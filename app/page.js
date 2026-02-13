@@ -325,7 +325,7 @@ export default function Page() {
 
   return (
     <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif', maxWidth: '40rem' }}>
-      <h1 style={{ marginBottom: '1rem' }}>CleanSheet</h1>
+      <h1 style={{ marginBottom: '1rem' }}>FitForPDF</h1>
       <p style={{ color: '#666', marginBottom: '1.5rem' }}>Upload CSV or XLSX → download PDF</p>
 
       <form onSubmit={handleSubmit}>
@@ -344,7 +344,7 @@ export default function Page() {
             disabled={isLoading}
             style={{ marginRight: '0.5rem' }}
           />
-          Add “Made with CleanSheet” footer
+          Add “Made with FitForPDF” footer
         </label>
         <label style={{ display: 'block', marginBottom: '1rem' }}>
           <input
