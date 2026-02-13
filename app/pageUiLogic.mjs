@@ -45,10 +45,10 @@ export function getFailKind(confidence) {
 
 export function getPageBurdenUiCopy() {
   return {
-    title: 'Document trop volumineux pour un envoi direct',
-    description: 'Ce PDF dépasserait un volume raisonnable pour une lecture humaine.',
-    primaryCta: 'Générer une version compacte',
-    secondaryCta: 'Modifier le périmètre (bientôt disponible)',
+    title: 'Document too large for direct sending',
+    description: 'This PDF would exceed a reasonable volume for human review.',
+    primaryCta: 'Generate compact version',
+    secondaryCta: 'Adjust scope (coming soon)',
   };
 }
 
@@ -81,7 +81,7 @@ export function normalizePageBurdenRecommendations(rawRecommendations) {
 }
 
 export function recommendationLabel(token) {
-  if (token === RECOMMENDATION_MODE_COMPACT) return 'Essayez le mode compact.';
-  if (token === RECOMMENDATION_SCOPE_REDUCE) return 'Réduisez le nombre de lignes ou de colonnes.';
+  if (token === RECOMMENDATION_MODE_COMPACT) return 'Try compact mode.';
+  if (token === RECOMMENDATION_SCOPE_REDUCE) return 'Reduce rows or columns.';
   return String(token || '');
 }

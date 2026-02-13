@@ -91,22 +91,22 @@ function parseConfidenceFromHeaders(headers) {
 
 const VALID_VERDICTS = new Set(['OK', 'WARN', 'FAIL']);
 const REASON_LABELS = Object.freeze({
-  min_font_low: 'Texte trop petit pour un envoi fiable',
-  overflow_cells: 'Certaines cellules dépassent la zone disponible',
-  high_wrap_rate: 'Beaucoup de lignes passent sur plusieurs lignes',
-  high_truncation: 'Des contenus ont été tronqués',
-  max_row_height_hit: 'Certaines lignes ont été limitées en hauteur',
-  zero_width_column: 'Une colonne est devenue illisible',
-  page_burden_high: 'Document trop volumineux pour un envoi direct',
+  min_font_low: 'Text too small for reliable delivery',
+  overflow_cells: 'Some cells exceed available space',
+  high_wrap_rate: 'Many lines wrap onto multiple lines',
+  high_truncation: 'Some content was truncated',
+  max_row_height_hit: 'Some rows were height-limited',
+  zero_width_column: 'A column became unreadable',
+  page_burden_high: 'Document too large for direct sending',
   // Legacy/fallback codes from scoreV2 path.
-  column_collapse: 'Les colonnes sont trop compressées pour rester lisibles',
-  wrap_severe: 'La mise en page provoque des retours à la ligne excessifs',
-  missing_rows_severe: 'Des lignes semblent manquantes dans le rendu',
-  small_font: 'La taille de texte est trop petite',
-  header_not_repeated: 'L’en-tête n’est pas correctement répété',
-  missing_rows: 'Le rendu semble incomplet',
-  empty_or_header_only: 'Le document semble vide ou incomplet',
-  blank_pages: 'Une ou plusieurs pages semblent vides',
+  column_collapse: 'Columns are too compressed to remain readable',
+  wrap_severe: 'Layout causes excessive line wraps',
+  missing_rows_severe: 'Some rows appear missing in the render',
+  small_font: 'The text size is too small',
+  header_not_repeated: 'The header is not repeated correctly',
+  missing_rows: 'The render appears incomplete',
+  empty_or_header_only: 'The document looks empty or incomplete',
+  blank_pages: 'One or more pages appear empty',
 });
 const REASON_CODE_SET = new Set(Object.keys(REASON_LABELS));
 
@@ -309,7 +309,7 @@ export default function Page() {
         }
 
         if (mode === 'optimized' && !isFallback) {
-          setNotice('Mode optimisé indisponible, version standard générée.');
+          setNotice('Optimized mode unavailable; standard version generated.');
           await submitRender('normal', { isFallback: true, preserveNotice: true, flowIdOverride: activeFlowId });
           return;
         }
@@ -616,6 +616,17 @@ export default function Page() {
         .muted {
           color: #64748b;
         }
+        .fileInput {
+          display: none;
+        }
+        .uploadLabel {
+          cursor: pointer;
+        }
+        .fileName {
+          margin: 0.35rem 0 0;
+          color: #334155;
+          font-size: 0.85rem;
+        }
         @media (max-width: 780px) {
           .comparison {
             grid-template-columns: 1fr;
@@ -674,13 +685,22 @@ export default function Page() {
           </p>
 
           <form onSubmit={handleSubmit}>
-            <input
-              type="file"
-              accept=".csv,.xlsx"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              disabled={isLoading}
-              className="field"
-            />
+            <div className="field">
+              <label htmlFor="fitforpdf-file" className="secondaryBtn uploadLabel">
+                Choose file
+              </label>
+              <input
+                id="fitforpdf-file"
+                type="file"
+                accept=".csv,.xlsx"
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                disabled={isLoading}
+                className="fileInput"
+              />
+              <p className="fileName">
+                {file ? file.name : 'No file selected'}
+              </p>
+            </div>
             <label className="field">
               <input
                 type="checkbox"
@@ -699,7 +719,7 @@ export default function Page() {
                 disabled={isLoading}
                 style={{ marginRight: '0.5rem' }}
               />
-              Tronquer les textes longs (réduit le volume)
+              Truncate long text to reduce payload
             </label>
             <button className="btn" type="submit" disabled={isLoading}>
               {isLoading ? 'Generating…' : 'Generate PDF'}
@@ -796,7 +816,7 @@ export default function Page() {
                   marginRight: '0.5rem',
                 }}
               >
-                Vérification recommandée
+                Recommended check
               </span>
               {confidence?.score != null ? <span style={{ color: '#555' }}>Score: {confidence.score}</span> : null}
             </p>
@@ -809,7 +829,7 @@ export default function Page() {
                   aria-expanded={showDetails}
                   className="secondaryBtn"
                 >
-                  {showDetails ? 'Masquer détails' : 'Voir détails'}
+                  {showDetails ? 'Hide details' : 'Show details'}
                 </button>
                 {showDetails && (
                   <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
@@ -823,17 +843,17 @@ export default function Page() {
 
             <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
-                Télécharger quand même
+                Download anyway
               </button>
               {!stillRiskAfterOptimized && (
                 <button className="secondaryBtn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
-                  Générer une version optimisée
+                  Generate optimized version
                 </button>
               )}
             </div>
             {stillRiskAfterOptimized && (
               <p style={{ marginTop: '0.75rem', color: '#555' }}>
-                Version optimisée générée. Résultat toujours à vérifier.
+                Optimized version generated. Please review before using.
               </p>
             )}
           </section>
@@ -866,13 +886,13 @@ export default function Page() {
               <button className="btn" type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
                 {pageBurdenCopy.primaryCta}
               </button>
-              <button className="secondaryBtn" type="button" disabled title="Bientôt disponible">
+              <button className="secondaryBtn" type="button" disabled title="Coming soon">
                 {pageBurdenCopy.secondaryCta}
               </button>
             </div>
             {stillRiskAfterCompact && (
               <p style={{ marginTop: '0.75rem', color: '#555' }}>
-                Meme en compact, c\'est encore trop volumineux. Reduisez le perimetre.
+                Even in compact mode it is still too large. Reduce scope.
               </p>
             )}
           </section>
@@ -889,7 +909,7 @@ export default function Page() {
             }}
           >
             <p style={{ margin: 0, color: '#991b1b', fontWeight: 600 }}>
-              PDF à risque {confidence?.score != null ? `(Score: ${confidence.score})` : ''}
+              PDF risk {confidence?.score != null ? `(Score: ${confidence.score})` : ''}
             </p>
             {failReasons.length > 0 && (
               <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
@@ -901,22 +921,22 @@ export default function Page() {
             <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {stillRiskAfterOptimized ? (
                 <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
-                  Télécharger quand même
+                  Download anyway
                 </button>
               ) : (
                 <>
                   <button className="secondaryBtn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
-                    Générer une version optimisée
+                    Generate optimized version
                   </button>
                   <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
-                    Télécharger quand même
+                    Download anyway
                   </button>
                 </>
               )}
             </div>
             {stillRiskAfterOptimized && (
               <p style={{ marginTop: '0.75rem', color: '#555' }}>
-                Version optimisée générée. Résultat toujours à vérifier.
+                Optimized version generated. Please review before using.
               </p>
             )}
           </section>
@@ -930,7 +950,7 @@ export default function Page() {
               aria-expanded={showDebug}
               className="secondaryBtn"
             >
-              {showDebug ? 'Masquer debug' : 'Debug'}
+              {showDebug ? 'Hide debug' : 'Debug'}
             </button>
             {showDebug && (
               <>

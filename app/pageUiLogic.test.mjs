@@ -44,8 +44,8 @@ test('shows page burden message and compact CTA on page_burden_high FAIL', () =>
   assert.equal(getFailKind(confidence), 'page_burden');
 
   const copy = getPageBurdenUiCopy();
-  assert.equal(copy.title, 'Document trop volumineux pour un envoi direct');
-  assert.equal(copy.primaryCta, 'Générer une version compacte');
+  assert.equal(copy.title, 'Document too large for direct sending');
+  assert.equal(copy.primaryCta, 'Generate compact version');
 });
 
 test('compact CTA rerenders with mode=compact and columnMap=force', () => {
@@ -100,8 +100,8 @@ test('normalizes legacy and coded recommendations for page burden', () => {
     'mode_compact',
   ]);
   assert.deepEqual(recommendations, ['mode_compact', 'scope_reduce']);
-  assert.equal(recommendationLabel('mode_compact'), 'Essayez le mode compact.');
-  assert.equal(recommendationLabel('scope_reduce'), 'Réduisez le nombre de lignes ou de colonnes.');
+  assert.equal(recommendationLabel('mode_compact'), 'Try compact mode.');
+  assert.equal(recommendationLabel('scope_reduce'), 'Reduce rows or columns.');
 });
 
 test('export count increments only on success only', () => {
