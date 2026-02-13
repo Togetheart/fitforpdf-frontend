@@ -15,6 +15,11 @@ import {
   incrementUsedCount,
   resetDevOnly,
 } from './paywall.mjs';
+import {
+  LANDING_COPY,
+  LANDING_SECTIONS,
+  TELEGRAM_BOT_URL,
+} from './siteCopy.mjs';
 
 const API_BASE = '/api';
 
@@ -185,6 +190,10 @@ async function parseConfidenceFromJsonIfAvailable(res) {
   return null;
 }
 
+export function getLandingSections(usedLeft = 3) {
+  return LANDING_SECTIONS(usedLeft);
+}
+
 export default function Page() {
   const [file, setFile] = useState(null);
   const [includeBranding, setIncludeBranding] = useState(true);
@@ -204,7 +213,6 @@ export default function Page() {
   const [failureRecommendations, setFailureRecommendations] = useState([]);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [freeExportsLeft, setFreeExportsLeft] = useState(() => freeLeft());
-  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
 
   useEffect(() => {
@@ -394,32 +402,6 @@ export default function Page() {
     setFlowId(null);
   }
 
-  async function handleCheckout(pack) {
-    if (isCheckoutLoading) return;
-    setError(null);
-    setNotice(null);
-    setIsCheckoutLoading(true);
-
-    try {
-      const res = await fetch(`${API_BASE}/checkout`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ pack }),
-      });
-
-      const payload = await res.json().catch(() => ({}));
-      if (!res.ok || !payload.url) {
-        throw new Error(payload.error || 'Checkout failed');
-      }
-
-      window.location.assign(payload.url);
-    } catch (err) {
-      setError(err.message || 'Checkout failed');
-    } finally {
-      setIsCheckoutLoading(false);
-    }
-  }
-
   const verdict = confidence?.verdict;
   const stillRiskAfterOptimized = lastRequestMode === 'optimized' && (verdict === 'WARN' || verdict === 'FAIL');
   const stillRiskAfterCompact = lastRequestMode === 'compact' && verdict === 'FAIL';
@@ -449,15 +431,54 @@ export default function Page() {
         .hero {
           text-align: left;
         }
-        .logo {
-          font-size: 2.1rem;
-          letter-spacing: 0.02em;
+        .brand {
           color: var(--accent);
-          margin: 0;
+          font-size: 0.85rem;
+          font-weight: 700;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
         }
-        .subtitle {
-          margin-top: 0.4rem;
+        .heroTitle {
+          font-size: 2.1rem;
+          line-height: 1.12;
+          margin: 0.25rem 0 0.5rem;
+          letter-spacing: 0.02em;
+        }
+        .heroSubheadline {
+          margin: 0;
+          max-width: 48ch;
           color: #475569;
+        }
+        .heroActions {
+          margin-top: 0.9rem;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.65rem;
+          align-items: center;
+        }
+        .linkBtn {
+          border: 1px solid #e5e7eb;
+          background: #fff;
+          color: #111827;
+          text-decoration: none;
+          border-radius: 10px;
+          padding: 0.58rem 1rem;
+          font-weight: 600;
+          transition: transform 140ms ease, opacity 140ms ease;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+        }
+        .linkBtn:hover {
+          transform: translateY(-1px);
+          opacity: 0.94;
+        }
+        .linkBtn:active {
+          transform: translateY(0);
+        }
+        .sectionTitle {
+          margin: 0 0 0.6rem;
+          color: #111827;
         }
         .comparison {
           display: grid;
@@ -475,6 +496,16 @@ export default function Page() {
         .card:hover {
           transform: translateY(-1px);
           opacity: 0.97;
+        }
+        .featureList {
+          margin: 0.25rem 0 0;
+          padding-left: 1.1rem;
+          color: #334155;
+          display: grid;
+          gap: 0.25rem;
+        }
+        .featureItem {
+          color: #334155;
         }
         .cardTitle {
           font-size: 0.95rem;
@@ -597,22 +628,46 @@ export default function Page() {
 
       <div className="container">
         <header className="hero">
-          <h1 className="logo">FitForPDF</h1>
-          <p className="subtitle">Upload a CSV or XLSX and generate a clean PDF in one step.</p>
+          <p className="brand">FitForPDF</p>
+          <h1 className="heroTitle">{LANDING_COPY.heroTitle}</h1>
+          <p className="heroSubheadline">{LANDING_COPY.heroSubheadline}</p>
+          <div className="heroActions">
+            <a href="#tool" className="btn">
+              {LANDING_COPY.heroPrimaryCta}
+            </a>
+            <a href="/pricing" className="linkBtn">
+              {LANDING_COPY.heroSecondaryCta}
+            </a>
+            <a href={TELEGRAM_BOT_URL} className="linkBtn">
+              {LANDING_COPY.telegramCta}
+            </a>
+          </div>
         </header>
 
         <section className="comparison" aria-label="Before and after example">
           <article className="card">
-            <h2 className="cardTitle">Before</h2>
-            <div className="placeholder">CSV input</div>
+            <h2 className="cardTitle">{LANDING_COPY.proofBeforeTitle}</h2>
+            <div className="placeholder">{LANDING_COPY.proofBeforePlaceholder}</div>
           </article>
           <article className="card">
-            <h2 className="cardTitle">After</h2>
-            <div className="placeholder">PDF output</div>
+            <h2 className="cardTitle">{LANDING_COPY.proofAfterTitle}</h2>
+            <div className="placeholder">{LANDING_COPY.proofAfterPlaceholder}</div>
           </article>
         </section>
 
         <section className="panel">
+          <h2 className="sectionTitle">{LANDING_COPY.clientReadyTitle}</h2>
+          <ul className="featureList">
+            {LANDING_COPY.clientReadyBullets.map((item) => (
+              <li className="featureItem" key={item}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="panel" id="tool">
+          <h2 className="sectionTitle">{LANDING_COPY.toolTitle}</h2>
           <p className="quotaLine">
             Free exports left: {freeExportsLeft} / 3
             {freeExportsLeft === 0 ? <span className="quotaLimit">Free limit reached</span> : null}
@@ -668,7 +723,7 @@ export default function Page() {
 
         {canShowPanel ? (
           <section className="panel paywall">
-            <h2 style={{ marginTop: 0 }}>You\'ve used your 3 free exports.</h2>
+            <h2 style={{ marginTop: 0 }}>You've used your 3 free exports.</h2>
             <p className="muted" style={{ marginBottom: '0.6rem' }}>
               Pick a plan to continue.
             </p>
@@ -690,26 +745,34 @@ export default function Page() {
                 <p className="planSub">Coming soon</p>
               </article>
             </div>
-            <div className="actions">
-              <button
-                className="btn"
-                type="button"
-                disabled={isCheckoutLoading}
-                onClick={() => handleCheckout('credits_100')}
-              >
-                Buy credits (100)
-              </button>
-              <button
-                className="btn"
-                type="button"
-                disabled={isCheckoutLoading}
-                onClick={() => handleCheckout('credits_500')}
-              >
-                Buy credits (500)
-              </button>
-            </div>
           </section>
         ) : null}
+
+        <section className="panel">
+          <h2 className="sectionTitle">{LANDING_COPY.pricingTitle}</h2>
+          <div className="planGrid">
+            <article className="planCard">
+              <h3 className="planTitle">{LANDING_COPY.pricingFreeTitle}</h3>
+              <p className="planSub">{LANDING_COPY.pricingFreeCopy}</p>
+            </article>
+            <article className="planCard">
+              <h3 className="planTitle">{LANDING_COPY.pricingCredits100Title}</h3>
+              <p className="planSub">{LANDING_COPY.pricingCredits100Copy}</p>
+            </article>
+            <article className="planCard">
+              <h3 className="planTitle">{LANDING_COPY.pricingCredits500Title}</h3>
+              <p className="planSub">{LANDING_COPY.pricingCredits500Copy}</p>
+            </article>
+            <article className="planCard">
+              <h3 className="planTitle">{LANDING_COPY.pricingProTitle}</h3>
+              <p className="planSub">{LANDING_COPY.pricingProCopy}</p>
+            </article>
+            <article className="planCard">
+              <h3 className="planTitle">{LANDING_COPY.pricingApiTitle}</h3>
+              <p className="planSub">{LANDING_COPY.pricingApiCopy}</p>
+            </article>
+          </div>
+        </section>
 
         {verdict === 'WARN' && (
           <section

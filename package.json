@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "test": "node --test app/pageUiLogic.test.mjs app/api/render/route.test.mjs app/api/checkout/route.test.mjs",
+    "test": "node --test app/pageUiLogic.test.mjs app/pageStructure.test.mjs app/api/render/route.test.mjs app/api/checkout/route.test.mjs",
     "build": "next build",
     "start": "next start -p 3001"
   },
