@@ -5,13 +5,12 @@ const RECOMMENDATION_SCOPE_REDUCE = 'scope_reduce';
 export function buildRenderUrl(apiUrl, mode, options = {}) {
   const truncateLongText = Boolean(options && options.truncateLongText === true);
   const params = new URLSearchParams();
+  params.set('columnMap', 'force');
   if (mode === 'optimized') {
     params.set('mode', 'optimized');
-    params.set('columnMap', 'auto');
   }
   if (mode === 'compact') {
     params.set('mode', 'compact');
-    params.set('columnMap', 'auto');
   }
   if (truncateLongText) {
     params.set('truncate_long_text', 'true');

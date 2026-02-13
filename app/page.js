@@ -29,6 +29,33 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
+function sanitizeFilenameBase(name) {
+  const trimmed = String(name || '').trim();
+  if (!trimmed) return 'document';
+  const baseName = trimmed.split(/[\\/]/).pop();
+  const withoutExt = baseName.replace(/\.[^/.]+$/u, '');
+  const cleaned = withoutExt.replace(/[<>:"/\\|?*]/gu, '_').trim();
+  return cleaned || 'document';
+}
+
+function getPdfFilenameFromSourceFile(fileObj) {
+  const baseName = sanitizeFilenameBase(fileObj?.name);
+  return `${baseName}.pdf`;
+}
+
+function getFilenameFromContentDisposition(contentDisposition, fallback) {
+  if (!contentDisposition) return fallback;
+  const match = /filename\*=UTF-8''([^;]+)|filename\*=([^;]+)|filename\s*=\s*\"?([^\";]+)\"?/i.exec(contentDisposition);
+  if (!match) return fallback;
+  const raw = match[1] || match[2] || match[3];
+  if (!raw) return fallback;
+  try {
+    return decodeURIComponent(raw.replace(/^"|"$/g, '').trim());
+  } catch {
+    return raw.replace(/^"|"$/g, '').trim() || fallback;
+  }
+}
+
 function parseReasons(rawReasons) {
   if (!rawReasons || rawReasons === 'N/A') return [];
   return String(rawReasons)
@@ -169,6 +196,7 @@ export default function Page() {
   const [showDebug, setShowDebug] = useState(false);
   const [debugByQuery, setDebugByQuery] = useState(false);
   const [failureRecommendations, setFailureRecommendations] = useState([]);
+  const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -203,6 +231,7 @@ export default function Page() {
         body: formData,
         headers: {
           'X-CleanSheet-Flow-Id': activeFlowId,
+          'X-FitForPDF-Source-Filename': file.name || '',
         },
       });
 
@@ -249,8 +278,13 @@ export default function Page() {
       const debugMetricsData = parseDebugMetricsHeader(res.headers.get('x-cleansheet-debug-metrics'));
       const columnMapDebugData = parseColumnMapDebugFromHeaders(res.headers);
       const blob = await res.blob();
+      const responseFilename = getFilenameFromContentDisposition(
+        res.headers.get('content-disposition'),
+        getPdfFilenameFromSourceFile(file),
+      );
 
       setPdfBlob(blob);
+      setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
       setLastRequestMode(mode);
       setShowDetails(false);
@@ -278,7 +312,7 @@ export default function Page() {
 
       const effectiveVerdict = confidenceData?.verdict ?? 'OK';
       if (effectiveVerdict === 'OK') {
-        downloadBlob(blob, mode === 'optimized' ? 'report-optimisee.pdf' : 'report.pdf');
+        downloadBlob(blob, responseFilename);
         setPdfBlob(null);
         setConfidence(null);
         setFlowId(null);
@@ -311,7 +345,7 @@ export default function Page() {
 
   function handleDownloadAnyway() {
     if (!pdfBlob) return;
-    downloadBlob(pdfBlob, lastRequestMode === 'optimized' ? 'report-optimisee.pdf' : 'report.pdf');
+    downloadBlob(pdfBlob, resolvedPdfFilename);
     setFlowId(null);
   }
 

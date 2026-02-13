@@ -20,11 +20,11 @@ test('shows page burden message and compact CTA on page_burden_high FAIL', () =>
   assert.equal(copy.primaryCta, 'Générer une version compacte');
 });
 
-test('compact CTA rerenders with mode=compact and columnMap=auto', () => {
+test('compact CTA rerenders with mode=compact and columnMap=force', () => {
   const url = new URL(buildRenderUrl('http://localhost:3000', 'compact'));
   assert.equal(url.pathname, '/render');
   assert.equal(url.searchParams.get('mode'), 'compact');
-  assert.equal(url.searchParams.get('columnMap'), 'auto');
+  assert.equal(url.searchParams.get('columnMap'), 'force');
   assert.equal(url.searchParams.get('mode'), 'compact');
 });
 
@@ -32,26 +32,31 @@ test('truncate_long_text opt-in appends request param when enabled', () => {
   const url = new URL(buildRenderUrl('http://localhost:3000', 'normal', { truncateLongText: true }));
   assert.equal(url.pathname, '/render');
   assert.equal(url.searchParams.get('truncate_long_text'), 'true');
+  assert.equal(url.searchParams.get('columnMap'), 'force');
 });
 
 test('truncate_long_text is absent by default and remains opt-in only', () => {
   const normalUrl = new URL(buildRenderUrl('http://localhost:3000', 'normal'));
+  assert.equal(normalUrl.searchParams.get('columnMap'), 'force');
   assert.equal(normalUrl.searchParams.get('truncate_long_text'), null);
 
   const optimizedUrl = new URL(buildRenderUrl('http://localhost:3000', 'optimized'));
   assert.equal(optimizedUrl.searchParams.get('truncate_long_text'), null);
   assert.equal(optimizedUrl.searchParams.get('mode'), 'optimized');
-  assert.equal(optimizedUrl.searchParams.get('columnMap'), 'auto');
+  assert.equal(optimizedUrl.searchParams.get('columnMap'), 'force');
 });
 
 test('buildRenderUrl supports same-origin proxy base paths', () => {
   const compactPath = buildRenderUrl('/api', 'compact');
   assert.equal(compactPath.startsWith('/api/render?'), true);
   assert.equal(compactPath.includes('mode=compact'), true);
-  assert.equal(compactPath.includes('columnMap=auto'), true);
+  assert.equal(compactPath.includes('columnMap=force'), true);
 
   const normalPath = buildRenderUrl('/api', 'normal');
-  assert.equal(normalPath, '/api/render');
+  assert.equal(normalPath, '/api/render?columnMap=force');
+  const normalUrl = new URL(normalPath, 'http://localhost');
+  assert.equal(normalUrl.searchParams.get('columnMap'), 'force');
+  assert.equal(normalUrl.searchParams.get('mode'), null);
 });
 
 test('generic FAIL still uses generic fail path', () => {
