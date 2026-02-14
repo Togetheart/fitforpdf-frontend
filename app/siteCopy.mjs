@@ -1,18 +1,27 @@
 export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
-  heroTitle: 'Client-ready PDFs from messy spreadsheets.',
+  heroTitle: 'Client-ready PDFs. From messy spreadsheets.',
   heroSubheadline: 'Upload a CSV or Excel file and get a structured PDF ready to send.',
-  heroPrimaryCta: 'Generate your PDF',
+  heroPrimaryCta: 'Generate PDF',
   heroSecondaryCta: 'See pricing',
-  heroTrustLine: 'Files are deleted immediately after conversion.',
-  telegramCta: 'Try on Telegram',
+  heroTertiaryCta: 'Try on Telegram',
+  heroTrustLine: 'Files are deleted immediately after conversion. PDF is available for up to 15 minutes.',
+
+  topBarLinks: [
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Privacy', href: '/privacy' },
+  ],
+
+  beforeAfterTitle: 'Before / After',
+  beforeLabel: 'CSV INPUT',
+  afterLabel: 'PDF OUTPUT',
 
   problemTitle: 'Why spreadsheet exports fail in real life',
   problemBullets: [
-    'Cut columns',
-    'Unreadable zoom',
-    'Manual layout fixes',
+    'Columns are cut',
+    'Zoom makes text unreadable',
+    'Manual layout fixes become unavoidable',
   ],
 
   clientReadyTitle: 'What “client-ready” means',
@@ -21,48 +30,58 @@ export const LANDING_COPY = {
     'Smart column sections (A/B/C when needed)',
     'Fixed reference columns repeated',
     'Rows X–Y and Page i/n',
-    'No manual layout',
   ],
 
   howItWorksTitle: 'In 3 steps',
   howItWorksSteps: [
-    'Upload your CSV/Excel file',
-    'We organize it into clean sections',
-    'Download a client-ready PDF',
+    'Upload a CSV or XLSX file.',
+    'We organize it into readable sections.',
+    'Download a client-ready PDF.',
   ],
 
-  toolTitle: 'Try FitForPDF',
+  toolTitle: 'Try FitForPDF on the web',
   toolSubcopy: '3 free exports. No account required.',
+  brandingOptionLabel: 'Add “Made with FitForPDF” footer',
+  truncateOptionLabel: 'Truncate long text to reduce payload',
+  truncateNotice: 'Truncation is off by default. Long text may overflow on small displays.',
 
-  pricingTitle: 'Simple pricing',
-  pricingFreeTitle: 'Free',
-  pricingFreeCopy: '3 exports total',
-  pricingCredits100Title: 'Credits 100',
-  pricingCredits100Copy: '€19',
-  pricingCredits500Title: 'Credits 500',
-  pricingCredits500Copy: '€79',
-  pricingProTitle: 'Pro',
-  pricingProCopy: 'Coming soon',
-  pricingApiTitle: 'API',
-  pricingApiCopy: 'Coming soon',
-  pricingCtaLabel: 'See full pricing',
+  pricingPreviewTitle: 'Simple pricing',
+  pricingPreviewCards: [
+    { title: 'Free', copy: '3 exports total', cta: 'See full pricing', href: '/pricing' },
+    { title: 'Credits 100', copy: '€19', cta: 'See full pricing', href: '/pricing' },
+    { title: 'Credits 500', copy: '€79', cta: 'See full pricing', href: '/pricing' },
+    { title: 'Pro', copy: 'Coming soon', cta: 'See full pricing', href: '/pricing' },
+    { title: 'API', copy: 'Coming soon', cta: 'See full pricing', href: '/pricing' },
+  ],
 
-  privacyTitle: 'Privacy-first by default',
-  privacyBullets: [
+  privacyStripTitle: 'Privacy-first by default',
+  privacyStripBullets: [
     'Files are deleted immediately after conversion.',
     'The generated PDF is available for up to 15 minutes.',
     'We do not store file contents in logs.',
   ],
+  privacyStripCta: 'See privacy',
+
+  footerLinks: [
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Privacy', href: '/privacy' },
+    { label: 'Try on Telegram', href: TELEGRAM_BOT_URL },
+  ],
+  footerCopyright: '© FitForPDF',
+  logoText: 'FitForPDF',
 };
 
 export const LANDING_COPY_KEYS = {
+  topBar: 'topbar',
   hero: 'hero',
   problem: 'problem',
+  beforeAfter: 'before-after',
   clientReady: 'client-ready',
-  how: 'how-it-works',
+  howItWorks: 'how-it-works',
   tool: 'tool',
-  pricing: 'pricing',
-  privacy: 'privacy',
+  pricingPreview: 'pricing-preview',
+  privacyStrip: 'privacy-strip',
+  footer: 'footer',
 };
 
 export const PRICING_PAGE_COPY = {
@@ -85,16 +104,26 @@ export const PRICING_PAGE_COPY = {
   proFeature2: 'Priority processing',
   proCtaLabel: 'Coming soon',
   apiTitle: 'API (coming soon)',
-  apiCopy: 'Usage-based. Contact us.',
+  apiCopy: 'Usage-based',
   apiCtaLabel: 'Join early access',
   apiCtaHref: 'mailto:support@fitforpdf.com',
   backToApp: 'Back to app',
   backToAppHref: '/',
-  retentionTitle: 'Privacy & retention',
-  filesDeleted: 'Files are deleted after 15 minutes',
-  pdfsDeleted: 'PDFs are deleted after 24 hours',
-  noLogs: 'We do not store file contents in logs.',
-  plannedLabel: 'Planned',
+  faq: [
+    {
+      question: 'What counts as an export?',
+      answer: 'A successful PDF generation.',
+    },
+    {
+      question: 'Do you store files?',
+      answer: 'See /privacy',
+      link: '/privacy',
+    },
+    {
+      question: 'What if my file is huge?',
+      answer: 'Use the compact flow or reduce scope before exporting.',
+    },
+  ],
 };
 
 export const PRICING_CARDS = [
@@ -102,7 +131,6 @@ export const PRICING_CARDS = [
     id: 'free',
     title: PRICING_PAGE_COPY.freeTitle,
     priceLine: PRICING_PAGE_COPY.freeSubtitle,
-    amountLine: '',
     points: [PRICING_PAGE_COPY.freeFeature],
     actionLabel: PRICING_PAGE_COPY.freeCtaLabel,
     actionType: 'link',
@@ -111,9 +139,8 @@ export const PRICING_CARDS = [
   },
   {
     id: 'credits100',
-    title: `${PRICING_PAGE_COPY.creditsTitle} 100`,
-    priceLine: `${PRICING_PAGE_COPY.credits100Title} . ${PRICING_PAGE_COPY.credits100Price}`,
-    amountLine: '',
+    title: `${PRICING_PAGE_COPY.creditsTitle} ${PRICING_PAGE_COPY.credits100Title}`,
+    priceLine: PRICING_PAGE_COPY.credits100Price,
     points: [],
     actionLabel: PRICING_PAGE_COPY.creditsCtaLabel,
     actionType: 'button',
@@ -123,9 +150,8 @@ export const PRICING_CARDS = [
   },
   {
     id: 'credits500',
-    title: `${PRICING_PAGE_COPY.creditsTitle} 500`,
-    priceLine: `${PRICING_PAGE_COPY.credits500Title} . ${PRICING_PAGE_COPY.credits500Price}`,
-    amountLine: '',
+    title: `${PRICING_PAGE_COPY.creditsTitle} ${PRICING_PAGE_COPY.credits500Title}`,
+    priceLine: PRICING_PAGE_COPY.credits500Price,
     points: [],
     actionLabel: PRICING_PAGE_COPY.creditsCtaLabel,
     actionType: 'button',
@@ -136,7 +162,6 @@ export const PRICING_CARDS = [
     id: 'pro',
     title: PRICING_PAGE_COPY.proTitle,
     priceLine: PRICING_PAGE_COPY.proPrice,
-    amountLine: '',
     points: [PRICING_PAGE_COPY.proFeature1, PRICING_PAGE_COPY.proFeature2],
     actionLabel: PRICING_PAGE_COPY.proCtaLabel,
     actionType: 'button',
@@ -145,8 +170,7 @@ export const PRICING_CARDS = [
   {
     id: 'api',
     title: PRICING_PAGE_COPY.apiTitle,
-    priceLine: 'Usage-based',
-    amountLine: '',
+    priceLine: PRICING_PAGE_COPY.apiCopy,
     points: [],
     actionLabel: PRICING_PAGE_COPY.apiCtaLabel,
     actionType: 'link',
@@ -155,62 +179,69 @@ export const PRICING_CARDS = [
   },
 ];
 
-export const PRICING_FAQ = [
-  {
-    question: 'What counts as an export?',
-    answer: 'A successful PDF generation.',
-  },
-  {
-    question: 'Do you store files?',
-    answer: 'See Privacy.',
-    link: '/privacy',
-  },
-  {
-    question: 'What if my export is huge?',
-    answer: 'Use compact mode or reduce the scope.',
-  },
-];
-
 export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
+  {
+    id: LANDING_COPY_KEYS.topBar,
+    title: LANDING_COPY.logoText,
+    links: LANDING_COPY.topBarLinks,
+    containsFreeQuotaText: false,
+  },
   {
     id: LANDING_COPY_KEYS.hero,
     title: LANDING_COPY.heroTitle,
     ctas: [
-      { label: LANDING_COPY.heroPrimaryCta, href: '#tool' },
-      { label: LANDING_COPY.heroSecondaryCta, href: '/pricing' },
-      { label: LANDING_COPY.telegramCta, href: TELEGRAM_BOT_URL },
+      { label: LANDING_COPY.heroPrimaryCta, href: '#tool', type: 'primary' },
+      { label: LANDING_COPY.heroSecondaryCta, href: '/pricing', type: 'secondary' },
+      { label: LANDING_COPY.heroTertiaryCta, href: TELEGRAM_BOT_URL, type: 'tertiary' },
     ],
+    trustLines: [LANDING_COPY.heroTrustLine],
     containsFreeQuotaText: false,
   },
   {
     id: LANDING_COPY_KEYS.problem,
     title: LANDING_COPY.problemTitle,
+    bullets: LANDING_COPY.problemBullets,
+    containsFreeQuotaText: false,
+  },
+  {
+    id: LANDING_COPY_KEYS.beforeAfter,
+    title: LANDING_COPY.beforeAfterTitle,
     containsFreeQuotaText: false,
   },
   {
     id: LANDING_COPY_KEYS.clientReady,
     title: LANDING_COPY.clientReadyTitle,
+    bullets: LANDING_COPY.clientReadyBullets,
     containsFreeQuotaText: false,
   },
   {
-    id: LANDING_COPY_KEYS.how,
+    id: LANDING_COPY_KEYS.howItWorks,
     title: LANDING_COPY.howItWorksTitle,
+    bullets: LANDING_COPY.howItWorksSteps,
     containsFreeQuotaText: false,
   },
   {
     id: LANDING_COPY_KEYS.tool,
     title: LANDING_COPY.toolTitle,
-    containsFreeQuotaText: true,
     freeQuotaText: `Free exports left: ${freeExportsLeft} / 3`,
+    containsFreeQuotaText: true,
   },
   {
-    id: LANDING_COPY_KEYS.pricing,
-    title: LANDING_COPY.pricingTitle,
+    id: LANDING_COPY_KEYS.pricingPreview,
+    title: LANDING_COPY.pricingPreviewTitle,
+    cards: LANDING_COPY.pricingPreviewCards,
     containsFreeQuotaText: false,
   },
   {
-    id: LANDING_COPY_KEYS.privacy,
-    title: LANDING_COPY.privacyTitle,
+    id: LANDING_COPY_KEYS.privacyStrip,
+    title: LANDING_COPY.privacyStripTitle,
+    bullets: LANDING_COPY.privacyStripBullets,
+    containsFreeQuotaText: false,
+  },
+  {
+    id: LANDING_COPY_KEYS.footer,
+    links: LANDING_COPY.footerLinks,
+    title: 'Footer',
     containsFreeQuotaText: false,
   },
 ];
@@ -224,17 +255,17 @@ export const PRIVACY_PAGE_COPY = {
     'Operational metadata (rows, columns, verdict, error codes) without file content',
   ],
   retention: [
-    'Policy: Files are deleted immediately after conversion.',
-    'Policy: The generated PDF is available for up to 15 minutes.',
+    'Files are deleted immediately after conversion.',
+    'The generated PDF is available for up to 15 minutes.',
   ],
-  sensitiveDataNote: 'Policy: Do not upload sensitive data.',
+  sensitiveDataNote: 'Do not upload sensitive data.',
   logs: [
     'We do not store file contents in logs.',
     'We may store operational metrics to improve reliability.',
   ],
   security: [
-    'Policy: Transport encryption (HTTPS).',
-    'Policy: Access controls (API key).',
+    'Transport encryption (HTTPS).',
+    'Access controls (API key).',
   ],
   contactEmail: 'support@fitforpdf.com',
 };

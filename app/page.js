@@ -19,7 +19,10 @@ import {
   LANDING_COPY,
   LANDING_SECTIONS,
   TELEGRAM_BOT_URL,
+  LANDING_COPY_KEYS,
 } from './siteCopy.mjs';
+import { UI_TOKENS } from './ui/tokens.mjs';
+import BeforeAfter from './components/BeforeAfter.mjs';
 
 const API_BASE = '/api';
 
@@ -414,322 +417,357 @@ export default function Page() {
     <main className="page">
       <style jsx>{`
         .page {
-          --accent: #c81e1e;
+          --accent: ${UI_TOKENS.accent};
+          --muted: ${UI_TOKENS.text.muted};
           min-height: 100vh;
-          padding: clamp(1.25rem, 2.5vw, 2.5rem);
-          background: #fff;
+          background: ${UI_TOKENS.bg};
           color: #111827;
-          font-family: "Avenir Next", "Avenir", "Segoe UI", sans-serif;
+          padding: ${UI_TOKENS.spacing.x16};
+          font-family: "Avenir Next", "Avenir", "Segoe UI", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+          font-size: ${UI_TOKENS.text.body.size};
+          line-height: ${UI_TOKENS.text.body.lineHeight};
         }
         .container {
-          max-width: 60rem;
+          max-width: ${UI_TOKENS.contentMaxWidth};
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 1.1rem;
+          gap: ${UI_TOKENS.spacing.x32};
+        }
+        .topBar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: ${UI_TOKENS.spacing.x12};
+          flex-wrap: wrap;
+        }
+        .logo {
+          color: var(--accent);
+          text-decoration: none;
+          font-size: 1.05rem;
+          font-weight: 650;
+          letter-spacing: 0.02em;
+        }
+        .topNav {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          gap: ${UI_TOKENS.spacing.x16};
+        }
+        .topLink,
+        .topLinkSmall,
+        .secondaryLink,
+        .btn {
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.pill};
+          color: #111827;
+          text-decoration: none;
+          font-weight: 550;
+          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
+        }
+        .topLink {
+          padding: 0.45rem 0.75rem;
+          background: transparent;
+        }
+        .topLinkSmall,
+        .secondaryLink {
+          padding: 0.45rem 0.85rem;
+          background: transparent;
+        }
+        .btn:hover {
+          transform: translateY(1px);
+          opacity: 0.9;
         }
         .hero {
-          text-align: left;
-        }
-        .brand {
-          color: var(--accent);
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
+          display: grid;
+          gap: 0.6rem;
         }
         .heroTitle {
-          font-size: 2.1rem;
-          line-height: 1.12;
-          margin: 0.25rem 0 0.5rem;
-          letter-spacing: 0.02em;
-        }
-        .heroSubheadline {
           margin: 0;
-          max-width: 48ch;
-          color: #475569;
+          font-size: ${UI_TOKENS.text.h1.sizeMobile};
+          font-weight: ${UI_TOKENS.text.h1.weight};
+          line-height: 1.07;
+          letter-spacing: 0.01em;
+          max-width: 16ch;
         }
-        .heroTrust {
-          margin-top: 0.85rem;
-          margin-bottom: 0;
-          color: #64748b;
-          font-size: 0.9rem;
-        }
-        .heroActions {
-          margin-top: 0.9rem;
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.65rem;
-          align-items: center;
-        }
-        .linkBtn {
-          border: 1px solid #e5e7eb;
-          background: #fff;
-          color: #111827;
-          text-decoration: none;
-          border-radius: 10px;
-          padding: 0.58rem 1rem;
-          font-weight: 600;
-          transition: transform 140ms ease, opacity 140ms ease;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-        }
-        .linkBtn:hover {
-          transform: translateY(-1px);
-          opacity: 0.94;
-        }
-        .linkBtn:active {
-          transform: translateY(0);
-        }
-        .sectionTitle {
-          margin: 0 0 0.6rem;
-          color: #111827;
-        }
-        .comparison {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-        }
-        .card {
-          border: 1px solid #e5e7eb;
-          border-radius: 12px;
-          padding: 0.85rem;
-          background: #fff;
-          transition: transform 160ms ease, opacity 160ms ease;
-          min-height: 220px;
-        }
-        .card:hover {
-          transform: translateY(-1px);
-          opacity: 0.97;
-        }
-        .featureList {
-          margin: 0.25rem 0 0;
-          padding-left: 1.1rem;
-          color: #334155;
-          display: grid;
-          gap: 0.25rem;
-        }
-        .featureItem {
-          color: #334155;
-        }
-        .cardTitle {
-          font-size: 0.95rem;
-          margin: 0 0 0.6rem;
-          color: #334155;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-        .placeholder {
-          border: 1px dashed #cbd5e1;
-          border-radius: 8px;
-          height: 150px;
-          display: grid;
-          place-items: center;
-          color: #64748b;
-          text-transform: uppercase;
-          font-size: 0.85rem;
-          background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
-        }
-        .panel {
-          border: 1px solid #e5e7eb;
-          border-radius: 12px;
-          padding: 1rem;
-          background: #ffffff;
-          box-shadow: 0 1px 0 rgba(15, 23, 42, 0.05);
-        }
-        .paywall {
-          border: 1px solid #fecaca;
-          background: #fff5f5;
-        }
-        .quotaLine {
-          font-weight: 600;
-          margin: 0 0 0.9rem;
-          color: #0f172a;
-        }
-        .quotaLimit {
-          color: #b91c1c;
-          margin-left: 0.5rem;
-          font-weight: 700;
-        }
-        .field {
-          margin-bottom: 0.9rem;
-          width: 100%;
-          display: block;
-        }
-        .btn {
-          border: 0;
-          border-radius: 10px;
-          padding: 0.58rem 1rem;
-          background: var(--accent);
-          color: #fff;
-          font-weight: 600;
-          transition: transform 140ms ease, opacity 140ms ease;
-          cursor: pointer;
-        }
-        .btn:hover:not(:disabled) {
-          transform: translateY(-1px);
-          opacity: 0.94;
-        }
-        .btn:disabled {
-          opacity: 0.56;
-          cursor: default;
-        }
-        .link {
-          color: #991b1b;
-          text-decoration: none;
-          font-weight: 600;
-        }
-        .link:hover {
-          text-decoration: underline;
-        }
-        .secondaryBtn {
-          border: 1px solid #e5e7eb;
-          background: #fff;
-          color: #0f172a;
-          border-radius: 10px;
-          padding: 0.58rem 1rem;
-          cursor: pointer;
-        }
-        .planGrid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 0.75rem;
-          margin-top: 0.75rem;
-        }
-        .planCard {
-          border: 1px solid #e5e7eb;
-          border-radius: 10px;
-          padding: 0.75rem;
-          background: #fff;
-        }
-        .planTitle {
+        .heroSub,
+        .trust {
           margin: 0;
-          font-size: 0.95rem;
-          color: #0f172a;
-        }
-        .planSub {
-          margin: 0.2rem 0 0;
-          color: #475569;
-          font-size: 0.85rem;
-        }
-        .panelSub {
-          margin: 0 0 0.8rem;
-          color: #64748b;
-          font-size: 0.95rem;
+          color: var(--muted);
+          max-width: 58ch;
         }
         .actions {
           display: flex;
+          align-items: center;
+          gap: ${UI_TOKENS.spacing.x12};
           flex-wrap: wrap;
-          gap: 0.7rem;
-          margin-top: 0.85rem;
+          margin-top: 0.4rem;
         }
-        .numberedList {
+        .btn,
+        .secondaryLink,
+        .fileLabel {
+          padding: 0.7rem 1rem;
+          background: #fff;
+          border-radius: ${UI_TOKENS.radius.input};
+          font-size: 1rem;
+          border: ${UI_TOKENS.border};
+        }
+        .btnPrimary {
+          background: var(--accent);
+          color: #fff;
+          border-color: var(--accent);
+          border-radius: ${UI_TOKENS.radius.pill};
+        }
+        .section {
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.card};
+          padding: ${UI_TOKENS.spacing.x24};
+          background: #fff;
+          display: grid;
+          gap: 0.6rem;
+        }
+        .problemSteps {
+          display: grid;
+          gap: 0.55rem;
           margin: 0;
           padding-left: 1.2rem;
-          display: grid;
-          gap: 0.5rem;
-          color: #334155;
+          color: #2b3340;
         }
-        .muted {
-          color: #64748b;
+        .sectionTitle {
+          margin: 0;
+          font-weight: 650;
+          font-size: 1.05rem;
+        }
+        .list {
+          margin: 0;
+          padding-left: 1.2rem;
+          color: #2b3340;
+          display: grid;
+          gap: 0.32rem;
+        }
+        .toolPanel {
+          display: grid;
+          gap: 0.65rem;
+        }
+        .field {
+          margin: 0;
+          display: grid;
+          gap: 0.45rem;
+        }
+        .quota {
+          margin: 0;
+          font-weight: 650;
+        }
+        .quotaLimit {
+          color: #b91c1c;
         }
         .fileInput {
           display: none;
         }
-        .uploadLabel {
+        .fileLabel {
+          width: fit-content;
           cursor: pointer;
+          font-weight: 560;
         }
-        .fileName {
-          margin: 0.35rem 0 0;
+        .note {
+          margin: 0;
+          color: var(--muted);
+          font-size: 0.93rem;
+        }
+        .notice {
+          margin-top: 0.45rem;
           color: #334155;
+        }
+        .error {
+          margin-top: 0.45rem;
+          color: #b91c1c;
+        }
+        .warn {
+          margin: 0.1rem 0 0;
+          color: #7a2e2e;
           font-size: 0.85rem;
         }
+        .paywall {
+          border: 1px solid #f8caca;
+          background: #fff7f7;
+          border-radius: ${UI_TOKENS.radius.card};
+          padding: 0.8rem;
+          display: grid;
+          gap: 0.4rem;
+        }
+        .footer {
+          border-top: ${UI_TOKENS.border};
+          padding-top: ${UI_TOKENS.spacing.x16};
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: ${UI_TOKENS.spacing.x12};
+          flex-wrap: wrap;
+          color: var(--muted);
+        }
+        .footerLinks {
+          display: flex;
+          align-items: center;
+          gap: ${UI_TOKENS.spacing.x12};
+          flex-wrap: wrap;
+        }
+        .smallMuted {
+          color: var(--muted);
+          font-size: 0.9rem;
+        }
+        .panel {
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.card};
+          padding: 0.95rem;
+          background: #fff;
+          display: grid;
+          gap: 0.7rem;
+        }
+        .pricingGrid {
+          display: grid;
+          gap: ${UI_TOKENS.spacing.x12};
+          grid-template-columns: 1fr;
+        }
+        .priceCard {
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.card};
+          padding: 0.85rem;
+          display: grid;
+          gap: 0.45rem;
+          background: #fff;
+        }
+        .priceTitle {
+          margin: 0;
+          font-weight: 650;
+          font-size: 1rem;
+        }
+        .priceCopy {
+          margin: 0;
+          color: var(--muted);
+        }
+        .smallAction {
+          width: fit-content;
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.pill};
+          padding: 0.35rem 0.72rem;
+          text-decoration: none;
+          color: #111827;
+          background: #fff;
+          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
+        }
+        .smallAction:hover {
+          transform: translateY(1px);
+          opacity: 0.9;
+        }
+
         @media (max-width: 780px) {
-          .comparison {
-            grid-template-columns: 1fr;
+          .page {
+            padding: ${UI_TOKENS.spacing.x24} ${UI_TOKENS.spacing.x16};
           }
-          .planGrid {
-            grid-template-columns: 1fr;
+          .topBar {
+            gap: ${UI_TOKENS.spacing.x8};
+          }
+          .topNav {
+            width: 100%;
+          }
+          .heroTitle {
+            font-size: ${UI_TOKENS.text.h1.sizeMobile};
+          }
+          .footer {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+        }
+
+        @media (min-width: 781px) {
+          .heroTitle {
+            font-size: ${UI_TOKENS.text.h1.sizeDesktop};
+          }
+          .pricingGrid {
+            grid-template-columns: repeat(2, 1fr);
           }
         }
       `}</style>
 
       <div className="container">
-        <header className="hero">
-          <p className="brand">FitForPDF</p>
-          <h1 className="heroTitle">{LANDING_COPY.heroTitle}</h1>
-          <p className="heroSubheadline">{LANDING_COPY.heroSubheadline}</p>
-          <p className="heroTrust">{LANDING_COPY.heroTrustLine}</p>
-          <div className="heroActions">
-            <a href="#tool" className="btn">
-              {LANDING_COPY.heroPrimaryCta}
-            </a>
-            <a href="/pricing" className="linkBtn">
-              {LANDING_COPY.heroSecondaryCta}
-            </a>
-            <a href={TELEGRAM_BOT_URL} className="linkBtn">
+        <header className="topBar" id={LANDING_COPY_KEYS.topBar}>
+          <a className="logo" href="/">{LANDING_COPY.logoText}</a>
+          <nav className="topNav" aria-label="Main navigation">
+            {LANDING_COPY.topBarLinks.map((link) => (
+              <a className="topLink" href={link.href} key={link.label}>
+                {link.label}
+              </a>
+            ))}
+            <a className="topLinkSmall" href={TELEGRAM_BOT_URL}>
               {LANDING_COPY.telegramCta}
             </a>
-          </div>
+          </nav>
         </header>
 
-        <section className="panel">
+        <section className="hero" id={LANDING_COPY_KEYS.hero} aria-label="Hero">
+          <h1 className="heroTitle">{LANDING_COPY.heroTitle}</h1>
+          <p className="heroSub">{LANDING_COPY.heroSubheadline}</p>
+          <p className="trust">{LANDING_COPY.heroTrustLine}</p>
+          <div className="actions">
+            <a href="#tool" className="btn btnPrimary">
+              {LANDING_COPY.heroPrimaryCta}
+            </a>
+            <a href="/pricing" className="secondaryLink">
+              {LANDING_COPY.heroSecondaryCta}
+            </a>
+            <a href={TELEGRAM_BOT_URL} className="topLinkSmall">
+              {LANDING_COPY.heroTertiaryCta}
+            </a>
+          </div>
+        </section>
+
+        <section className="section" id={LANDING_COPY_KEYS.problem} aria-label={LANDING_COPY.problemTitle}>
           <h2 className="sectionTitle">{LANDING_COPY.problemTitle}</h2>
-          <ul className="featureList">
+          <ul className="problemSteps">
             {LANDING_COPY.problemBullets.map((item) => (
-              <li className="featureItem" key={item}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="panel">
-          <h2 className="sectionTitle">{LANDING_COPY.clientReadyTitle}</h2>
-          <ul className="featureList">
-            {LANDING_COPY.clientReadyBullets.map((item) => (
-              <li className="featureItem" key={item}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="panel">
-          <h2 className="sectionTitle">{LANDING_COPY.howItWorksTitle}</h2>
-          <ol className="numberedList">
-            {LANDING_COPY.howItWorksSteps.map((item) => (
               <li key={item}>{item}</li>
             ))}
-          </ol>
+          </ul>
         </section>
 
-        <section className="panel" id="tool">
+        <section className="section" id={LANDING_COPY_KEYS.beforeAfter} aria-label={LANDING_COPY.beforeAfterTitle}>
+          <h2 className="sectionTitle">{LANDING_COPY.beforeAfterTitle}</h2>
+          <BeforeAfter beforeLabel={LANDING_COPY.beforeLabel} afterLabel={LANDING_COPY.afterLabel} />
+        </section>
+
+        <section className="section" id={LANDING_COPY_KEYS.clientReady} aria-label="Client-ready definition">
+          <h2 className="sectionTitle">{LANDING_COPY.clientReadyTitle}</h2>
+          <ul className="list">
+            {LANDING_COPY.clientReadyBullets.slice(0, 4).map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="section toolPanel" id={LANDING_COPY_KEYS.tool} aria-label="Try it now">
           <h2 className="sectionTitle">{LANDING_COPY.toolTitle}</h2>
-          <p className="panelSub">{LANDING_COPY.toolSubcopy}</p>
-          <p className="quotaLine">
+          <p className="note">{LANDING_COPY.toolSubcopy}</p>
+          <p className="quota">
             Free exports left: {freeExportsLeft} / 3
-            {freeExportsLeft === 0 ? <span className="quotaLimit">Free limit reached</span> : null}
+            {freeExportsLeft === 0 ? <span className="quotaLimit"> Free limit reached</span> : null}
           </p>
 
           <form onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="fitforpdf-file" className="secondaryBtn uploadLabel">
-                Choose file
+            <p className="field">
+              <label htmlFor="fitforpdf-file" className="fileLabel">
+                Choose file (CSV / XLSX)
+                <input
+                  id="fitforpdf-file"
+                  type="file"
+                  accept=".csv,.xlsx"
+                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                  disabled={isLoading}
+                  className="fileInput"
+                />
               </label>
-              <input
-                id="fitforpdf-file"
-                type="file"
-                accept=".csv,.xlsx"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                disabled={isLoading}
-                className="fileInput"
-              />
-              <p className="fileName">
-                {file ? file.name : 'No file selected'}
-              </p>
-            </div>
+            </p>
+            <p className="field note">{file ? file.name : 'No file selected'}</p>
+
             <label className="field">
               <input
                 type="checkbox"
@@ -738,8 +776,9 @@ export default function Page() {
                 disabled={isLoading}
                 style={{ marginRight: '0.5rem' }}
               />
-              Add “Made with FitForPDF” footer
+              {LANDING_COPY.brandingOptionLabel}
             </label>
+
             <label className="field">
               <input
                 type="checkbox"
@@ -748,298 +787,232 @@ export default function Page() {
                 disabled={isLoading}
                 style={{ marginRight: '0.5rem' }}
               />
-              Truncate long text to reduce payload
+              {LANDING_COPY.truncateOptionLabel}
             </label>
-            <button className="btn" type="submit" disabled={isLoading}>
-              {isLoading ? 'Generating…' : 'Generate PDF'}
-            </button>
-            {!shouldHidePaywallReset ? (
-              <button
-                type="button"
-                className="secondaryBtn"
-                style={{ marginLeft: '0.6rem' }}
-                onClick={handleResetPaywallForDev}
-                disabled={isLoading}
-              >
-                Reset free exports (dev)
+            {!truncateLongText ? <p className="warn">{LANDING_COPY.truncateNotice}</p> : null}
+
+            <div className="actions">
+              <button className="btn" type="submit" disabled={isLoading}>
+                {isLoading ? 'Generating…' : LANDING_COPY.heroPrimaryCta}
               </button>
-            ) : null}
-          </form>
-
-            {notice && <p style={{ color: '#334155', marginTop: '1rem' }}>{notice}</p>}
-          {error && <p style={{ color: '#991b1b', marginTop: '1rem' }}>{error}</p>}
-        </section>
-
-        {canShowPanel ? (
-          <section className="panel paywall">
-            <h2 style={{ marginTop: 0 }}>You've used your 3 free exports.</h2>
-            <p className="muted" style={{ marginBottom: '0.6rem' }}>
-              Pick a plan to continue.
-            </p>
-            <div className="planGrid">
-              <article className="planCard">
-                <h3 className="planTitle">Credits 100</h3>
-                <p className="planSub">€19</p>
-              </article>
-              <article className="planCard">
-                <h3 className="planTitle">Credits 500</h3>
-                <p className="planSub">€79</p>
-              </article>
-              <article className="planCard">
-                <h3 className="planTitle">Pro</h3>
-                <p className="planSub">Coming soon</p>
-              </article>
-              <article className="planCard">
-                <h3 className="planTitle">API</h3>
-                <p className="planSub">Coming soon</p>
-              </article>
-            </div>
-          </section>
-        ) : null}
-
-        <section className="panel">
-          <h2 className="sectionTitle">{LANDING_COPY.pricingTitle}</h2>
-          <div className="planGrid">
-            <article className="planCard">
-              <h3 className="planTitle">{LANDING_COPY.pricingFreeTitle}</h3>
-              <p className="planSub">{LANDING_COPY.pricingFreeCopy}</p>
-            </article>
-            <article className="planCard">
-              <h3 className="planTitle">{LANDING_COPY.pricingCredits100Title}</h3>
-              <p className="planSub">{LANDING_COPY.pricingCredits100Copy}</p>
-            </article>
-            <article className="planCard">
-              <h3 className="planTitle">{LANDING_COPY.pricingCredits500Title}</h3>
-              <p className="planSub">{LANDING_COPY.pricingCredits500Copy}</p>
-            </article>
-            <article className="planCard">
-              <h3 className="planTitle">{LANDING_COPY.pricingProTitle}</h3>
-              <p className="planSub">{LANDING_COPY.pricingProCopy}</p>
-            </article>
-            <article className="planCard">
-              <h3 className="planTitle">{LANDING_COPY.pricingApiTitle}</h3>
-              <p className="planSub">{LANDING_COPY.pricingApiCopy}</p>
-            </article>
-          </div>
-          <div className="actions">
-            <a href="/pricing" className="linkBtn">
-              {LANDING_COPY.pricingCtaLabel}
-            </a>
-          </div>
-        </section>
-
-        <section className="panel">
-          <h2 className="sectionTitle">{LANDING_COPY.privacyTitle}</h2>
-          <ul className="featureList">
-            {LANDING_COPY.privacyBullets.map((item) => (
-              <li className="featureItem" key={item}>
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div className="actions">
-            <a href="/privacy" className="linkBtn">
-              Privacy policy
-            </a>
-          </div>
-        </section>
-
-        {verdict === 'WARN' && (
-          <section
-            style={{
-              marginTop: '1.5rem',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              padding: '1rem',
-              background: '#fafafa',
-            }}
-          >
-            <p style={{ margin: 0 }}>
-              <span
-                style={{
-                  display: 'inline-block',
-                  fontSize: '0.8rem',
-                  padding: '0.2rem 0.5rem',
-                  borderRadius: '999px',
-                  background: '#f1f5f9',
-                  color: '#334155',
-                  marginRight: '0.5rem',
-                }}
-              >
-                Recommended check
-              </span>
-              {confidence?.score != null ? <span style={{ color: '#555' }}>Score: {confidence.score}</span> : null}
-            </p>
-
-            {warnReasons.length > 0 && (
-              <div style={{ marginTop: '0.75rem' }}>
+              {!shouldHidePaywallReset ? (
                 <button
                   type="button"
-                  onClick={() => setShowDetails((v) => !v)}
-                  aria-expanded={showDetails}
-                  className="secondaryBtn"
+                  className="secondaryLink"
+                  onClick={handleResetPaywallForDev}
+                  disabled={isLoading}
                 >
-                  {showDetails ? 'Hide details' : 'Show details'}
+                  Reset free exports (dev)
                 </button>
-                {showDetails && (
-                  <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
-                    {warnReasons.map((reason, idx) => (
-                      <li key={`${reason}-${idx}`}>{reason}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
+              ) : null}
+            </div>
+          </form>
 
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
-                Download anyway
-              </button>
-              {!stillRiskAfterOptimized && (
-                <button className="secondaryBtn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
-                  Generate optimized version
-                </button>
+          {notice && <p className="notice">{notice}</p>}
+          {error && <p className="error">{error}</p>}
+
+          {canShowPanel ? (
+            <div className="paywall">
+              <p style={{ margin: 0, fontWeight: 600 }}>You&apos;ve used your 3 free exports.</p>
+              <a href="/pricing" className="btn">
+                See pricing
+              </a>
+            </div>
+          ) : null}
+
+          {verdict === 'WARN' && (
+            <section className="panel" aria-label="Warning">
+              <p style={{ margin: 0 }}><span style={{
+                display: 'inline-block',
+                fontSize: '0.8rem',
+                padding: '0.2rem 0.5rem',
+                borderRadius: '999px',
+                background: '#f1f5f9',
+                color: '#334155',
+                marginRight: '0.5rem',
+              }}>Recommended check</span>{confidence?.score != null ? <span style={{ color: '#555' }}>Score: {confidence.score}</span> : null}</p>
+
+              {warnReasons.length > 0 && (
+                <div style={{ marginTop: '0.75rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowDetails((v) => !v)}
+                    aria-expanded={showDetails}
+                    className="secondaryLink"
+                  >
+                    {showDetails ? 'Hide details' : 'Show details'}
+                  </button>
+                  {showDetails && (
+                    <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                      {warnReasons.map((reason, idx) => (
+                        <li key={`${reason}-${idx}`}>{reason}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               )}
-            </div>
-            {stillRiskAfterOptimized && (
-              <p style={{ marginTop: '0.75rem', color: '#555' }}>
-                Optimized version generated. Please review before using.
-              </p>
-            )}
-          </section>
-        )}
 
-        {verdict === 'FAIL' && failKind === 'page_burden' && (
-          <section
-            style={{
-              marginTop: '1.5rem',
-              border: '1px solid #f59e0b',
-              borderRadius: '8px',
-              padding: '1rem',
-              background: '#fffbeb',
-            }}
-          >
-            <p style={{ margin: 0, color: '#92400e', fontWeight: 600 }}>
-              {pageBurdenCopy.title}
-            </p>
-            <p style={{ marginTop: '0.75rem', marginBottom: 0, color: '#78350f' }}>
-              {pageBurdenCopy.description}
-            </p>
-            {failureRecommendations.length > 0 && (
-              <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
-                {failureRecommendations.map((recommendation, idx) => (
-                  <li key={`${recommendation}-${idx}`}>{recommendationLabel(recommendation)}</li>
-                ))}
-              </ul>
-            )}
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button className="btn" type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
-                {pageBurdenCopy.primaryCta}
-              </button>
-              <button className="secondaryBtn" type="button" disabled title="Coming soon">
-                {pageBurdenCopy.secondaryCta}
-              </button>
-            </div>
-            {stillRiskAfterCompact && (
-              <p style={{ marginTop: '0.75rem', color: '#555' }}>
-                Even in compact mode it is still too large. Reduce scope.
-              </p>
-            )}
-          </section>
-        )}
-
-        {verdict === 'FAIL' && failKind !== 'page_burden' && (
-          <section
-            style={{
-              marginTop: '1.5rem',
-              border: '1px solid #ef4444',
-              borderRadius: '8px',
-              padding: '1rem',
-              background: '#fef2f2',
-            }}
-          >
-            <p style={{ margin: 0, color: '#991b1b', fontWeight: 600 }}>
-              PDF risk {confidence?.score != null ? `(Score: ${confidence.score})` : ''}
-            </p>
-            {failReasons.length > 0 && (
-              <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
-                {failReasons.map((reason, idx) => (
-                  <li key={`${reason}-${idx}`}>{reason}</li>
-                ))}
-              </ul>
-            )}
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              {stillRiskAfterOptimized ? (
-                <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button className="btn btnPrimary" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                   Download anyway
                 </button>
-              ) : (
-                <>
-                  <button className="secondaryBtn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
+                {!stillRiskAfterOptimized && (
+                  <button className="secondaryLink" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
                     Generate optimized version
                   </button>
-                  <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+                )}
+              </div>
+              {stillRiskAfterOptimized && (
+                <p style={{ marginTop: '0.75rem', color: '#555' }}>
+                  Optimized version generated. Please review before using.
+                </p>
+              )}
+            </section>
+          )}
+
+          {verdict === 'FAIL' && failKind === 'page_burden' && (
+            <section className="panel" aria-label="Page burden">
+              <p style={{ margin: 0, color: '#92400e', fontWeight: 600 }}>
+                {pageBurdenCopy.title}
+              </p>
+              <p style={{ marginTop: '0.75rem', marginBottom: 0, color: '#78350f' }}>
+                {pageBurdenCopy.description}
+              </p>
+              {failureRecommendations.length > 0 && (
+                <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                  {failureRecommendations.map((recommendation, idx) => (
+                    <li key={`${recommendation}-${idx}`}>{recommendationLabel(recommendation)}</li>
+                  ))}
+                </ul>
+              )}
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button className="btn btnPrimary" type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
+                  {pageBurdenCopy.primaryCta}
+                </button>
+                <button className="secondaryLink" type="button" disabled title="Coming soon">
+                  {pageBurdenCopy.secondaryCta}
+                </button>
+              </div>
+              {stillRiskAfterCompact && (
+                <p style={{ marginTop: '0.75rem', color: '#555' }}>
+                  Even in compact mode it is still too large. Reduce scope.
+                </p>
+              )}
+            </section>
+          )}
+
+          {verdict === 'FAIL' && failKind !== 'page_burden' && (
+            <section className="panel" aria-label="Failure">
+              <p style={{ margin: 0, color: '#991b1b', fontWeight: 600 }}>
+                PDF risk {confidence?.score != null ? `(Score: ${confidence.score})` : ''}
+              </p>
+              {failReasons.length > 0 && (
+                <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                  {failReasons.map((reason, idx) => (
+                    <li key={`${reason}-${idx}`}>{reason}</li>
+                  ))}
+                </ul>
+              )}
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                {stillRiskAfterOptimized ? (
+                  <button className="btn btnPrimary" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                     Download anyway
                   </button>
+                ) : (
+                  <>
+                    <button className="secondaryLink" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
+                      Generate optimized version
+                    </button>
+                    <button className="btn btnPrimary" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+                      Download anyway
+                    </button>
+                  </>
+                )}
+              </div>
+              {stillRiskAfterOptimized && (
+                <p style={{ marginTop: '0.75rem', color: '#555' }}>
+                  Optimized version generated. Please review before using.
+                </p>
+              )}
+            </section>
+          )}
+
+          {canShowDebug && (debugMetrics || columnMapDebug) && (
+            <section className="panel" aria-label="Debug">
+              <button type="button" onClick={() => setShowDebug((v) => !v)} aria-expanded={showDebug} className="secondaryLink">
+                {showDebug ? 'Hide debug' : 'Debug'}
+              </button>
+              {showDebug && (
+                <>
+                  {columnMapDebug && (
+                    <div style={{ marginTop: '0.75rem' }}>
+                      <strong>Column Map</strong>
+                      <div>mode: {columnMapDebug.mode}</div>
+                      <div>rendered: {columnMapDebug.rendered}</div>
+                      <div>sections: {columnMapDebug.entries ?? 'unknown'}</div>
+                    </div>
+                  )}
+                  {debugMetrics && (
+                    <pre style={{ marginTop: '0.75rem', overflow: 'auto', fontSize: '0.8rem' }}>
+                      {JSON.stringify(debugMetrics, null, 2)}
+                    </pre>
+                  )}
                 </>
               )}
-            </div>
-            {stillRiskAfterOptimized && (
-              <p style={{ marginTop: '0.75rem', color: '#555' }}>
-                Optimized version generated. Please review before using.
-              </p>
-            )}
-          </section>
-        )}
+            </section>
+          )}
 
-        {canShowDebug && (debugMetrics || columnMapDebug) && (
-          <section style={{ marginTop: '1.5rem' }}>
-            <button
-              type="button"
-              onClick={() => setShowDebug((v) => !v)}
-              aria-expanded={showDebug}
-              className="secondaryBtn"
-            >
-              {showDebug ? 'Hide debug' : 'Debug'}
-            </button>
-            {showDebug && (
-              <>
-                {columnMapDebug && (
-                  <div
-                    style={{
-                      marginTop: '0.75rem',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      padding: '0.75rem',
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    <strong>Column Map</strong>
-                    <div>mode: {columnMapDebug.mode}</div>
-                    <div>rendered: {columnMapDebug.rendered}</div>
-                    <div>sections: {columnMapDebug.entries ?? 'unknown'}</div>
-                  </div>
-                )}
-                {debugMetrics && (
-                  <pre
-                    style={{
-                      marginTop: '0.75rem',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      padding: '0.75rem',
-                      overflow: 'auto',
-                      fontSize: '0.8rem',
-                    }}
-                  >
-                    {JSON.stringify(debugMetrics, null, 2)}
-                  </pre>
-                )}
-              </>
-            )}
-          </section>
-        )}
+        </section>
+
+        <section className="section" id={LANDING_COPY_KEYS.howItWorks} aria-label={LANDING_COPY.howItWorksTitle}>
+          <h2 className="sectionTitle">{LANDING_COPY.howItWorksTitle}</h2>
+          <ol className="problemSteps">
+            {LANDING_COPY.howItWorksSteps.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="section" id={LANDING_COPY_KEYS.pricingPreview} aria-label="Simple pricing">
+          <h2 className="sectionTitle">{LANDING_COPY.pricingPreviewTitle}</h2>
+          <div className="pricingGrid">
+            {LANDING_COPY.pricingPreviewCards.map((card) => (
+              <article className="priceCard" key={card.title}>
+                <h3 className="priceTitle">{card.title}</h3>
+                <p className="priceCopy">{card.copy}</p>
+                <a className="smallAction" href={card.href}>
+                  {card.cta}
+                </a>
+              </article>
+            ))}
+          </div>
+          <a className="smallAction" href="/pricing">
+            See full pricing
+          </a>
+        </section>
+
+        <section className="section" id={LANDING_COPY_KEYS.privacyStrip} aria-label={LANDING_COPY.privacyStripTitle}>
+          <h2 className="sectionTitle">{LANDING_COPY.privacyStripTitle}</h2>
+          <ul className="list">
+            {LANDING_COPY.privacyStripBullets.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <a className="smallAction" href="/privacy">
+            {LANDING_COPY.privacyStripCta}
+          </a>
+        </section>
+
+        <footer className="footer" aria-label="Footer">
+          <nav className="footerLinks" aria-label="Footer links">
+            {LANDING_COPY.footerLinks.map((link) => (
+              <a className="smallMuted" key={link.label} href={link.href}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <p className="smallMuted">{LANDING_COPY.footerCopyright}</p>
+        </footer>
       </div>
     </main>
   );

@@ -1,37 +1,20 @@
 'use client';
 
-import { PRICING_CARDS, PRICING_FAQ, PRICING_PAGE_COPY } from '../siteCopy.mjs';
-
-export function getPricingPageSections() {
-  return {
-    title: PRICING_PAGE_COPY.pageTitle,
-    subtitle: PRICING_PAGE_COPY.pageSubtitle,
-    cards: PRICING_CARDS,
-    faq: PRICING_FAQ,
-    backToAppLabel: PRICING_PAGE_COPY.backToApp,
-    backToAppHref: PRICING_PAGE_COPY.backToAppHref,
-    retentionTitle: PRICING_PAGE_COPY.retentionTitle,
-    retention: [
-      PRICING_PAGE_COPY.filesDeleted,
-      PRICING_PAGE_COPY.pdfsDeleted,
-      PRICING_PAGE_COPY.noLogs,
-    ],
-    plannedLabel: PRICING_PAGE_COPY.plannedLabel,
-  };
-}
+import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
+import { UI_TOKENS } from '../ui/tokens.mjs';
 
 function renderAction(plan) {
   if (plan.actionType === 'link' && !plan.disabled) {
     return (
-      <a href={plan.actionHref} className={`planAction ${plan.id === 'api' ? 'planActionPrimary' : ''}`}>
+      <a className="planAction planActionPrimary" href={plan.actionHref}>
         {plan.actionLabel}
       </a>
     );
   }
 
-  if (plan.actionType === 'link' && plan.disabled) {
+  if (plan.actionType === 'link') {
     return (
-      <a href={plan.actionHref} className="planAction planActionDisabled" aria-disabled="true">
+      <a className="planAction planActionDisabled" href={plan.actionHref} aria-disabled="true">
         {plan.actionLabel}
       </a>
     );
@@ -54,153 +37,137 @@ export default function PricingPage() {
     <main className="pricing-page">
       <style jsx>{`
         .pricing-page {
-          --accent: #c81e1e;
+          --accent: ${UI_TOKENS.accent};
           min-height: 100vh;
-          background: #fff;
+          background: ${UI_TOKENS.bg};
           color: #111827;
-          padding: clamp(1.25rem, 2.6vw, 2.5rem);
-          font-family: 'Avenir Next', 'Avenir', 'Segoe UI', sans-serif;
+          padding: ${UI_TOKENS.spacing.x24};
+          font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+          font-size: ${UI_TOKENS.text.body.size};
+          line-height: ${UI_TOKENS.text.body.lineHeight};
         }
         .container {
-          max-width: 60rem;
+          max-width: ${UI_TOKENS.contentMaxWidth};
           margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          gap: 1.15rem;
+          display: grid;
+          gap: ${UI_TOKENS.spacing.x24};
         }
-        .backToApp {
+        .back {
           width: fit-content;
-          border: 1px solid #e5e7eb;
-          border-radius: 10px;
-          padding: 0.45rem 0.85rem;
-          color: #0f172a;
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.pill};
+          padding: 0.45rem 0.8rem;
           text-decoration: none;
-          font-weight: 600;
-          transition: opacity 140ms ease, transform 140ms ease;
+          color: #111827;
+          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
         }
-        .backToApp:hover {
-          transform: translateY(-1px);
-          opacity: 0.95;
-          text-decoration: underline;
+        .back:hover {
+          transform: translateY(1px);
+          opacity: 0.9;
         }
         .hero {
-          display: flex;
-          flex-direction: column;
-          gap: 0.45rem;
+          display: grid;
+          gap: 0.4rem;
         }
         .title {
           margin: 0;
-          font-size: 2rem;
+          font-size: ${UI_TOKENS.text.h1.sizeMobile};
+          font-weight: ${UI_TOKENS.text.h1.weight};
           letter-spacing: 0.01em;
-          color: #0f172a;
         }
-        .subtitle {
+        .subtitle,
+        .muted {
           margin: 0;
-          color: #475569;
-          max-width: 56ch;
+          color: ${UI_TOKENS.text.muted};
         }
         .plans {
-          margin-top: 0.2rem;
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 0.75rem;
+          gap: ${UI_TOKENS.spacing.x12};
         }
         .planCard {
-          border: 1px solid #e5e7eb;
-          border-radius: 12px;
-          padding: 1rem;
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.card};
+          padding: ${UI_TOKENS.spacing.x24};
+          display: grid;
+          gap: 0.5rem;
           background: #fff;
-          display: flex;
-          flex-direction: column;
-          gap: 0.55rem;
-          transition: transform 140ms ease, box-shadow 140ms ease;
-        }
-        .planCard:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 8px 18px rgba(2, 6, 23, 0.06);
         }
         .planCardRecommended {
-          border-color: rgba(200, 30, 30, 0.45);
+          border-color: rgba(200, 30, 30, 0.55);
           outline: 1px solid rgba(200, 30, 30, 0.15);
         }
         .planTitle {
           margin: 0;
-          font-size: 1.05rem;
-          color: #0f172a;
+          font-size: 1.08rem;
         }
         .planPrice {
           margin: 0;
           color: var(--accent);
-          font-weight: 700;
-        }
-        .planList {
-          margin: 0;
-          padding-left: 1.2rem;
-          color: #334155;
-          display: grid;
-          gap: 0.25rem;
+          font-weight: 650;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
         .planAction {
-          margin-top: auto;
-          border: 1px solid #e5e7eb;
-          border-radius: 10px;
-          padding: 0.55rem 0.9rem;
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.pill};
+          padding: 0.5rem 0.9rem;
           background: #fff;
           color: #111827;
-          text-align: center;
           text-decoration: none;
           font-weight: 600;
-          transition: transform 140ms ease, opacity 140ms ease;
           width: fit-content;
+          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
+          cursor: pointer;
         }
         .planAction:hover:not(:disabled) {
-          transform: translateY(-1px);
-          opacity: 0.95;
+          transform: translateY(1px);
+          opacity: 0.9;
         }
         .planActionPrimary {
           background: var(--accent);
-          color: #fff;
           border-color: var(--accent);
+          color: #fff;
         }
-        .planAction:disabled,
         .planActionDisabled {
-          opacity: 0.45;
+          opacity: 0.6;
           cursor: not-allowed;
         }
-        .faq,
-        .privacy {
-          border: 1px solid #e5e7eb;
-          border-radius: 12px;
-          padding: 1rem;
-          background: #fff;
-          display: grid;
-          gap: 0.8rem;
+        .planAction[disabled] {
+          opacity: 0.55;
+          cursor: not-allowed;
         }
-        .sectionTitle {
+        .planList {
           margin: 0;
-        }
-        .faqList,
-        .privacyList {
-          margin: 0;
-          padding-left: 1.2rem;
-          color: #334155;
+          padding-left: 1.1rem;
           display: grid;
           gap: 0.35rem;
+          color: ${UI_TOKENS.text.muted};
         }
-        .pending {
-          font-size: 0.75rem;
-          margin-left: 0.5rem;
-          color: #991b1b;
-          border: 1px solid #fecaca;
-          background: #fff5f5;
-          border-radius: 999px;
-          padding: 0.1rem 0.45rem;
+        .faq {
+          border: ${UI_TOKENS.border};
+          border-radius: ${UI_TOKENS.radius.card};
+          padding: 0.95rem;
+          display: grid;
+          gap: 0.6rem;
+        }
+
+        @media (min-width: 781px) {
+          .pricing-page {
+            padding: ${UI_TOKENS.spacing.x32};
+          }
+          .title {
+            font-size: ${UI_TOKENS.text.h1.sizeDesktop};
+          }
+          .plans {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
 
       <div className="container">
-        <a href={getPricingPageSections().backToAppHref} className="backToApp">
-          {getPricingPageSections().backToAppLabel}
+        <a className="back" href={PRICING_PAGE_COPY.backToAppHref}>
+          {PRICING_PAGE_COPY.backToApp}
         </a>
 
         <header className="hero">
@@ -208,12 +175,12 @@ export default function PricingPage() {
           <p className="subtitle">{PRICING_PAGE_COPY.pageSubtitle}</p>
         </header>
 
-        <section className="plans" aria-label="Pricing plans">
+        <section className="plans" aria-label="Plans">
           {PRICING_CARDS.map((plan) => (
             <article className={`planCard ${plan.recommended ? 'planCardRecommended' : ''}`} key={plan.id}>
               <h2 className="planTitle">{plan.title}</h2>
               <p className="planPrice">{plan.priceLine}</p>
-              {plan.points.length > 0 ? (
+              {plan.points.length ? (
                 <ul className="planList">
                   {plan.points.map((point) => (
                     <li key={point}>{point}</li>
@@ -226,37 +193,15 @@ export default function PricingPage() {
         </section>
 
         <section className="faq" aria-label="FAQ">
-          <h2 className="sectionTitle">FAQ</h2>
-          <ol className="faqList">
-            {PRICING_FAQ.map((item) => (
+          <h2 style={{ margin: 0, fontSize: '1.05rem' }}>FAQ</h2>
+          <ol className="planList">
+            {PRICING_PAGE_COPY.faq.map((item) => (
               <li key={item.question}>
-                <p style={{ margin: 0, fontWeight: 600 }}>{item.question}</p>
-                {item.link ? (
-                  <p style={{ margin: '0.3rem 0 0' }}>
-                    {item.answer} <a href={item.link}>Privacy page</a>.
-                  </p>
-                ) : (
-                  <p style={{ margin: '0.3rem 0 0' }}>{item.answer}</p>
-                )}
+                <p style={{ margin: '0 0 0.25rem' }}><strong>{item.question}</strong></p>
+                <p style={{ margin: 0 }}>{item.answer}</p>
               </li>
             ))}
           </ol>
-        </section>
-
-        <section className="privacy" aria-label="Privacy and retention">
-          <h2 className="sectionTitle">{PRICING_PAGE_COPY.retentionTitle}</h2>
-          <ul className="privacyList">
-            {[
-              PRICING_PAGE_COPY.filesDeleted,
-              PRICING_PAGE_COPY.pdfsDeleted,
-              PRICING_PAGE_COPY.noLogs,
-            ].map((item) => (
-              <li key={item}>
-                {item}
-                <span className="pending">{PRICING_PAGE_COPY.plannedLabel}</span>
-              </li>
-            ))}
-          </ul>
         </section>
       </div>
     </main>
