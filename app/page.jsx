@@ -26,7 +26,7 @@ import BeforeAfter from './components/BeforeAfter.mjs';
 import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
-import PricingCards from './components/PricingCards';
+import PricingPlans from './components/PricingPlans';
 import HeroBackground from './components/HeroBackground';
 
 const API_BASE = '/api';
@@ -682,10 +682,9 @@ A104,Widget,6900.00`}
             {LANDING_COPY.pricingPreviewTitle}
           </h2>
           <p className="text-sm text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
-          <PricingCards
+          <PricingPlans
             plans={PRICING_CARDS}
-            headingTag="h3"
-            showActions={false}
+            variant="home"
             gridTestId="pricing-grid"
             cardTestId="pricing-preview-card"
           />

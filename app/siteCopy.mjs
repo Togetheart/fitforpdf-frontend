@@ -100,7 +100,7 @@ export const PRICING_PAGE_COPY = {
   credits100Price: '€19',
   credits500Title: '500 exports',
   credits500Price: '€79',
-  creditsFeature: 'No subscription',
+  creditsFeature: 'Pay per output. No subscription.',
   creditsFeature2: 'Branding optional',
   creditsFeature3: 'Client-ready layout',
   creditsFeature4: 'Structured sections',
@@ -117,7 +117,7 @@ export const PRICING_PAGE_COPY = {
   proFeature3: 'API access',
   proFeature4: 'Usage-based API access',
   proApiCtaLabel: 'Join early access',
-  proApiCtaHref: 'mailto:support@fitforpdf.com',
+  proApiCtaHref: 'mailto:support@fitforpdf.com?subject=FitForPDF%20Pro%20early%20access',
 
   backToApp: 'Back to app',
   backToAppHref: '/',

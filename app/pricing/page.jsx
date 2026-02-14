@@ -3,7 +3,7 @@
 import React from 'react';
 import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
 import HeroBackground from '../components/HeroBackground';
-import PricingCards from '../components/PricingCards';
+import PricingPlans from '../components/PricingPlans';
 import Section from '../components/Section';
 import Accordion from '../components/Accordion';
 import PricingComparisonTable from '../components/PricingComparisonTable';
@@ -36,12 +36,12 @@ export default function PricingPage() {
           <p className={badgeClass}>{PRICING_PAGE_COPY.plansEyebrow}</p>
           <h2 className="text-2xl font-semibold">{PRICING_PAGE_COPY.plansTitle}</h2>
           <p className="max-w-[60ch] text-sm text-slate-600">{PRICING_PAGE_COPY.plansCopy}</p>
-          <PricingCards
+          <PricingPlans
             plans={PRICING_CARDS}
             headingTag="h3"
-            showActions
             featuredScaleClass="scale-105"
             gridTestId="pricing-grid"
+            variant="pricing"
           />
           <p className="text-sm text-slate-500">{PRICING_PAGE_COPY.socialProof}</p>
         </div>
