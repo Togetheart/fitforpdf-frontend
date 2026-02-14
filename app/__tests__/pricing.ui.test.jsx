@@ -3,7 +3,9 @@ import React from 'react';
 import { cleanup, render, screen, within } from '@testing-library/react';
 
 import PricingPage, { default as PricingPageDefaultExport } from '../pricing/page.jsx';
-import { PRICING_PAGE_COPY } from '../siteCopy.mjs';
+import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
+
+const pricingPlanTitles = PRICING_CARDS.map((plan) => plan.title);
 
 beforeEach(() => {
   render(<PricingPage />);
@@ -19,27 +21,33 @@ describe('pricing page UI', () => {
     expect(PricingPage).toBe(PricingPageDefaultExport);
   });
 
-  test('renders 3 primary columns with desktop 3-col grid classes', () => {
-    const primaryGrid = screen.getByTestId('pricing-primary-grid');
-    const cards = within(primaryGrid).getAllByRole('article');
+  test('renders 3 cards with desktop 3-col grid classes', () => {
+    const grid = screen.getByTestId('pricing-grid');
+    const cards = within(grid).getAllByRole('article');
 
-    expect(primaryGrid.className.includes('grid-cols-1')).toBe(true);
-    expect(primaryGrid.className.includes('md:grid-cols-3')).toBe(true);
+    expect(grid.className.includes('grid-cols-1')).toBe(true);
+    expect(grid.className.includes('md:grid-cols-3')).toBe(true);
     expect(cards).toHaveLength(3);
   });
 
-  test('contains free, credits 100, credits 500, pro, and API offerings', () => {
-    expect(screen.getByRole('heading', { name: /Free/i, level: 2 })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: /Credits 100 exports/i, level: 2 })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: /Credits 500 exports/i, level: 2 })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: /Pro \(coming soon\)/i, level: 2 })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: /API \(coming soon\)/i, level: 2 })).toBeTruthy();
+  test('contains expected pricing titles', () => {
+    pricingPlanTitles.forEach((title) => {
+      expect(screen.getByRole('heading', { name: title, level: 2 })).toBeTruthy();
+    });
+  });
+
+  test('renders exact expected prices', () => {
+    const pageText = document.body.textContent || '';
+
+    expect(pageText.includes('€19')).toBe(true);
+    expect(pageText.includes('€79')).toBe(true);
+    expect(pageText.includes('€29/month')).toBe(true);
   });
 
   test('Join early access CTA is present as a link', () => {
     const joinLink = screen.getByRole('link', { name: /Join early access/i });
 
     expect(joinLink).toBeTruthy();
-    expect(joinLink.getAttribute('href')).toBe(PRICING_PAGE_COPY.apiCtaHref);
+    expect(joinLink.getAttribute('href')).toBe(PRICING_PAGE_COPY.proApiCtaHref);
   });
 });

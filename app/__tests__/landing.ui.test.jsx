@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 
 import Landing from '../page.jsx';
 import SiteHeader from '../_components/SiteHeader';
-import { LANDING_COPY_KEYS } from '../siteCopy.mjs';
+import { LANDING_COPY_KEYS, PRICING_CARDS } from '../siteCopy.mjs';
 
 vi.mock('../components/BeforeAfter.mjs', () => ({
   default: () => <div data-testid="before-after-placeholder" />,
@@ -68,8 +68,14 @@ describe('landing structure and UI invariants', () => {
   test('pricing preview has three cards and responsive grid classes', () => {
     const pricingGrid = screen.getByTestId('pricing-grid');
     const cards = within(pricingGrid).getAllByRole('article');
+    const expectedTitles = PRICING_CARDS.map((card) => card.title);
+    const renderedTitles = cards.map((card) => {
+      const heading = within(card).getByRole('heading', { level: 3 });
+      return heading.textContent || '';
+    });
 
     expect(cards).toHaveLength(3);
+    expect(renderedTitles).toEqual(expect.arrayContaining(expectedTitles));
     expect(pricingGrid.className.includes('grid-cols-1')).toBe(true);
     expect(pricingGrid.className.includes('md:grid-cols-3')).toBe(true);
   });

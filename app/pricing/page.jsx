@@ -11,7 +11,7 @@ const CTA_SECONDARY =
   `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50`;
 
 function isCorePlan(plan) {
-  return ['free', 'credits100', 'credits500'].includes(plan.id);
+  return ['free', 'credits', 'proApi'].includes(plan.id);
 }
 
 function renderAction(plan) {
@@ -29,7 +29,7 @@ function renderAction(plan) {
     }
 
     return (
-      <a href={plan.actionHref} className={CTA_PRIMARY}>
+      <a href={plan.actionHref} className={CTA_SECONDARY}>
         {plan.actionLabel}
       </a>
     );
@@ -38,7 +38,7 @@ function renderAction(plan) {
   return (
     <button
       type="button"
-      className={CTA_SECONDARY}
+      className={plan.disabled ? `${CTA_SECONDARY} opacity-70` : `${CTA_PRIMARY}`}
       disabled={plan.disabled}
       title={plan.tooltip}
     >
@@ -48,8 +48,7 @@ function renderAction(plan) {
 }
 
 export default function PricingPage() {
-  const corePlans = PRICING_CARDS.filter(isCorePlan);
-  const secondaryPlans = PRICING_CARDS.filter((plan) => !isCorePlan(plan));
+  const plans = PRICING_CARDS.filter(isCorePlan);
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -72,28 +71,19 @@ export default function PricingPage() {
 
       <section className="bg-gray-50">
         <div className="mx-auto flex w-full max-w-[960px] flex-col gap-4 px-4 py-8 sm:px-6 sm:py-10">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3" data-testid="pricing-primary-grid">
-            {corePlans.map((plan) => (
-              <article key={plan.id} className="rounded-[12px] border border-slate-200 bg-white p-5">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3" data-testid="pricing-grid">
+            {plans.map((plan) => (
+              <article
+                key={plan.id}
+                className={`rounded-[12px] border border-slate-200 bg-white p-5 ${plan.recommended ? 'border-[#D92D2A]/35 ring-1 ring-[#D92D2A]/20' : ''}`}
+              >
                 <h2 className="text-lg font-semibold">{plan.title}</h2>
-                <p className={`mt-2 ${plan.id === 'free' ? 'text-slate-500' : 'text-[#D92D2A]'} text-lg font-semibold`}>
+                {plan.recommended ? (
+                  <p className="mt-2 text-xs font-medium text-[#D92D2A]">Recommended</p>
+                ) : null}
+                <p className="mt-2 text-lg font-semibold text-[#D92D2A]">
                   {plan.priceLine}
                 </p>
-                {plan.id === 'free' && (
-                  <p className="mt-1 text-sm text-slate-500">
-                    {PRICING_PAGE_COPY.freeFeature}
-                  </p>
-                )}
-                <div className="mt-5">{renderAction(plan)}</div>
-              </article>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {secondaryPlans.map((plan) => (
-              <article key={plan.id} className="rounded-[12px] border border-slate-200 bg-white p-5">
-                <h2 className="text-lg font-semibold">{plan.title}</h2>
-                <p className="mt-1 text-sm text-slate-600">{plan.priceLine}</p>
                 {plan.points.length ? (
                   <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-slate-600">
                     {plan.points.map((point) => (

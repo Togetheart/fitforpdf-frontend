@@ -18,6 +18,7 @@ import {
 import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
+  PRICING_CARDS,
 } from './siteCopy.mjs';
 import { getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
@@ -194,22 +195,6 @@ const CTA_BASE = 'inline-flex h-11 items-center justify-center rounded-full bord
 const CTA_PRIMARY = `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white`;
 const CTA_SECONDARY = `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50`;
 const PANEL = 'rounded-xl border border-slate-200 bg-white';
-
-const pricingCards = [
-  {
-    title: 'Free',
-    copy: ['3 exports total'],
-  },
-  {
-    title: 'Credits',
-    copy: ['100 exports • €19', '500 exports • €79'],
-  },
-  {
-    title: 'Pro and API',
-    copy: ['Pro: €29/month', 'API: usage-based'],
-    note: 'coming soon',
-  },
-];
 
 function SectionShell({ id, index, children, testId }) {
   return (
@@ -677,13 +662,22 @@ export default function Page() {
           </h2>
           <p className="text-sm text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3" data-section="pricing-grid" data-testid="pricing-grid">
-            {pricingCards.map((item) => (
-              <article key={item.title} className={`${PANEL} p-4`}>
-                <p className="font-semibold text-slate-900">{item.title}</p>
+            {PRICING_CARDS.map((item) => (
+              <article
+                key={item.id}
+                className={`${PANEL} p-4 ${item.recommended ? 'border-[#D92D2A]/30 bg-white shadow-sm ring-1 ring-[#D92D2A]/20' : ''}`}
+                data-plan-card={item.id}
+              >
+                <h3 className="font-semibold text-slate-900">{item.title}</h3>
+                {item.recommended ? (
+                  <p className="mt-1 text-xs font-medium text-[#D92D2A]">Recommended</p>
+                ) : null}
+                <p className="mt-2 text-sm font-medium text-slate-700">
+                  {item.priceLine}
+                </p>
                 <ul className="mt-2 space-y-1 text-sm text-slate-600">
-                  {item.copy.map((line) => <li key={line}>{line}</li>)}
+                  {item.points.map((line) => <li key={line}>{line}</li>)}
                 </ul>
-                {item.note ? <p className="mt-2 text-xs text-amber-700">{item.note}</p> : null}
               </article>
             ))}
           </div>
