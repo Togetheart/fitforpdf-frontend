@@ -415,36 +415,35 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section">
-        <PageHero
-          variant="home"
-          eyebrow={LANDING_COPY.heroLabel}
-          align="center"
-          height="min-h-screen"
-          title={(
-            <>
-              <span className="block">Client-ready PDFs.</span>
-              <span className="block text-black/60">From messy spreadsheets.</span>
-            </>
-          )}
-          subtitle={LANDING_COPY.heroSubheadline}
-          contentClassName="items-center gap-8 text-center"
-          className="py-0"
-        >
-          <div className="space-y-6">
-            <a
-              href="#tool"
-              data-testid="hero-primary-cta"
-              className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:bg-red-700 hover:shadow-[0_0_40px_rgba(239,68,68,0.25)] active:scale-[0.99]"
-            >
-              {LANDING_COPY.heroPrimaryCta}
-            </a>
-            <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
-          </div>
-        </PageHero>
-      </Section>
+      <PageHero
+        heroTestId="hero-section"
+        variant="home"
+        eyebrow={LANDING_COPY.heroLabel}
+        align="center"
+        height="min-h-screen"
+        title={(
+          <>
+            <span className="block">Client-ready PDFs.</span>
+            <span className="block text-black/60">From messy spreadsheets.</span>
+          </>
+        )}
+        subtitle={LANDING_COPY.heroSubheadline}
+        contentClassName="items-center gap-8 text-center"
+        className="py-0 w-full"
+      >
+        <div className="space-y-6">
+          <a
+            href="#tool"
+            data-testid="hero-primary-cta"
+            className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:bg-red-700 hover:shadow-[0_0_40px_rgba(239,68,68,0.25)] active:scale-[0.99]"
+          >
+            {LANDING_COPY.heroPrimaryCta}
+          </a>
+          <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
+        </div>
+      </PageHero>
 
-      <Section id="transformation" index={1} bg="bg-gray-50" className="py-24">
+      <Section id="transformation" index={1} bg="bg-gray-50" className="py-24 w-full">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
             Look professional.
