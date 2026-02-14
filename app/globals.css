@@ -45,34 +45,56 @@
     will-change: transform, opacity;
   }
 
+  .hero-bg-layer {
+    position: absolute;
+    inset: -30%;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
   .hero-bg-gradients {
     opacity: 0.95;
     filter: saturate(104%) contrast(102%);
     transform: translate3d(0, 0, 0);
   }
 
-  .hero-bg-mesh {
-    position: absolute;
-    inset: -30%;
-    border-radius: 50%;
-    pointer-events: none;
+  .hero-bg-layer-1 {
+    opacity: 0.42;
+    background-size: 140% 140%;
+    filter: blur(24px);
+    mix-blend-mode: multiply;
+    mask-image: radial-gradient(circle at 50% 35%, #000 30%, transparent 78%);
   }
 
-  .hero-bg-mesh--one {
-    background: radial-gradient(circle at 20% 20%, rgba(217, 45, 42, 0.26), transparent 42%);
-    transform: translate3d(-6%, -4%, 0) scale(0.95);
-  }
-
-  .hero-bg-mesh--two {
-    background: radial-gradient(circle at 70% 18%, rgba(59, 130, 246, 0.22), transparent 44%);
-    transform: translate3d(4%, 6%, 0) scale(0.94);
-    opacity: 0.62;
-  }
-
-  .hero-bg-mesh--three {
-    background: radial-gradient(circle at 48% 142%, rgba(217, 45, 42, 0.18), transparent 52%);
-    transform: translate3d(2%, -8%, 0) scale(1.08);
+  .hero-bg-layer-2 {
     opacity: 0.35;
+    background-size: 130% 130%;
+    filter: blur(22px);
+    mix-blend-mode: soft-light;
+    mask-image: radial-gradient(circle at 50% 72%, #000 24%, transparent 82%);
+  }
+
+  .hero-bg-grain,
+  .hero-bg-noise {
+    opacity: 0.035;
+  }
+
+  .hero-bg-grain {
+    position: absolute;
+    inset: -10%;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.03) 0 1px,
+        rgba(255, 255, 255, 0) 1px 3px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.02) 0 1px,
+        rgba(255, 255, 255, 0) 1px 3px
+      );
+    background-size: 3px 3px, 4px 4px;
+    mix-blend-mode: multiply;
   }
 
   .hero-bg-gradients--home {
@@ -107,40 +129,62 @@
   }
 
   .animate-heroMesh {
-    animation: heroDriftOne 18s ease-in-out infinite alternate, heroDriftTwo 26s ease-in-out infinite alternate;
+    animation: heroFloatA 22s ease-in-out infinite alternate;
+  }
+
+  .animate-heroMeshA {
+    animation: heroFloatA 22s ease-in-out infinite alternate;
+  }
+
+  .animate-heroMeshB {
+    animation: heroFloatB 28s ease-in-out infinite alternate;
   }
 
   .hero-bg-animate {
-    animation: heroDriftOne 18s ease-in-out infinite alternate, heroDriftTwo 26s ease-in-out infinite alternate;
+    animation: heroFloatA 22s ease-in-out infinite alternate;
   }
 
-  @keyframes heroDriftOne {
+  @keyframes heroFloatA {
     0% {
-      transform: translate3d(-1.4%, -0.8%, 0) scale(1.01);
+      transform: translate3d(-1.3%, -1.1%, 0) scale(1.01);
     }
     50% {
-      transform: translate3d(0.9%, 1.3%, 0) scale(1.02);
+      transform: translate3d(1.2%, 0.9%, 0) scale(1.02);
     }
     100% {
-      transform: translate3d(1.2%, -0.4%, 0) scale(1.01);
+      transform: translate3d(-0.2%, 1.6%, 0) scale(1.01);
     }
   }
 
-  @keyframes heroDriftTwo {
+  @keyframes heroFloatB {
     0% {
-      transform: translate3d(1.1%, 0.2%, 0) scale(1.01);
+      transform: translate3d(1.1%, 0.2%, 0) scale(1.02);
     }
     50% {
-      transform: translate3d(-1%, -1.3%, 0) scale(1.03);
+      transform: translate3d(-0.6%, -1.3%, 0) scale(1.01);
     }
     100% {
-      transform: translate3d(0.4%, 1.4%, 0) scale(1.01);
+      transform: translate3d(0.7%, 0.6%, 0) scale(1.02);
+    }
+  }
+
+  @keyframes heroGrainDrift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(1.8%, 1.2%, 0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-bg-animate,
-    .animate-heroMesh {
+    .animate-heroMesh,
+    .animate-heroMeshA,
+    .animate-heroMeshB,
+    .hero-bg-grain,
+    .hero-bg-layer-1,
+    .hero-bg-layer-2 {
       animation: none;
     }
 

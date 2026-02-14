@@ -82,13 +82,21 @@ describe('landing conversion-first structure', () => {
   });
 
   test('hero includes subtle radial gradient background and CTA glow utility', () => {
-    const gradients = screen.getByTestId('hero-bg-gradients');
-    const style = gradients.getAttribute('style') || '';
+    const layerOne = screen.getByTestId('hero-bg-layer-1');
+    const layerTwo = screen.getByTestId('hero-bg-layer-2');
+    const grain = screen.getByTestId('hero-bg-grain');
+    const layerOneStyle = layerOne.getAttribute('style') || '';
+    const layerTwoStyle = layerTwo.getAttribute('style') || '';
     const primary = screen.getByTestId('hero-primary-cta');
+    const layerOneClass = layerOne.getAttribute('class') || '';
+    const layerTwoClass = layerTwo.getAttribute('class') || '';
 
-    expect(style.includes('radial-gradient')).toBe(true);
+    expect(layerOneStyle.includes('radial-gradient')).toBe(true);
+    expect(layerTwoStyle.includes('radial-gradient')).toBe(true);
     expect(primary.getAttribute('class') || '').toContain('hover:shadow-[0_0_40px_rgba(239,68,68,0.25)]');
-    expect((gradients.getAttribute('class') || '').includes('animate-heroMesh')).toBe(true);
+    expect((grain.getAttribute('class') || '').includes('hero-bg-grain')).toBe(true);
+    expect(layerOneClass.includes('motion-safe:animate-heroMeshA')).toBe(true);
+    expect(layerTwoClass.includes('motion-safe:animate-heroMeshB')).toBe(true);
   });
 
   test('pricing preview renders three cards', () => {
