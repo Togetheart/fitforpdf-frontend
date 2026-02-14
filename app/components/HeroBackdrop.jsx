@@ -63,6 +63,9 @@ export default function HeroBackdrop({
     gradients.style.setProperty('--hero-bg-y', '0px');
 
     const driftA = gsap.to(layerOne, {
+      x: `${18 * motionMultiplier}px`,
+      y: `${-12 * motionMultiplier}px`,
+      scale: 1.032,
       '--r1x': driftR1x,
       '--r1y': driftR1y,
       duration: 14,
@@ -72,6 +75,9 @@ export default function HeroBackdrop({
     });
 
     const driftB = gsap.to(layerTwo, {
+      x: `${-12 * motionMultiplier}px`,
+      y: `${11 * motionMultiplier}px`,
+      scale: 1.026,
       '--r2x': driftR2x,
       '--r2y': driftR2y,
       duration: 18,
@@ -81,8 +87,8 @@ export default function HeroBackdrop({
     });
 
     const grainDrift = gsap.to(grain, {
-      opacity: 0.16,
-      duration: 22,
+      opacity: 0.18,
+      duration: 18,
       ease: 'sine.inOut',
       repeat: -1,
       yoyo: true,
@@ -91,6 +97,7 @@ export default function HeroBackdrop({
     const gradientDrift = gsap.to(gradients, {
       x: `${8 * motionMultiplier}px`,
       y: `${6 * motionMultiplier}px`,
+      scale: 1.008,
       duration: 22,
       repeat: -1,
       yoyo: true,

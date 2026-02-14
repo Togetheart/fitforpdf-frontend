@@ -73,7 +73,7 @@ describe('HeroBackdrop', () => {
     );
     expect(toSpy).toHaveBeenCalledWith(
       grain,
-      expect.objectContaining({ opacity: 0.16 }),
+      expect.objectContaining({ opacity: 0.18 }),
     );
 
     expect(quickToSpy).toHaveBeenCalledTimes(6);
