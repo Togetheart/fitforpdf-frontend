@@ -54,6 +54,7 @@ describe('hero background shared structure', () => {
     expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
     expect((heroBg.getAttribute('class') || '').includes('pointer-events-none')).toBe(true);
     expect((heroGradients.getAttribute('style') || '').includes('radial-gradient')).toBe(true);
+    expect((heroGradients.getAttribute('class') || '').includes('animate-heroMesh')).toBe(true);
     expect(heroGradients).toBeTruthy();
     expect(heroNoise).toBeTruthy();
   });
@@ -66,7 +67,7 @@ describe('hero background shared structure', () => {
 
     const heroGradients = screen.getByTestId('hero-bg-gradients');
     await waitFor(() => {
-      expect((heroGradients.getAttribute('class') || '').includes('hero-bg-animate')).toBe(false);
+      expect((heroGradients.getAttribute('class') || '').includes('animate-heroMesh')).toBe(false);
     });
   });
 });

@@ -5,7 +5,7 @@ import { cleanup, render, screen, within } from '@testing-library/react';
 import Landing from '../page.jsx';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { LANDING_COPY_KEYS } from '../siteCopy.mjs';
+import { LANDING_COPY, LANDING_COPY_KEYS } from '../siteCopy.mjs';
 
 function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
   Object.defineProperty(window, 'matchMedia', {
@@ -67,12 +67,18 @@ describe('landing conversion-first structure', () => {
     const hero = screen.getByTestId('hero-section');
     const primary = within(hero).getByTestId('hero-primary-cta');
     const links = within(hero).getAllByRole('link');
+    const paragraphs = hero.querySelectorAll('p');
+    const trustLineText = 'Files are deleted after conversion. PDF available for 15 minutes.';
 
     expect(primary).toBeTruthy();
     expect(primary.textContent).toBe('Generate PDF');
     expect(primary.getAttribute('href')).toBe('#tool');
     expect(links).toHaveLength(1);
     expect(links[0].getAttribute('class') || '').toContain('rounded-full');
+    expect(Array.from(paragraphs).filter((el) => el.textContent?.trim() === LANDING_COPY.heroSubheadline).length).toBe(1);
+    expect(Array.from(paragraphs).filter((el) => el.textContent?.trim() === LANDING_COPY.heroTrustLine).length).toBe(1);
+
+    expect(within(hero).getAllByText(trustLineText)).toHaveLength(1);
   });
 
   test('hero includes subtle radial gradient background and CTA glow utility', () => {
@@ -82,6 +88,7 @@ describe('landing conversion-first structure', () => {
 
     expect(style.includes('radial-gradient')).toBe(true);
     expect(primary.getAttribute('class') || '').toContain('hover:shadow-[0_0_40px_rgba(239,68,68,0.25)]');
+    expect((gradients.getAttribute('class') || '').includes('animate-heroMesh')).toBe(true);
   });
 
   test('pricing preview renders three cards', () => {

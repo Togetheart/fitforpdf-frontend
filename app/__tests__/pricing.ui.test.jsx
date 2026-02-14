@@ -69,7 +69,7 @@ describe('pricing page UI', () => {
     );
 
     const gradients = screen.getByTestId('hero-bg-gradients');
-    expect((gradients.getAttribute('class') || '').includes('hero-bg-animate')).toBe(false);
+    expect((gradients.getAttribute('class') || '').includes('animate-heroMesh')).toBe(false);
   });
 
   test('pricing page exports a React component', () => {

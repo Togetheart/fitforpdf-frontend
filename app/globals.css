@@ -45,10 +45,41 @@
     will-change: transform, opacity;
   }
 
+  .hero-bg-gradients {
+    opacity: 0.95;
+    filter: saturate(104%) contrast(102%);
+    transform: translate3d(0, 0, 0);
+  }
+
+  .hero-bg-mesh {
+    position: absolute;
+    inset: -30%;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero-bg-mesh--one {
+    background: radial-gradient(circle at 20% 20%, rgba(217, 45, 42, 0.26), transparent 42%);
+    transform: translate3d(-6%, -4%, 0) scale(0.95);
+  }
+
+  .hero-bg-mesh--two {
+    background: radial-gradient(circle at 70% 18%, rgba(59, 130, 246, 0.22), transparent 44%);
+    transform: translate3d(4%, 6%, 0) scale(0.94);
+    opacity: 0.62;
+  }
+
+  .hero-bg-mesh--three {
+    background: radial-gradient(circle at 48% 142%, rgba(217, 45, 42, 0.18), transparent 52%);
+    transform: translate3d(2%, -8%, 0) scale(1.08);
+    opacity: 0.35;
+  }
+
   .hero-bg-gradients--home {
     background:
-      radial-gradient(1200px circle at 20% 20%, rgba(239, 68, 68, 0.06), transparent 60%),
-      radial-gradient(900px circle at 80% 30%, rgba(59, 130, 246, 0.04), transparent 60%);
+      radial-gradient(55% 65% at 12% 14%, rgba(239, 68, 68, 0.07), transparent 58%),
+      radial-gradient(48% 50% at 85% 22%, rgba(59, 130, 246, 0.03), transparent 60%),
+      radial-gradient(50% 42% at 48% 130%, rgba(217, 45, 42, 0.07), transparent 68%);
   }
 
   .hero-bg-gradients--pricing {
@@ -65,12 +96,6 @@
       radial-gradient(28rem 20rem at 54% 132%, rgba(217, 45, 42, 0.07), rgba(217, 45, 42, 0) 64%);
   }
 
-  .hero-bg-gradients {
-    opacity: 0.95;
-    filter: saturate(104%) contrast(102%);
-    transform: translate3d(0, 0, 0);
-  }
-
   .hero-bg-noise {
     --hero-noise-opacity: 0.035;
     opacity: var(--hero-noise-opacity);
@@ -81,24 +106,41 @@
     pointer-events: none;
   }
 
-  .hero-bg-animate {
-    animation: heroGradientDrift 28s ease-in-out infinite alternate;
+  .animate-heroMesh {
+    animation: heroDriftOne 18s ease-in-out infinite alternate, heroDriftTwo 26s ease-in-out infinite alternate;
   }
 
-  @keyframes heroGradientDrift {
+  .hero-bg-animate {
+    animation: heroDriftOne 18s ease-in-out infinite alternate, heroDriftTwo 26s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroDriftOne {
     0% {
-      transform: translate3d(-2%, -1%, 0) scale(1.01);
+      transform: translate3d(-1.4%, -0.8%, 0) scale(1.01);
     }
     50% {
-      transform: translate3d(1.2%, 1.6%, 0) scale(1.03);
+      transform: translate3d(0.9%, 1.3%, 0) scale(1.02);
     }
     100% {
-      transform: translate3d(0.8%, -1.3%, 0) scale(1.01);
+      transform: translate3d(1.2%, -0.4%, 0) scale(1.01);
+    }
+  }
+
+  @keyframes heroDriftTwo {
+    0% {
+      transform: translate3d(1.1%, 0.2%, 0) scale(1.01);
+    }
+    50% {
+      transform: translate3d(-1%, -1.3%, 0) scale(1.03);
+    }
+    100% {
+      transform: translate3d(0.4%, 1.4%, 0) scale(1.01);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-bg-animate {
+    .hero-bg-animate,
+    .animate-heroMesh {
       animation: none;
     }
 
