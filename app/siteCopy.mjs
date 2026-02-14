@@ -1,66 +1,62 @@
 export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
+  logoText: 'FitForPDF',
   heroTitle: 'Client-ready PDFs. From messy spreadsheets.',
-  heroSubheadline: 'Upload a CSV or Excel file and get a structured PDF ready to send.',
+  heroSubheadline: 'Upload a CSV or Excel file. Get a structured PDF ready to send.',
   heroPrimaryCta: 'Generate PDF',
   heroSecondaryCta: 'See pricing',
   heroTertiaryCta: 'Try on Telegram',
-  heroTrustLine: 'Files are deleted immediately after conversion. PDF is available for up to 15 minutes.',
+  heroTrustLine: 'Files are deleted immediately after conversion. PDF available for 15 minutes.',
 
   topBarLinks: [
     { label: 'Pricing', href: '/pricing' },
     { label: 'Privacy', href: '/privacy' },
   ],
+  telegramCta: 'Try on Telegram',
 
-  beforeAfterTitle: 'Before / After',
-  beforeLabel: 'CSV INPUT',
-  afterLabel: 'PDF OUTPUT',
+  beforeAfterTitle: 'From raw data to structured document.',
+  beforeLabel: 'CSV input',
+  afterLabel: 'PDF output',
 
   problemTitle: 'Why spreadsheet exports fail in real life',
   problemBullets: [
-    'Columns are cut',
-    'Zoom makes text unreadable',
-    'Manual layout fixes become unavoidable',
+    'Columns are cut.',
+    'Text becomes unreadable after zoom.',
+    'Manual layout fixes become mandatory.',
   ],
 
   clientReadyTitle: 'What “client-ready” means',
   clientReadyBullets: [
     'Document overview page',
-    'Smart column sections (A/B/C when needed)',
-    'Fixed reference columns repeated',
+    'Smart column sections',
+    'Fixed reference columns',
     'Rows X–Y and Page i/n',
+    'No manual layout',
   ],
 
-  howItWorksTitle: 'In 3 steps',
-  howItWorksSteps: [
-    'Upload a CSV or XLSX file.',
-    'We organize it into readable sections.',
-    'Download a client-ready PDF.',
-  ],
-
-  toolTitle: 'Try FitForPDF on the web',
+  toolTitle: 'Try it now',
   toolSubcopy: '3 free exports. No account required.',
   brandingOptionLabel: 'Add “Made with FitForPDF” footer',
   truncateOptionLabel: 'Truncate long text to reduce payload',
   truncateNotice: 'Truncation is off by default. Long text may overflow on small displays.',
 
-  pricingPreviewTitle: 'Simple pricing',
-  pricingPreviewCards: [
-    { title: 'Free', copy: '3 exports total', cta: 'See full pricing', href: '/pricing' },
-    { title: 'Credits 100', copy: '€19', cta: 'See full pricing', href: '/pricing' },
-    { title: 'Credits 500', copy: '€79', cta: 'See full pricing', href: '/pricing' },
-    { title: 'Pro', copy: 'Coming soon', cta: 'See full pricing', href: '/pricing' },
-    { title: 'API', copy: 'Coming soon', cta: 'See full pricing', href: '/pricing' },
+  pricingPreviewTitle: 'Simple pricing.',
+  pricingPreviewSubline: 'Pay per output. No lock-in.',
+  pricingPreviewItems: [
+    { label: 'Free', copy: '3 exports total' },
+    { label: 'Credits 100', copy: '€19' },
+    { label: 'Credits 500', copy: '€79' },
   ],
+  pricingPreviewCta: 'See full pricing',
 
-  privacyStripTitle: 'Privacy-first by default',
+  privacyStripTitle: 'Privacy-first by default.',
   privacyStripBullets: [
     'Files are deleted immediately after conversion.',
-    'The generated PDF is available for up to 15 minutes.',
+    'PDFs are deleted after 15 minutes.',
     'We do not store file contents in logs.',
   ],
-  privacyStripCta: 'See privacy',
+  privacyStripCta: 'Read privacy policy',
 
   footerLinks: [
     { label: 'Pricing', href: '/pricing' },
@@ -68,20 +64,18 @@ export const LANDING_COPY = {
     { label: 'Try on Telegram', href: TELEGRAM_BOT_URL },
   ],
   footerCopyright: '© FitForPDF',
-  logoText: 'FitForPDF',
 };
 
 export const LANDING_COPY_KEYS = {
   topBar: 'topbar',
   hero: 'hero',
-  problem: 'problem',
   beforeAfter: 'before-after',
   clientReady: 'client-ready',
-  howItWorks: 'how-it-works',
-  tool: 'tool',
-  pricingPreview: 'pricing-preview',
-  privacyStrip: 'privacy-strip',
+  upload: 'upload',
+  pricingPreview: 'pricing',
+  privacyStrip: 'privacy',
   footer: 'footer',
+  problem: 'problem',
 };
 
 export const PRICING_PAGE_COPY = {
@@ -121,7 +115,7 @@ export const PRICING_PAGE_COPY = {
     },
     {
       question: 'What if my file is huge?',
-      answer: 'Use the compact flow or reduce scope before exporting.',
+      answer: 'Use the compact mode or reduce scope before exporting.',
     },
   ],
 };
@@ -134,7 +128,7 @@ export const PRICING_CARDS = [
     points: [PRICING_PAGE_COPY.freeFeature],
     actionLabel: PRICING_PAGE_COPY.freeCtaLabel,
     actionType: 'link',
-    actionHref: '/#tool',
+    actionHref: '/#upload',
     disabled: false,
   },
   {
@@ -182,15 +176,13 @@ export const PRICING_CARDS = [
 export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
   {
     id: LANDING_COPY_KEYS.topBar,
-    title: LANDING_COPY.logoText,
-    links: LANDING_COPY.topBarLinks,
     containsFreeQuotaText: false,
   },
   {
     id: LANDING_COPY_KEYS.hero,
     title: LANDING_COPY.heroTitle,
     ctas: [
-      { label: LANDING_COPY.heroPrimaryCta, href: '#tool', type: 'primary' },
+      { label: LANDING_COPY.heroPrimaryCta, href: '#upload', type: 'primary' },
       { label: LANDING_COPY.heroSecondaryCta, href: '/pricing', type: 'secondary' },
       { label: LANDING_COPY.heroTertiaryCta, href: TELEGRAM_BOT_URL, type: 'tertiary' },
     ],
@@ -198,15 +190,10 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     containsFreeQuotaText: false,
   },
   {
-    id: LANDING_COPY_KEYS.problem,
-    title: LANDING_COPY.problemTitle,
-    bullets: LANDING_COPY.problemBullets,
-    containsFreeQuotaText: false,
-  },
-  {
     id: LANDING_COPY_KEYS.beforeAfter,
     title: LANDING_COPY.beforeAfterTitle,
     containsFreeQuotaText: false,
+    component: 'before-after',
   },
   {
     id: LANDING_COPY_KEYS.clientReady,
@@ -215,13 +202,7 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     containsFreeQuotaText: false,
   },
   {
-    id: LANDING_COPY_KEYS.howItWorks,
-    title: LANDING_COPY.howItWorksTitle,
-    bullets: LANDING_COPY.howItWorksSteps,
-    containsFreeQuotaText: false,
-  },
-  {
-    id: LANDING_COPY_KEYS.tool,
+    id: LANDING_COPY_KEYS.upload,
     title: LANDING_COPY.toolTitle,
     freeQuotaText: `Free exports left: ${freeExportsLeft} / 3`,
     containsFreeQuotaText: true,
@@ -229,7 +210,10 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
   {
     id: LANDING_COPY_KEYS.pricingPreview,
     title: LANDING_COPY.pricingPreviewTitle,
-    cards: LANDING_COPY.pricingPreviewCards,
+    subline: LANDING_COPY.pricingPreviewSubline,
+    cards: LANDING_COPY.pricingPreviewItems,
+    cta: LANDING_COPY.pricingPreviewCta,
+    href: '/pricing',
     containsFreeQuotaText: false,
   },
   {
@@ -237,6 +221,8 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     title: LANDING_COPY.privacyStripTitle,
     bullets: LANDING_COPY.privacyStripBullets,
     containsFreeQuotaText: false,
+    cta: LANDING_COPY.privacyStripCta,
+    href: '/privacy',
   },
   {
     id: LANDING_COPY_KEYS.footer,
@@ -265,7 +251,7 @@ export const PRIVACY_PAGE_COPY = {
   ],
   security: [
     'Transport encryption (HTTPS).',
-    'Access controls (API key).',
+    'Access controls in place for key endpoints.',
   ],
   contactEmail: 'support@fitforpdf.com',
 };

@@ -10,7 +10,7 @@ function landingText() {
 test('hero copy appears before tool section', () => {
   const sections = LANDING_SECTIONS(3);
   const heroIndex = sections.findIndex((section) => section.id === LANDING_COPY_KEYS.hero);
-  const toolIndex = sections.findIndex((section) => section.id === LANDING_COPY_KEYS.tool);
+  const toolIndex = sections.findIndex((section) => section.id === LANDING_COPY_KEYS.upload);
 
   assert.equal(heroIndex >= 0, true);
   assert.equal(toolIndex >= 0, true);
@@ -23,7 +23,7 @@ test('hero copy appears before tool section', () => {
 test('tool section id exists', () => {
   const sections = LANDING_SECTIONS(3);
   assert.equal(
-    sections.some((section) => section.id === LANDING_COPY_KEYS.tool),
+    sections.some((section) => section.id === LANDING_COPY_KEYS.upload),
     true,
   );
 });
@@ -42,7 +42,7 @@ test('hero links to pricing and Telegram', () => {
 test('free exports text does not belong to hero section', () => {
   const sections = LANDING_SECTIONS(3);
   const heroSection = sections.find((section) => section.id === LANDING_COPY_KEYS.hero);
-  const toolSection = sections.find((section) => section.id === LANDING_COPY_KEYS.tool);
+  const toolSection = sections.find((section) => section.id === LANDING_COPY_KEYS.upload);
 
   assert.equal(heroSection.containsFreeQuotaText, false);
   assert.equal(toolSection.containsFreeQuotaText, true);

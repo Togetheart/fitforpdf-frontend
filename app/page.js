@@ -17,11 +17,12 @@ import {
 } from './paywall.mjs';
 import {
   LANDING_COPY,
-  LANDING_SECTIONS,
   TELEGRAM_BOT_URL,
   LANDING_COPY_KEYS,
+  LANDING_SECTIONS,
 } from './siteCopy.mjs';
 import { UI_TOKENS } from './ui/tokens.mjs';
+import { getCtaLayout, getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
 
 const API_BASE = '/api';
@@ -101,14 +102,12 @@ const REASON_LABELS = Object.freeze({
   max_row_height_hit: 'Some rows were height-limited',
   zero_width_column: 'A column became unreadable',
   page_burden_high: 'Document too large for direct sending',
-  // Legacy/fallback codes from scoreV2 path.
   column_collapse: 'Columns are too compressed to remain readable',
   wrap_severe: 'Layout causes excessive line wraps',
   missing_rows_severe: 'Some rows appear missing in the render',
   small_font: 'The text size is too small',
   header_not_repeated: 'The header is not repeated correctly',
   missing_rows: 'The render appears incomplete',
-  empty_or_header_only: 'The document looks empty or incomplete',
   blank_pages: 'One or more pages appear empty',
 });
 const REASON_CODE_SET = new Set(Object.keys(REASON_LABELS));
@@ -217,17 +216,31 @@ export default function Page() {
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [freeExportsLeft, setFreeExportsLeft] = useState(() => freeLeft());
   const [showPaywall, setShowPaywall] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const debugParam = new URLSearchParams(window.location.search).get('debug');
     setDebugByQuery(debugParam === '1');
     setFreeExportsLeft(freeLeft());
+
+    const mq = window.matchMedia('(max-width: 480px)');
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
   }, []);
 
+  const ctaLayout = getCtaLayout({ isMobile });
+  const beforeAfterLayout = getLayoutMode({ isMobile });
   const canShowDebug = process.env.NODE_ENV !== 'production' || debugByQuery;
   const canShowPanel = showPaywall || freeExportsLeft <= 0;
   const shouldHidePaywallReset = process.env.NODE_ENV === 'production' && !debugByQuery;
+
+  const sections = LANDING_SECTIONS(freeExportsLeft);
+  const heroSection = sections.find((section) => section.id === LANDING_COPY_KEYS.hero);
+  const uploadSection = sections.find((section) => section.id === LANDING_COPY_KEYS.upload);
+  const beforeAfterSection = sections.find((section) => section.id === LANDING_COPY_KEYS.beforeAfter);
 
   function refreshFreeExports() {
     setFreeExportsLeft(freeLeft());
@@ -417,345 +430,394 @@ export default function Page() {
     <main className="page">
       <style jsx>{`
         .page {
-          --accent: ${UI_TOKENS.accent};
-          --muted: ${UI_TOKENS.text.muted};
+          --accent: ${UI_TOKENS.colors.accentRed};
+          --muted: ${UI_TOKENS.colors.muted};
           min-height: 100vh;
-          background: ${UI_TOKENS.bg};
-          color: #111827;
-          padding: ${UI_TOKENS.spacing.x16};
-          font-family: "Avenir Next", "Avenir", "Segoe UI", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-          font-size: ${UI_TOKENS.text.body.size};
-          line-height: ${UI_TOKENS.text.body.lineHeight};
+          background: ${UI_TOKENS.colors.bg};
+          color: ${UI_TOKENS.colors.text};
+          padding: ${UI_TOKENS.spacing.x24} ${UI_TOKENS.spacing.x16};
+          font-family: -apple-system, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
+          font-size: ${UI_TOKENS.typography.body.size};
+          line-height: ${UI_TOKENS.typography.body.lineHeight};
         }
+
         .container {
-          max-width: ${UI_TOKENS.contentMaxWidth};
+          max-width: ${UI_TOKENS.maxWidth};
           margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          gap: ${UI_TOKENS.spacing.x32};
+          display: grid;
+          gap: ${UI_TOKENS.spacing.x64};
         }
+
         .topBar {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: ${UI_TOKENS.spacing.x12};
-          flex-wrap: wrap;
         }
-        .logo {
+
+        .wordmark {
           color: var(--accent);
           text-decoration: none;
           font-size: 1.05rem;
           font-weight: 650;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.01em;
         }
-        .topNav {
+
+        .topLinks {
           margin-left: auto;
           display: flex;
           align-items: center;
           gap: ${UI_TOKENS.spacing.x16};
+          flex-wrap: wrap;
         }
-        .topLink,
-        .topLinkSmall,
-        .secondaryLink,
-        .btn {
-          border: ${UI_TOKENS.border};
-          border-radius: ${UI_TOKENS.radius.pill};
-          color: #111827;
-          text-decoration: none;
-          font-weight: 550;
-          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
-        }
+
         .topLink {
-          padding: 0.45rem 0.75rem;
-          background: transparent;
+          text-decoration: none;
+          color: ${UI_TOKENS.colors.text};
         }
-        .topLinkSmall,
-        .secondaryLink {
-          padding: 0.45rem 0.85rem;
-          background: transparent;
-        }
-        .btn:hover {
-          transform: translateY(1px);
-          opacity: 0.9;
-        }
+
         .hero {
           display: grid;
-          gap: 0.6rem;
+          gap: ${UI_TOKENS.spacing.x16};
         }
+
         .heroTitle {
           margin: 0;
-          font-size: ${UI_TOKENS.text.h1.sizeMobile};
-          font-weight: ${UI_TOKENS.text.h1.weight};
-          line-height: 1.07;
+          font-size: ${UI_TOKENS.typography.h1.mobile};
+          line-height: ${UI_TOKENS.typography.h1.lineHeight};
+          font-weight: ${UI_TOKENS.typography.h1.weight};
           letter-spacing: 0.01em;
           max-width: 16ch;
         }
+
         .heroSub,
-        .trust {
+        .trust,
+        .note {
           margin: 0;
           color: var(--muted);
           max-width: 58ch;
         }
-        .actions {
-          display: flex;
-          align-items: center;
+
+        .ctaRow,
+        .primaryActionRow {
+          display: grid;
           gap: ${UI_TOKENS.spacing.x12};
-          flex-wrap: wrap;
-          margin-top: 0.4rem;
         }
-        .btn,
-        .secondaryLink,
-        .fileLabel {
-          padding: 0.7rem 1rem;
-          background: #fff;
+
+        .ctaRow {
+          width: fit-content;
+        }
+
+        .btn {
+          height: ${UI_TOKENS.buttonHeight};
           border-radius: ${UI_TOKENS.radius.input};
-          font-size: 1rem;
-          border: ${UI_TOKENS.border};
-        }
-        .btnPrimary {
-          background: var(--accent);
-          color: #fff;
-          border-color: var(--accent);
-          border-radius: ${UI_TOKENS.radius.pill};
-        }
-        .section {
-          border: ${UI_TOKENS.border};
-          border-radius: ${UI_TOKENS.radius.card};
-          padding: ${UI_TOKENS.spacing.x24};
+          border: 1px solid ${UI_TOKENS.colors.border};
+          text-decoration: none;
+          color: ${UI_TOKENS.colors.text};
+          padding: 0 1rem;
           background: #fff;
-          display: grid;
-          gap: 0.6rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
         }
-        .problemSteps {
-          display: grid;
-          gap: 0.55rem;
-          margin: 0;
-          padding-left: 1.2rem;
-          color: #2b3340;
+
+        .btn:hover {
+          transform: translateY(1px);
+          opacity: 0.93;
         }
+
+        .btnPrimary {
+          color: #fff;
+          background: var(--accent);
+          border-color: var(--accent);
+        }
+
+        .btnSmall {
+          border-radius: ${UI_TOKENS.radius.pill};
+          height: auto;
+          min-height: ${UI_TOKENS.buttonHeight};
+          padding: 0 0.85rem;
+        }
+
+        .section {
+          display: grid;
+          gap: ${UI_TOKENS.spacing.x16};
+        }
+
         .sectionTitle {
           margin: 0;
-          font-weight: 650;
-          font-size: 1.05rem;
+          font-size: ${UI_TOKENS.typography.h2.mobile};
+          line-height: ${UI_TOKENS.typography.h2.lineHeight};
+          font-weight: ${UI_TOKENS.typography.h2.weight};
         }
-        .list {
+
+        .sectionList {
           margin: 0;
           padding-left: 1.2rem;
-          color: #2b3340;
           display: grid;
-          gap: 0.32rem;
+          gap: ${UI_TOKENS.spacing.x12};
+          color: ${UI_TOKENS.colors.text};
         }
+
         .toolPanel {
-          display: grid;
-          gap: 0.65rem;
+          gap: ${UI_TOKENS.spacing.x16};
         }
+
+        .quota {
+          margin: 0;
+          font-weight: 650;
+        }
+
+        .quotaLimit {
+          color: #b91c1c;
+        }
+
+        .fileLabel {
+          width: fit-content;
+          border: 1px solid ${UI_TOKENS.colors.border};
+          border-radius: ${UI_TOKENS.radius.input};
+          padding: 0.45rem 0.75rem;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          font-weight: 600;
+        }
+
+        .fileInput {
+          display: none;
+        }
+
         .field {
           margin: 0;
           display: grid;
           gap: 0.45rem;
         }
-        .quota {
+
+        .warn {
           margin: 0;
-          font-weight: 650;
+          margin-top: 0.15rem;
+          color: #7a2e2e;
+          font-size: ${UI_TOKENS.typography.small.size};
         }
-        .quotaLimit {
-          color: #b91c1c;
-        }
-        .fileInput {
-          display: none;
-        }
-        .fileLabel {
-          width: fit-content;
-          cursor: pointer;
-          font-weight: 560;
-        }
-        .note {
-          margin: 0;
-          color: var(--muted);
-          font-size: 0.93rem;
-        }
+
         .notice {
           margin-top: 0.45rem;
           color: #334155;
         }
+
         .error {
           margin-top: 0.45rem;
           color: #b91c1c;
         }
-        .warn {
-          margin: 0.1rem 0 0;
-          color: #7a2e2e;
-          font-size: 0.85rem;
-        }
+
         .paywall {
           border: 1px solid #f8caca;
           background: #fff7f7;
-          border-radius: ${UI_TOKENS.radius.card};
-          padding: 0.8rem;
+          border-radius: ${UI_TOKENS.radius.base};
+          padding: 0.85rem;
           display: grid;
-          gap: 0.4rem;
+          gap: 0.45rem;
         }
-        .footer {
-          border-top: ${UI_TOKENS.border};
-          padding-top: ${UI_TOKENS.spacing.x16};
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: ${UI_TOKENS.spacing.x12};
-          flex-wrap: wrap;
-          color: var(--muted);
-        }
-        .footerLinks {
-          display: flex;
-          align-items: center;
-          gap: ${UI_TOKENS.spacing.x12};
-          flex-wrap: wrap;
-        }
-        .smallMuted {
-          color: var(--muted);
-          font-size: 0.9rem;
-        }
+
         .panel {
-          border: ${UI_TOKENS.border};
-          border-radius: ${UI_TOKENS.radius.card};
+          border: 1px solid ${UI_TOKENS.colors.border};
+          border-radius: ${UI_TOKENS.radius.base};
           padding: 0.95rem;
           background: #fff;
           display: grid;
           gap: 0.7rem;
         }
-        .pricingGrid {
+
+        .pricingStrip {
           display: grid;
           gap: ${UI_TOKENS.spacing.x12};
-          grid-template-columns: 1fr;
+          border-top: 1px solid ${UI_TOKENS.colors.border};
+          border-bottom: 1px solid ${UI_TOKENS.colors.border};
+          padding: ${UI_TOKENS.spacing.x32} 0;
         }
-        .priceCard {
-          border: ${UI_TOKENS.border};
-          border-radius: ${UI_TOKENS.radius.card};
-          padding: 0.85rem;
+
+        .pricingItems {
           display: grid;
-          gap: 0.45rem;
-          background: #fff;
+          gap: ${UI_TOKENS.spacing.x8};
         }
-        .priceTitle {
-          margin: 0;
-          font-weight: 650;
-          font-size: 1rem;
+
+        .pricingItem {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: ${UI_TOKENS.spacing.x16};
+          border: 1px solid ${UI_TOKENS.colors.border};
+          border-radius: ${UI_TOKENS.radius.base};
+          padding: 0.72rem;
         }
-        .priceCopy {
-          margin: 0;
-          color: var(--muted);
-        }
+
         .smallAction {
           width: fit-content;
-          border: ${UI_TOKENS.border};
+          border: 1px solid ${UI_TOKENS.colors.border};
           border-radius: ${UI_TOKENS.radius.pill};
-          padding: 0.35rem 0.72rem;
+          padding: 0.35rem 0.85rem;
           text-decoration: none;
-          color: #111827;
-          background: #fff;
+          color: ${UI_TOKENS.colors.text};
           transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
         }
+
         .smallAction:hover {
           transform: translateY(1px);
           opacity: 0.9;
         }
 
-        @media (max-width: 780px) {
+        .footer {
+          display: grid;
+          gap: ${UI_TOKENS.spacing.x12};
+          color: var(--muted);
+          border-top: 1px solid ${UI_TOKENS.colors.border};
+          padding-top: ${UI_TOKENS.spacing.x24};
+        }
+
+        .footerLinks {
+          display: flex;
+          align-items: center;
+          gap: ${UI_TOKENS.spacing.x16};
+          flex-wrap: wrap;
+        }
+
+        .footerLinks a {
+          text-decoration: none;
+          color: ${UI_TOKENS.colors.text};
+        }
+
+        .muted {
+          color: var(--muted);
+          font-size: 0.93rem;
+        }
+
+        .micro {
+          color: var(--muted);
+          font-size: ${UI_TOKENS.typography.small.size};
+        }
+
+        @media (max-width: 480px) {
           .page {
             padding: ${UI_TOKENS.spacing.x24} ${UI_TOKENS.spacing.x16};
           }
-          .topBar {
-            gap: ${UI_TOKENS.spacing.x8};
-          }
-          .topNav {
-            width: 100%;
-          }
+
           .heroTitle {
-            font-size: ${UI_TOKENS.text.h1.sizeMobile};
+            font-size: ${UI_TOKENS.typography.h1.mobile};
           }
-          .footer {
-            flex-direction: column;
-            align-items: flex-start;
+
+          .sectionTitle {
+            font-size: ${UI_TOKENS.typography.h2.mobile};
+          }
+
+          .topLinks {
+            width: 100%;
+            justify-content: flex-start;
+          }
+
+          .ctaRow,
+          .primaryActionRow {
+            width: 100%;
+            grid-template-columns: 1fr;
+          }
+
+          .btn,
+          .btnSmall {
+            width: 100%;
           }
         }
 
-        @media (min-width: 781px) {
+        @media (min-width: 481px) {
           .heroTitle {
-            font-size: ${UI_TOKENS.text.h1.sizeDesktop};
+            font-size: ${UI_TOKENS.typography.h1.desktop};
           }
-          .pricingGrid {
-            grid-template-columns: repeat(2, 1fr);
+
+          .sectionTitle {
+            font-size: ${UI_TOKENS.typography.h2.desktop};
+          }
+
+          .ctaRow {
+            grid-template-columns: repeat(3, auto);
+          }
+
+          .primaryActionRow[data-cta="row"] {
+            grid-template-columns: repeat(2, auto);
           }
         }
       `}</style>
 
       <div className="container">
         <header className="topBar" id={LANDING_COPY_KEYS.topBar}>
-          <a className="logo" href="/">{LANDING_COPY.logoText}</a>
-          <nav className="topNav" aria-label="Main navigation">
+          <a className="wordmark" href="/" data-testid="wordmark">{LANDING_COPY.logoText}</a>
+          <nav className="topLinks" aria-label="Main navigation">
             {LANDING_COPY.topBarLinks.map((link) => (
-              <a className="topLink" href={link.href} key={link.label}>
+              <a className="topLink" key={link.label} href={link.href}>
                 {link.label}
               </a>
             ))}
-            <a className="topLinkSmall" href={TELEGRAM_BOT_URL}>
+            <a className="topLink" href={TELEGRAM_BOT_URL}>
               {LANDING_COPY.telegramCta}
             </a>
           </nav>
         </header>
 
-        <section className="hero" id={LANDING_COPY_KEYS.hero} aria-label="Hero">
-          <h1 className="heroTitle">{LANDING_COPY.heroTitle}</h1>
+        <section className="hero" id={LANDING_COPY_KEYS.hero}>
+          <h1 className="heroTitle">{heroSection.title}</h1>
           <p className="heroSub">{LANDING_COPY.heroSubheadline}</p>
-          <p className="trust">{LANDING_COPY.heroTrustLine}</p>
-          <div className="actions">
-            <a href="#tool" className="btn btnPrimary">
-              {LANDING_COPY.heroPrimaryCta}
+          <p className="trust">{heroSection.trustLines[0]}</p>
+          <div className="ctaRow" data-cta={ctaLayout}>
+            <a className="btn btnPrimary" href={heroSection.ctas[0].href} data-testid="primary-cta">
+              {heroSection.ctas[0].label}
             </a>
-            <a href="/pricing" className="secondaryLink">
-              {LANDING_COPY.heroSecondaryCta}
+            <a className="btn btnSmall" href={heroSection.ctas[1].href}>
+              {heroSection.ctas[1].label}
             </a>
-            <a href={TELEGRAM_BOT_URL} className="topLinkSmall">
-              {LANDING_COPY.heroTertiaryCta}
+            <a className="btn btnSmall" href={heroSection.ctas[2].href}>
+              {heroSection.ctas[2].label}
             </a>
           </div>
         </section>
 
-        <section className="section" id={LANDING_COPY_KEYS.problem} aria-label={LANDING_COPY.problemTitle}>
+        <section className="section" id={LANDING_COPY_KEYS.problem}>
           <h2 className="sectionTitle">{LANDING_COPY.problemTitle}</h2>
-          <ul className="problemSteps">
+          <ul className="sectionList">
             {LANDING_COPY.problemBullets.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="section" id={LANDING_COPY_KEYS.beforeAfter} aria-label={LANDING_COPY.beforeAfterTitle}>
-          <h2 className="sectionTitle">{LANDING_COPY.beforeAfterTitle}</h2>
-          <BeforeAfter beforeLabel={LANDING_COPY.beforeLabel} afterLabel={LANDING_COPY.afterLabel} />
+        <section className="section" id={LANDING_COPY_KEYS.beforeAfter}>
+          <h2 className="sectionTitle">{beforeAfterSection.title}</h2>
+          <BeforeAfter
+            beforeLabel={LANDING_COPY.beforeLabel}
+            afterLabel={LANDING_COPY.afterLabel}
+            isMobile={isMobile}
+            layoutMode={beforeAfterLayout}
+          />
         </section>
 
-        <section className="section" id={LANDING_COPY_KEYS.clientReady} aria-label="Client-ready definition">
+        <section className="section" id={LANDING_COPY_KEYS.clientReady}>
           <h2 className="sectionTitle">{LANDING_COPY.clientReadyTitle}</h2>
-          <ul className="list">
+          <ul className="sectionList">
             {LANDING_COPY.clientReadyBullets.slice(0, 4).map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="section toolPanel" id={LANDING_COPY_KEYS.tool} aria-label="Try it now">
-          <h2 className="sectionTitle">{LANDING_COPY.toolTitle}</h2>
+        <section className="section toolPanel" id={LANDING_COPY_KEYS.upload}>
+          <h2 className="sectionTitle">{uploadSection.title}</h2>
           <p className="note">{LANDING_COPY.toolSubcopy}</p>
           <p className="quota">
-            Free exports left: {freeExportsLeft} / 3
+            {uploadSection.freeQuotaText}
             {freeExportsLeft === 0 ? <span className="quotaLimit"> Free limit reached</span> : null}
           </p>
 
           <form onSubmit={handleSubmit}>
             <p className="field">
               <label htmlFor="fitforpdf-file" className="fileLabel">
-                Choose file (CSV / XLSX)
+                Select a file (CSV / XLSX)
                 <input
                   id="fitforpdf-file"
                   type="file"
@@ -791,14 +853,14 @@ export default function Page() {
             </label>
             {!truncateLongText ? <p className="warn">{LANDING_COPY.truncateNotice}</p> : null}
 
-            <div className="actions">
-              <button className="btn" type="submit" disabled={isLoading}>
+            <div className="primaryActionRow" data-cta={ctaLayout}>
+              <button className="btn btnPrimary" type="submit" disabled={isLoading}>
                 {isLoading ? 'Generating…' : LANDING_COPY.heroPrimaryCta}
               </button>
               {!shouldHidePaywallReset ? (
                 <button
                   type="button"
-                  className="secondaryLink"
+                  className="btn"
                   onClick={handleResetPaywallForDev}
                   disabled={isLoading}
                 >
@@ -814,9 +876,7 @@ export default function Page() {
           {canShowPanel ? (
             <div className="paywall">
               <p style={{ margin: 0, fontWeight: 600 }}>You&apos;ve used your 3 free exports.</p>
-              <a href="/pricing" className="btn">
-                See pricing
-              </a>
+              <a href="/pricing" className="btn">See pricing</a>
             </div>
           ) : null}
 
@@ -838,7 +898,7 @@ export default function Page() {
                     type="button"
                     onClick={() => setShowDetails((v) => !v)}
                     aria-expanded={showDetails}
-                    className="secondaryLink"
+                    className="btn"
                   >
                     {showDetails ? 'Hide details' : 'Show details'}
                   </button>
@@ -853,11 +913,11 @@ export default function Page() {
               )}
 
               <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button className="btn btnPrimary" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+                <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                   Download anyway
                 </button>
                 {!stillRiskAfterOptimized && (
-                  <button className="secondaryLink" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
+                  <button className="btn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
                     Generate optimized version
                   </button>
                 )}
@@ -886,10 +946,10 @@ export default function Page() {
                 </ul>
               )}
               <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button className="btn btnPrimary" type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
+                <button className="btn" type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
                   {pageBurdenCopy.primaryCta}
                 </button>
-                <button className="secondaryLink" type="button" disabled title="Coming soon">
+                <button className="btn" type="button" disabled title="Coming soon">
                   {pageBurdenCopy.secondaryCta}
                 </button>
               </div>
@@ -915,15 +975,15 @@ export default function Page() {
               )}
               <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                 {stillRiskAfterOptimized ? (
-                  <button className="btn btnPrimary" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+                  <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                     Download anyway
                   </button>
                 ) : (
                   <>
-                    <button className="secondaryLink" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
+                    <button className="btn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
                       Generate optimized version
                     </button>
-                    <button className="btn btnPrimary" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+                    <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                       Download anyway
                     </button>
                   </>
@@ -939,7 +999,7 @@ export default function Page() {
 
           {canShowDebug && (debugMetrics || columnMapDebug) && (
             <section className="panel" aria-label="Debug">
-              <button type="button" onClick={() => setShowDebug((v) => !v)} aria-expanded={showDebug} className="secondaryLink">
+              <button type="button" onClick={() => setShowDebug((v) => !v)} aria-expanded={showDebug} className="btn">
                 {showDebug ? 'Hide debug' : 'Debug'}
               </button>
               {showDebug && (
@@ -961,57 +1021,41 @@ export default function Page() {
               )}
             </section>
           )}
-
         </section>
 
-        <section className="section" id={LANDING_COPY_KEYS.howItWorks} aria-label={LANDING_COPY.howItWorksTitle}>
-          <h2 className="sectionTitle">{LANDING_COPY.howItWorksTitle}</h2>
-          <ol className="problemSteps">
-            {LANDING_COPY.howItWorksSteps.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="section" id={LANDING_COPY_KEYS.pricingPreview} aria-label="Simple pricing">
-          <h2 className="sectionTitle">{LANDING_COPY.pricingPreviewTitle}</h2>
-          <div className="pricingGrid">
-            {LANDING_COPY.pricingPreviewCards.map((card) => (
-              <article className="priceCard" key={card.title}>
-                <h3 className="priceTitle">{card.title}</h3>
-                <p className="priceCopy">{card.copy}</p>
-                <a className="smallAction" href={card.href}>
-                  {card.cta}
-                </a>
-              </article>
+        <section className="pricingStrip" id={LANDING_COPY_KEYS.pricingPreview} aria-label="Simple pricing">
+          <p className="sectionTitle" style={{ margin: 0 }}>{LANDING_COPY.pricingPreviewTitle}</p>
+          <p className="micro">{LANDING_COPY.pricingPreviewSubline}</p>
+          <div className="pricingItems">
+            {LANDING_COPY.pricingPreviewItems.map((item) => (
+              <div className="pricingItem" key={item.label}>
+                <span>{item.label}</span>
+                <span>{item.copy}</span>
+              </div>
             ))}
           </div>
-          <a className="smallAction" href="/pricing">
-            See full pricing
-          </a>
+          <a className="smallAction" href="/pricing"> {LANDING_COPY.pricingPreviewCta}</a>
         </section>
 
         <section className="section" id={LANDING_COPY_KEYS.privacyStrip} aria-label={LANDING_COPY.privacyStripTitle}>
           <h2 className="sectionTitle">{LANDING_COPY.privacyStripTitle}</h2>
-          <ul className="list">
+          <ul className="sectionList">
             {LANDING_COPY.privacyStripBullets.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <a className="smallAction" href="/privacy">
-            {LANDING_COPY.privacyStripCta}
-          </a>
+          <a className="smallAction" href="/privacy">{LANDING_COPY.privacyStripCta}</a>
         </section>
 
         <footer className="footer" aria-label="Footer">
           <nav className="footerLinks" aria-label="Footer links">
             {LANDING_COPY.footerLinks.map((link) => (
-              <a className="smallMuted" key={link.label} href={link.href}>
+              <a key={link.label} href={link.href}>
                 {link.label}
               </a>
             ))}
           </nav>
-          <p className="smallMuted">{LANDING_COPY.footerCopyright}</p>
+          <p className="muted">{LANDING_COPY.footerCopyright}</p>
         </footer>
       </div>
     </main>

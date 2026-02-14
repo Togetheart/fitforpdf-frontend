@@ -37,28 +37,28 @@ export default function PricingPage() {
     <main className="pricing-page">
       <style jsx>{`
         .pricing-page {
-          --accent: ${UI_TOKENS.accent};
+          --accent: ${UI_TOKENS.colors.accentRed};
           min-height: 100vh;
-          background: ${UI_TOKENS.bg};
-          color: #111827;
+          background: ${UI_TOKENS.colors.bg};
+          color: ${UI_TOKENS.colors.text};
           padding: ${UI_TOKENS.spacing.x24};
-          font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-          font-size: ${UI_TOKENS.text.body.size};
-          line-height: ${UI_TOKENS.text.body.lineHeight};
+          font-family: -apple-system, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
+          font-size: ${UI_TOKENS.typography.body.size};
+          line-height: ${UI_TOKENS.typography.body.lineHeight};
         }
         .container {
-          max-width: ${UI_TOKENS.contentMaxWidth};
+          max-width: ${UI_TOKENS.maxWidth};
           margin: 0 auto;
           display: grid;
           gap: ${UI_TOKENS.spacing.x24};
         }
         .back {
           width: fit-content;
-          border: ${UI_TOKENS.border};
+          border: 1px solid ${UI_TOKENS.colors.border};
           border-radius: ${UI_TOKENS.radius.pill};
           padding: 0.45rem 0.8rem;
           text-decoration: none;
-          color: #111827;
+          color: ${UI_TOKENS.colors.text};
           transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
         }
         .back:hover {
@@ -71,22 +71,22 @@ export default function PricingPage() {
         }
         .title {
           margin: 0;
-          font-size: ${UI_TOKENS.text.h1.sizeMobile};
-          font-weight: ${UI_TOKENS.text.h1.weight};
+          font-size: ${UI_TOKENS.typography.h1.mobile};
+          font-weight: ${UI_TOKENS.typography.h1.weight};
           letter-spacing: 0.01em;
         }
         .subtitle,
         .muted {
           margin: 0;
-          color: ${UI_TOKENS.text.muted};
+          color: ${UI_TOKENS.colors.muted};
         }
         .plans {
           display: grid;
           gap: ${UI_TOKENS.spacing.x12};
         }
         .planCard {
-          border: ${UI_TOKENS.border};
-          border-radius: ${UI_TOKENS.radius.card};
+          border: 1px solid ${UI_TOKENS.colors.border};
+          border-radius: ${UI_TOKENS.radius.base};
           padding: ${UI_TOKENS.spacing.x24};
           display: grid;
           gap: 0.5rem;
@@ -109,11 +109,11 @@ export default function PricingPage() {
           gap: 0.5rem;
         }
         .planAction {
-          border: ${UI_TOKENS.border};
+          border: 1px solid ${UI_TOKENS.colors.border};
           border-radius: ${UI_TOKENS.radius.pill};
           padding: 0.5rem 0.9rem;
           background: #fff;
-          color: #111827;
+          color: ${UI_TOKENS.colors.text};
           text-decoration: none;
           font-weight: 600;
           width: fit-content;
@@ -142,11 +142,11 @@ export default function PricingPage() {
           padding-left: 1.1rem;
           display: grid;
           gap: 0.35rem;
-          color: ${UI_TOKENS.text.muted};
+          color: ${UI_TOKENS.colors.muted};
         }
         .faq {
-          border: ${UI_TOKENS.border};
-          border-radius: ${UI_TOKENS.radius.card};
+          border: 1px solid ${UI_TOKENS.colors.border};
+          border-radius: ${UI_TOKENS.radius.base};
           padding: 0.95rem;
           display: grid;
           gap: 0.6rem;
@@ -157,7 +157,7 @@ export default function PricingPage() {
             padding: ${UI_TOKENS.spacing.x32};
           }
           .title {
-            font-size: ${UI_TOKENS.text.h1.sizeDesktop};
+            font-size: ${UI_TOKENS.typography.h1.desktop};
           }
           .plans {
             grid-template-columns: 1fr;

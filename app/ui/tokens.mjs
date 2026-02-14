@@ -1,6 +1,13 @@
 export const UI_TOKENS = Object.freeze({
-  contentMaxWidth: '960px',
+  colors: {
+    text: '#0A0A0A',
+    muted: 'rgba(0, 0, 0, 0.55)',
+    border: 'rgba(0, 0, 0, 0.10)',
+    bg: '#FFFFFF',
+    accentRed: '#D92D2A',
+  },
   spacing: {
+    x4: '4px',
     x8: '8px',
     x12: '12px',
     x16: '16px',
@@ -8,27 +15,38 @@ export const UI_TOKENS = Object.freeze({
     x32: '32px',
     x48: '48px',
     x64: '64px',
+    x96: '96px',
+    x120: '120px',
   },
   radius: {
-    card: '14px',
+    base: '12px',
     input: '10px',
     pill: '999px',
   },
-  border: '1px solid rgba(0, 0, 0, 0.08)',
-  text: {
+  typography: {
     h1: {
-      sizeDesktop: '44px',
-      sizeMobile: '32px',
+      mobile: '44px',
+      desktop: '64px',
       weight: 650,
+      lineHeight: 1.05,
+    },
+    h2: {
+      mobile: '24px',
+      desktop: '32px',
+      weight: 620,
+      lineHeight: 1.2,
     },
     body: {
       size: '16px',
       lineHeight: 1.5,
     },
-    muted: 'rgba(0, 0, 0, 0.6)',
+    small: {
+      size: '13px',
+      lineHeight: 1.4,
+    },
   },
-  accent: '#D92D2A',
-  bg: '#FFFFFF',
+  maxWidth: '960px',
+  buttonHeight: '48px',
   motion: {
     duration: '150ms',
   },
