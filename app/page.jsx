@@ -27,7 +27,7 @@ import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
-import HeroBackground from './components/HeroBackground';
+import PageHero from './components/PageHero';
 
 const API_BASE = '/api';
 
@@ -219,6 +219,7 @@ export default function Page() {
   const [debugByQuery, setDebugByQuery] = useState(false);
   const [failureRecommendations, setFailureRecommendations] = useState([]);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
+  const [renderVerdict, setRenderVerdict] = useState(null);
   const [freeExportsLeft, setFreeExportsLeft] = useState(() => freeLeft());
   const [isMobile, setIsMobile] = useState(false);
 
@@ -255,6 +256,7 @@ export default function Page() {
 
     setError(null);
     if (!preserveNotice) setNotice(null);
+    setRenderVerdict(null);
     setFailureRecommendations([]);
     setColumnMapDebug(null);
     setIsLoading(true);
@@ -333,6 +335,7 @@ export default function Page() {
       setPdfBlob(blob);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
+      setRenderVerdict(confidenceData?.verdict ?? null);
       setLastRequestMode(mode);
       setShowDetails(false);
       setDebugMetrics(debugMetricsData);
@@ -378,6 +381,7 @@ export default function Page() {
   }
 
   function handleFileSelect(nextFile) {
+    setRenderVerdict(null);
     setFile(nextFile);
     if (nextFile) {
       setError(null);
@@ -389,6 +393,7 @@ export default function Page() {
   function handleRemoveFile() {
     setFile(null);
     setPdfBlob(null);
+    setRenderVerdict(null);
     setError(null);
     setNotice(null);
   }
@@ -422,17 +427,22 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section" className="py-28">
-        <div className="relative">
-          <HeroBackground variant="home" />
-          <section className="relative z-10 grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
+        <PageHero
+          variant="home"
+          eyebrow={LANDING_COPY.heroLabel}
+          title={(
+            <>
+              Client-ready PDFs.
+              <br />
+              <span className="block text-black/70">From messy spreadsheets.</span>
+            </>
+          )}
+          subtitle={LANDING_COPY.heroSubheadline}
+          trustLine={LANDING_COPY.heroTrustLine}
+          contentClassName="gap-10"
+        >
+          <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
             <div className="space-y-6">
-              <p className="text-xs font-semibold tracking-[0.18em] text-black/50">{LANDING_COPY.heroLabel}</p>
-              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
-                <span className="block">Client-ready PDFs.</span>
-                <span className="block text-black/70">From messy spreadsheets.</span>
-              </h1>
-              <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
-              <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
               <div className="mt-8">
                 <a
                   href="#tool"
@@ -442,6 +452,7 @@ export default function Page() {
                   {LANDING_COPY.heroPrimaryCta}
                 </a>
               </div>
+              <p className="max-w-prose text-sm text-slate-600">{LANDING_COPY.heroTrustRow}</p>
             </div>
             <div className="hidden md:block">
               <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
@@ -469,8 +480,8 @@ A104,Widget,6900.00`}
                 </div>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </PageHero>
       </Section>
 
       <Section id={LANDING_COPY_KEYS.problem} index={1} bg="bg-gray-50" className="py-24" testId={LANDING_COPY_KEYS.problem}>
@@ -534,6 +545,8 @@ A104,Widget,6900.00`}
             onTruncateChange={setTruncateLongText}
             onSubmit={handleSubmit}
             onDownloadAgain={handleDownloadAnyway}
+            downloadedFileName={Boolean(pdfBlob) ? resolvedPdfFilename : null}
+            verdict={renderVerdict}
           />
 
           {verdict === 'WARN' && (
@@ -676,7 +689,19 @@ A104,Widget,6900.00`}
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={5} bg="bg-white" className="py-24">
+      <Section id="credibility" index={5} className="py-24">
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.credibilityTitle}</h2>
+          <div className="space-y-2 text-slate-700">
+            {LANDING_COPY.credibilityBullets.map((item) => (
+              <p key={item}>{item}</p>
+            ))}
+          </div>
+          <p className="max-w-prose text-sm text-slate-600">{LANDING_COPY.credibilityMicro}</p>
+        </div>
+      </Section>
+
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={6} bg="bg-white" className="py-24">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.pricingPreviewTitle}
@@ -694,7 +719,7 @@ A104,Widget,6900.00`}
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.privacyStrip} index={6} bg="bg-gray-50" className="py-24">
+      <Section id={LANDING_COPY_KEYS.privacyStrip} index={7} bg="bg-gray-50" className="py-24">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.privacyStripTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
@@ -706,7 +731,7 @@ A104,Widget,6900.00`}
         </div>
       </Section>
 
-      <Section id="home-faq" index={7} bg="bg-white" className="py-24">
+      <Section id="home-faq" index={8} bg="bg-white" className="py-24">
         <div className="space-y-4">
           <Accordion title="Frequently asked questions" items={HOME_FAQ} testId="home-faq" />
         </div>

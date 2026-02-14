@@ -7,7 +7,28 @@ import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import { PRICING_PAGE_COPY } from '../siteCopy.mjs';
 
+function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    configurable: true,
+    value: (query) => ({
+      matches: query.includes('prefers-reduced-motion')
+        ? reduceMotion
+        : query.includes('max-width: 768px')
+          ? mobile
+          : false,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => true,
+    }),
+  });
+}
+
 beforeEach(() => {
+  configureMatchMedia({ mobile: false, reduceMotion: false });
   render(
     <>
       <SiteHeader />
@@ -22,6 +43,35 @@ afterEach(() => {
 });
 
 describe('pricing page UI', () => {
+  test('has page hero shell and backdrop', () => {
+    const hero = screen.getByTestId('page-hero');
+    expect(hero).toBeTruthy();
+
+    const backdrop = hero.querySelector('[data-testid="hero-backdrop"]');
+    const heroBg = hero.querySelector('[data-testid="hero-bg"]');
+    const heroGradients = hero.querySelector('[data-testid="hero-bg-gradients"]');
+
+    expect(backdrop).toBeTruthy();
+    expect(backdrop?.getAttribute('aria-hidden')).toBe('true');
+    expect(heroBg).toBeTruthy();
+    expect(heroGradients).toBeTruthy();
+  });
+
+  test('hero backdrop animation disabled in reduced-motion mode', () => {
+    cleanup();
+    configureMatchMedia({ mobile: false, reduceMotion: true });
+    render(
+      <>
+        <SiteHeader />
+        <PricingPage />
+        <SiteFooter />
+      </>,
+    );
+
+    const gradients = screen.getByTestId('hero-bg-gradients');
+    expect((gradients.getAttribute('class') || '').includes('hero-bg-animate')).toBe(false);
+  });
+
   test('pricing page exports a React component', () => {
     expect(typeof PricingPageDefaultExport).toBe('function');
     expect(PricingPage).toBe(PricingPageDefaultExport);

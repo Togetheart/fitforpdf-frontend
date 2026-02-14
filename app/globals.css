@@ -34,6 +34,10 @@
     isolation: isolate;
   }
 
+  .hero-backdrop {
+    border-radius: inherit;
+  }
+
   .hero-bg-gradients,
   .hero-bg-noise {
     position: absolute;

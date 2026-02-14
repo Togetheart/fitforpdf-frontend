@@ -12,25 +12,28 @@ vi.mock('../components/BeforeAfter.mjs', () => ({
   default: () => <div data-layout="split" data-testid="before-after" />,
 }));
 
-function ensureMatchMedia() {
-  if (window.matchMedia) return;
+function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
-    value: () => ({
-      matches: false,
-      media: '(max-width: 768px)',
+    value: (query) => ({
+      matches: query.includes('prefers-reduced-motion')
+        ? reduceMotion
+        : query.includes('max-width: 768px')
+          ? mobile
+          : false,
+      media: query,
       addEventListener: () => {},
       removeEventListener: () => {},
       addListener: () => {},
       removeListener: () => {},
-      dispatchEvent: () => {},
+      dispatchEvent: () => true,
     }),
   });
 }
 
 beforeEach(() => {
-  ensureMatchMedia();
+  configureMatchMedia({ mobile: false, reduceMotion: false });
   render(
     <>
       <SiteHeader />
@@ -45,6 +48,35 @@ afterEach(() => {
 });
 
 describe('landing structure and UI invariants', () => {
+  test('hero section uses shared PageHero and backdrop', () => {
+    const pageHero = screen.getByTestId('page-hero');
+    const heroBackdrop = within(pageHero).getByTestId('hero-backdrop');
+    const heroBg = within(pageHero).getByTestId('hero-bg');
+    const heroGradients = within(pageHero).getByTestId('hero-bg-gradients');
+    const heroNoise = within(pageHero).getByTestId('hero-bg-noise');
+
+    expect(pageHero.getAttribute('data-testid')).toBe('page-hero');
+    expect(heroBackdrop.getAttribute('aria-hidden')).toBe('true');
+    expect(heroBg).toBeTruthy();
+    expect(heroGradients).toBeTruthy();
+    expect(heroNoise).toBeTruthy();
+  });
+
+  test('reduced motion disables hero backdrop drift animation', async () => {
+    cleanup();
+    configureMatchMedia({ mobile: false, reduceMotion: true });
+    render(
+      <>
+        <SiteHeader />
+        <Landing />
+        <SiteFooter />
+      </>,
+    );
+
+    const heroGradients = screen.getByTestId('hero-bg-gradients');
+    expect((heroGradients.getAttribute('class') || '').includes('hero-bg-animate')).toBe(false);
+  });
+
   test('hero has exactly one primary CTA and no secondary links', () => {
     const hero = screen.getByTestId('hero-section');
     const primary = within(hero).getByTestId('hero-primary-cta');
@@ -73,10 +105,10 @@ describe('landing structure and UI invariants', () => {
   test('hero title renders as two separated lines', () => {
     const hero = screen.getByTestId('hero-section');
     const heroTitleLines = within(hero).getAllByText(/Client-ready PDFs\.|From messy spreadsheets\./i);
-    const spans = hero.querySelectorAll('h1 span');
+    const lineBreak = hero.querySelector('h1 br');
 
     expect(heroTitleLines).toHaveLength(2);
-    expect(spans).toHaveLength(2);
+    expect(lineBreak).toBeTruthy();
   });
 
   test('hero is before tool section in DOM order', () => {
@@ -94,9 +126,14 @@ describe('landing structure and UI invariants', () => {
 
   test('UploadCard includes dropzone, CTA, badge and switches', () => {
     const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
+    const uploadCard = within(toolSection).getByTestId('upload-card');
+
+    expect(uploadCard).toBeTruthy();
     expect(within(toolSection).getByText('Drop CSV or XLSX here')).toBeTruthy();
     expect(within(toolSection).getByRole('button', { name: 'Generate PDF' })).toBeTruthy();
-    expect(within(toolSection).getByText(/Free\.\s*3\s*exports left/i)).toBeTruthy();
+    expect(within(toolSection).getByTestId('upload-dropzone')).toBeTruthy();
+    expect(within(toolSection).getByText(/Free:\s*3\s*exports left/i)).toBeTruthy();
+    expect(uploadCard.querySelector('[data-testid="quota-pill"]')).toBeTruthy();
 
     const switches = within(toolSection).getAllByRole('switch');
     expect(switches).toHaveLength(2);
@@ -120,14 +157,16 @@ describe('landing structure and UI invariants', () => {
     expect(cards[1].getAttribute('data-featured')).toBe('true');
     expect(pricingGrid.className.includes('grid-cols-1')).toBe(true);
     expect(pricingGrid.className.includes('md:grid-cols-3')).toBe(true);
+    const creditsCard = screen.getByTestId('plan-credits');
+    expect(creditsCard).toBeTruthy();
+    expect(creditsCard.getAttribute('data-highlight')).toBe('true');
   });
 
   test('home includes premium section labels and micro copy', () => {
     const hero = screen.getByTestId('hero-section');
     expect(within(hero).getByText('FITFORPDF')).toBeTruthy();
-    expect(
-      within(hero).getByText('No accounts. Files deleted after conversion.'),
-    ).toBeTruthy();
+    expect(within(hero).getByText('Files are deleted immediately after conversion. PDF available for 15 minutes.')).toBeTruthy();
+    expect(within(hero).getByText('No account. No tracking of file contents. Works with CSV and XLSX.')).toBeTruthy();
   });
 
   test('problem section uses the three real-world pain lines', () => {
@@ -155,7 +194,7 @@ describe('landing structure and UI invariants', () => {
 
 test('free exports pill is scoped to tool section', () => {
   const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
-  const counters = screen.getAllByText(/Free\.?\s*\d+\s*exports left/i);
+  const counters = screen.getAllByText(/Free[:\s]\s*\d+\s*exports left/i);
 
   expect(counters.length).toBeGreaterThan(0);
   counters.forEach((node) => {

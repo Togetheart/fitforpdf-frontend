@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { PRIVACY_PAGE_COPY } from '../siteCopy.mjs';
-import HeroBackground from '../components/HeroBackground';
 import Section from '../components/Section';
 import Accordion from '../components/Accordion';
+import PageHero from '../components/PageHero';
 
 function BulletList({ values }) {
   return (
@@ -28,25 +28,21 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Section id="privacy-hero" index={0} className="py-28">
-        <div className="relative">
-          <HeroBackground variant="privacy" />
-          <div className="relative z-10 mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-              {PRIVACY_PAGE_COPY.heroLabel}
-            </p>
-            <h1
-              className="mt-4 text-center text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]"
-              data-testid="privacy-h1"
-            >
+        <PageHero
+          variant="privacy"
+          align="center"
+          eyebrow={PRIVACY_PAGE_COPY.heroLabel}
+          title={(
+            <>
               <span className="block">{PRIVACY_PAGE_COPY.pageTitle}</span>
               <span className="block text-slate-600">{PRIVACY_PAGE_COPY.pageTitleAccent}</span>
-            </h1>
-            <p className="mx-auto mt-4 max-w-[46ch] text-sm text-slate-700 sm:text-base">
-              {PRIVACY_PAGE_COPY.pageSubtitle}
-            </p>
-            <p className="mt-3 text-sm text-slate-500">{PRIVACY_PAGE_COPY.microLine}</p>
-          </div>
-        </div>
+            </>
+          )}
+          subtitle={PRIVACY_PAGE_COPY.pageSubtitle}
+          trustLine={PRIVACY_PAGE_COPY.microLine}
+          titleClassName="mt-4 text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]"
+          headingTestId="privacy-h1"
+        />
       </Section>
 
       <Section id="privacy-handling" index={1} className="py-28">

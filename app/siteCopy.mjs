@@ -6,7 +6,8 @@ export const LANDING_COPY = {
   heroSubheadline: 'Upload a CSV or Excel file.\\nGet a structured PDF ready to send.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
-  heroTrustLine: 'No accounts. Files deleted after conversion.',
+  heroTrustLine: 'Files are deleted immediately after conversion. PDF available for 15 minutes.',
+  heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
 
   problemTitle: 'Spreadsheet exports fail in real life.',
   problemBullets: [
@@ -30,6 +31,14 @@ export const LANDING_COPY = {
 
   toolTitle: 'Generate a client-ready PDF',
   toolSubcopy: '3 free exports. No account required.',
+
+  credibilityTitle: 'Why this is reliable',
+  credibilityBullets: [
+    'Overview page included',
+    'Columns grouped into sections',
+    'Rows X–Y and Page i/n',
+  ],
+  credibilityMicro: "If it looks wrong once, you won't trust it. FitForPDF is built for the first try.",
 
   pricingPreviewTitle: 'Simple pricing.',
   pricingPreviewSubline: 'Pay only for what you export.',
@@ -244,9 +253,15 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     containsFreeQuotaText: false,
   },
   {
+    id: 'credibility',
+    title: LANDING_COPY.credibilityTitle,
+    bullets: LANDING_COPY.credibilityBullets,
+    containsFreeQuotaText: false,
+  },
+  {
     id: LANDING_COPY_KEYS.upload,
     title: LANDING_COPY.toolTitle,
-    freeQuotaText: `Free. ${freeExportsLeft} exports left`,
+    freeQuotaText: `Free: ${freeExportsLeft} exports left`,
     containsFreeQuotaText: true,
   },
   {
