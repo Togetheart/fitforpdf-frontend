@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import React from 'react';
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 
 import PricingPage from '../pricing/page.jsx';
 import SiteHeader from '../components/SiteHeader';
@@ -40,19 +40,55 @@ describe('pricing conversion UI', () => {
   });
 
   test('credits card lists both pack variants', () => {
-    const creditsCard = screen.getByTestId('plan-highlighted').closest('[data-testid="plan-card"]') || null;
+    const creditsCard = screen.getByTestId('plan-credits')?.closest('[data-testid="plan-card"]') || null;
     const body = creditsCard ? creditsCard.textContent : '';
 
     expect(creditsCard).toBeTruthy();
-    expect(body).toContain('100 exports • €19');
-    expect(body).toContain('500 exports • €79');
+    expect(body).toContain('100 exports · €19');
+    expect(body).toContain('500 exports · €79');
   });
 
   test('contains a comparison table and faq', () => {
     const compare = screen.getByTestId('pricing-compare');
+    const text = compare.textContent || '';
     const faq = screen.getByTestId('pricing-faq');
 
     expect(compare).toBeTruthy();
     expect(faq).toBeTruthy();
+    expect(text).toContain('Client-ready PDF output');
+    expect(text).toContain('Branding removable');
+    expect(text).toContain('Batch export');
+    expect(text).toContain('API access');
+    expect(screen.getByTestId('plan-highlighted')).toBeTruthy();
+  });
+
+  test('faq opens one item at a time and icon rotates', () => {
+    const faq = screen.getByTestId('pricing-faq');
+    const buttons = within(faq).getAllByRole('button');
+    expect(buttons.length).toBe(4);
+
+    const first = buttons[0];
+    const second = buttons[1];
+    const firstPanel = document.getElementById(first.getAttribute('aria-controls') || '');
+    const secondPanel = document.getElementById(second.getAttribute('aria-controls') || '');
+    const firstChevron = first.querySelector('[data-testid="faq-chevron"]');
+    const secondChevron = second.querySelector('[data-testid="faq-chevron"]');
+
+    expect(firstPanel).toBeTruthy();
+    expect(secondPanel).toBeTruthy();
+    expect(first.getAttribute('aria-expanded')).toBe('false');
+    expect(second.getAttribute('aria-expanded')).toBe('false');
+    expect(firstChevron).toBeTruthy();
+    expect(secondChevron).toBeTruthy();
+
+    fireEvent.click(first);
+    expect(first.getAttribute('aria-expanded')).toBe('true');
+    expect(firstChevron?.getAttribute('class') || '').toContain('rotate-180');
+    expect(second.getAttribute('aria-expanded')).toBe('false');
+
+    fireEvent.click(second);
+    expect(second.getAttribute('aria-expanded')).toBe('true');
+    expect(secondChevron?.getAttribute('class') || '').toContain('rotate-180');
+    expect(first.getAttribute('aria-expanded')).toBe('false');
   });
 });

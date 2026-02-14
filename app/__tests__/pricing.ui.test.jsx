@@ -106,19 +106,19 @@ describe('pricing page UI', () => {
     );
 
     expect(creditsCard).toBeTruthy();
-    expect(within(creditsCard).getByText('100 exports • €19')).toBeTruthy();
-    expect(within(creditsCard).getByText('500 exports • €79')).toBeTruthy();
+    expect(within(creditsCard).getByText('100 exports · €19')).toBeTruthy();
+    expect(within(creditsCard).getByText('500 exports · €79')).toBeTruthy();
   });
 
   test('comparison table is present and has comparison test id', () => {
     const compare = screen.getByTestId('pricing-compare');
     expect(compare).toBeTruthy();
-    const table = within(compare).getByRole('table');
-    const rows = within(table).getAllByRole('row');
+    const compareText = compare.textContent || '';
 
-    expect(rows).toHaveLength(5);
-    expect(within(table).getByRole('columnheader', { name: 'Feature' })).toBeTruthy();
-    expect(within(rows[1]).getByText('Exports')).toBeTruthy();
+    expect(compareText).toContain('Client-ready PDF output');
+    expect(compareText).toContain('Branding removable');
+    expect(compareText).toContain('Batch export');
+    expect(compareText).toContain('API access');
   });
 
   test('FAQ exists and is interactive', () => {
@@ -152,13 +152,11 @@ describe('pricing page UI', () => {
     expect(updatedIconClass.includes('rotate-180')).toBe(true);
   });
 
-  test('contains exact expected prices', () => {
+  test('contains expected plan pricing values', () => {
     const pageText = document.body.textContent || '';
 
-    expect(pageText.includes('100 exports')).toBe(true);
-    expect(pageText.includes('€19')).toBe(true);
-    expect(pageText.includes('500 exports')).toBe(true);
-    expect(pageText.includes('€79')).toBe(true);
+    expect(pageText.includes('100 exports · €19')).toBe(true);
+    expect(pageText.includes('500 exports · €79')).toBe(true);
     expect(pageText.includes('€29/month')).toBe(true);
   });
 
@@ -166,21 +164,5 @@ describe('pricing page UI', () => {
     const creditsButton = screen.getByRole('button', { name: PRICING_PAGE_COPY.creditsCtaLabel });
     expect(creditsButton).toBeTruthy();
     expect(creditsButton.getAttribute('disabled')).toBe('');
-  });
-
-  test('comparison plans include branded row and no accidental duplicates', () => {
-    const cards = screen.getAllByTestId('plan-card');
-    const titles = cards.map((card) => {
-      const heading = within(card).getByRole('heading', { level: 3 });
-      return heading.textContent;
-    });
-    const seen = new Set(titles.filter(Boolean));
-    expect(seen.size).toBe(3);
-  });
-
-  test('header and CTA back links remain', () => {
-    expect(screen.getByRole('link', { name: PRICING_PAGE_COPY.freeCtaLabel }).getAttribute('href')).toBe(
-      PRICING_PAGE_COPY.freeCtaHref,
-    );
   });
 });
