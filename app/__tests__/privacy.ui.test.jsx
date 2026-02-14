@@ -81,12 +81,11 @@ describe('privacy page UI', () => {
     expect((heading.getAttribute('class') || '').includes('text-center')).toBe(true);
     expect(screen.getByText('Not our business.')).toBeTruthy();
     expect(screen.getByText('PRIVACY')).toBeTruthy();
-  });
 
-  test('contains privacy core sections', () => {
-    expect(screen.getByRole('heading', { level: 2, name: 'How file handling works' })).toBeTruthy();
-    expect(screen.getByRole('heading', { level: 2, name: 'What we don’t do' })).toBeTruthy();
-    expect(screen.getByRole('heading', { level: 2, name: 'Infrastructure' })).toBeTruthy();
+    const lines = heading.querySelectorAll('span');
+    expect(lines.length).toBeGreaterThan(1);
+    expect(lines[0]?.textContent).toBe('Your data.');
+    expect(lines[1]?.textContent).toBe('Not our business.');
   });
 
   test('contains file handling promises', () => {
@@ -94,6 +93,12 @@ describe('privacy page UI', () => {
     expect(screen.getByText('The generated PDF is available for up to 15 minutes.')).toBeTruthy();
     expect(screen.getByText('We do not store file contents in logs.')).toBeTruthy();
     expect(screen.getByText('Do not upload sensitive data.')).toBeTruthy();
+  });
+
+  test('contains trust sections and sensitive-data callout', () => {
+    expect(screen.getByRole('heading', { level: 2, name: 'How file handling works' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: 'What we log' })).toBeTruthy();
+    expect(screen.getByTestId('privacy-sensitive-callout').textContent).toContain('Do not upload sensitive data.');
   });
 
   test('contains legal footer line', () => {

@@ -1,26 +1,34 @@
+'use client';
+
 import React from 'react';
 
 import { PRIVACY_PAGE_COPY } from '../siteCopy.mjs';
+import Card from '../components/Card';
 import Section from '../components/Section';
 import Accordion from '../components/Accordion';
 import PageHero from '../components/PageHero';
 
-function BulletList({ values }) {
+function SectionBullets({ items, compact = false }) {
+  const listClassName = compact ? 'space-y-2' : 'space-y-3';
+
   return (
-    <ul className="list-disc space-y-2 pl-6 text-sm text-slate-700">
-      {values.map((value) => (
-        <li key={value}>{value}</li>
+    <ul className={`${listClassName} text-sm text-slate-700`}>
+      {items.map((item) => (
+        <li key={item} className="leading-relaxed">
+          {item}
+        </li>
       ))}
     </ul>
   );
 }
 
-function PillarCard({ title, bullets }) {
+function HandlingCard({ title, description, items }) {
   return (
-    <article className="space-y-3">
-      <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
-      <BulletList values={bullets} />
-    </article>
+    <Card className="relative border border-slate-200/80 bg-white p-6 sm:p-7">
+      <h3 className="mb-2 text-sm font-semibold tracking-[0.08em] text-black/55">{title}</h3>
+      <p className="mb-3 text-sm text-slate-700">{description}</p>
+      <SectionBullets items={items} compact />
+    </Card>
   );
 }
 
@@ -45,54 +53,60 @@ export default function PrivacyPage() {
         />
       </Section>
 
-      <Section id="privacy-handling" index={1} className="py-28">
+      <Section id="privacy-handling" index={1} className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl space-y-6">
-          <h2 className="text-3xl font-semibold">{PRIVACY_PAGE_COPY.handlingTitle}</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
-            <PillarCard title={PRIVACY_PAGE_COPY.files.title} bullets={PRIVACY_PAGE_COPY.files.bullets} />
-            <PillarCard
+          <h2 className="text-3xl font-semibold tracking-tight">{PRIVACY_PAGE_COPY.handlingTitle}</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <HandlingCard
+              title={PRIVACY_PAGE_COPY.files.title}
+              description={PRIVACY_PAGE_COPY.files.bullets[0]}
+              items={[]}
+            />
+            <HandlingCard
               title={PRIVACY_PAGE_COPY.generatedPdf.title}
-              bullets={PRIVACY_PAGE_COPY.generatedPdf.bullets}
+              description={PRIVACY_PAGE_COPY.generatedPdf.bullets[0]}
+              items={PRIVACY_PAGE_COPY.generatedPdf.bullets.slice(1)}
             />
           </div>
         </div>
       </Section>
 
-      <Section id="privacy-logs" index={2} bg="bg-white" className="py-20">
+      <Section id="privacy-logs" index={2} bg="bg-gray-50" className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl space-y-4">
-          <h2 className="text-3xl font-semibold">{PRIVACY_PAGE_COPY.logs.title}</h2>
-          <BulletList values={PRIVACY_PAGE_COPY.logs.bullets} />
+          <h2 className="text-3xl font-semibold tracking-tight">{PRIVACY_PAGE_COPY.logs.title}</h2>
+          <Card className="p-6 sm:p-8">
+            <SectionBullets items={PRIVACY_PAGE_COPY.logs.bullets} />
+          </Card>
         </div>
       </Section>
 
-      <Section id="privacy-dont-do" index={3} className="py-28">
-        <div className="mx-auto max-w-4xl space-y-4">
-          <h2 className="text-3xl font-semibold">{PRIVACY_PAGE_COPY.dontDoTitle}</h2>
-          <BulletList values={PRIVACY_PAGE_COPY.dontDo} />
+      <Section id="privacy-sensitive" index={3} className="py-16 sm:py-20">
+        <div className="mx-auto flex max-w-4xl">
+          <div
+            data-testid="privacy-sensitive-callout"
+            className="w-full rounded-2xl border border-[#D92D2A]/25 bg-[#D92D2A]/5 px-6 py-4"
+          >
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#B62622]">
+              Safety note
+            </p>
+            <p className="mt-1 text-sm text-slate-800">{PRIVACY_PAGE_COPY.sensitiveDataNote}</p>
+          </div>
         </div>
       </Section>
 
-      <Section id="privacy-infrastructure" index={4} className="py-28">
-        <div className="mx-auto max-w-4xl space-y-4">
-          <h2 className="text-3xl font-semibold">{PRIVACY_PAGE_COPY.infrastructureTitle}</h2>
-          <BulletList values={PRIVACY_PAGE_COPY.infrastructure} />
-        </div>
-      </Section>
-
-      <Section id="privacy-legal" index={5} className="py-12">
-        <div className="mx-auto flex max-w-4xl flex-col gap-3">
-          <p className="text-sm text-slate-500">{PRIVACY_PAGE_COPY.legalFooter}</p>
-          {/* placeholder contact email until full support flow is finalized */}
+      <Section id="privacy-legal" index={4} bg="bg-gray-50" className="py-16 sm:py-20">
+        <div className="mx-auto flex max-w-4xl flex-col gap-2 text-sm text-slate-600">
+          <p>{PRIVACY_PAGE_COPY.legalFooter}</p>
           <a
-            className="inline-flex w-fit text-sm font-medium text-slate-700 underline underline-offset-4"
+            className="w-fit text-sm font-medium text-slate-700 underline underline-offset-4"
             href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
           >
             {PRIVACY_PAGE_COPY.contactLabel}
           </a>
-          <p className="text-sm text-slate-600">{PRIVACY_PAGE_COPY.sensitiveDataNote}</p>
         </div>
       </Section>
-      <Section id="privacy-faq" index={6} className="py-28">
+
+      <Section id="privacy-faq" index={5} className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl">
           <Accordion title="Frequently asked questions" items={PRIVACY_PAGE_COPY.faq} />
         </div>
