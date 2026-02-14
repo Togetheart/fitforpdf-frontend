@@ -100,15 +100,16 @@ describe('home conversion-critical UI', () => {
     const firstButton = screen.getByRole('button', { name: firstQuestion });
     const panel = document.getElementById(firstButton.getAttribute('aria-controls'));
     const chevron = firstButton.querySelector('[data-testid="faq-chevron"]');
+    const panelClass = (panel?.getAttribute('class') || '');
 
     expect(firstButton.getAttribute('aria-expanded')).toBe('false');
     expect(panel).toBeTruthy();
-    expect(panel.getAttribute('class') || '').toContain('grid-rows-[0fr]');
+    expect(panelClass).toContain('max-h-0');
 
     fireEvent.click(firstButton);
 
     expect(firstButton.getAttribute('aria-expanded')).toBe('true');
-    expect(panel.getAttribute('class') || '').toContain('grid-rows-[1fr]');
+    expect(panel?.getAttribute('class') || '').toContain('max-h-[20rem]');
     expect(chevron.getAttribute('class') || '').toContain('rotate-180');
   });
 });

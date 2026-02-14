@@ -21,8 +21,6 @@ import {
   PRICING_CARDS,
   HOME_FAQ,
 } from './siteCopy.mjs';
-import { getLayoutMode } from './ui/responsive.mjs';
-import BeforeAfter from './components/BeforeAfter.mjs';
 import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
@@ -221,22 +219,13 @@ export default function Page() {
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [freeExportsLeft, setFreeExportsLeft] = useState(() => freeLeft());
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const debugParam = new URLSearchParams(window.location.search).get('debug');
     setDebugByQuery(debugParam === '1');
     setFreeExportsLeft(freeLeft());
-
-    const mq = window.matchMedia('(max-width: 768px)');
-    const sync = () => setIsMobile(mq.matches);
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
   }, []);
-
-  const beforeAfterLayout = getLayoutMode({ isMobile });
   const canShowDebug = process.env.NODE_ENV !== 'production' || debugByQuery;
 
   async function submitRender(mode = 'normal', opts = {}) {
@@ -426,105 +415,139 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section" className="py-28">
+      <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section">
         <PageHero
           variant="home"
           eyebrow={LANDING_COPY.heroLabel}
+          align="center"
+          height="min-h-screen"
           title={(
             <>
-              Client-ready PDFs.
-              <br />
-              <span className="block text-black/70">From messy spreadsheets.</span>
+              <span className="block">Client-ready PDFs.</span>
+              <span className="block text-black/60">From messy spreadsheets.</span>
             </>
           )}
           subtitle={LANDING_COPY.heroSubheadline}
           trustLine={LANDING_COPY.heroTrustLine}
-          contentClassName="gap-10"
+          contentClassName="items-center gap-8 text-center"
+          className="py-0"
         >
-          <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
-            <div className="space-y-6">
-              <div className="mt-8">
-                <a
-                  href="#tool"
-                  data-testid="hero-primary-cta"
-                  className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-150 hover:bg-red-700 active:scale-[0.99]"
-                >
-                  {LANDING_COPY.heroPrimaryCta}
-                </a>
-              </div>
-              <p className="max-w-prose text-sm text-slate-600">{LANDING_COPY.heroTrustRow}</p>
-            </div>
-            <div className="hidden md:block">
-              <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
-                <p className="text-xs font-semibold tracking-[0.15em] text-black/50">PREVIEW</p>
-                <div className="mt-4 space-y-3">
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">CSV input</p>
-                    <pre className="mt-2 min-h-20 max-h-36 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[11px] leading-4 text-slate-700">
-{`invoice_id,client,total
-A102,ACME Corp,4230.00
-A103,Northline,1120.00
-A104,Widget,6900.00`}
-                    </pre>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                      Structured PDF summary
-                    </p>
-                    <div className="mt-2 space-y-1 text-sm text-slate-700">
-                      <p className="font-semibold">Overview page</p>
-                      <p>Rows 1–20 · Page 1/n</p>
-                      <p>Columns grouped by section</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="space-y-6">
+            <a
+              href="#tool"
+              data-testid="hero-primary-cta"
+              className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:bg-red-700 hover:shadow-[0_0_40px_rgba(239,68,68,0.25)] active:scale-[0.99]"
+            >
+              {LANDING_COPY.heroPrimaryCta}
+            </a>
+            <p className="max-w-prose text-sm text-slate-500">
+              No account. No tracking of file contents. Works with CSV and XLSX.
+            </p>
+            <p className="max-w-prose text-sm text-slate-500">
+              {LANDING_COPY.heroTrustLine}
+            </p>
           </div>
         </PageHero>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.problem} index={1} bg="bg-gray-50" className="py-24" testId={LANDING_COPY_KEYS.problem}>
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.problemTitle}</h2>
-          <div className="space-y-2 text-slate-700">
-            {LANDING_COPY.problemBullets.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
-          </div>
+      <Section id="transformation" index={1} bg="bg-gray-50" className="py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            Look professional.
+            <span className="block">Even with messy spreadsheets.</span>
+          </h2>
         </div>
       </Section>
 
       <Section id={LANDING_COPY_KEYS.beforeAfter} index={2} className="py-24">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
-            {LANDING_COPY.beforeAfterTitle}
+        <div className="space-y-6">
+          <h2 className="text-center text-2xl font-semibold leading-snug sm:text-3xl">
+            From raw data to structured document.
           </h2>
-          <BeforeAfter
-            beforeLabel={LANDING_COPY.beforeLabel}
-            afterLabel={LANDING_COPY.afterLabel}
-            isMobile={isMobile}
-            layoutMode={beforeAfterLayout}
-          />
+          <div
+            data-testid="home-preview-card"
+            className="home-preview-float mx-auto max-w-5xl rounded-2xl border border-black/10 bg-white/80 p-4 shadow-sm backdrop-blur md:p-8"
+          >
+            <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{LANDING_COPY.beforeLabel}</p>
+                <pre className="mt-2 min-h-28 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-3 text-[11px] leading-4 text-slate-700">
+{`invoice_id,client,total
+A102,ACME Corp,4230.00
+A103,Northline,1120.00
+A104,Widget,6900.00`}
+                </pre>
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{LANDING_COPY.afterLabel}</p>
+                <div className="mt-2 space-y-1 text-sm text-slate-700">
+                  <p className="font-semibold">Overview page</p>
+                  <p>Rows 1–20 · Page 1/2</p>
+                  <p>Columns grouped by section</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.clientReady} index={3} bg="bg-white" className="py-24">
+      <Section id="how-it-works" index={3} className="py-24" bg="bg-gray-50">
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.clientReadyTitle}</h2>
-          <ul className="space-y-2 text-slate-700">
-            {LANDING_COPY.clientReadyBullets.slice(0, 4).map((item) => (
-              <li key={item}>{item}</li>
-            ))}
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">How it works</h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">1</p>
+              <h3 className="text-lg font-semibold">Upload your file</h3>
+              <p className="mt-2 text-sm text-slate-700">Drop CSV or XLSX into the secure converter.</p>
+            </article>
+            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">2</p>
+              <h3 className="text-lg font-semibold">Generate structure</h3>
+              <p className="mt-2 text-sm text-slate-700">We build a client-ready PDF with overview and sections.</p>
+            </article>
+            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">3</p>
+              <h3 className="text-lg font-semibold">Download</h3>
+              <p className="mt-2 text-sm text-slate-700">Get a polished file in seconds and send it immediately.</p>
+            </article>
+          </div>
+        </div>
+      </Section>
+
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={4} className="py-24" bg="bg-white">
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
+            {LANDING_COPY.pricingPreviewTitle}
+          </h2>
+          <p className="text-sm text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
+          <PricingPlans
+            plans={PRICING_CARDS}
+            variant="home"
+            gridTestId="pricing-grid"
+            cardTestId="pricing-preview-card"
+          />
+          <a href="/pricing" className={CTA_SECONDARY}>
+            {LANDING_COPY.pricingPreviewCta}
+          </a>
+        </div>
+      </Section>
+
+      <Section id={LANDING_COPY_KEYS.privacyStrip} index={5} bg="bg-gray-50" className="py-24">
+        <div className="mx-auto max-w-3xl space-y-4 text-center">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">Your data. Not our business.</h2>
+          <ul className="mx-auto inline-flex max-w-2xl flex-col gap-2 pl-5 text-left text-slate-700">
+            <li>Files are deleted immediately after conversion.</li>
+            <li>The generated PDF is available for up to 15 minutes.</li>
+            <li>We do not store file contents in logs.</li>
           </ul>
         </div>
       </Section>
 
       <Section
         id={LANDING_COPY_KEYS.upload}
-        index={4}
+        index={6}
         className="py-24"
-        bg="bg-gray-50"
+        bg="bg-white"
         testId={LANDING_COPY_KEYS.upload}
       >
         <div className="space-y-4">
@@ -686,48 +709,6 @@ A104,Widget,6900.00`}
               )}
             </section>
           )}
-        </div>
-      </Section>
-
-      <Section id="credibility" index={5} className="py-24">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.credibilityTitle}</h2>
-          <div className="space-y-2 text-slate-700">
-            {LANDING_COPY.credibilityBullets.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
-          </div>
-          <p className="max-w-prose text-sm text-slate-600">{LANDING_COPY.credibilityMicro}</p>
-        </div>
-      </Section>
-
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={6} bg="bg-white" className="py-24">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
-            {LANDING_COPY.pricingPreviewTitle}
-          </h2>
-          <p className="text-sm text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
-          <PricingPlans
-            plans={PRICING_CARDS}
-            variant="home"
-            gridTestId="pricing-grid"
-            cardTestId="pricing-preview-card"
-          />
-          <a href="/pricing" className={`${CTA_SECONDARY} w-fit`}>
-            {LANDING_COPY.pricingPreviewCta}
-          </a>
-        </div>
-      </Section>
-
-      <Section id={LANDING_COPY_KEYS.privacyStrip} index={7} bg="bg-gray-50" className="py-24">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.privacyStripTitle}</h2>
-          <ul className="ml-4 list-disc space-y-2 text-slate-700">
-            {LANDING_COPY.privacyStripBullets.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <a href="/privacy" className={`${CTA_SECONDARY} w-fit`}>{LANDING_COPY.privacyStripCta}</a>
         </div>
       </Section>
 

@@ -81,6 +81,9 @@ describe('privacy page UI', () => {
     expect((heading.getAttribute('class') || '').includes('text-center')).toBe(true);
     expect(screen.getByText('Not our business.')).toBeTruthy();
     expect(screen.getByText('PRIVACY')).toBeTruthy();
+    expect(screen.getByText('FitForPDF processes files — it does not store them.')).toBeTruthy();
+    expect(screen.queryByText('FitForPDF is designed to process files — not store them.')).toBeNull();
+    expect(screen.queryByText('No account. No tracking. Files deleted after conversion.')).toBeNull();
 
     const lines = heading.querySelectorAll('span');
     expect(lines.length).toBeGreaterThan(1);

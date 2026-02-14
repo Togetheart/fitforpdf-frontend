@@ -38,16 +38,18 @@ describe('FaqAccordion', () => {
     const panel = document.getElementById(panelId);
 
     expect(first.getAttribute('aria-expanded')).toBe('false');
-    expect(panel.className).toContain('grid-rows-[0fr]');
+    expect(panel.className).toContain('max-h-0');
+    expect(panel.className).toContain('opacity-0');
 
     fireEvent.click(first);
     expect(first.getAttribute('aria-expanded')).toBe('true');
-    expect(panel.className).toContain('grid-rows-[1fr]');
+    expect(panel.className).toContain('max-h-[20rem]');
     expect(panel.className).toContain('opacity-100');
 
     fireEvent.click(first);
     expect(first.getAttribute('aria-expanded')).toBe('false');
-    expect(panel.className).toContain('grid-rows-[0fr]');
+    expect(panel.className).toContain('max-h-0');
+    expect(panel.className).toContain('opacity-0');
   });
 
   test('opens only one item at a time', () => {

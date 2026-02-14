@@ -2,8 +2,8 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
-  heroTitle: 'Client-ready PDFs. From messy spreadsheets.',
-  heroSubheadline: 'Upload a CSV or Excel file.\\nGet a structured PDF ready to send.',
+  heroTitle: 'Client-ready PDFs.\\nFrom messy spreadsheets.',
+  heroSubheadline: 'Upload a CSV or Excel file.\\nGet a structured PDF ready to send in seconds.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'Files are deleted immediately after conversion. PDF available for 15 minutes.',
@@ -87,8 +87,8 @@ export const HOME_FAQ = [
 ];
 
 export const PRICING_PAGE_COPY = {
-  pageTitle: 'Pay only for what you export.',
-  pageSubtitle: 'Start free. Upgrade only when your PDFs are worth sending.',
+  pageTitle: 'Pay only when it’s worth sending.',
+  pageSubtitle: 'Start free. Upgrade when your PDFs are client-ready.',
   pageTagline: 'No subscriptions. No lock-in.',
   pageMicro: 'No subscriptions. No lock-in.',
   socialProof: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
@@ -291,7 +291,7 @@ export const PRIVACY_PAGE_COPY = {
   heroLabel: 'PRIVACY',
   pageTitle: 'Your data.',
   pageTitleAccent: 'Not our business.',
-  pageSubtitle: 'FitForPDF is designed to process files — not store them.',
+  pageSubtitle: 'FitForPDF processes files — it does not store them.',
   microLine: 'No accounts. No tracking of file contents.',
 
   handlingTitle: 'How file handling works',
