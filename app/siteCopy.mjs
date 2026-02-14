@@ -35,7 +35,7 @@ export const LANDING_COPY = {
     'No manual layout',
   ],
 
-  toolTitle: 'Try it now',
+  toolTitle: 'Try FitForPDF on the web',
   toolSubcopy: '3 free exports. No account required.',
   brandingOptionLabel: 'Add “Made with FitForPDF” footer',
   truncateOptionLabel: 'Truncate long text to reduce payload',
@@ -71,7 +71,7 @@ export const LANDING_COPY_KEYS = {
   hero: 'hero',
   beforeAfter: 'before-after',
   clientReady: 'client-ready',
-  upload: 'upload',
+  upload: 'tool',
   pricingPreview: 'pricing',
   privacyStrip: 'privacy',
   footer: 'footer',
@@ -128,7 +128,7 @@ export const PRICING_CARDS = [
     points: [PRICING_PAGE_COPY.freeFeature],
     actionLabel: PRICING_PAGE_COPY.freeCtaLabel,
     actionType: 'link',
-    actionHref: '/#upload',
+    actionHref: '/#tool',
     disabled: false,
   },
   {
@@ -182,7 +182,7 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     id: LANDING_COPY_KEYS.hero,
     title: LANDING_COPY.heroTitle,
     ctas: [
-      { label: LANDING_COPY.heroPrimaryCta, href: '#upload', type: 'primary' },
+      { label: LANDING_COPY.heroPrimaryCta, href: '#tool', type: 'primary' },
       { label: LANDING_COPY.heroSecondaryCta, href: '/pricing', type: 'secondary' },
       { label: LANDING_COPY.heroTertiaryCta, href: TELEGRAM_BOT_URL, type: 'tertiary' },
     ],

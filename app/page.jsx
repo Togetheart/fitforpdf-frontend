@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useEffect, useState } from 'react';
 import {
   buildRenderUrl,
@@ -19,9 +20,7 @@ import {
   LANDING_COPY,
   TELEGRAM_BOT_URL,
   LANDING_COPY_KEYS,
-  LANDING_SECTIONS,
 } from './siteCopy.mjs';
-import { UI_TOKENS } from './ui/tokens.mjs';
 import { getCtaLayout, getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
 
@@ -192,8 +191,40 @@ async function parseConfidenceFromJsonIfAvailable(res) {
   return null;
 }
 
-export function getLandingSections(usedLeft = 3) {
-  return LANDING_SECTIONS(usedLeft);
+const CTA_BASE = 'inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150';
+const CTA_PRIMARY = `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white`;
+const CTA_SECONDARY = `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50`;
+const PANEL = 'rounded-xl border border-slate-200 bg-white';
+
+const pricingCards = [
+  {
+    title: 'Free',
+    copy: ['3 exports total'],
+  },
+  {
+    title: 'Credits',
+    copy: ['100 exports • €19', '500 exports • €79'],
+  },
+  {
+    title: 'Pro and API',
+    copy: ['Pro: €29/month', 'API: usage-based'],
+    note: 'coming soon',
+  },
+];
+
+function SectionShell({ id, index, children, testId }) {
+  return (
+    <section
+      id={id}
+      className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+      data-section-bg={index % 2 === 0 ? 'white' : 'gray'}
+      data-testid={testId ?? `section-${id}`}
+    >
+      <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6 px-4 py-10 sm:px-6 sm:py-12 md:py-14">
+        {children}
+      </div>
+    </section>
+  );
 }
 
 export default function Page() {
@@ -224,7 +255,7 @@ export default function Page() {
     setDebugByQuery(debugParam === '1');
     setFreeExportsLeft(freeLeft());
 
-    const mq = window.matchMedia('(max-width: 480px)');
+    const mq = window.matchMedia('(max-width: 768px)');
     const sync = () => setIsMobile(mq.matches);
     sync();
     mq.addEventListener('change', sync);
@@ -236,11 +267,7 @@ export default function Page() {
   const canShowDebug = process.env.NODE_ENV !== 'production' || debugByQuery;
   const canShowPanel = showPaywall || freeExportsLeft <= 0;
   const shouldHidePaywallReset = process.env.NODE_ENV === 'production' && !debugByQuery;
-
-  const sections = LANDING_SECTIONS(freeExportsLeft);
-  const heroSection = sections.find((section) => section.id === LANDING_COPY_KEYS.hero);
-  const uploadSection = sections.find((section) => section.id === LANDING_COPY_KEYS.upload);
-  const beforeAfterSection = sections.find((section) => section.id === LANDING_COPY_KEYS.beforeAfter);
+  const ctaStackClass = ctaLayout === 'stack' ? 'grid grid-cols-1' : 'grid grid-cols-1 sm:grid-cols-3';
 
   function refreshFreeExports() {
     setFreeExportsLeft(freeLeft());
@@ -427,396 +454,96 @@ export default function Page() {
   const failReasons = (confidence?.reasons || []).map(reasonLabel).slice(0, 3);
 
   return (
-    <main className="page">
-      <style jsx>{`
-        .page {
-          --accent: ${UI_TOKENS.colors.accentRed};
-          --muted: ${UI_TOKENS.colors.muted};
-          min-height: 100vh;
-          background: ${UI_TOKENS.colors.bg};
-          color: ${UI_TOKENS.colors.text};
-          padding: ${UI_TOKENS.spacing.x24} ${UI_TOKENS.spacing.x16};
-          font-family: -apple-system, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
-          font-size: ${UI_TOKENS.typography.body.size};
-          line-height: ${UI_TOKENS.typography.body.lineHeight};
-        }
-
-        .container {
-          max-width: ${UI_TOKENS.maxWidth};
-          margin: 0 auto;
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x64};
-        }
-
-        .topBar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: ${UI_TOKENS.spacing.x12};
-        }
-
-        .wordmark {
-          color: var(--accent);
-          text-decoration: none;
-          font-size: 1.05rem;
-          font-weight: 650;
-          letter-spacing: 0.01em;
-        }
-
-        .topLinks {
-          margin-left: auto;
-          display: flex;
-          align-items: center;
-          gap: ${UI_TOKENS.spacing.x16};
-          flex-wrap: wrap;
-        }
-
-        .topLink {
-          text-decoration: none;
-          color: ${UI_TOKENS.colors.text};
-        }
-
-        .hero {
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x16};
-        }
-
-        .heroTitle {
-          margin: 0;
-          font-size: ${UI_TOKENS.typography.h1.mobile};
-          line-height: ${UI_TOKENS.typography.h1.lineHeight};
-          font-weight: ${UI_TOKENS.typography.h1.weight};
-          letter-spacing: 0.01em;
-          max-width: 16ch;
-        }
-
-        .heroSub,
-        .trust,
-        .note {
-          margin: 0;
-          color: var(--muted);
-          max-width: 58ch;
-        }
-
-        .ctaRow,
-        .primaryActionRow {
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x12};
-        }
-
-        .ctaRow {
-          width: fit-content;
-        }
-
-        .btn {
-          height: ${UI_TOKENS.buttonHeight};
-          border-radius: ${UI_TOKENS.radius.input};
-          border: 1px solid ${UI_TOKENS.colors.border};
-          text-decoration: none;
-          color: ${UI_TOKENS.colors.text};
-          padding: 0 1rem;
-          background: #fff;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
-        }
-
-        .btn:hover {
-          transform: translateY(1px);
-          opacity: 0.93;
-        }
-
-        .btnPrimary {
-          color: #fff;
-          background: var(--accent);
-          border-color: var(--accent);
-        }
-
-        .btnSmall {
-          border-radius: ${UI_TOKENS.radius.pill};
-          height: auto;
-          min-height: ${UI_TOKENS.buttonHeight};
-          padding: 0 0.85rem;
-        }
-
-        .section {
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x16};
-        }
-
-        .sectionTitle {
-          margin: 0;
-          font-size: ${UI_TOKENS.typography.h2.mobile};
-          line-height: ${UI_TOKENS.typography.h2.lineHeight};
-          font-weight: ${UI_TOKENS.typography.h2.weight};
-        }
-
-        .sectionList {
-          margin: 0;
-          padding-left: 1.2rem;
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x12};
-          color: ${UI_TOKENS.colors.text};
-        }
-
-        .toolPanel {
-          gap: ${UI_TOKENS.spacing.x16};
-        }
-
-        .quota {
-          margin: 0;
-          font-weight: 650;
-        }
-
-        .quotaLimit {
-          color: #b91c1c;
-        }
-
-        .fileLabel {
-          width: fit-content;
-          border: 1px solid ${UI_TOKENS.colors.border};
-          border-radius: ${UI_TOKENS.radius.input};
-          padding: 0.45rem 0.75rem;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          font-weight: 600;
-        }
-
-        .fileInput {
-          display: none;
-        }
-
-        .field {
-          margin: 0;
-          display: grid;
-          gap: 0.45rem;
-        }
-
-        .warn {
-          margin: 0;
-          margin-top: 0.15rem;
-          color: #7a2e2e;
-          font-size: ${UI_TOKENS.typography.small.size};
-        }
-
-        .notice {
-          margin-top: 0.45rem;
-          color: #334155;
-        }
-
-        .error {
-          margin-top: 0.45rem;
-          color: #b91c1c;
-        }
-
-        .paywall {
-          border: 1px solid #f8caca;
-          background: #fff7f7;
-          border-radius: ${UI_TOKENS.radius.base};
-          padding: 0.85rem;
-          display: grid;
-          gap: 0.45rem;
-        }
-
-        .panel {
-          border: 1px solid ${UI_TOKENS.colors.border};
-          border-radius: ${UI_TOKENS.radius.base};
-          padding: 0.95rem;
-          background: #fff;
-          display: grid;
-          gap: 0.7rem;
-        }
-
-        .pricingStrip {
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x12};
-          border-top: 1px solid ${UI_TOKENS.colors.border};
-          border-bottom: 1px solid ${UI_TOKENS.colors.border};
-          padding: ${UI_TOKENS.spacing.x32} 0;
-        }
-
-        .pricingItems {
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x8};
-        }
-
-        .pricingItem {
-          display: flex;
-          justify-content: space-between;
-          align-items: baseline;
-          gap: ${UI_TOKENS.spacing.x16};
-          border: 1px solid ${UI_TOKENS.colors.border};
-          border-radius: ${UI_TOKENS.radius.base};
-          padding: 0.72rem;
-        }
-
-        .smallAction {
-          width: fit-content;
-          border: 1px solid ${UI_TOKENS.colors.border};
-          border-radius: ${UI_TOKENS.radius.pill};
-          padding: 0.35rem 0.85rem;
-          text-decoration: none;
-          color: ${UI_TOKENS.colors.text};
-          transition: transform ${UI_TOKENS.motion.duration} ease, opacity ${UI_TOKENS.motion.duration} ease;
-        }
-
-        .smallAction:hover {
-          transform: translateY(1px);
-          opacity: 0.9;
-        }
-
-        .footer {
-          display: grid;
-          gap: ${UI_TOKENS.spacing.x12};
-          color: var(--muted);
-          border-top: 1px solid ${UI_TOKENS.colors.border};
-          padding-top: ${UI_TOKENS.spacing.x24};
-        }
-
-        .footerLinks {
-          display: flex;
-          align-items: center;
-          gap: ${UI_TOKENS.spacing.x16};
-          flex-wrap: wrap;
-        }
-
-        .footerLinks a {
-          text-decoration: none;
-          color: ${UI_TOKENS.colors.text};
-        }
-
-        .muted {
-          color: var(--muted);
-          font-size: 0.93rem;
-        }
-
-        .micro {
-          color: var(--muted);
-          font-size: ${UI_TOKENS.typography.small.size};
-        }
-
-        @media (max-width: 480px) {
-          .page {
-            padding: ${UI_TOKENS.spacing.x24} ${UI_TOKENS.spacing.x16};
-          }
-
-          .heroTitle {
-            font-size: ${UI_TOKENS.typography.h1.mobile};
-          }
-
-          .sectionTitle {
-            font-size: ${UI_TOKENS.typography.h2.mobile};
-          }
-
-          .topLinks {
-            width: 100%;
-            justify-content: flex-start;
-          }
-
-          .ctaRow,
-          .primaryActionRow {
-            width: 100%;
-            grid-template-columns: 1fr;
-          }
-
-          .btn,
-          .btnSmall {
-            width: 100%;
-          }
-        }
-
-        @media (min-width: 481px) {
-          .heroTitle {
-            font-size: ${UI_TOKENS.typography.h1.desktop};
-          }
-
-          .sectionTitle {
-            font-size: ${UI_TOKENS.typography.h2.desktop};
-          }
-
-          .ctaRow {
-            grid-template-columns: repeat(3, auto);
-          }
-
-          .primaryActionRow[data-cta="row"] {
-            grid-template-columns: repeat(2, auto);
-          }
-        }
-      `}</style>
-
-      <div className="container">
-        <header className="topBar" id={LANDING_COPY_KEYS.topBar}>
-          <a className="wordmark" href="/" data-testid="wordmark">{LANDING_COPY.logoText}</a>
-          <nav className="topLinks" aria-label="Main navigation">
+    <main className="min-h-screen bg-white text-slate-900">
+      <SectionShell id={LANDING_COPY_KEYS.topBar} index={0}>
+        <header className="flex items-center justify-between gap-3">
+          <a href="/" className="text-xl font-semibold text-[#D92D2A]" data-testid="wordmark">
+            {LANDING_COPY.logoText}
+          </a>
+          <nav className="ml-auto flex items-center gap-3" aria-label="Main navigation">
             {LANDING_COPY.topBarLinks.map((link) => (
-              <a className="topLink" key={link.label} href={link.href}>
+              <a key={link.label} href={link.href} className="text-sm text-slate-900 hover:opacity-80">
                 {link.label}
               </a>
             ))}
-            <a className="topLink" href={TELEGRAM_BOT_URL}>
+            <a href={TELEGRAM_BOT_URL} className="text-sm text-slate-900 hover:opacity-80">
               {LANDING_COPY.telegramCta}
             </a>
           </nav>
         </header>
+      </SectionShell>
 
-        <section className="hero" id={LANDING_COPY_KEYS.hero}>
-          <h1 className="heroTitle">{heroSection.title}</h1>
-          <p className="heroSub">{LANDING_COPY.heroSubheadline}</p>
-          <p className="trust">{heroSection.trustLines[0]}</p>
-          <div className="ctaRow" data-cta={ctaLayout}>
-            <a className="btn btnPrimary" href={heroSection.ctas[0].href} data-testid="primary-cta">
-              {heroSection.ctas[0].label}
+      <SectionShell id={LANDING_COPY_KEYS.hero} index={1} testId="hero-section">
+        <section className="space-y-4">
+          <h1 className="text-[44px] font-[650] leading-tight tracking-tight sm:text-6xl">
+            {LANDING_COPY.heroTitle}
+          </h1>
+          <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
+          <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
+          <div className={`${ctaStackClass} gap-3`} data-testid="hero-ctas">
+            <a href="#tool" className={CTA_PRIMARY} data-testid="primary-cta">
+              {LANDING_COPY.heroPrimaryCta}
             </a>
-            <a className="btn btnSmall" href={heroSection.ctas[1].href}>
-              {heroSection.ctas[1].label}
+            <a href="/pricing" className={CTA_SECONDARY} data-testid="secondary-cta-pricing">
+              {LANDING_COPY.heroSecondaryCta}
             </a>
-            <a className="btn btnSmall" href={heroSection.ctas[2].href}>
-              {heroSection.ctas[2].label}
+            <a href={TELEGRAM_BOT_URL} className={CTA_SECONDARY} data-testid="secondary-cta-telegram">
+              {LANDING_COPY.heroTertiaryCta}
             </a>
           </div>
         </section>
+      </SectionShell>
 
-        <section className="section" id={LANDING_COPY_KEYS.problem}>
-          <h2 className="sectionTitle">{LANDING_COPY.problemTitle}</h2>
-          <ul className="sectionList">
+      <SectionShell id={LANDING_COPY_KEYS.problem} index={2}>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.problemTitle}</h2>
+          <ul className="ml-4 list-disc space-y-2 text-slate-700">
             {LANDING_COPY.problemBullets.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-        </section>
+        </div>
+      </SectionShell>
 
-        <section className="section" id={LANDING_COPY_KEYS.beforeAfter}>
-          <h2 className="sectionTitle">{beforeAfterSection.title}</h2>
+      <SectionShell id={LANDING_COPY_KEYS.beforeAfter} index={3}>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
+            {LANDING_COPY.beforeAfterTitle}
+          </h2>
           <BeforeAfter
             beforeLabel={LANDING_COPY.beforeLabel}
             afterLabel={LANDING_COPY.afterLabel}
             isMobile={isMobile}
             layoutMode={beforeAfterLayout}
           />
-        </section>
+        </div>
+      </SectionShell>
 
-        <section className="section" id={LANDING_COPY_KEYS.clientReady}>
-          <h2 className="sectionTitle">{LANDING_COPY.clientReadyTitle}</h2>
-          <ul className="sectionList">
+      <SectionShell id={LANDING_COPY_KEYS.clientReady} index={4}>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.clientReadyTitle}</h2>
+          <ul className="ml-4 list-disc space-y-2 text-slate-700">
             {LANDING_COPY.clientReadyBullets.slice(0, 4).map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-        </section>
+        </div>
+      </SectionShell>
 
-        <section className="section toolPanel" id={LANDING_COPY_KEYS.upload}>
-          <h2 className="sectionTitle">{uploadSection.title}</h2>
-          <p className="note">{LANDING_COPY.toolSubcopy}</p>
-          <p className="quota">
-            {uploadSection.freeQuotaText}
-            {freeExportsLeft === 0 ? <span className="quotaLimit"> Free limit reached</span> : null}
-          </p>
+      <SectionShell id={LANDING_COPY_KEYS.upload} index={5} testId="tool-section">
+        <div className="space-y-4">
+          <article className={`${PANEL} p-4 sm:p-6`}>
+            <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
+              {LANDING_COPY.toolTitle}
+            </h2>
+            <p className="text-sm text-slate-500">{LANDING_COPY.toolSubcopy}</p>
+            <p className="mt-3 font-semibold text-slate-900">
+              Free exports left: {freeExportsLeft} / 3
+              {freeExportsLeft === 0 ? <span className="ml-2 text-red-700">Free limit reached</span> : null}
+            </p>
 
-          <form onSubmit={handleSubmit}>
-            <p className="field">
-              <label htmlFor="fitforpdf-file" className="fileLabel">
+            <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+              <label htmlFor="fitforpdf-file" className="inline-flex h-11 cursor-pointer items-center rounded-lg border border-slate-300 px-4 text-sm font-medium">
                 Select a file (CSV / XLSX)
                 <input
                   id="fitforpdf-file"
@@ -824,86 +551,85 @@ export default function Page() {
                   accept=".csv,.xlsx"
                   onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                   disabled={isLoading}
-                  className="fileInput"
+                  className="hidden"
                 />
               </label>
-            </p>
-            <p className="field note">{file ? file.name : 'No file selected'}</p>
+              <p className="text-sm text-slate-600">{file ? file.name : 'No file selected'}</p>
 
-            <label className="field">
-              <input
-                type="checkbox"
-                checked={includeBranding}
-                onChange={(e) => setIncludeBranding(e.target.checked)}
-                disabled={isLoading}
-                style={{ marginRight: '0.5rem' }}
-              />
-              {LANDING_COPY.brandingOptionLabel}
-            </label>
-
-            <label className="field">
-              <input
-                type="checkbox"
-                checked={truncateLongText}
-                onChange={(e) => setTruncateLongText(e.target.checked)}
-                disabled={isLoading}
-                style={{ marginRight: '0.5rem' }}
-              />
-              {LANDING_COPY.truncateOptionLabel}
-            </label>
-            {!truncateLongText ? <p className="warn">{LANDING_COPY.truncateNotice}</p> : null}
-
-            <div className="primaryActionRow" data-cta={ctaLayout}>
-              <button className="btn btnPrimary" type="submit" disabled={isLoading}>
-                {isLoading ? 'Generating…' : LANDING_COPY.heroPrimaryCta}
-              </button>
-              {!shouldHidePaywallReset ? (
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={handleResetPaywallForDev}
+              <label className="flex items-center text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={includeBranding}
+                  onChange={(e) => setIncludeBranding(e.target.checked)}
                   disabled={isLoading}
-                >
-                  Reset free exports (dev)
-                </button>
+                  className="mr-2 h-4 w-4"
+                />
+                {LANDING_COPY.brandingOptionLabel}
+              </label>
+
+              <label className="flex items-center text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={truncateLongText}
+                  onChange={(e) => setTruncateLongText(e.target.checked)}
+                  disabled={isLoading}
+                  className="mr-2 h-4 w-4"
+                />
+                {LANDING_COPY.truncateOptionLabel}
+              </label>
+
+              {!truncateLongText ? (
+                <p className="text-xs text-rose-700">{LANDING_COPY.truncateNotice}</p>
               ) : null}
-            </div>
-          </form>
 
-          {notice && <p className="notice">{notice}</p>}
-          {error && <p className="error">{error}</p>}
+              <div className={`${ctaStackClass} w-full gap-3`}>
+                <button className={CTA_PRIMARY} type="submit" disabled={isLoading}>
+                  {isLoading ? 'Generating…' : LANDING_COPY.heroPrimaryCta}
+                </button>
+                {!shouldHidePaywallReset ? (
+                  <button
+                    type="button"
+                    className={CTA_SECONDARY}
+                    onClick={handleResetPaywallForDev}
+                    disabled={isLoading}
+                  >
+                    Reset free exports (dev)
+                  </button>
+                ) : null}
+              </div>
+            </form>
 
-          {canShowPanel ? (
-            <div className="paywall">
-              <p style={{ margin: 0, fontWeight: 600 }}>You&apos;ve used your 3 free exports.</p>
-              <a href="/pricing" className="btn">See pricing</a>
-            </div>
-          ) : null}
+            {notice && <p className="mt-2 text-sm text-amber-700">{notice}</p>}
+            {error && <p className="mt-2 text-sm text-rose-700">{error}</p>}
+
+            {canShowPanel ? (
+              <section className="mt-4 rounded-lg border border-rose-200 bg-rose-50 p-3">
+                <p className="mb-2 font-semibold text-rose-700">You&apos;ve used your 3 free exports.</p>
+                <a href="/pricing" className={CTA_SECONDARY}>See pricing</a>
+              </section>
+            ) : null}
+          </article>
 
           {verdict === 'WARN' && (
-            <section className="panel" aria-label="Warning">
-              <p style={{ margin: 0 }}><span style={{
-                display: 'inline-block',
-                fontSize: '0.8rem',
-                padding: '0.2rem 0.5rem',
-                borderRadius: '999px',
-                background: '#f1f5f9',
-                color: '#334155',
-                marginRight: '0.5rem',
-              }}>Recommended check</span>{confidence?.score != null ? <span style={{ color: '#555' }}>Score: {confidence.score}</span> : null}</p>
-
+            <section className={`${PANEL} p-4`}>
+              <p>
+                <span className="inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+                  Recommended check
+                </span>
+                {confidence?.score != null ? <span className="ml-2 text-slate-700">Score: {confidence.score}</span> : null}
+              </p>
               {warnReasons.length > 0 && (
-                <div style={{ marginTop: '0.75rem' }}>
+                <div className="mt-3">
                   <button
                     type="button"
                     onClick={() => setShowDetails((v) => !v)}
                     aria-expanded={showDetails}
-                    className="btn"
+                    className={CTA_SECONDARY}
                   >
                     {showDetails ? 'Hide details' : 'Show details'}
                   </button>
                   {showDetails && (
-                    <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                    <ul className="mt-3 space-y-1 list-disc pl-6 text-sm text-slate-700">
                       {warnReasons.map((reason, idx) => (
                         <li key={`${reason}-${idx}`}>{reason}</li>
                       ))}
@@ -912,108 +638,110 @@ export default function Page() {
                 </div>
               )}
 
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button className={CTA_SECONDARY} type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                   Download anyway
                 </button>
                 {!stillRiskAfterOptimized && (
-                  <button className="btn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
+                  <button className={CTA_SECONDARY} type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
                     Generate optimized version
                   </button>
                 )}
               </div>
-              {stillRiskAfterOptimized && (
-                <p style={{ marginTop: '0.75rem', color: '#555' }}>
+              {stillRiskAfterOptimized ? (
+                <p className="mt-3 text-sm text-slate-700">
                   Optimized version generated. Please review before using.
                 </p>
-              )}
+              ) : null}
             </section>
           )}
 
           {verdict === 'FAIL' && failKind === 'page_burden' && (
-            <section className="panel" aria-label="Page burden">
-              <p style={{ margin: 0, color: '#92400e', fontWeight: 600 }}>
-                {pageBurdenCopy.title}
-              </p>
-              <p style={{ marginTop: '0.75rem', marginBottom: 0, color: '#78350f' }}>
-                {pageBurdenCopy.description}
-              </p>
+            <section className={`${PANEL} p-4`}>
+              <p className="font-semibold text-amber-700">{pageBurdenCopy.title}</p>
+              <p className="mt-3 text-sm text-amber-800">{pageBurdenCopy.description}</p>
               {failureRecommendations.length > 0 && (
-                <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                <ul className="mt-3 space-y-1 list-disc pl-6 text-sm text-slate-700">
                   {failureRecommendations.map((recommendation, idx) => (
                     <li key={`${recommendation}-${idx}`}>{recommendationLabel(recommendation)}</li>
                   ))}
                 </ul>
               )}
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button className="btn" type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
+
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button className={CTA_SECONDARY} type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
                   {pageBurdenCopy.primaryCta}
                 </button>
-                <button className="btn" type="button" disabled title="Coming soon">
+                <button className={CTA_SECONDARY} type="button" disabled title="Coming soon">
                   {pageBurdenCopy.secondaryCta}
                 </button>
               </div>
-              {stillRiskAfterCompact && (
-                <p style={{ marginTop: '0.75rem', color: '#555' }}>
+              {stillRiskAfterCompact ? (
+                <p className="mt-3 text-sm text-slate-700">
                   Even in compact mode it is still too large. Reduce scope.
                 </p>
-              )}
+              ) : null}
             </section>
           )}
 
           {verdict === 'FAIL' && failKind !== 'page_burden' && (
-            <section className="panel" aria-label="Failure">
-              <p style={{ margin: 0, color: '#991b1b', fontWeight: 600 }}>
+            <section className={`${PANEL} p-4`}>
+              <p className="font-semibold text-rose-700">
                 PDF risk {confidence?.score != null ? `(Score: ${confidence.score})` : ''}
               </p>
               {failReasons.length > 0 && (
-                <ul style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                <ul className="mt-3 space-y-1 list-disc pl-6 text-sm text-slate-700">
                   {failReasons.map((reason, idx) => (
                     <li key={`${reason}-${idx}`}>{reason}</li>
                   ))}
                 </ul>
               )}
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <div className="mt-4 flex flex-wrap gap-3">
                 {stillRiskAfterOptimized ? (
-                  <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+                  <button className={CTA_SECONDARY} type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                     Download anyway
                   </button>
                 ) : (
                   <>
-                    <button className="btn" type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
+                    <button className={CTA_SECONDARY} type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
                       Generate optimized version
                     </button>
-                    <button className="btn" type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
+                    <button className={CTA_SECONDARY} type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                       Download anyway
                     </button>
                   </>
                 )}
               </div>
-              {stillRiskAfterOptimized && (
-                <p style={{ marginTop: '0.75rem', color: '#555' }}>
+              {stillRiskAfterOptimized ? (
+                <p className="mt-3 text-sm text-slate-700">
                   Optimized version generated. Please review before using.
                 </p>
-              )}
+              ) : null}
             </section>
           )}
 
           {canShowDebug && (debugMetrics || columnMapDebug) && (
-            <section className="panel" aria-label="Debug">
-              <button type="button" onClick={() => setShowDebug((v) => !v)} aria-expanded={showDebug} className="btn">
+            <section className={`${PANEL} p-4`}>
+              <button
+                type="button"
+                onClick={() => setShowDebug((v) => !v)}
+                aria-expanded={showDebug}
+                className={CTA_SECONDARY}
+              >
                 {showDebug ? 'Hide debug' : 'Debug'}
               </button>
               {showDebug && (
                 <>
                   {columnMapDebug && (
-                    <div style={{ marginTop: '0.75rem' }}>
-                      <strong>Column Map</strong>
-                      <div>mode: {columnMapDebug.mode}</div>
-                      <div>rendered: {columnMapDebug.rendered}</div>
-                      <div>sections: {columnMapDebug.entries ?? 'unknown'}</div>
+                    <div className="mt-3 space-y-1 text-sm text-slate-700">
+                      <p className="font-semibold">Column Map</p>
+                      <p>mode: {columnMapDebug.mode}</p>
+                      <p>rendered: {columnMapDebug.rendered}</p>
+                      <p>sections: {columnMapDebug.entries ?? 'unknown'}</p>
                     </div>
                   )}
                   {debugMetrics && (
-                    <pre style={{ marginTop: '0.75rem', overflow: 'auto', fontSize: '0.8rem' }}>
+                    <pre className="mt-3 max-h-48 overflow-auto text-xs text-slate-700">
                       {JSON.stringify(debugMetrics, null, 2)}
                     </pre>
                   )}
@@ -1021,43 +749,56 @@ export default function Page() {
               )}
             </section>
           )}
-        </section>
+        </div>
+      </SectionShell>
 
-        <section className="pricingStrip" id={LANDING_COPY_KEYS.pricingPreview} aria-label="Simple pricing">
-          <p className="sectionTitle" style={{ margin: 0 }}>{LANDING_COPY.pricingPreviewTitle}</p>
-          <p className="micro">{LANDING_COPY.pricingPreviewSubline}</p>
-          <div className="pricingItems">
-            {LANDING_COPY.pricingPreviewItems.map((item) => (
-              <div className="pricingItem" key={item.label}>
-                <span>{item.label}</span>
-                <span>{item.copy}</span>
-              </div>
+      <SectionShell id={LANDING_COPY_KEYS.pricingPreview} index={6}>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
+            {LANDING_COPY.pricingPreviewTitle}
+          </h2>
+          <p className="text-sm text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3" data-section="pricing-grid" data-testid="pricing-grid">
+            {pricingCards.map((item) => (
+              <article key={item.title} className={`${PANEL} p-4`}>
+                <p className="font-semibold text-slate-900">{item.title}</p>
+                <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                  {item.copy.map((line) => <li key={line}>{line}</li>)}
+                </ul>
+                {item.note ? <p className="mt-2 text-xs text-amber-700">{item.note}</p> : null}
+              </article>
             ))}
           </div>
-          <a className="smallAction" href="/pricing"> {LANDING_COPY.pricingPreviewCta}</a>
-        </section>
+          <a href="/pricing" className={`${CTA_SECONDARY} w-fit`}>
+            {LANDING_COPY.pricingPreviewCta}
+          </a>
+        </div>
+      </SectionShell>
 
-        <section className="section" id={LANDING_COPY_KEYS.privacyStrip} aria-label={LANDING_COPY.privacyStripTitle}>
-          <h2 className="sectionTitle">{LANDING_COPY.privacyStripTitle}</h2>
-          <ul className="sectionList">
+      <SectionShell id={LANDING_COPY_KEYS.privacyStrip} index={7}>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.privacyStripTitle}</h2>
+          <ul className="ml-4 list-disc space-y-2 text-slate-700">
             {LANDING_COPY.privacyStripBullets.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <a className="smallAction" href="/privacy">{LANDING_COPY.privacyStripCta}</a>
-        </section>
+          <a href="/privacy" className={`${CTA_SECONDARY} w-fit`}>{LANDING_COPY.privacyStripCta}</a>
+        </div>
+      </SectionShell>
 
-        <footer className="footer" aria-label="Footer">
-          <nav className="footerLinks" aria-label="Footer links">
+      <SectionShell index={8}>
+        <footer className="flex flex-col gap-3">
+          <nav className="flex flex-wrap items-center gap-4" aria-label="Footer links">
             {LANDING_COPY.footerLinks.map((link) => (
-              <a key={link.label} href={link.href}>
+              <a key={link.label} href={link.href} className="text-sm text-slate-700">
                 {link.label}
               </a>
             ))}
           </nav>
-          <p className="muted">{LANDING_COPY.footerCopyright}</p>
+          <p className="text-sm text-slate-500">{LANDING_COPY.footerCopyright}</p>
         </footer>
-      </div>
+      </SectionShell>
     </main>
   );
 }
