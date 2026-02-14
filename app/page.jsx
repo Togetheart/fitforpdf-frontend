@@ -19,10 +19,12 @@ import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
   PRICING_CARDS,
+  HOME_FAQ,
 } from './siteCopy.mjs';
 import { getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
 import GenerateModule from './components/GenerateModule';
+import FaqAccordion from './components/FaqAccordion';
 import Section from './components/Section';
 import PricingCards from './components/PricingCards';
 
@@ -691,6 +693,12 @@ A104,Widget,6900.00`}
             ))}
           </ul>
           <a href="/privacy" className={`${CTA_SECONDARY} w-fit`}>{LANDING_COPY.privacyStripCta}</a>
+        </div>
+      </Section>
+
+      <Section id="home-faq" index={7} bg="bg-white" className="py-24">
+        <div className="space-y-4">
+          <FaqAccordion title="Frequently asked questions" items={HOME_FAQ} />
         </div>
       </Section>
 

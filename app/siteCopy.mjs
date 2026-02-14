@@ -54,6 +54,29 @@ export const LANDING_COPY_KEYS = {
   privacyStrip: 'privacy',
 };
 
+export const HOME_FAQ = [
+  {
+    id: 'what-counts',
+    q: 'What counts as an export?',
+    a: 'A successful PDF generation (HTTP 200 with a PDF response).',
+  },
+  {
+    id: 'do-you-store',
+    q: 'Do you store my files?',
+    a: 'No. Files are deleted immediately after conversion. The generated PDF is available for up to 15 minutes.',
+  },
+  {
+    id: 'client-work',
+    q: 'Is this suitable for client work?',
+    a: 'Yes. FitForPDF produces a predictable, client-ready layout: overview page, column sections, repeated reference columns, and clear pagination.',
+  },
+  {
+    id: 'api',
+    q: 'Do you offer an API?',
+    a: 'Not yet. API access is planned once the core workflow is proven.',
+  },
+];
+
 export const PRICING_PAGE_COPY = {
   pageTitle: 'Pay only for what you export.',
   pageSubtitle: 'Start free. Upgrade only when your PDFs are worth sending.',
@@ -103,21 +126,24 @@ export const PRICING_PAGE_COPY = {
 
   faq: [
     {
-      question: 'What counts as an export?',
-      answer: 'A successful PDF generation.',
+      id: 'billing',
+      q: 'Do I have to subscribe?',
+      a: 'No. Credits are pay-per-output. Subscribe only if you want batch export and priority later.',
     },
     {
-      question: 'Do you store my files?',
-      answer: 'No. FitForPDF processes files to generate a PDF and removes them from the workflow immediately.',
-      link: '/privacy',
+      id: 'invoices',
+      q: 'Can you provide invoices?',
+      a: 'Yes. Invoices will be available via Stripe once payments go live.',
     },
     {
-      question: 'Is this suitable for client work?',
-      answer: 'Yes. The goal is to deliver predictable, client-ready exports.',
+      id: 'limits',
+      q: 'What are the free limits?',
+      a: 'Free includes 3 exports total. Upgrade with credits when you need more.',
     },
     {
-      question: 'Do you offer an API?',
-      answer: 'API access is part of the Pro plan and is coming soon.',
+      id: 'api-coming',
+      q: 'Do you offer an API?',
+      a: 'API access is part of the Pro plan and is coming soon.',
     },
   ],
 };
@@ -284,5 +310,22 @@ export const PRIVACY_PAGE_COPY = {
   security: [
     'Files are processed server-side.',
     'Access controls are enforced for API endpoints.',
+  ],
+  faq: [
+    {
+      id: 'retention',
+      q: 'How long do you keep files?',
+      a: 'Files are deleted immediately after conversion. The generated PDF is available for up to 15 minutes.',
+    },
+    {
+      id: 'logs',
+      q: 'Do you store file contents in logs?',
+      a: 'No. We do not store file contents in logs.',
+    },
+    {
+      id: 'sensitive',
+      q: 'Can I upload sensitive data?',
+      a: 'Please do not. FitForPDF is built for convenience, not for handling sensitive or regulated data.',
+    },
   ],
 };

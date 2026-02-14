@@ -2,6 +2,7 @@ import React from 'react';
 
 import { PRIVACY_PAGE_COPY } from '../siteCopy.mjs';
 import Section from '../components/Section';
+import FaqAccordion from '../components/FaqAccordion';
 
 function BulletList({ values }) {
   return (
@@ -79,6 +80,11 @@ export default function PrivacyPage() {
             {PRIVACY_PAGE_COPY.contactLabel}
           </a>
           <p className="text-sm text-slate-600">{PRIVACY_PAGE_COPY.sensitiveDataNote}</p>
+        </div>
+      </Section>
+      <Section id="privacy-faq" index={5} className="py-28">
+        <div className="mx-auto max-w-4xl">
+          <FaqAccordion title="Frequently asked questions" items={PRIVACY_PAGE_COPY.faq} />
         </div>
       </Section>
     </div>

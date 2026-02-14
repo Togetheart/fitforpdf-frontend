@@ -1,26 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
 import PricingCards from '../components/PricingCards';
 import Section from '../components/Section';
-
-const LINK_CLASS =
-  'inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-900 transition duration-150 ease-out hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/50 focus-visible:ring-offset-2';
-
-function Chevron({ open }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`text-slate-500 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-    >
-      ▾
-    </span>
-  );
-}
+import FaqAccordion from '../components/FaqAccordion';
 
 export default function PricingPage() {
-  const [openQuestion, setOpenQuestion] = useState(null);
+  const backlinkClass =
+    'inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-900 transition duration-150 ease-out hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/50 focus-visible:ring-offset-2';
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -87,50 +75,8 @@ export default function PricingPage() {
 
       <Section id="pricing-faq" index={3} bg="bg-gray-50" className="py-20 sm:py-24">
         <div className="mx-auto max-w-3xl space-y-4">
-          <h2 className="text-2xl font-semibold">FAQ</h2>
-          <div className="space-y-3">
-            {PRICING_PAGE_COPY.faq.map((item, index) => {
-              const isOpen = openQuestion === index;
-
-              return (
-                <div
-                  key={item.question}
-                  className="overflow-hidden rounded-[14px] border border-slate-200 bg-white transition-shadow duration-150 hover:shadow-sm"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setOpenQuestion((current) => (current === index ? null : index))}
-                    className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm font-medium text-slate-900"
-                    aria-expanded={isOpen}
-                  >
-                    {item.question}
-                    <Chevron open={isOpen} />
-                  </button>
-                  <div
-                    className={`grid overflow-hidden transition-all duration-200 ease-out ${
-                      isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-                    }`}
-                    aria-hidden={!isOpen}
-                  >
-                    <div className="min-h-0 px-4 pb-4 text-sm text-slate-600">
-                      <p className="leading-relaxed">
-                        {item.answer}
-                        {item.link ? (
-                          <>
-                            {' '}
-                            <a href={item.link} className="underline">
-                              Read more
-                            </a>
-                          </>
-                        ) : null}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <a className={LINK_CLASS} href={PRICING_PAGE_COPY.backToAppHref}>
+          <FaqAccordion title="Frequently asked questions" items={PRICING_PAGE_COPY.faq} />
+          <a className={backlinkClass} href={PRICING_PAGE_COPY.backToAppHref}>
             {PRICING_PAGE_COPY.backToApp}
           </a>
         </div>
