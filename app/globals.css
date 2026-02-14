@@ -207,6 +207,22 @@
     filter: saturate(1.05);
   }
 
+  .app-bg-cells {
+    position: absolute;
+    inset: -20%;
+    width: 140%;
+    height: 140%;
+    pointer-events: none;
+    opacity: 0.06;
+    filter: blur(0.75px);
+    mix-blend-mode: multiply;
+    will-change: transform;
+  }
+
+  .app-bg-cell-outline {
+    transition: opacity 200ms ease;
+  }
+
   .animate-appMeshA {
     animation: appMeshA 38s ease-in-out infinite alternate;
   }
@@ -311,6 +327,16 @@
     .animate-appMeshB,
     .animate-appNoise {
       animation: none !important;
+    }
+
+    .app-bg-cells {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .app-bg-cells {
+      opacity: 0.03;
     }
   }
 
