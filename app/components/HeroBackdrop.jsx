@@ -47,7 +47,7 @@ export default function HeroBackdrop({
             <span
               data-testid="hero-bg-grain"
               aria-hidden="true"
-              className="hero-bg-grain pointer-events-none"
+              className="hero-bg-grain pointer-events-none motion-safe:animate-heroGrain motion-reduce:animate-none"
             />
           </>
         ) : null}

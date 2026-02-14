@@ -61,6 +61,7 @@
   .hero-bg-layer-1 {
     opacity: 0.42;
     background-size: 140% 140%;
+    background-position: 0% 0%;
     filter: blur(24px);
     mix-blend-mode: multiply;
     mask-image: radial-gradient(circle at 50% 35%, #000 30%, transparent 78%);
@@ -69,6 +70,7 @@
   .hero-bg-layer-2 {
     opacity: 0.35;
     background-size: 130% 130%;
+    background-position: 100% 5%;
     filter: blur(22px);
     mix-blend-mode: soft-light;
     mask-image: radial-gradient(circle at 50% 72%, #000 24%, transparent 82%);
@@ -92,9 +94,10 @@
         90deg,
         rgba(255, 255, 255, 0.02) 0 1px,
         rgba(255, 255, 255, 0) 1px 3px
-      );
+    );
     background-size: 3px 3px, 4px 4px;
     mix-blend-mode: multiply;
+    animation: heroGrainDrift 40s linear infinite;
   }
 
   .hero-bg-gradients--home {
@@ -129,42 +132,52 @@
   }
 
   .animate-heroMesh {
-    animation: heroFloatA 22s ease-in-out infinite alternate;
+    animation: heroFloatA 26s ease-in-out infinite alternate;
   }
 
   .animate-heroMeshA {
-    animation: heroFloatA 22s ease-in-out infinite alternate;
+    animation: heroFloatA 26s ease-in-out infinite alternate;
   }
 
   .animate-heroMeshB {
-    animation: heroFloatB 28s ease-in-out infinite alternate;
+    animation: heroFloatB 30s ease-in-out infinite alternate;
+  }
+
+  .animate-heroGrain {
+    animation: heroGrainDrift 48s linear infinite;
   }
 
   .hero-bg-animate {
-    animation: heroFloatA 22s ease-in-out infinite alternate;
+    animation: heroFloatA 26s ease-in-out infinite alternate;
   }
 
   @keyframes heroFloatA {
     0% {
-      transform: translate3d(-1.3%, -1.1%, 0) scale(1.01);
+      transform: translate3d(-1.8%, -1.2%, 0) scale(1.03);
+      background-position: 0% 0%;
     }
     50% {
-      transform: translate3d(1.2%, 0.9%, 0) scale(1.02);
+      transform: translate3d(1.4%, 0.8%, 0) scale(1.01);
+      background-position: 62% 48%;
     }
     100% {
-      transform: translate3d(-0.2%, 1.6%, 0) scale(1.01);
+      transform: translate3d(0.2%, 1.6%, 0) scale(1.03);
+      background-position: 12% 95%;
     }
   }
 
   @keyframes heroFloatB {
     0% {
-      transform: translate3d(1.1%, 0.2%, 0) scale(1.02);
+      transform: translate3d(1.4%, 0.6%, 0) scale(1.02);
+      background-position: 100% 10%;
     }
     50% {
-      transform: translate3d(-0.6%, -1.3%, 0) scale(1.01);
+      transform: translate3d(-1.2%, -1.4%, 0) scale(1.02);
+      background-position: 46% 64%;
     }
     100% {
-      transform: translate3d(0.7%, 0.6%, 0) scale(1.02);
+      transform: translate3d(0.7%, 1.0%, 0) scale(1.02);
+      background-position: 86% 26%;
     }
   }
 
