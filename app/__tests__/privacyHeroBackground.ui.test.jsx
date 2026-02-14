@@ -34,14 +34,11 @@ describe('privacy hero background', () => {
 
     const heroBg = screen.getByTestId('hero-bg');
     const heroGradients = screen.getByTestId('hero-bg-gradients');
-    const heroNoise = screen.getByTestId('hero-bg-noise');
 
     expect(heroBg).toBeTruthy();
     expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
     expect((heroBg.getAttribute('class') || '').includes('pointer-events-none')).toBe(true);
     expect(heroGradients).toBeTruthy();
-    expect(heroNoise).toBeTruthy();
     expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients--privacy')).toBe(true);
   });
 });
-

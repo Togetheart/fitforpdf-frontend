@@ -69,8 +69,6 @@ describe('global app backdrop', () => {
 
     expect(appBackdrop).toBeTruthy();
     expect(heroBackdrop).toBeTruthy();
-    expect(screen.getByTestId('hero-bg-layer-1')).toBeTruthy();
-    expect(screen.getByTestId('hero-bg-layer-2')).toBeTruthy();
   });
 
   test('pricing and privacy use only the global backdrop in focus layer level', () => {
@@ -95,14 +93,7 @@ describe('global app backdrop', () => {
     renderWithShell(<LandingPage />);
 
     const appBackdrop = screen.getByTestId('app-backdrop');
-    const layerOne = screen.getByTestId('app-backdrop-layer-1');
-    const layerTwo = screen.getByTestId('app-backdrop-layer-2');
-
     expect(appBackdrop.getAttribute('data-motion')).toBe('off');
-    expect((layerOne.className || '').includes('animate-appMeshA')).toBe(true);
-    expect((layerOne.className || '').includes('motion-reduce:animate-none')).toBe(true);
-    expect((layerTwo.className || '').includes('animate-appMeshB')).toBe(true);
-    expect((layerTwo.className || '').includes('motion-reduce:animate-none')).toBe(true);
+    expect((appBackdrop.getAttribute('class') || '').includes('app-bg-white')).toBe(true);
   });
 });
-

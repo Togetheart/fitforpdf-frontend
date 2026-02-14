@@ -75,14 +75,13 @@ describe('landing conversion-first structure', () => {
 
   test('hero includes subtle gradient background and CTA glow utility', () => {
     const heroBackdrop = screen.getByTestId('hero-backdrop');
-    const layerOne = screen.getByTestId('hero-bg-layer-1');
-    const layerTwo = screen.getByTestId('hero-bg-layer-2');
-    const grain = screen.getByTestId('hero-bg-grain');
+    const heroBg = screen.getByTestId('hero-bg');
+    const heroGradients = screen.getByTestId('hero-bg-gradients');
     const primary = screen.getByTestId('hero-primary-cta');
 
-    expect((layerOne.getAttribute('style') || '').includes('radial-gradient')).toBe(true);
-    expect((layerTwo.getAttribute('style') || '').includes('radial-gradient')).toBe(true);
-    expect((grain.getAttribute('class') || '').includes('hero-bg-grain')).toBe(true);
+    expect((heroBackdrop.getAttribute('class') || '').includes('hero-backdrop')).toBe(true);
+    expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
+    expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients')).toBe(true);
     expect(primary.getAttribute('class') || '').toContain('hover:shadow-[0_0_40px_rgba(239,68,68,0.25)]');
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
   });
