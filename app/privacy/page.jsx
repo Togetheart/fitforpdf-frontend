@@ -35,23 +35,22 @@ function HandlingCard({ title, description, items }) {
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Section id="privacy-hero" index={0} className="py-28">
-        <PageHero
-          variant="privacy"
-          align="center"
-          eyebrow={PRIVACY_PAGE_COPY.heroLabel}
-          title={(
-            <>
-              <span className="block">{PRIVACY_PAGE_COPY.pageTitle}</span>
-              <span className="block text-slate-600">{PRIVACY_PAGE_COPY.pageTitleAccent}</span>
-            </>
-          )}
-          subtitle={PRIVACY_PAGE_COPY.pageSubtitle}
-          trustLine={PRIVACY_PAGE_COPY.microLine}
-          titleClassName="mt-4 text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]"
-          headingTestId="privacy-h1"
-        />
-      </Section>
+      <PageHero
+        variant="privacy"
+        align="center"
+        eyebrow={PRIVACY_PAGE_COPY.heroLabel}
+        title={(
+          <>
+            <span className="block">{PRIVACY_PAGE_COPY.pageTitle}</span>
+            <span className="block text-slate-600">{PRIVACY_PAGE_COPY.pageTitleAccent}</span>
+          </>
+        )}
+        subtitle={PRIVACY_PAGE_COPY.pageSubtitle}
+        trustLine={PRIVACY_PAGE_COPY.microLine}
+        titleClassName="mt-4 text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]"
+        headingTestId="privacy-h1"
+        className="py-28 w-full"
+      />
 
       <Section id="privacy-handling" index={1} className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl space-y-6">

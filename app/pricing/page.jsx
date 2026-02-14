@@ -15,20 +15,19 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Section id="pricing-hero" index={0} bg="bg-white" className="py-24 sm:py-28">
-        <PageHero
-          variant="pricing"
-          align="center"
-          eyebrow={PRICING_PAGE_COPY.plansEyebrow}
-          title={PRICING_PAGE_COPY.pageTitle}
-          subtitle={PRICING_PAGE_COPY.pageSubtitle}
-          trustLine={PRICING_PAGE_COPY.pageMicro}
-          contentClassName="space-y-6"
-          titleClassName="mt-4 text-center text-4xl md:text-6xl font-[650] leading-tight tracking-tight"
-        >
-          <span className={badgeClass}>{PRICING_PAGE_COPY.pageTagline}</span>
-        </PageHero>
-      </Section>
+      <PageHero
+        variant="pricing"
+        align="center"
+        eyebrow={PRICING_PAGE_COPY.plansEyebrow}
+        title={PRICING_PAGE_COPY.pageTitle}
+        subtitle={PRICING_PAGE_COPY.pageSubtitle}
+        trustLine={PRICING_PAGE_COPY.pageMicro}
+        contentClassName="space-y-6"
+        titleClassName="mt-4 text-center text-4xl md:text-6xl font-[650] leading-tight tracking-tight"
+        className="py-24 sm:py-28 w-full"
+      >
+        <span className={badgeClass}>{PRICING_PAGE_COPY.pageTagline}</span>
+      </PageHero>
 
       <Section id="pricing-plans" index={1} bg="bg-gray-50" className="py-16 sm:py-20">
         <div className={`${sectionClass} space-y-4`}>
