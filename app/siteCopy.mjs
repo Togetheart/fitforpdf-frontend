@@ -54,9 +54,10 @@ export const LANDING_COPY_KEYS = {
 };
 
 export const PRICING_PAGE_COPY = {
-  pageTitle: 'Simple and transparent',
-  pageSubtitle: 'Pay per output. No lock-in.',
-  pageMicro: 'Start free. Upgrade when you need more exports.',
+  pageTitle: 'Pay only for what you export.',
+  pageSubtitle: 'Start free. Upgrade only when your PDFs are worth sending.',
+  pageMicro: 'No lock-in. No subscriptions required.',
+  socialProof: 'Used by consultants, finance teams and operators who need clean PDFs without manual formatting.',
 
   freeTitle: 'Free',
   freeSubtitle: '3 exports',
@@ -72,18 +73,20 @@ export const PRICING_PAGE_COPY = {
   credits500Price: '€79',
   creditsFeature: 'No subscription',
   creditsFeature2: 'Branding optional',
+  creditsFeature3: 'Client-ready layout',
+  creditsFeature4: 'Structured sections',
   creditsCtaLabel: 'Buy credits',
   creditsCtaHref: '#',
   creditsCtaTooltip: 'Checkout coming soon.',
   creditsBadge: 'Most popular',
 
-  proApiTitle: 'Pro / API',
+  proApiTitle: 'Pro (coming soon)',
   proApiComingSoon: 'Coming soon',
   proPrice: '€29/month',
   proFeature1: 'Batch export',
   proFeature2: 'Priority processing',
   proFeature3: 'API access',
-  proFeature4: 'API: usage-based',
+  proFeature4: 'Usage-based API access',
   proApiCtaLabel: 'Join early access',
   proApiCtaHref: 'mailto:support@fitforpdf.com',
 
@@ -103,21 +106,17 @@ export const PRICING_PAGE_COPY = {
       answer: 'A successful PDF generation.',
     },
     {
-      question: 'Do you store files?',
-      answer: 'See /privacy',
+      question: 'Do you store my files?',
+      answer: 'No. FitForPDF processes files to generate a PDF and removes them from the workflow immediately.',
       link: '/privacy',
     },
     {
-      question: 'What if my file is huge?',
-      answer: 'Use the compact mode or reduce scope before exporting.',
+      question: 'Is this suitable for client work?',
+      answer: 'Yes. The goal is to deliver predictable, client-ready exports.',
     },
     {
-      question: 'Can I use this for client work?',
-      answer: 'Yes. The tool is designed for reliable, client-ready exports.',
-    },
-    {
-      question: 'Is there an API?',
-      answer: 'An API access plan is included with the Pro/API offering, coming soon.',
+      question: 'Do you offer an API?',
+      answer: 'API access is part of the Pro plan and is coming soon.',
     },
   ],
 };
@@ -149,6 +148,8 @@ export const PRICING_CARDS = [
       `${PRICING_PAGE_COPY.credits500Title} for ${PRICING_PAGE_COPY.credits500Price}`,
       `${PRICING_PAGE_COPY.creditsFeature}`,
       `${PRICING_PAGE_COPY.creditsFeature2}`,
+      `${PRICING_PAGE_COPY.creditsFeature3}`,
+      `${PRICING_PAGE_COPY.creditsFeature4}`,
     ],
     actionLabel: PRICING_PAGE_COPY.creditsCtaLabel,
     actionType: 'button',

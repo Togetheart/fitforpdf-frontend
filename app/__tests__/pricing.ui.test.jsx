@@ -49,6 +49,15 @@ describe('pricing page UI', () => {
     expect(cards.find((card) => card.getAttribute('data-featured') === 'true')).toBeTruthy();
   });
 
+  test('only one badge is shown for the most popular card', () => {
+    const badges = screen.getAllByTestId('pricing-badge');
+    const featuredCards = screen.getAllByRole('article').filter((card) => card.getAttribute('data-featured') === 'true');
+
+    expect(badges).toHaveLength(1);
+    expect(featuredCards).toHaveLength(1);
+    expect(featuredCards[0].textContent).toContain(PRICING_PAGE_COPY.creditsBadge);
+  });
+
   test('contains exact expected prices', () => {
     const pageText = document.body.textContent || '';
 
@@ -83,5 +92,18 @@ describe('pricing page UI', () => {
     const joinLink = screen.getByRole('link', { name: /Join early access/i });
     expect(joinLink).toBeTruthy();
     expect(joinLink.getAttribute('href')).toBe(PRICING_PAGE_COPY.proApiCtaHref);
+  });
+
+  test('FAQ renders 4 accordion items', () => {
+    const faqSection = screen.getByTestId('section-pricing-faq');
+    const faqToggles = within(faqSection).getAllByRole('button');
+
+    expect(faqToggles).toHaveLength(PRICING_PAGE_COPY.faq.length);
+  });
+
+  test('pricing hero copy matches high-trust value framing', () => {
+    expect(screen.getByRole('heading', { level: 1, name: PRICING_PAGE_COPY.pageTitle })).toBeTruthy();
+    expect(screen.getByText(PRICING_PAGE_COPY.pageMicro)).toBeTruthy();
+    expect(screen.getByText(PRICING_PAGE_COPY.socialProof)).toBeTruthy();
   });
 });

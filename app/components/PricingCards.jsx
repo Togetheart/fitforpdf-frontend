@@ -1,11 +1,11 @@
 import React from 'react';
 
 const CTA_BASE =
-  'inline-flex h-11 w-full items-center justify-center rounded-full border px-4 text-sm font-semibold transition';
+  'inline-flex h-11 w-full items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150 ease-out';
 const CTA_PRIMARY =
-  `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white hover:bg-[#c82727]`;
+  `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white hover:bg-[#c82727] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D92D2A]/40 focus-visible:ring-offset-2`;
 const CTA_SECONDARY =
-  `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50`;
+  `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/50 focus-visible:ring-offset-2`;
 
 function renderAction(plan) {
   if (plan.actionType === 'link') {
@@ -48,14 +48,14 @@ export default function PricingCards({
   gridTestId = 'pricing-grid',
 }) {
   const HeadingTag = headingTag;
-  const GRID_CLASS = 'grid grid-cols-1 gap-3 md:grid-cols-3';
+  const GRID_CLASS = 'grid grid-cols-1 gap-4 md:grid-cols-3';
 
   return (
     <div className={GRID_CLASS} data-testid={gridTestId}>
       {plans.map((plan) => {
         const cardClass = [
-          'rounded-[14px] border border-slate-200 bg-white p-5',
-          plan.recommended ? 'relative border-[#D92D2A]/40 shadow-lg transition-transform duration-200' : '',
+          'relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-150 ease-out hover:-translate-y-0.5 hover:shadow-md',
+          plan.recommended ? 'border-2 border-[#D92D2A]/50 shadow-[0_10px_35px_-22px_rgba(0,0,0,0.35)] md:scale-[1.03]' : '',
           plan.recommended ? `md:${featuredScaleClass}` : '',
         ]
           .filter(Boolean)
@@ -73,7 +73,7 @@ export default function PricingCards({
             className={cardClass}
           >
             {plan.badge ? (
-              <div className="mb-3">
+              <div className="absolute -top-3 right-3">
                 <span
                   data-testid="pricing-badge"
                   className="inline-flex rounded-full border border-[#D92D2A]/30 bg-[#D92D2A]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#D92D2A]"
