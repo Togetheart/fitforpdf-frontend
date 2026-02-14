@@ -422,11 +422,11 @@ export default function Page() {
           font-family: "Avenir Next", "Avenir", "Segoe UI", sans-serif;
         }
         .container {
-          max-width: 70rem;
+          max-width: 60rem;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 1rem;
+          gap: 1.1rem;
         }
         .hero {
           text-align: left;
@@ -448,6 +448,12 @@ export default function Page() {
           margin: 0;
           max-width: 48ch;
           color: #475569;
+        }
+        .heroTrust {
+          margin-top: 0.85rem;
+          margin-bottom: 0;
+          color: #64748b;
+          font-size: 0.9rem;
         }
         .heroActions {
           margin-top: 0.9rem;
@@ -607,11 +613,23 @@ export default function Page() {
           color: #475569;
           font-size: 0.85rem;
         }
+        .panelSub {
+          margin: 0 0 0.8rem;
+          color: #64748b;
+          font-size: 0.95rem;
+        }
         .actions {
           display: flex;
           flex-wrap: wrap;
           gap: 0.7rem;
           margin-top: 0.85rem;
+        }
+        .numberedList {
+          margin: 0;
+          padding-left: 1.2rem;
+          display: grid;
+          gap: 0.5rem;
+          color: #334155;
         }
         .muted {
           color: #64748b;
@@ -642,6 +660,7 @@ export default function Page() {
           <p className="brand">FitForPDF</p>
           <h1 className="heroTitle">{LANDING_COPY.heroTitle}</h1>
           <p className="heroSubheadline">{LANDING_COPY.heroSubheadline}</p>
+          <p className="heroTrust">{LANDING_COPY.heroTrustLine}</p>
           <div className="heroActions">
             <a href="#tool" className="btn">
               {LANDING_COPY.heroPrimaryCta}
@@ -655,15 +674,15 @@ export default function Page() {
           </div>
         </header>
 
-        <section className="comparison" aria-label="Before and after example">
-          <article className="card">
-            <h2 className="cardTitle">{LANDING_COPY.proofBeforeTitle}</h2>
-            <div className="placeholder">{LANDING_COPY.proofBeforePlaceholder}</div>
-          </article>
-          <article className="card">
-            <h2 className="cardTitle">{LANDING_COPY.proofAfterTitle}</h2>
-            <div className="placeholder">{LANDING_COPY.proofAfterPlaceholder}</div>
-          </article>
+        <section className="panel">
+          <h2 className="sectionTitle">{LANDING_COPY.problemTitle}</h2>
+          <ul className="featureList">
+            {LANDING_COPY.problemBullets.map((item) => (
+              <li className="featureItem" key={item}>
+                {item}
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="panel">
@@ -677,8 +696,18 @@ export default function Page() {
           </ul>
         </section>
 
+        <section className="panel">
+          <h2 className="sectionTitle">{LANDING_COPY.howItWorksTitle}</h2>
+          <ol className="numberedList">
+            {LANDING_COPY.howItWorksSteps.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ol>
+        </section>
+
         <section className="panel" id="tool">
           <h2 className="sectionTitle">{LANDING_COPY.toolTitle}</h2>
+          <p className="panelSub">{LANDING_COPY.toolSubcopy}</p>
           <p className="quotaLine">
             Free exports left: {freeExportsLeft} / 3
             {freeExportsLeft === 0 ? <span className="quotaLimit">Free limit reached</span> : null}
@@ -737,7 +766,7 @@ export default function Page() {
             ) : null}
           </form>
 
-          {notice && <p style={{ color: '#334155', marginTop: '1rem' }}>{notice}</p>}
+            {notice && <p style={{ color: '#334155', marginTop: '1rem' }}>{notice}</p>}
           {error && <p style={{ color: '#991b1b', marginTop: '1rem' }}>{error}</p>}
         </section>
 
@@ -749,16 +778,16 @@ export default function Page() {
             </p>
             <div className="planGrid">
               <article className="planCard">
-                <h3 className="planTitle">Credits: 100 exports</h3>
-                <p className="planSub">19€</p>
+                <h3 className="planTitle">Credits 100</h3>
+                <p className="planSub">€19</p>
               </article>
               <article className="planCard">
-                <h3 className="planTitle">Credits: 500 exports</h3>
-                <p className="planSub">79€</p>
+                <h3 className="planTitle">Credits 500</h3>
+                <p className="planSub">€79</p>
               </article>
               <article className="planCard">
                 <h3 className="planTitle">Pro</h3>
-                <p className="planSub">29€/mo — coming soon (batch export)</p>
+                <p className="planSub">Coming soon</p>
               </article>
               <article className="planCard">
                 <h3 className="planTitle">API</h3>
@@ -791,6 +820,27 @@ export default function Page() {
               <h3 className="planTitle">{LANDING_COPY.pricingApiTitle}</h3>
               <p className="planSub">{LANDING_COPY.pricingApiCopy}</p>
             </article>
+          </div>
+          <div className="actions">
+            <a href="/pricing" className="linkBtn">
+              {LANDING_COPY.pricingCtaLabel}
+            </a>
+          </div>
+        </section>
+
+        <section className="panel">
+          <h2 className="sectionTitle">{LANDING_COPY.privacyTitle}</h2>
+          <ul className="featureList">
+            {LANDING_COPY.privacyBullets.map((item) => (
+              <li className="featureItem" key={item}>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <div className="actions">
+            <a href="/privacy" className="linkBtn">
+              Privacy policy
+            </a>
           </div>
         </section>
 

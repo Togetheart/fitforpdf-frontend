@@ -1,45 +1,68 @@
-export const TELEGRAM_BOT_URL = 'https://t.me/FitForPDFBot';
+export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
   heroTitle: 'Client-ready PDFs from messy spreadsheets.',
-  heroSubheadline:
-    'Upload CSV/XLSX and instantly generate a PDF that is ready to send to clients and teams.',
-  heroPrimaryCta: 'Try it now',
+  heroSubheadline: 'Upload a CSV or Excel file and get a structured PDF ready to send.',
+  heroPrimaryCta: 'Generate your PDF',
   heroSecondaryCta: 'See pricing',
+  heroTrustLine: 'Files are deleted immediately after conversion.',
   telegramCta: 'Try on Telegram',
-  proofBeforeTitle: 'Before',
-  proofAfterTitle: 'After',
-  proofSectionTitle: 'Before / After',
-  proofBeforePlaceholder: 'CSV input',
-  proofAfterPlaceholder: 'PDF output',
-  clientReadyTitle: 'Client-ready means',
+
+  problemTitle: 'Why spreadsheet exports fail in real life',
+  problemBullets: [
+    'Cut columns',
+    'Unreadable zoom',
+    'Manual layout fixes',
+  ],
+
+  clientReadyTitle: 'What “client-ready” means',
   clientReadyBullets: [
     'Document overview page',
-    'Smart column sections',
+    'Smart column sections (A/B/C when needed)',
     'Fixed reference columns repeated',
     'Rows X–Y and Page i/n',
     'No manual layout',
   ],
-  toolTitle: 'Try FitForPDF on the web',
-  pricingTitle: 'Pricing',
+
+  howItWorksTitle: 'In 3 steps',
+  howItWorksSteps: [
+    'Upload your CSV/Excel file',
+    'We organize it into clean sections',
+    'Download a client-ready PDF',
+  ],
+
+  toolTitle: 'Try FitForPDF',
+  toolSubcopy: '3 free exports. No account required.',
+
+  pricingTitle: 'Simple pricing',
   pricingFreeTitle: 'Free',
-  pricingFreeCopy: '3 exports total · Branding enabled by default',
-  pricingCredits100Title: 'Credits: 100',
+  pricingFreeCopy: '3 exports total',
+  pricingCredits100Title: 'Credits 100',
   pricingCredits100Copy: '€19',
-  pricingCredits500Title: 'Credits: 500',
+  pricingCredits500Title: 'Credits 500',
   pricingCredits500Copy: '€79',
   pricingProTitle: 'Pro',
-  pricingProCopy: '€29/mo — coming soon (batch export)',
+  pricingProCopy: 'Coming soon',
   pricingApiTitle: 'API',
   pricingApiCopy: 'Coming soon',
+  pricingCtaLabel: 'See full pricing',
+
+  privacyTitle: 'Privacy-first by default',
+  privacyBullets: [
+    'Files are deleted immediately after conversion.',
+    'The generated PDF is available for up to 15 minutes.',
+    'We do not store file contents in logs.',
+  ],
 };
 
 export const LANDING_COPY_KEYS = {
   hero: 'hero',
-  proof: 'proof',
+  problem: 'problem',
   clientReady: 'client-ready',
+  how: 'how-it-works',
   tool: 'tool',
   pricing: 'pricing',
+  privacy: 'privacy',
 };
 
 export const PRICING_PAGE_COPY = {
@@ -105,13 +128,18 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     containsFreeQuotaText: false,
   },
   {
-    id: LANDING_COPY_KEYS.proof,
-    title: `${LANDING_COPY.proofBeforeTitle} / ${LANDING_COPY.proofAfterTitle}`,
+    id: LANDING_COPY_KEYS.problem,
+    title: LANDING_COPY.problemTitle,
     containsFreeQuotaText: false,
   },
   {
     id: LANDING_COPY_KEYS.clientReady,
     title: LANDING_COPY.clientReadyTitle,
+    containsFreeQuotaText: false,
+  },
+  {
+    id: LANDING_COPY_KEYS.how,
+    title: LANDING_COPY.howItWorksTitle,
     containsFreeQuotaText: false,
   },
   {
@@ -123,6 +151,11 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
   {
     id: LANDING_COPY_KEYS.pricing,
     title: LANDING_COPY.pricingTitle,
+    containsFreeQuotaText: false,
+  },
+  {
+    id: LANDING_COPY_KEYS.privacy,
+    title: LANDING_COPY.privacyTitle,
     containsFreeQuotaText: false,
   },
 ];
