@@ -9,7 +9,7 @@ import SiteFooter from '../components/SiteFooter';
 import { LANDING_COPY_KEYS, PRICING_CARDS } from '../siteCopy.mjs';
 
 vi.mock('../components/BeforeAfter.mjs', () => ({
-  default: () => <div data-testid="before-after-placeholder" />,
+  default: () => <div data-layout="split" data-testid="before-after" />,
 }));
 
 function ensureMatchMedia() {
@@ -79,15 +79,15 @@ describe('landing structure and UI invariants', () => {
   });
 
   test('hero is before tool section in DOM order', () => {
-    const heroHeading = screen.getByRole('heading', { name: /Client-ready PDFs\. From messy spreadsheets\./i, level: 1 });
-    const toolHeading = screen.getByRole('heading', { name: /Generate a client-ready PDF/i, level: 2 });
+    const heroHeading = screen.getByRole('heading', { name: /From messy spreadsheets\./i, level: 1 });
+    const toolHeading = screen.getByRole('heading', { name: /Try it now/i, level: 2 });
     expect(heroHeading.compareDocumentPosition(toolHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('tool section id is #tool and exists', () => {
     const toolSection = screen.getByTestId('tool-section');
     expect(toolSection.getAttribute('id')).toBe(LANDING_COPY_KEYS.upload);
-    expect(within(toolSection).getByText('Generate a client-ready PDF')).toBeTruthy();
+    expect(within(toolSection).getByText('Try it now')).toBeTruthy();
     expect(within(toolSection).getByText('Drop CSV or XLSX here')).toBeTruthy();
   });
 
@@ -108,11 +108,41 @@ describe('landing structure and UI invariants', () => {
     expect(pricingGrid.className.includes('grid-cols-1')).toBe(true);
     expect(pricingGrid.className.includes('md:grid-cols-3')).toBe(true);
   });
+
+  test('home includes premium section labels and micro copy', () => {
+    const hero = screen.getByTestId('hero-section');
+    expect(within(hero).getByText('FITFORPDF')).toBeTruthy();
+    expect(
+      within(hero).getByText('No accounts. Files deleted after conversion.'),
+    ).toBeTruthy();
+  });
+
+  test('problem section uses the three real-world pain lines', () => {
+    const problemSection = screen.getByTestId(LANDING_COPY_KEYS.problem);
+    expect(problemSection.getAttribute('data-section-bg')).toBe('gray');
+    expect(within(problemSection).getByText('Spreadsheet exports fail in real life.')).toBeTruthy();
+    expect(within(problemSection).getByText('Columns are cut.')).toBeTruthy();
+    expect(within(problemSection).getByText('Text becomes unreadable after zoom.')).toBeTruthy();
+    expect(within(problemSection).getByText('Manual layout fixes become mandatory.')).toBeTruthy();
+  });
+
+  test('transformation and client-ready sections are present', () => {
+    expect(screen.getByRole('heading', { name: /From raw data to structured document\./i, level: 2 })).toBeTruthy();
+    expect(screen.getByTestId('before-after')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: /Client-ready means/i, level: 2 })).toBeTruthy();
+  });
+
+  test('pricing and trust previews are present with secondary links', () => {
+    expect(screen.getByRole('heading', { name: /Simple pricing\./i, level: 2 })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: /Privacy-first by default\./i, level: 2 })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'See full pricing' }).getAttribute('href')).toBe('/pricing');
+    expect(screen.getByRole('link', { name: 'Read privacy policy' }).getAttribute('href')).toBe('/privacy');
+  });
 });
 
 test('free exports pill is scoped to tool section', () => {
   const toolSection = screen.getByTestId('tool-section');
-  const counters = screen.getAllByText(/Free\.\s*\d+\s*exports left/i);
+  const counters = screen.getAllByText(/Free\.?\s*\d+\s*exports left/i);
 
   expect(counters.length).toBeGreaterThan(0);
   counters.forEach((node) => {

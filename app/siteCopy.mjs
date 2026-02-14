@@ -3,11 +3,12 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
   heroTitle: 'Client-ready PDFs. From messy spreadsheets.',
-  heroSubheadline: 'Upload a CSV or Excel file. Get a structured PDF ready to send.',
+  heroSubheadline: 'Upload a CSV or Excel file.\\nGet a structured PDF ready to send.',
+  heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
-  heroTrustLine: 'Files are deleted immediately after conversion. PDF available for 15 minutes.',
+  heroTrustLine: 'No accounts. Files deleted after conversion.',
 
-  problemTitle: 'Why spreadsheet exports fail in real life',
+  problemTitle: 'Spreadsheet exports fail in real life.',
   problemBullets: [
     'Columns are cut.',
     'Text becomes unreadable after zoom.',
@@ -16,9 +17,9 @@ export const LANDING_COPY = {
 
   beforeAfterTitle: 'From raw data to structured document.',
   beforeLabel: 'CSV input',
-  afterLabel: 'PDF output',
+  afterLabel: 'Structured PDF summary',
 
-  clientReadyTitle: 'What “client-ready” means',
+  clientReadyTitle: 'Client-ready means',
   clientReadyBullets: [
     'Document overview page',
     'Smart column sections',
@@ -27,11 +28,11 @@ export const LANDING_COPY = {
     'No manual layout',
   ],
 
-  toolTitle: 'Generate a client-ready PDF',
+  toolTitle: 'Try it now',
   toolSubcopy: '3 free exports. No account required.',
 
-  pricingPreviewTitle: 'Simple and transparent',
-  pricingPreviewSubline: 'Pay per output. No lock-in.',
+  pricingPreviewTitle: 'Simple pricing.',
+  pricingPreviewSubline: 'Pay only for what you export.',
   pricingPreviewCta: 'See full pricing',
 
   privacyStripTitle: 'Privacy-first by default.',

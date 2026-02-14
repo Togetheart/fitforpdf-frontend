@@ -418,9 +418,10 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section">
-        <section className="grid gap-10 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
+      <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section" className="py-28">
+        <section className="grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
           <div className="space-y-6">
+            <p className="text-xs font-semibold tracking-[0.18em] text-black/50">{LANDING_COPY.heroLabel}</p>
             <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
               <span className="block">Client-ready PDFs.</span>
               <span className="block text-black/70">From messy spreadsheets.</span>
@@ -438,17 +439,27 @@ export default function Page() {
             </div>
           </div>
           <div className="hidden md:block">
-            <div className="w-[440px] rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+            <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
               <p className="text-xs font-semibold tracking-[0.15em] text-black/50">PREVIEW</p>
-              <div className="mt-4 space-y-2">
-                <div className="h-8 rounded-lg border border-black/10 bg-slate-50" />
-                <div className="rounded-lg border border-black/10 bg-slate-50 px-3 py-2">
-                  <p className="text-sm font-medium">Overview page</p>
-                  <p className="mt-2 h-2 w-4/5 rounded-full bg-black/10" />
+              <div className="mt-4 space-y-3">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">CSV input</p>
+                  <pre className="mt-2 min-h-20 max-h-36 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[11px] leading-4 text-slate-700">
+{`invoice_id,client,total
+A102,ACME Corp,4230.00
+A103,Northline,1120.00
+A104,Widget,6900.00`}
+                  </pre>
                 </div>
-                <div className="rounded-lg border border-black/10 bg-slate-50 px-3 py-2">
-                  <p className="text-sm font-medium">1. Rows 1-20 · Page 1/n</p>
-                  <p className="mt-2 h-2 w-3/5 rounded-full bg-black/10" />
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    Structured PDF summary
+                  </p>
+                  <div className="mt-2 space-y-1 text-sm text-slate-700">
+                    <p className="font-semibold">Overview page</p>
+                    <p>Rows 1–20 · Page 1/n</p>
+                    <p>Columns grouped by section</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -456,18 +467,18 @@ export default function Page() {
         </section>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.problem} index={1}>
+      <Section id={LANDING_COPY_KEYS.problem} index={1} bg="bg-gray-50" className="py-24" testId={LANDING_COPY_KEYS.problem}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.problemTitle}</h2>
-          <ul className="ml-4 list-disc space-y-2 text-slate-700">
+          <div className="space-y-2 text-slate-700">
             {LANDING_COPY.problemBullets.map((item) => (
-              <li key={item}>{item}</li>
+              <p key={item}>{item}</p>
             ))}
-          </ul>
+          </div>
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.beforeAfter} index={2}>
+      <Section id={LANDING_COPY_KEYS.beforeAfter} index={2} className="py-24">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.beforeAfterTitle}
@@ -481,10 +492,10 @@ export default function Page() {
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.clientReady} index={3}>
+      <Section id={LANDING_COPY_KEYS.clientReady} index={3} bg="bg-white" className="py-24">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.clientReadyTitle}</h2>
-          <ul className="ml-4 list-disc space-y-2 text-slate-700">
+          <ul className="space-y-2 text-slate-700">
             {LANDING_COPY.clientReadyBullets.slice(0, 4).map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -492,7 +503,7 @@ export default function Page() {
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.upload} index={4} bg="bg-gray-50" testId="tool-section">
+      <Section id={LANDING_COPY_KEYS.upload} index={4} className="py-24" bg="bg-gray-50" testId="tool-section">
         <div className="space-y-4">
           <GenerateModule
             toolTitle={LANDING_COPY.toolTitle}
@@ -653,7 +664,7 @@ export default function Page() {
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={5} bg="bg-white">
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={5} bg="bg-white" className="py-24">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.pricingPreviewTitle}
@@ -671,7 +682,7 @@ export default function Page() {
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.privacyStrip} index={6} bg="bg-gray-50">
+      <Section id={LANDING_COPY_KEYS.privacyStrip} index={6} bg="bg-gray-50" className="py-24">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.privacyStripTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
