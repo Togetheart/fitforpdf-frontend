@@ -2,7 +2,7 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
-  heroTitle: 'Client-ready PDFs.\\nFrom messy spreadsheets.',
+  heroTitle: 'Client-ready PDFs.\\nFrom raw data.',
   heroSubheadline: 'Upload a CSV or XLSX. Get a structured PDF ready to send.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',

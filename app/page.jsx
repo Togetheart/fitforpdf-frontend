@@ -26,6 +26,7 @@ import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
 import PageHero from './components/PageHero';
+import HeroHeadline from './components/HeroHeadline';
 
 const API_BASE = '/api';
 
@@ -421,12 +422,7 @@ export default function Page() {
         eyebrow={LANDING_COPY.heroLabel}
         align="center"
         height="min-h-screen"
-        title={(
-          <>
-            <span className="block">Client-ready PDFs.</span>
-            <span className="block text-black/60">From messy spreadsheets.</span>
-          </>
-        )}
+        title={<HeroHeadline />}
         subtitle={LANDING_COPY.heroSubheadline}
         contentClassName="items-center gap-8 text-center"
         className="py-0 w-full"

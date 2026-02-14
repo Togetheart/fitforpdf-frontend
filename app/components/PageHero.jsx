@@ -20,6 +20,8 @@ export default function PageHero({
   const isCenter = align === 'center';
   const alignClass = isCenter ? 'items-center text-center' : 'items-start text-left';
   const titleAlignClass = isCenter ? 'mx-auto text-center' : '';
+  const titleIsElement = React.isValidElement(title);
+  const titleIsHeadLine = titleIsElement && title.type === 'h1';
 
   const hasDefaultContent = Boolean(eyebrow || title || subtitle || trustLine);
 
@@ -36,12 +38,23 @@ export default function PageHero({
               <p className="text-xs font-semibold tracking-[0.18em] text-black/55">{eyebrow}</p>
             ) : null}
             {title ? (
-              <h1
-                data-testid={headingTestId}
-                className={`${titleClassName} ${titleAlignClass}`}
-              >
-                {title}
-              </h1>
+              titleIsElement && !titleIsHeadLine && !headingTestId ? (
+                title
+              ) : titleIsElement && headingTestId ? (
+                <h1
+                  data-testid={headingTestId}
+                  className={`${titleClassName} ${titleAlignClass}`}
+                >
+                  {title}
+                </h1>
+              ) : (
+                <h1
+                  data-testid={headingTestId}
+                  className={`${titleClassName} ${titleAlignClass}`}
+                >
+                  {title}
+                </h1>
+              )
             ) : null}
             {subtitle ? (
               <p className="max-w-prose text-base text-slate-700">{subtitle}</p>
