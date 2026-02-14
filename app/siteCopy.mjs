@@ -104,7 +104,7 @@ export const PRICING_PAGE_COPY = {
   creditsCtaTooltip: 'Checkout coming soon.',
   creditsBadge: 'Most popular',
 
-  proApiTitle: 'Pro (coming soon)',
+  proApiTitle: 'Pro + API',
   proApiComingSoon: 'Coming soon',
   proPrice: '€29/month',
   proFeature1: 'Batch export',

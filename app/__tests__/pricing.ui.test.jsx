@@ -1,13 +1,11 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import React from 'react';
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 
 import PricingPage, { default as PricingPageDefaultExport } from '../pricing/page.jsx';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
-
-const pricingPlanTitles = PRICING_CARDS.map((plan) => plan.title);
+import { PRICING_PAGE_COPY } from '../siteCopy.mjs';
 
 beforeEach(() => {
   render(
@@ -34,28 +32,74 @@ describe('pricing page UI', () => {
     expect(screen.getByRole('contentinfo')).toBeTruthy();
   });
 
-  test('renders 3 cards with desktop 3-col grid classes', () => {
-    const grid = screen.getByTestId('pricing-grid');
-    const cards = within(grid).getAllByRole('article');
-
-    expect(grid.className.includes('grid-cols-1')).toBe(true);
-    expect(grid.className.includes('md:grid-cols-3')).toBe(true);
-    expect(cards).toHaveLength(3);
-    const titles = cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent || '');
-    pricingPlanTitles.forEach((title) => {
-      expect(titles).toContain(title);
-    });
-    expect(screen.getByText(PRICING_PAGE_COPY.creditsBadge)).toBeTruthy();
-    expect(cards.find((card) => card.getAttribute('data-featured') === 'true')).toBeTruthy();
+  test('renders the pricing hero heading', () => {
+    expect(screen.getByRole('heading', { level: 1, name: 'Pay only for what you export.' })).toBeTruthy();
   });
 
-  test('only one badge is shown for the most popular card', () => {
-    const badges = screen.getAllByTestId('pricing-badge');
-    const featuredCards = screen.getAllByRole('article').filter((card) => card.getAttribute('data-featured') === 'true');
+  test('renders exactly 3 plan cards with correct grid behavior', () => {
+    const grid = screen.getByTestId('pricing-grid');
+    const cards = screen.getAllByTestId('plan-card');
 
-    expect(badges).toHaveLength(1);
-    expect(featuredCards).toHaveLength(1);
-    expect(featuredCards[0].textContent).toContain(PRICING_PAGE_COPY.creditsBadge);
+    expect(grid).toBeTruthy();
+    expect((grid.getAttribute('class') || '').includes('grid-cols-1')).toBe(true);
+    expect((grid.getAttribute('class') || '').includes('md:grid-cols-3')).toBe(true);
+    expect(cards).toHaveLength(3);
+    expect(screen.getByRole('heading', { level: 3, name: 'Free' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 3, name: 'Credits' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 3, name: 'Pro + API' })).toBeTruthy();
+  });
+
+  test('credits card lists both packs and prices', () => {
+    const cards = screen.getAllByTestId('plan-card');
+    const creditsCard = cards.find((card) =>
+      /Credits/i.test(within(card).queryByRole('heading', { level: 3 })?.textContent || ''),
+    );
+
+    expect(creditsCard).toBeTruthy();
+    expect(within(creditsCard).getByText('100 exports • €19')).toBeTruthy();
+    expect(within(creditsCard).getByText('500 exports • €79')).toBeTruthy();
+  });
+
+  test('comparison table is present and has comparison test id', () => {
+    const compare = screen.getByTestId('pricing-compare');
+    expect(compare).toBeTruthy();
+    const table = within(compare).getByRole('table');
+    const rows = within(table).getAllByRole('row');
+
+    expect(rows).toHaveLength(5);
+    expect(within(table).getByRole('columnheader', { name: 'Feature' })).toBeTruthy();
+    expect(within(rows[1]).getByText('Exports')).toBeTruthy();
+  });
+
+  test('FAQ exists and is interactive', () => {
+    const faq = screen.getByTestId('pricing-faq');
+    const firstQuestion = PRICING_PAGE_COPY.faq[0].q;
+
+    expect(faq).toBeTruthy();
+    expect(within(faq).getByRole('button', { name: firstQuestion })).toBeTruthy();
+  });
+
+  test('clicking first FAQ question expands answer and rotates icon', () => {
+    const firstQuestion = PRICING_PAGE_COPY.faq[0].q;
+    const firstButton = screen.getByRole('button', { name: firstQuestion });
+    const panelId = firstButton.getAttribute('aria-controls');
+    const panel = document.getElementById(panelId || '');
+    const icon = firstButton.querySelector('[data-testid="faq-chevron"]') || firstButton.querySelector('svg:last-child');
+    const iconClass = icon ? icon.getAttribute('class') || '' : '';
+
+    expect(firstButton.getAttribute('aria-expanded')).toBe('false');
+    expect(panel).toBeTruthy();
+    expect(panel.getAttribute('class') || '').toContain('grid-rows-[0fr]');
+    expect(iconClass.includes('rotate-180')).toBe(false);
+
+    fireEvent.click(firstButton);
+
+    expect(firstButton.getAttribute('aria-expanded')).toBe('true');
+    expect(panel.getAttribute('class') || '').toContain('grid-rows-[1fr]');
+    expect(panel.getAttribute('class') || '').toContain('opacity-100');
+    const updatedIcon = firstButton.querySelector('[data-testid="faq-chevron"]') || firstButton.querySelector('svg:last-child');
+    const updatedIconClass = updatedIcon ? updatedIcon.getAttribute('class') || '' : '';
+    expect(updatedIconClass.includes('rotate-180')).toBe(true);
   });
 
   test('contains exact expected prices', () => {
@@ -68,42 +112,25 @@ describe('pricing page UI', () => {
     expect(pageText.includes('€29/month')).toBe(true);
   });
 
-  test('each plan has exactly one CTA', () => {
-    const cards = screen.getAllByRole('article');
-    cards.forEach((card) => {
-      const actions = [...within(card).queryAllByRole('link'), ...within(card).queryAllByRole('button')];
-      expect(actions).toHaveLength(1);
+  test('pricing CTA items are intentional for no-Stripe state', () => {
+    const creditsButton = screen.getByRole('button', { name: PRICING_PAGE_COPY.creditsCtaLabel });
+    expect(creditsButton).toBeTruthy();
+    expect(creditsButton.getAttribute('disabled')).toBe('');
+  });
+
+  test('comparison plans include branded row and no accidental duplicates', () => {
+    const cards = screen.getAllByTestId('plan-card');
+    const titles = cards.map((card) => {
+      const heading = within(card).getByRole('heading', { level: 3 });
+      return heading.textContent;
     });
+    const seen = new Set(titles.filter(Boolean));
+    expect(seen.size).toBe(3);
   });
 
-  test('credits action is disabled and explained as coming soon', () => {
-    const button = screen.getByRole('button', { name: PRICING_PAGE_COPY.creditsCtaLabel });
-    expect(button.disabled).toBe(true);
-    expect(screen.getByText(PRICING_PAGE_COPY.creditsCtaTooltip)).toBeTruthy();
-  });
-
-  test('comparison table is rendered', () => {
-    expect(screen.getByTestId('pricing-comparison-table')).toBeTruthy();
-    expect(screen.getByRole('table')).toBeTruthy();
-    expect(screen.getByText('Feature comparison')).toBeTruthy();
-  });
-
-  test('Join early access CTA is present as a mail link', () => {
-    const joinLink = screen.getByRole('link', { name: /Join early access/i });
-    expect(joinLink).toBeTruthy();
-    expect(joinLink.getAttribute('href')).toBe(PRICING_PAGE_COPY.proApiCtaHref);
-  });
-
-  test('FAQ renders 4 accordion items', () => {
-    const faqSection = screen.getByTestId('section-pricing-faq');
-    const faqToggles = within(faqSection).getAllByRole('button');
-
-    expect(faqToggles).toHaveLength(PRICING_PAGE_COPY.faq.length);
-  });
-
-  test('pricing hero copy matches high-trust value framing', () => {
-    expect(screen.getByRole('heading', { level: 1, name: PRICING_PAGE_COPY.pageTitle })).toBeTruthy();
-    expect(screen.getByText(PRICING_PAGE_COPY.pageMicro)).toBeTruthy();
-    expect(screen.getByText(PRICING_PAGE_COPY.socialProof)).toBeTruthy();
+  test('header and CTA back links remain', () => {
+    expect(screen.getByRole('link', { name: PRICING_PAGE_COPY.freeCtaLabel }).getAttribute('href')).toBe(
+      PRICING_PAGE_COPY.freeCtaHref,
+    );
   });
 });

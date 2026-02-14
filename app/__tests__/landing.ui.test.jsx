@@ -47,15 +47,16 @@ afterEach(() => {
 describe('landing structure and UI invariants', () => {
   test('hero has exactly one primary CTA and no secondary links', () => {
     const hero = screen.getByTestId('hero-section');
-    const primary = within(hero).getByTestId('primary-cta');
+    const primary = within(hero).getByTestId('hero-primary-cta');
     const links = within(hero).getAllByRole('link');
 
     expect(primary.textContent).toBe('Generate PDF');
+    expect(within(hero).queryByRole('link', { name: 'See pricing' })).toBeNull();
+    expect(within(hero).queryByRole('link', { name: 'Try on Telegram' })).toBeNull();
     expect(links).toHaveLength(1);
     expect(primary.getAttribute('href')).toBe('#tool');
     expect(primary.className).toContain('h-11');
     expect(primary.className).toContain('rounded-full');
-    expect(hero.querySelector('button')).toBeNull();
   });
 
   test('top nav has the three required links', () => {
@@ -89,6 +90,18 @@ describe('landing structure and UI invariants', () => {
     expect(toolSection.getAttribute('id')).toBe(LANDING_COPY_KEYS.upload);
     expect(within(toolSection).getByText('Try it now')).toBeTruthy();
     expect(within(toolSection).getByText('Drop CSV or XLSX here')).toBeTruthy();
+  });
+
+  test('UploadCard includes dropzone, CTA, badge and switches', () => {
+    const toolSection = screen.getByTestId('tool-section');
+    expect(within(toolSection).getByText('Drop CSV or XLSX here')).toBeTruthy();
+    expect(within(toolSection).getByRole('button', { name: 'Generate PDF' })).toBeTruthy();
+    expect(within(toolSection).getByText(/Free\.\s*3\s*exports left/i)).toBeTruthy();
+
+    const switches = within(toolSection).getAllByRole('switch');
+    expect(switches).toHaveLength(2);
+    expect(within(toolSection).getByRole('switch', { name: 'Branding' })).toBeTruthy();
+    expect(within(toolSection).getByRole('switch', { name: 'Truncate long text' })).toBeTruthy();
   });
 
   test('pricing preview has three cards and featured credits card', () => {

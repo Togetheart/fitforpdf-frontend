@@ -23,9 +23,9 @@ import {
 } from './siteCopy.mjs';
 import { getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
-import GenerateModule from './components/GenerateModule';
+import UploadCard from './components/UploadCard';
 import FaqAccordion from './components/FaqAccordion';
-import Section from './components/Section';
+import Section from './components/ui/Section';
 import PricingCards from './components/PricingCards';
 
 const API_BASE = '/api';
@@ -433,7 +433,7 @@ export default function Page() {
             <div className="mt-8">
               <a
                 href="#tool"
-                data-testid="primary-cta"
+                data-testid="hero-primary-cta"
                 className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-150 hover:bg-red-700 active:scale-[0.99]"
               >
                 {LANDING_COPY.heroPrimaryCta}
@@ -507,7 +507,7 @@ A104,Widget,6900.00`}
 
       <Section id={LANDING_COPY_KEYS.upload} index={4} className="py-24" bg="bg-gray-50" testId="tool-section">
         <div className="space-y-4">
-          <GenerateModule
+          <UploadCard
             toolTitle={LANDING_COPY.toolTitle}
             toolSubcopy={LANDING_COPY.toolSubcopy}
             file={file}

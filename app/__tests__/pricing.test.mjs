@@ -27,7 +27,7 @@ test('pricing contains 500 exports and €79', () => {
 
 test('pricing contains Pro and API and €29/month', () => {
   const content = pricingText();
-  assert.ok(content.includes('Pro (coming soon)'));
+  assert.ok(content.includes('Pro + API'));
   assert.ok(content.includes('€29/month'));
 });
 

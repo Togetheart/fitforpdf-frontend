@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check, X } from 'lucide-react';
 
 const CTA_BASE =
   'inline-flex h-11 w-full items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150 ease-out';
@@ -6,6 +7,10 @@ const CTA_PRIMARY =
   `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white hover:bg-[#c82727] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D92D2A]/40 focus-visible:ring-offset-2`;
 const CTA_SECONDARY =
   `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/50 focus-visible:ring-offset-2`;
+
+function isNegativePoint(point) {
+  return /^no\b/i.test(point) || /^coming soon\b/i.test(point) || /^unlimited\b/i.test(point);
+}
 
 function renderAction(plan) {
   if (plan.actionType === 'link') {
@@ -68,9 +73,11 @@ export default function PricingCards({
         return (
           <article
             key={plan.id}
+            data-testid="plan-card"
             data-featured={cardDataFeatured}
             data-card-id={plan.id}
             className={cardClass}
+            aria-label={plan.title}
           >
             {plan.badge ? (
               <div className="absolute -top-3 right-3">
@@ -85,16 +92,23 @@ export default function PricingCards({
             <HeadingTag className="text-lg font-semibold tracking-tight">{plan.title}</HeadingTag>
             <div className="mt-3 space-y-2">
               {(plan.priceLines && plan.priceLines.length ? plan.priceLines : [plan.priceLine]).map((line) => (
-                <p key={line} className="text-sm text-slate-900">
+                <p key={line} className="text-sm font-semibold text-slate-900">
                   {line}
                 </p>
               ))}
             </div>
 
             {plan.points?.length ? (
-              <ul className="mt-3 space-y-1.5 pl-5 text-sm text-slate-700 list-disc">
+              <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
                 {plan.points.map((point) => (
-                  <li key={point}>{point}</li>
+                  <li key={point} className="flex items-start gap-2">
+                    {isNegativePoint(point) ? (
+                      <X className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
+                    ) : (
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                    )}
+                    <span>{point}</span>
+                  </li>
                 ))}
               </ul>
             ) : null}

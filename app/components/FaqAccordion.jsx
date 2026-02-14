@@ -10,6 +10,7 @@ function normalizeId(value) {
 export default function FaqAccordion({
   items = [],
   title = 'Frequently asked questions',
+  testId,
 }) {
   const itemList = useMemo(
     () =>
@@ -45,7 +46,10 @@ export default function FaqAccordion({
   return (
     <div className="mx-auto max-w-3xl">
       <h2 className="text-2xl font-semibold leading-tight">{title}</h2>
-      <div className="mt-8 space-y-0 divide-y divide-black/10" data-testid="faq-accordion">
+      <div
+        className="mt-8 space-y-0 divide-y divide-black/10"
+        data-testid={testId ?? 'faq-accordion'}
+      >
         {itemList.map((item) => {
           const isOpen = openId === item.id;
           const buttonId = `faq-q-${item.id}`;
@@ -67,6 +71,7 @@ export default function FaqAccordion({
                 </span>
                 <ChevronDown
                   aria-hidden="true"
+                  data-testid="faq-chevron"
                   className={`h-4 w-4 shrink-0 text-slate-500 transition-all duration-200 ${isOpen ? 'rotate-180' : ''}`}
                 />
               </button>
