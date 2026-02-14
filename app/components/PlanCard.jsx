@@ -79,6 +79,9 @@ export default function PlanCard({
       aria-label={plan.title}
     >
       {isFeatured ? (
+        <span aria-hidden="true" className="sr-only" data-testid="plan-credits" data-highlight="true" />
+      ) : null}
+      {isFeatured ? (
         <div className="absolute -top-3 right-3">
           <Badge variant="popular" testId="plan-highlighted" data-highlight="true">
             {plan.badge || 'Most popular'}

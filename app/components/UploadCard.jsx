@@ -5,8 +5,6 @@ import Button from './Button';
 import Toggle from './Toggle';
 import UploadDropzone from './UploadDropzone';
 
-const inputId = 'fitforpdf-file';
-
 function formatBytes(bytes) {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
@@ -31,13 +29,16 @@ export default function UploadCard({
   onTruncateChange,
   onSubmit,
   onDownloadAgain,
+  downloadedFileName,
+  verdict,
 }) {
   const isOverQuota = freeExportsLeft <= 0;
   const isReady = Boolean(file);
   const inputId = 'fitforpdf-file-input';
+  const verdictNormalized = verdict ? String(verdict).toUpperCase() : '';
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5">
+    <article data-testid="upload-card" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5">
       <form className="space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
@@ -49,7 +50,7 @@ export default function UploadCard({
             className="inline-flex h-9 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm"
             aria-label="free exports remaining"
           >
-            Free. {freeExportsLeft} exports left
+            Free: {freeExportsLeft} exports left
           </span>
         </div>
 
@@ -81,7 +82,7 @@ export default function UploadCard({
           </div>
         ) : null}
 
-          <div className="space-y-3">
+        <div className="space-y-3">
           <Toggle
             label="Branding"
             checked={includeBranding}
@@ -131,6 +132,17 @@ export default function UploadCard({
             )}
           </Button>
         )}
+
+        {hasResultBlob && downloadedFileName ? (
+          <div className="flex flex-col gap-2 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+            <p>Downloaded: {downloadedFileName}</p>
+            {verdictNormalized ? (
+              <span className="inline-flex h-7 items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 text-[11px] font-medium text-emerald-700">
+                {verdictNormalized}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
 
         <p className="text-xs text-slate-500">
           Files are deleted immediately after conversion. PDF available for 15 minutes.

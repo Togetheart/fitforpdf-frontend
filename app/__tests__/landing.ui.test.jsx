@@ -105,10 +105,10 @@ describe('landing structure and UI invariants', () => {
   test('hero title renders as two separated lines', () => {
     const hero = screen.getByTestId('hero-section');
     const heroTitleLines = within(hero).getAllByText(/Client-ready PDFs\.|From messy spreadsheets\./i);
-    const spans = hero.querySelectorAll('h1 span');
+    const lineBreak = hero.querySelector('h1 br');
 
     expect(heroTitleLines).toHaveLength(2);
-    expect(spans).toHaveLength(2);
+    expect(lineBreak).toBeTruthy();
   });
 
   test('hero is before tool section in DOM order', () => {
@@ -126,9 +126,14 @@ describe('landing structure and UI invariants', () => {
 
   test('UploadCard includes dropzone, CTA, badge and switches', () => {
     const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
+    const uploadCard = within(toolSection).getByTestId('upload-card');
+
+    expect(uploadCard).toBeTruthy();
     expect(within(toolSection).getByText('Drop CSV or XLSX here')).toBeTruthy();
     expect(within(toolSection).getByRole('button', { name: 'Generate PDF' })).toBeTruthy();
-    expect(within(toolSection).getByText(/Free\.\s*3\s*exports left/i)).toBeTruthy();
+    expect(within(toolSection).getByTestId('upload-dropzone')).toBeTruthy();
+    expect(within(toolSection).getByText(/Free:\s*3\s*exports left/i)).toBeTruthy();
+    expect(uploadCard.querySelector('[data-testid="quota-pill"]')).toBeTruthy();
 
     const switches = within(toolSection).getAllByRole('switch');
     expect(switches).toHaveLength(2);
@@ -152,14 +157,16 @@ describe('landing structure and UI invariants', () => {
     expect(cards[1].getAttribute('data-featured')).toBe('true');
     expect(pricingGrid.className.includes('grid-cols-1')).toBe(true);
     expect(pricingGrid.className.includes('md:grid-cols-3')).toBe(true);
+    const creditsCard = screen.getByTestId('plan-credits');
+    expect(creditsCard).toBeTruthy();
+    expect(creditsCard.getAttribute('data-highlight')).toBe('true');
   });
 
   test('home includes premium section labels and micro copy', () => {
     const hero = screen.getByTestId('hero-section');
     expect(within(hero).getByText('FITFORPDF')).toBeTruthy();
-    expect(
-      within(hero).getByText('No accounts. Files deleted after conversion.'),
-    ).toBeTruthy();
+    expect(within(hero).getByText('Files are deleted immediately after conversion. PDF available for 15 minutes.')).toBeTruthy();
+    expect(within(hero).getByText('No account. No tracking of file contents. Works with CSV and XLSX.')).toBeTruthy();
   });
 
   test('problem section uses the three real-world pain lines', () => {
@@ -187,7 +194,7 @@ describe('landing structure and UI invariants', () => {
 
 test('free exports pill is scoped to tool section', () => {
   const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
-  const counters = screen.getAllByText(/Free\.?\s*\d+\s*exports left/i);
+  const counters = screen.getAllByText(/Free[:\s]\s*\d+\s*exports left/i);
 
   expect(counters.length).toBeGreaterThan(0);
   counters.forEach((node) => {
