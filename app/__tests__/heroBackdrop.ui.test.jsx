@@ -31,6 +31,7 @@ function configureMatchMedia({ mobile = false, reduceMotion = false, pointerFine
 
 beforeEach(() => {
   configureMatchMedia({ mobile: false, reduceMotion: false, pointerFine: true });
+  window.history.replaceState({}, '', '/');
 });
 
 afterEach(() => {
@@ -58,16 +59,45 @@ describe('HeroBackdrop', () => {
 
     expect(toSpy).toHaveBeenCalledWith(
       layerOne,
-      expect.objectContaining({ '--r1x': '20%', '--r1y': '10%' }),
+      expect.objectContaining({
+        '--r1x': expect.stringContaining('%'),
+        '--r1y': expect.stringContaining('%'),
+      }),
     );
     expect(toSpy).toHaveBeenCalledWith(
       layerTwo,
-      expect.objectContaining({ '--r2x': '88%', '--r2y': '24%' }),
+      expect.objectContaining({
+        '--r2x': expect.stringContaining('%'),
+        '--r2y': expect.stringContaining('%'),
+      }),
+    );
+    expect(toSpy).toHaveBeenCalledWith(
+      grain,
+      expect.objectContaining({ opacity: 0.16 }),
     );
 
-    expect(quickToSpy).toHaveBeenCalledTimes(4);
+    expect(quickToSpy).toHaveBeenCalledTimes(6);
     expect(addEventSpy).toHaveBeenCalledWith('pointermove', expect.any(Function));
     expect(addEventSpy).toHaveBeenCalledWith('pointerleave', expect.any(Function));
+  });
+
+  test('debug mode multiplies motion amplitudes', () => {
+    cleanup();
+    window.history.replaceState({}, '', '/?motion=debug');
+
+    const toSpy = vi.spyOn(gsap, 'to');
+    render(<LandingPage />);
+
+    const layerOne = screen.getByTestId('hero-bg-layer-1');
+    const layerTwo = screen.getByTestId('hero-bg-layer-2');
+    const calls = toSpy.mock.calls.map(([, values]) => values || {}).filter((values) => values && typeof values === 'object');
+    const layerOneCall = calls.find((values) => values['--r1x']);
+    const layerTwoCall = calls.find((values) => values['--r2x']);
+
+    expect(layerOneCall?.['--r1x']).toBe('60%');
+    expect(layerOneCall?.['--r1y']).toBe('64%');
+    expect(layerTwoCall?.['--r2x']).toBe('16%');
+    expect(layerTwoCall?.['--r2y']).toBe('66%');
   });
 
   test('disables all gsap motion when reduced motion is requested', () => {

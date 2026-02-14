@@ -26,6 +26,11 @@ export default function HeroBackdrop({
   const layerOneRef = useRef(null);
   const layerTwoRef = useRef(null);
   const grainRef = useRef(null);
+  const gradientsRef = useRef(null);
+
+  const isDebugMotion =
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('motion') === 'debug';
+  const motionMultiplier = isDebugMotion ? 3 : 1;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -35,33 +40,62 @@ export default function HeroBackdrop({
     const layerOne = layerOneRef.current;
     const layerTwo = layerTwoRef.current;
     const grain = grainRef.current;
+    const gradients = gradientsRef.current;
     const root = backdropRef.current;
-    if (!layerOne || !layerTwo || !grain || !root) return;
+    if (!layerOne || !layerTwo || !grain || !root || !gradients) return;
 
-    layerOne.style.setProperty('--r1x', '12%');
-    layerOne.style.setProperty('--r1y', '16%');
-    layerTwo.style.setProperty('--r2x', '82%');
-    layerTwo.style.setProperty('--r2y', '18%');
+    const baseR1x = 12;
+    const baseR1y = 16;
+    const baseR2x = 82;
+    const baseR2y = 18;
+
+    const driftR1x = `${Math.min(92, baseR1x + 16 * motionMultiplier)}%`;
+    const driftR1y = `${Math.min(92, baseR1y + 16 * motionMultiplier)}%`;
+    const driftR2x = `${Math.max(8, baseR2x - 22 * motionMultiplier)}%`;
+    const driftR2y = `${Math.min(92, baseR2y + 16 * motionMultiplier)}%`;
+
+    layerOne.style.setProperty('--r1x', `${baseR1x}%`);
+    layerOne.style.setProperty('--r1y', `${baseR1y}%`);
+    layerTwo.style.setProperty('--r2x', `${baseR2x}%`);
+    layerTwo.style.setProperty('--r2y', `${baseR2y}%`);
+    grain.style.opacity = '0.10';
+    gradients.style.setProperty('--hero-bg-x', '0px');
+    gradients.style.setProperty('--hero-bg-y', '0px');
 
     const driftA = gsap.to(layerOne, {
-      '--r1x': '20%',
-      '--r1y': '10%',
-      duration: 18,
+      '--r1x': driftR1x,
+      '--r1y': driftR1y,
+      duration: 14,
       repeat: -1,
       yoyo: true,
       ease: 'sine.inOut',
     });
 
     const driftB = gsap.to(layerTwo, {
-      '--r2x': '88%',
-      '--r2y': '24%',
-      duration: 24,
+      '--r2x': driftR2x,
+      '--r2y': driftR2y,
+      duration: 18,
       repeat: -1,
       yoyo: true,
       ease: 'sine.inOut',
     });
 
-    const grainDrift = gsap.to(grain, { x: '8px', y: '-6px', duration: 48, ease: 'none', repeat: -1, yoyo: true });
+    const grainDrift = gsap.to(grain, {
+      opacity: 0.16,
+      duration: 22,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    });
+
+    const gradientDrift = gsap.to(gradients, {
+      x: `${8 * motionMultiplier}px`,
+      y: `${6 * motionMultiplier}px`,
+      duration: 22,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
 
     const addPointerListeners = mediaQueryMatches('(pointer: fine)');
     let onPointerMove = null;
@@ -72,6 +106,8 @@ export default function HeroBackdrop({
       const quickToLayerOneY = gsap.quickTo(layerOne, 'y', { duration: 0.75, ease: 'power2.out' });
       const quickToLayerTwoX = gsap.quickTo(layerTwo, 'x', { duration: 0.95, ease: 'power2.out' });
       const quickToLayerTwoY = gsap.quickTo(layerTwo, 'y', { duration: 0.95, ease: 'power2.out' });
+      const quickToGradientX = gsap.quickTo(gradients, 'x', { duration: 0.9, ease: 'power2.out' });
+      const quickToGradientY = gsap.quickTo(gradients, 'y', { duration: 0.9, ease: 'power2.out' });
 
       onPointerMove = (event) => {
         const bounds = root.getBoundingClientRect();
@@ -84,6 +120,8 @@ export default function HeroBackdrop({
         quickToLayerOneY(clampedY);
         quickToLayerTwoX(clampedX * -0.5);
         quickToLayerTwoY(clampedY * -0.65);
+        quickToGradientX(clampedX * 0.6);
+        quickToGradientY(clampedY * 0.4);
       };
 
       onPointerOut = () => {
@@ -91,6 +129,8 @@ export default function HeroBackdrop({
         quickToLayerOneY(0);
         quickToLayerTwoX(0);
         quickToLayerTwoY(0);
+        quickToGradientX(0);
+        quickToGradientY(0);
       };
 
       root.addEventListener('pointermove', onPointerMove);
@@ -101,12 +141,13 @@ export default function HeroBackdrop({
       driftA.kill();
       driftB.kill();
       grainDrift.kill();
+      gradientDrift.kill();
       if (addPointerListeners) {
         root.removeEventListener('pointermove', onPointerMove);
         root.removeEventListener('pointerleave', onPointerOut);
       }
     };
-  }, [variant]);
+  }, [variant, isDebugMotion]);
 
   const motion = mediaQueryMatches('(prefers-reduced-motion: reduce)') ? 'off' : 'on';
 
@@ -122,6 +163,7 @@ export default function HeroBackdrop({
         <div
           data-testid="hero-bg-gradients"
           className={`hero-bg-gradients hero-bg-gradients--${variant}`}
+          ref={gradientsRef}
         />
         <span
           data-testid="hero-bg-noise"

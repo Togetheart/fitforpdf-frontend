@@ -55,7 +55,9 @@
   .hero-bg-gradients {
     opacity: 0.95;
     filter: saturate(104%) contrast(102%);
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(var(--hero-bg-x, 0px), var(--hero-bg-y, 0px), 0);
+    --hero-bg-x: 0px;
+    --hero-bg-y: 0px;
   }
 
   .hero-bg-layer-1 {
