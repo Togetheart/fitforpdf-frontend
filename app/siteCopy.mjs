@@ -214,3 +214,27 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     containsFreeQuotaText: false,
   },
 ];
+
+export const PRIVACY_PAGE_COPY = {
+  pageTitle: 'Privacy',
+  intro: 'FitForPDF processes uploaded files to generate PDFs.',
+  dataProcessed: [
+    'Uploaded file content (CSV/XLSX)',
+    'Generated PDF',
+    'Operational metadata (rows, columns, verdict, error codes) without file content',
+  ],
+  retention: [
+    'Policy: Files are deleted immediately after conversion.',
+    'Policy: The generated PDF is available for up to 15 minutes.',
+  ],
+  sensitiveDataNote: 'Policy: Do not upload sensitive data.',
+  logs: [
+    'We do not store file contents in logs.',
+    'We may store operational metrics to improve reliability.',
+  ],
+  security: [
+    'Policy: Transport encryption (HTTPS).',
+    'Policy: Access controls (API key).',
+  ],
+  contactEmail: 'support@fitforpdf.com',
+};
