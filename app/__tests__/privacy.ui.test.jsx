@@ -26,23 +26,26 @@ describe('privacy page UI', () => {
     expect(screen.getByRole('contentinfo')).toBeTruthy();
   });
 
-  test('contains file deletion statement', () => {
-    const element = screen.getByText('Files are deleted immediately after conversion.');
-    expect(element).toBeTruthy();
+  test('renders premium hero hierarchy', () => {
+    expect(screen.getByRole('heading', { level: 1, name: /Your data\./i })).toBeTruthy();
+    expect(screen.getByText('Not our business.')).toBeTruthy();
+    expect(screen.getByText('PRIVACY')).toBeTruthy();
   });
 
-  test('contains PDF retention statement', () => {
-    const element = screen.getByText('The generated PDF is available for up to 15 minutes.');
-    expect(element).toBeTruthy();
+  test('contains privacy core sections', () => {
+    expect(screen.getByRole('heading', { level: 2, name: 'How file handling works' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: 'What we don’t do' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: 'Infrastructure' })).toBeTruthy();
   });
 
-  test('contains logs statement', () => {
-    const element = screen.getByText('We do not store file contents in logs.');
-    expect(element).toBeTruthy();
+  test('contains file handling promises', () => {
+    expect(screen.getByText('Files are deleted immediately after conversion.')).toBeTruthy();
+    expect(screen.getByText('Available for up to 15 minutes.')).toBeTruthy();
+    expect(screen.getByText('We do not store file contents in logs.')).toBeTruthy();
+    expect(screen.getByText('Do not upload sensitive data.')).toBeTruthy();
   });
 
-  test('contains sensitive data warning', () => {
-    const element = screen.getByText('Do not upload sensitive data.');
-    expect(element).toBeTruthy();
+  test('contains legal footer line', () => {
+    expect(screen.getByText('For legal terms, see Terms of Service.')).toBeTruthy();
   });
 });

@@ -239,25 +239,49 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
 ];
 
 export const PRIVACY_PAGE_COPY = {
-  pageTitle: 'Privacy',
-  intro: 'FitForPDF processes uploaded files to generate PDFs.',
-  dataProcessed: [
-    'Uploaded file content (CSV/XLSX)',
-    'Generated PDF',
-    'Operational metadata (rows, columns, verdict, error codes) without file content',
+  heroLabel: 'PRIVACY',
+  pageTitle: 'Your data.',
+  pageTitleAccent: 'Not our business.',
+  pageSubtitle: 'FitForPDF is designed to process files — not store them.',
+  microLine: 'No accounts. No tracking of file contents.',
+
+  handlingTitle: 'How file handling works',
+  files: {
+    title: 'Files',
+    bullets: ['Files are deleted immediately after conversion.'],
+  },
+  generatedPdf: {
+    title: 'Generated PDFs',
+    bullets: ['Available for up to 15 minutes.', 'Automatically deleted after.'],
+  },
+  logs: {
+    title: 'Logs',
+    bullets: [
+      'We do not store file contents in logs.',
+      'Only technical metadata is retained to improve reliability.',
+    ],
+  },
+
+  dontDoTitle: 'What we don’t do',
+  dontDo: [
+    'We do not read your documents.',
+    'We do not train models on your files.',
+    'We do not resell your data.',
   ],
-  retention: [
-    'Files are deleted immediately after conversion.',
-    'The generated PDF is available for up to 15 minutes.',
+
+  infrastructureTitle: 'Infrastructure',
+  infrastructure: [
+    'Files are processed server-side.',
+    'Files and outputs are automatically deleted.',
+    'No long-term storage of user files.',
   ],
+
   sensitiveDataNote: 'Do not upload sensitive data.',
-  logs: [
-    'We do not store file contents in logs.',
-    'We may store operational metrics to improve reliability.',
-  ],
-  security: [
-    'Transport encryption (HTTPS).',
-    'Access controls in place for key endpoints.',
-  ],
+  legalFooter: 'For legal terms, see Terms of Service.',
   contactEmail: 'support@fitforpdf.com',
+  contactLabel: 'support@fitforpdf.com',
+  security: [
+    'Files are processed server-side.',
+    'Access controls are enforced for API endpoints.',
+  ],
 };
