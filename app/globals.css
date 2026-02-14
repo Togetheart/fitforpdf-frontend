@@ -151,6 +151,74 @@
     animation: heroFloatA 26s ease-in-out infinite alternate;
   }
 
+  .app-backdrop {
+    position: fixed;
+    inset: -45%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+    transform: translateZ(0);
+    isolation: isolate;
+  }
+
+  .app-bg-layer {
+    position: absolute;
+    inset: -30%;
+    pointer-events: none;
+    will-change: transform, filter, opacity;
+  }
+
+  .app-bg-layer-app {
+    filter: blur(26px);
+  }
+
+  .app-bg-layer-1 {
+    --g1x: 14%;
+    --g1y: 16%;
+    background-image:
+      radial-gradient(circle at var(--g1x) var(--g1y), rgba(217, 45, 42, 0.12), transparent 52%),
+      radial-gradient(circle at 72% 12%, rgba(59, 130, 246, 0.05), transparent 58%);
+    opacity: 0.52;
+    mix-blend-mode: multiply;
+    mask-image: radial-gradient(circle at 44% 28%, #000 24%, transparent 80%);
+  }
+
+  .app-bg-layer-2 {
+    --g2x: 82%;
+    --g2y: 12%;
+    background-image:
+      radial-gradient(circle at var(--g2x) var(--g2y), rgba(217, 45, 42, 0.1), transparent 55%),
+      radial-gradient(circle at 16% 78%, rgba(59, 130, 246, 0.04), transparent 58%);
+    opacity: 0.45;
+    mix-blend-mode: soft-light;
+    mask-image: radial-gradient(circle at 56% 76%, #000 22%, transparent 80%);
+  }
+
+  .app-bg-noise,
+  .app-noise {
+    position: absolute;
+    inset: -40%;
+    background-image: var(--app-noise-uri);
+    background-repeat: repeat;
+    background-size: 42px 42px;
+    opacity: 0.038;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    filter: saturate(1.05);
+  }
+
+  .animate-appMeshA {
+    animation: appMeshA 38s ease-in-out infinite alternate;
+  }
+
+  .animate-appMeshB {
+    animation: appMeshB 44s ease-in-out infinite alternate;
+  }
+
+  .animate-appNoise {
+    animation: heroGrainDrift 64s linear infinite;
+  }
+
   @keyframes heroFloatA {
     0% {
       transform: translate3d(-1.8%, -1.2%, 0) scale(1.03);
@@ -181,6 +249,36 @@
     }
   }
 
+  @keyframes appMeshA {
+    0% {
+      transform: translate3d(-1.2%, -0.8%, 0) scale(1.02);
+      background-position: 0% 0%;
+    }
+    50% {
+      transform: translate3d(1.4%, 1.0%, 0) scale(1.03);
+      background-position: 54% 58%;
+    }
+    100% {
+      transform: translate3d(-0.4%, 1.6%, 0) scale(1.01);
+      background-position: 28% 100%;
+    }
+  }
+
+  @keyframes appMeshB {
+    0% {
+      transform: translate3d(0.8%, 1.0%, 0) scale(1.015);
+      background-position: 100% 2%;
+    }
+    50% {
+      transform: translate3d(-1.0%, -0.6%, 0) scale(1.025);
+      background-position: 44% 66%;
+    }
+    100% {
+      transform: translate3d(0.3%, 1.2%, 0) scale(1.012);
+      background-position: 88% 38%;
+    }
+  }
+
   @keyframes heroGrainDrift {
     0% {
       transform: translate3d(0, 0, 0);
@@ -203,6 +301,16 @@
 
     .hero-bg-noise {
       opacity: 0.03;
+    }
+
+    .app-bg-layer-1,
+    .app-bg-layer-2,
+    .app-bg-noise,
+    .app-noise,
+    .animate-appMeshA,
+    .animate-appMeshB,
+    .animate-appNoise {
+      animation: none !important;
     }
   }
 
