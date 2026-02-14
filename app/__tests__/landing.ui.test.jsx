@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 
 import Landing from '../page.jsx';
 import SiteHeader from '../_components/SiteHeader';
-import { LANDING_COPY_KEYS, LANDING_COPY } from '../siteCopy.mjs';
+import { LANDING_COPY_KEYS } from '../siteCopy.mjs';
 
 vi.mock('../components/BeforeAfter.mjs', () => ({
   default: () => <div data-testid="before-after-placeholder" />,
@@ -61,8 +61,8 @@ describe('landing structure and UI invariants', () => {
     expect(primary.className.includes('rounded-full')).toBe(true);
     expect(hero.querySelector('button')).toBeNull();
 
-    expect(within(hero).queryByText(LANDING_COPY.heroSecondaryCta)).toBeNull();
-    expect(within(hero).queryByText(LANDING_COPY.heroTertiaryCta)).toBeNull();
+    expect(within(hero).queryByText('See pricing')).toBeNull();
+    expect(within(hero).queryByText('Try on Telegram')).toBeNull();
   });
 
   test('pricing preview has three cards and responsive grid classes', () => {

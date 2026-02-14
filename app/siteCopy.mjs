@@ -5,15 +5,7 @@ export const LANDING_COPY = {
   heroTitle: 'Client-ready PDFs. From messy spreadsheets.',
   heroSubheadline: 'Upload a CSV or Excel file. Get a structured PDF ready to send.',
   heroPrimaryCta: 'Generate PDF',
-  heroSecondaryCta: 'See pricing',
-  heroTertiaryCta: 'Try on Telegram',
   heroTrustLine: 'Files are deleted immediately after conversion. PDF available for 15 minutes.',
-
-  topBarLinks: [
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Privacy', href: '/privacy' },
-  ],
-  telegramCta: 'Try on Telegram',
 
   beforeAfterTitle: 'From raw data to structured document.',
   beforeLabel: 'CSV input',
@@ -67,7 +59,6 @@ export const LANDING_COPY = {
 };
 
 export const LANDING_COPY_KEYS = {
-  topBar: 'topbar',
   hero: 'hero',
   beforeAfter: 'before-after',
   clientReady: 'client-ready',
@@ -174,10 +165,6 @@ export const PRICING_CARDS = [
 ];
 
 export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
-  {
-    id: LANDING_COPY_KEYS.topBar,
-    containsFreeQuotaText: false,
-  },
   {
     id: LANDING_COPY_KEYS.hero,
     title: LANDING_COPY.heroTitle,
