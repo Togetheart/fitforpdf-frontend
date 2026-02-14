@@ -58,8 +58,8 @@ describe('pricing highlight on home', () => {
     const creditsCard = screen.getByTestId('plan-highlighted').closest('[data-testid="plan-card"]');
     const cardText = creditsCard ? creditsCard.textContent : '';
 
-    expect(cardText).toContain('100 exports • €19');
-    expect(cardText).toContain('500 exports • €79');
+    expect(cardText).toContain('100 exports · €19');
+    expect(cardText).toContain('500 exports · €79');
   });
 
   test('free card and pro card contain required pricing text', () => {

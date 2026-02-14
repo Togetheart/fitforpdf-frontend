@@ -33,7 +33,7 @@ test('pricing contains Pro and API and €29/month', () => {
 
 test('pricing contains API wording', () => {
   const content = pricingText();
-  assert.equal(content.includes('Usage-based API access'), true);
+  assert.equal(content.includes('API access (usage-based)'), true);
 });
 
 test('pricing has back to app link', () => {
