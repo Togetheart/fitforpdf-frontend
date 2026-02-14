@@ -28,7 +28,7 @@ export const LANDING_COPY = {
     'No manual layout',
   ],
 
-  toolTitle: 'Try it now',
+  toolTitle: 'Generate a client-ready PDF',
   toolSubcopy: '3 free exports. No account required.',
 
   pricingPreviewTitle: 'Simple pricing.',
@@ -279,10 +279,10 @@ export const PRIVACY_PAGE_COPY = {
   },
   generatedPdf: {
     title: 'Generated PDFs',
-    bullets: ['Available for up to 15 minutes.', 'Automatically deleted after.'],
+    bullets: ['The generated PDF is available for up to 15 minutes.', 'Automatically deleted after.'],
   },
   logs: {
-    title: 'Logs',
+    title: 'What we log',
     bullets: [
       'We do not store file contents in logs.',
       'Only technical metadata is retained to improve reliability.',

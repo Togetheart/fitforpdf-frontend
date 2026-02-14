@@ -81,19 +81,19 @@ describe('landing structure and UI invariants', () => {
 
   test('hero is before tool section in DOM order', () => {
     const heroHeading = screen.getByRole('heading', { name: /From messy spreadsheets\./i, level: 1 });
-    const toolHeading = screen.getByRole('heading', { name: /Try it now/i, level: 2 });
+    const toolHeading = screen.getByRole('heading', { name: /Generate a client-ready PDF/i, level: 2 });
     expect(heroHeading.compareDocumentPosition(toolHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('tool section id is #tool and exists', () => {
-    const toolSection = screen.getByTestId('tool-section');
+    const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     expect(toolSection.getAttribute('id')).toBe(LANDING_COPY_KEYS.upload);
-    expect(within(toolSection).getByText('Try it now')).toBeTruthy();
+    expect(within(toolSection).getByText('Generate a client-ready PDF')).toBeTruthy();
     expect(within(toolSection).getByText('Drop CSV or XLSX here')).toBeTruthy();
   });
 
   test('UploadCard includes dropzone, CTA, badge and switches', () => {
-    const toolSection = screen.getByTestId('tool-section');
+    const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     expect(within(toolSection).getByText('Drop CSV or XLSX here')).toBeTruthy();
     expect(within(toolSection).getByRole('button', { name: 'Generate PDF' })).toBeTruthy();
     expect(within(toolSection).getByText(/Free\.\s*3\s*exports left/i)).toBeTruthy();
@@ -154,7 +154,7 @@ describe('landing structure and UI invariants', () => {
 });
 
 test('free exports pill is scoped to tool section', () => {
-  const toolSection = screen.getByTestId('tool-section');
+  const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
   const counters = screen.getAllByText(/Free\.?\s*\d+\s*exports left/i);
 
   expect(counters.length).toBeGreaterThan(0);

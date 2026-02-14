@@ -1,14 +1,11 @@
 import './globals.css';
-import SiteHeader from './components/SiteHeader';
-import SiteFooter from './components/SiteFooter';
+import SiteShell from './components/SiteShell';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-white text-black">
-        <SiteHeader />
-        <main>{children}</main>
-        <SiteFooter />
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

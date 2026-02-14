@@ -24,9 +24,10 @@ import {
 import { getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
 import UploadCard from './components/UploadCard';
-import FaqAccordion from './components/FaqAccordion';
+import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
 import PricingCards from './components/PricingCards';
+import HeroBackground from './components/HeroBackground';
 
 const API_BASE = '/api';
 
@@ -421,52 +422,55 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section" className="py-28">
-        <section className="grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
-          <div className="space-y-6">
-            <p className="text-xs font-semibold tracking-[0.18em] text-black/50">{LANDING_COPY.heroLabel}</p>
-            <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
-              <span className="block">Client-ready PDFs.</span>
-              <span className="block text-black/70">From messy spreadsheets.</span>
-            </h1>
-            <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
-            <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
-            <div className="mt-8">
-              <a
-                href="#tool"
-                data-testid="hero-primary-cta"
-                className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-150 hover:bg-red-700 active:scale-[0.99]"
-              >
-                {LANDING_COPY.heroPrimaryCta}
-              </a>
+        <div className="relative">
+          <HeroBackground variant="home" />
+          <section className="relative z-10 grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
+            <div className="space-y-6">
+              <p className="text-xs font-semibold tracking-[0.18em] text-black/50">{LANDING_COPY.heroLabel}</p>
+              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
+                <span className="block">Client-ready PDFs.</span>
+                <span className="block text-black/70">From messy spreadsheets.</span>
+              </h1>
+              <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
+              <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
+              <div className="mt-8">
+                <a
+                  href="#tool"
+                  data-testid="hero-primary-cta"
+                  className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-150 hover:bg-red-700 active:scale-[0.99]"
+                >
+                  {LANDING_COPY.heroPrimaryCta}
+                </a>
+              </div>
             </div>
-          </div>
-          <div className="hidden md:block">
-            <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
-              <p className="text-xs font-semibold tracking-[0.15em] text-black/50">PREVIEW</p>
-              <div className="mt-4 space-y-3">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">CSV input</p>
-                  <pre className="mt-2 min-h-20 max-h-36 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[11px] leading-4 text-slate-700">
+            <div className="hidden md:block">
+              <div className="w-full rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+                <p className="text-xs font-semibold tracking-[0.15em] text-black/50">PREVIEW</p>
+                <div className="mt-4 space-y-3">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">CSV input</p>
+                    <pre className="mt-2 min-h-20 max-h-36 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[11px] leading-4 text-slate-700">
 {`invoice_id,client,total
 A102,ACME Corp,4230.00
 A103,Northline,1120.00
 A104,Widget,6900.00`}
-                  </pre>
-                </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    Structured PDF summary
-                  </p>
-                  <div className="mt-2 space-y-1 text-sm text-slate-700">
-                    <p className="font-semibold">Overview page</p>
-                    <p>Rows 1–20 · Page 1/n</p>
-                    <p>Columns grouped by section</p>
+                    </pre>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                      Structured PDF summary
+                    </p>
+                    <div className="mt-2 space-y-1 text-sm text-slate-700">
+                      <p className="font-semibold">Overview page</p>
+                      <p>Rows 1–20 · Page 1/n</p>
+                      <p>Columns grouped by section</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </Section>
 
       <Section id={LANDING_COPY_KEYS.problem} index={1} bg="bg-gray-50" className="py-24" testId={LANDING_COPY_KEYS.problem}>
@@ -505,7 +509,13 @@ A104,Widget,6900.00`}
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.upload} index={4} className="py-24" bg="bg-gray-50" testId="tool-section">
+      <Section
+        id={LANDING_COPY_KEYS.upload}
+        index={4}
+        className="py-24"
+        bg="bg-gray-50"
+        testId={LANDING_COPY_KEYS.upload}
+      >
         <div className="space-y-4">
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}
@@ -677,6 +687,7 @@ A104,Widget,6900.00`}
             headingTag="h3"
             showActions={false}
             gridTestId="pricing-grid"
+            cardTestId="pricing-preview-card"
           />
           <a href="/pricing" className={`${CTA_SECONDARY} w-fit`}>
             {LANDING_COPY.pricingPreviewCta}
@@ -698,7 +709,7 @@ A104,Widget,6900.00`}
 
       <Section id="home-faq" index={7} bg="bg-white" className="py-24">
         <div className="space-y-4">
-          <FaqAccordion title="Frequently asked questions" items={HOME_FAQ} />
+          <Accordion title="Frequently asked questions" items={HOME_FAQ} testId="home-faq" />
         </div>
       </Section>
 

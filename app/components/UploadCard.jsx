@@ -1,8 +1,9 @@
 import React from 'react';
-import { FileCheck, UploadCloud, Loader2 } from 'lucide-react';
+import { FileCheck, Loader2 } from 'lucide-react';
 
-import Button from './ui/Button';
-import Switch from './ui/Switch';
+import Button from './Button';
+import Toggle from './Toggle';
+import UploadDropzone from './UploadDropzone';
 
 const inputId = 'fitforpdf-file';
 
@@ -33,18 +34,7 @@ export default function UploadCard({
 }) {
   const isOverQuota = freeExportsLeft <= 0;
   const isReady = Boolean(file);
-  const handleDropZoneDrop = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const files = event?.dataTransfer?.files;
-    if (!files || files.length === 0) return;
-    onFileSelect?.(files[0]);
-  };
-
-  const handleDropZoneDragOver = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
+  const inputId = 'fitforpdf-file-input';
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5">
@@ -55,6 +45,7 @@ export default function UploadCard({
             <p className="text-sm text-slate-500">{toolSubcopy}</p>
           </div>
           <span
+            data-testid="quota-pill"
             className="inline-flex h-9 items-center rounded-full border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm"
             aria-label="free exports remaining"
           >
@@ -62,24 +53,11 @@ export default function UploadCard({
           </span>
         </div>
 
-        <label
-          htmlFor={inputId}
-          data-testid="generate-dropzone"
-          onDrop={handleDropZoneDrop}
-          onDragOver={handleDropZoneDragOver}
-          className="block rounded-xl border-2 border-dashed border-slate-300 bg-gray-50 p-8 text-center transition hover:border-[#D92D2A]/35 hover:bg-red-50/20"
-        >
-          <UploadCloud aria-hidden="true" className="mx-auto h-6 w-6 text-slate-700" />
-          <p className="mt-3 text-sm font-medium text-slate-700">Drop CSV or XLSX here</p>
-          <span className="mt-2 inline-block text-sm font-medium text-[#D92D2A]">or choose a file</span>
-        </label>
-        <input
-          id={inputId}
-          type="file"
+        <UploadDropzone
+          inputId={inputId}
+          onFileSelect={onFileSelect}
           accept=".csv,.xlsx"
-          className="hidden"
-          data-testid="generate-file-input"
-          onChange={(event) => onFileSelect(event.target.files?.[0] ?? null)}
+          disabled={isLoading}
         />
 
         {file ? (
@@ -103,14 +81,14 @@ export default function UploadCard({
           </div>
         ) : null}
 
-        <div className="space-y-3">
-          <Switch
+          <div className="space-y-3">
+          <Toggle
             label="Branding"
             checked={includeBranding}
             disabled={!isReady || isLoading}
             onChange={onBrandingChange}
           />
-          <Switch
+          <Toggle
             label="Truncate long text"
             checked={truncateLongText}
             disabled={!isReady || isLoading}

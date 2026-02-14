@@ -51,6 +51,7 @@ export default function PricingCards({
   showActions = true,
   featuredScaleClass = 'scale-105',
   gridTestId = 'pricing-grid',
+  cardTestId = 'plan-card',
 }) {
   const HeadingTag = headingTag;
   const GRID_CLASS = 'grid grid-cols-1 gap-4 md:grid-cols-3';
@@ -69,16 +70,22 @@ export default function PricingCards({
           .trim();
 
         const cardDataFeatured = plan.recommended ? 'true' : 'false';
+        const recommendedTitleClass = plan.recommended ? 'sr-only' : '';
 
         return (
           <article
             key={plan.id}
-            data-testid="plan-card"
+            data-testid={cardTestId}
             data-featured={cardDataFeatured}
             data-card-id={plan.id}
             className={cardClass}
             aria-label={plan.title}
           >
+            {plan.recommended ? (
+              <span data-testid="plan-highlighted" className={recommendedTitleClass}>
+                {plan.title}
+              </span>
+            ) : null}
             {plan.badge ? (
               <div className="absolute -top-3 right-3">
                 <span

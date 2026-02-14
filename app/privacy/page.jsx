@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { PRIVACY_PAGE_COPY } from '../siteCopy.mjs';
+import HeroBackground from '../components/HeroBackground';
 import Section from '../components/Section';
-import FaqAccordion from '../components/FaqAccordion';
+import Accordion from '../components/Accordion';
 
 function BulletList({ values }) {
   return (
@@ -27,18 +28,24 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Section id="privacy-hero" index={0} className="py-28">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-            {PRIVACY_PAGE_COPY.heroLabel}
-          </p>
-          <h1 className="mt-4 text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]">
-            <span className="block">{PRIVACY_PAGE_COPY.pageTitle}</span>
-            <span className="block text-slate-600">{PRIVACY_PAGE_COPY.pageTitleAccent}</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-[46ch] text-sm text-slate-700 sm:text-base">
-            {PRIVACY_PAGE_COPY.pageSubtitle}
-          </p>
-          <p className="mt-3 text-sm text-slate-500">{PRIVACY_PAGE_COPY.microLine}</p>
+        <div className="relative">
+          <HeroBackground variant="privacy" />
+          <div className="relative z-10 mx-auto max-w-3xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              {PRIVACY_PAGE_COPY.heroLabel}
+            </p>
+            <h1
+              className="mt-4 text-center text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]"
+              data-testid="privacy-h1"
+            >
+              <span className="block">{PRIVACY_PAGE_COPY.pageTitle}</span>
+              <span className="block text-slate-600">{PRIVACY_PAGE_COPY.pageTitleAccent}</span>
+            </h1>
+            <p className="mx-auto mt-4 max-w-[46ch] text-sm text-slate-700 sm:text-base">
+              {PRIVACY_PAGE_COPY.pageSubtitle}
+            </p>
+            <p className="mt-3 text-sm text-slate-500">{PRIVACY_PAGE_COPY.microLine}</p>
+          </div>
         </div>
       </Section>
 
@@ -73,6 +80,7 @@ export default function PrivacyPage() {
       <Section id="privacy-legal" index={4} className="py-12">
         <div className="mx-auto flex max-w-4xl flex-col gap-3">
           <p className="text-sm text-slate-500">{PRIVACY_PAGE_COPY.legalFooter}</p>
+          {/* placeholder contact email until full support flow is finalized */}
           <a
             className="inline-flex w-fit text-sm font-medium text-slate-700 underline underline-offset-4"
             href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
@@ -84,7 +92,7 @@ export default function PrivacyPage() {
       </Section>
       <Section id="privacy-faq" index={5} className="py-28">
         <div className="mx-auto max-w-4xl">
-          <FaqAccordion title="Frequently asked questions" items={PRIVACY_PAGE_COPY.faq} />
+          <Accordion title="Frequently asked questions" items={PRIVACY_PAGE_COPY.faq} />
         </div>
       </Section>
     </div>
