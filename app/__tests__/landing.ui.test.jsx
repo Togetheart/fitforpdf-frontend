@@ -3,9 +3,7 @@ import React from 'react';
 import { cleanup, render, screen, within } from '@testing-library/react';
 
 import Landing from '../page.jsx';
-import SiteHeader from '../components/SiteHeader';
-import SiteFooter from '../components/SiteFooter';
-import { LANDING_COPY_KEYS } from '../siteCopy.mjs';
+import { LANDING_COPY, LANDING_COPY_KEYS } from '../siteCopy.mjs';
 
 function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
   Object.defineProperty(window, 'matchMedia', {
@@ -29,13 +27,7 @@ function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
 
 beforeEach(() => {
   configureMatchMedia({ mobile: false, reduceMotion: false });
-  render(
-    <>
-      <SiteHeader />
-      <Landing />
-      <SiteFooter />
-    </>,
-  );
+  render(<Landing />);
 });
 
 afterEach(() => {
@@ -51,6 +43,7 @@ describe('landing conversion-first structure', () => {
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
     const privacy = screen.getByTestId(`section-${LANDING_COPY_KEYS.privacyStrip}`);
 
+    expect(hero).toBeTruthy();
     expect(transformation).toBeTruthy();
     expect(proof).toBeTruthy();
     expect(howItWorks).toBeTruthy();
@@ -63,7 +56,7 @@ describe('landing conversion-first structure', () => {
     expect(pricing.compareDocumentPosition(privacy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  test('hero has exactly one primary CTA and no other hero buttons', () => {
+  test('hero has exactly one primary CTA and no other hero links', () => {
     const hero = screen.getByTestId('hero-section');
     const primary = within(hero).getByTestId('hero-primary-cta');
     const links = within(hero).getAllByRole('link');
@@ -72,15 +65,25 @@ describe('landing conversion-first structure', () => {
     expect(primary.textContent).toBe('Generate PDF');
     expect(primary.getAttribute('href')).toBe('#tool');
     expect(links).toHaveLength(1);
-    expect(links[0].getAttribute('class') || '').toContain('rounded-full');
   });
 
-  test('hero includes subtle radial gradient background and CTA glow utility', () => {
-    const gradients = screen.getByTestId('hero-bg-gradients');
-    const style = gradients.getAttribute('style') || '';
+  test('hero has headline/subline/trust line', () => {
+    expect(screen.getByText(LANDING_COPY.heroSubheadline)).toBeTruthy();
+    expect(screen.getByText(LANDING_COPY.heroTrustLine)).toBeTruthy();
+    expect(screen.getAllByText(LANDING_COPY.heroTrustLine)).toHaveLength(1);
+  });
+
+  test('hero includes subtle gradient background and CTA glow utility', () => {
+    const layerOne = screen.getByTestId('hero-bg-layer-1');
+    const layerTwo = screen.getByTestId('hero-bg-layer-2');
+    const grain = screen.getByTestId('hero-bg-grain');
     const primary = screen.getByTestId('hero-primary-cta');
 
-    expect(style.includes('radial-gradient')).toBe(true);
+    expect((layerOne.getAttribute('style') || '').includes('radial-gradient')).toBe(true);
+    expect((layerTwo.getAttribute('style') || '').includes('radial-gradient')).toBe(true);
+    expect((grain.getAttribute('class') || '').includes('hero-bg-grain')).toBe(true);
+    expect((layerOne.getAttribute('class') || '').includes('motion-safe:animate-heroMeshA')).toBe(true);
+    expect((layerTwo.getAttribute('class') || '').includes('motion-safe:animate-heroMeshB')).toBe(true);
     expect(primary.getAttribute('class') || '').toContain('hover:shadow-[0_0_40px_rgba(239,68,68,0.25)]');
   });
 
@@ -99,7 +102,6 @@ describe('landing conversion-first structure', () => {
 
   test('preview card has desktop float animation class', () => {
     const previewCard = screen.getByTestId('home-preview-card');
-
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
   });
 });

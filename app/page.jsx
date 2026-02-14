@@ -428,7 +428,6 @@ export default function Page() {
             </>
           )}
           subtitle={LANDING_COPY.heroSubheadline}
-          trustLine={LANDING_COPY.heroTrustLine}
           contentClassName="items-center gap-8 text-center"
           className="py-0"
         >
@@ -440,12 +439,7 @@ export default function Page() {
             >
               {LANDING_COPY.heroPrimaryCta}
             </a>
-            <p className="max-w-prose text-sm text-slate-500">
-              No account. No tracking of file contents. Works with CSV and XLSX.
-            </p>
-            <p className="max-w-prose text-sm text-slate-500">
-              {LANDING_COPY.heroTrustLine}
-            </p>
+            <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
           </div>
         </PageHero>
       </Section>
