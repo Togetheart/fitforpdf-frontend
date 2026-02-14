@@ -7,10 +7,6 @@ export const LANDING_COPY = {
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'Files are deleted immediately after conversion. PDF available for 15 minutes.',
 
-  beforeAfterTitle: 'From raw data to structured document.',
-  beforeLabel: 'CSV input',
-  afterLabel: 'PDF output',
-
   problemTitle: 'Why spreadsheet exports fail in real life',
   problemBullets: [
     'Columns are cut.',
@@ -18,28 +14,24 @@ export const LANDING_COPY = {
     'Manual layout fixes become mandatory.',
   ],
 
+  beforeAfterTitle: 'From raw data to structured document.',
+  beforeLabel: 'CSV input',
+  afterLabel: 'PDF output',
+
   clientReadyTitle: 'What “client-ready” means',
   clientReadyBullets: [
     'Document overview page',
     'Smart column sections',
-    'Fixed reference columns',
+    'Fixed reference columns repeated',
     'Rows X–Y and Page i/n',
     'No manual layout',
   ],
 
   toolTitle: 'Generate a client-ready PDF',
   toolSubcopy: '3 free exports. No account required.',
-  brandingOptionLabel: 'Add “Made with FitForPDF” footer',
-  truncateOptionLabel: 'Truncate long text to reduce payload',
-  truncateNotice: 'Truncation is off by default. Long text may overflow on small displays.',
 
-  pricingPreviewTitle: 'Simple pricing.',
+  pricingPreviewTitle: 'Simple and transparent',
   pricingPreviewSubline: 'Pay per output. No lock-in.',
-  pricingPreviewItems: [
-    { label: 'Free', copy: '3 exports total' },
-    { label: 'Credits', copy: '100 exports • €19 · 500 exports • €79' },
-    { label: 'Pro + API', copy: '€29/month (coming soon)' },
-  ],
   pricingPreviewCta: 'See full pricing',
 
   privacyStripTitle: 'Privacy-first by default.',
@@ -49,49 +41,47 @@ export const LANDING_COPY = {
     'We do not store file contents in logs.',
   ],
   privacyStripCta: 'Read privacy policy',
-
-  footerLinks: [
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Privacy', href: '/privacy' },
-    { label: 'Try on Telegram', href: TELEGRAM_BOT_URL },
-  ],
-  footerCopyright: '© FitForPDF',
 };
 
 export const LANDING_COPY_KEYS = {
   hero: 'hero',
+  problem: 'problem',
   beforeAfter: 'before-after',
   clientReady: 'client-ready',
   upload: 'tool',
-  pricingPreview: 'pricing',
+  pricingPreview: 'pricing-preview',
   privacyStrip: 'privacy',
-  footer: 'footer',
-  problem: 'problem',
 };
 
 export const PRICING_PAGE_COPY = {
-  pageTitle: 'Pricing',
+  pageTitle: 'Simple and transparent',
   pageSubtitle: 'Pay per output. No lock-in.',
+
   freeTitle: 'Free',
   freeSubtitle: '3 exports total',
   freeFeature: 'Branding enabled',
   freeCtaLabel: 'Start free',
+  freeCtaHref: '/#upload',
+
   creditsTitle: 'Credits',
   credits100Title: '100 exports',
   credits100Price: '€19',
   credits500Title: '500 exports',
   credits500Price: '€79',
   creditsCtaLabel: 'Buy credits',
-  creditsCtaTooltip: 'Coming soon',
-  proApiTitle: 'Pro + API (coming soon)',
+  creditsCtaTooltip: 'Checkout coming soon.',
+
+  proApiTitle: 'Pro and API',
   proPrice: '€29/month',
-  proFeature1: 'Batch export',
-  proFeature2: 'Priority processing',
-  proApiFeature3: 'Usage-based API',
+  proFeature1: 'API: usage-based',
+  proFeature2: 'Batch export',
+  proFeature3: 'Priority processing',
   proApiCtaLabel: 'Join early access',
   proApiCtaHref: 'mailto:support@fitforpdf.com',
+
   backToApp: 'Back to app',
   backToAppHref: '/',
+
   faq: [
     {
       question: 'What counts as an export?',
@@ -114,49 +104,49 @@ export const PRICING_CARDS = [
     id: 'free',
     title: PRICING_PAGE_COPY.freeTitle,
     priceLine: PRICING_PAGE_COPY.freeSubtitle,
+    priceLines: [PRICING_PAGE_COPY.freeSubtitle],
     points: [PRICING_PAGE_COPY.freeFeature],
     actionLabel: PRICING_PAGE_COPY.freeCtaLabel,
     actionType: 'link',
-    actionHref: '/#tool',
+    actionHref: PRICING_PAGE_COPY.freeCtaHref,
     disabled: false,
     recommended: false,
+    ctaNote: null,
   },
   {
     id: 'credits',
     title: PRICING_PAGE_COPY.creditsTitle,
     priceLine: `${PRICING_PAGE_COPY.credits100Title} • ${PRICING_PAGE_COPY.credits100Price} · ${PRICING_PAGE_COPY.credits500Title} • ${PRICING_PAGE_COPY.credits500Price}`,
+    priceLines: [
+      `${PRICING_PAGE_COPY.credits100Title} • ${PRICING_PAGE_COPY.credits100Price}`,
+      `${PRICING_PAGE_COPY.credits500Title} • ${PRICING_PAGE_COPY.credits500Price}`,
+    ],
     points: [
       `${PRICING_PAGE_COPY.credits100Title} for ${PRICING_PAGE_COPY.credits100Price}`,
       `${PRICING_PAGE_COPY.credits500Title} for ${PRICING_PAGE_COPY.credits500Price}`,
     ],
     actionLabel: PRICING_PAGE_COPY.creditsCtaLabel,
     actionType: 'button',
+    actionHref: '#',
     disabled: true,
     tooltip: PRICING_PAGE_COPY.creditsCtaTooltip,
     recommended: true,
+    ctaNote: PRICING_PAGE_COPY.creditsCtaTooltip,
   },
   {
     id: 'proApi',
     title: PRICING_PAGE_COPY.proApiTitle,
     priceLine: PRICING_PAGE_COPY.proPrice,
-    points: [
-      PRICING_PAGE_COPY.proFeature1,
-      PRICING_PAGE_COPY.proFeature2,
-      PRICING_PAGE_COPY.proApiFeature3,
-    ],
+    priceLines: [PRICING_PAGE_COPY.proPrice, PRICING_PAGE_COPY.proFeature1],
+    points: [PRICING_PAGE_COPY.proFeature2, PRICING_PAGE_COPY.proFeature3],
     actionLabel: PRICING_PAGE_COPY.proApiCtaLabel,
     actionType: 'link',
     actionHref: PRICING_PAGE_COPY.proApiCtaHref,
     disabled: false,
     recommended: false,
+    ctaNote: null,
   },
 ];
-
-export const LANDING_PRICING_CARDS = PRICING_CARDS.map((card) => ({
-  label: card.title,
-  copy: card.priceLine,
-  isRecommended: card.recommended ?? false,
-}));
 
 export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
   {
@@ -167,6 +157,12 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     ],
     trustLines: [LANDING_COPY.heroTrustLine],
     containsFreeQuotaText: false,
+  },
+  {
+    id: LANDING_COPY_KEYS.problem,
+    title: LANDING_COPY.problemTitle,
+    containsFreeQuotaText: false,
+    bullets: LANDING_COPY.problemBullets,
   },
   {
     id: LANDING_COPY_KEYS.beforeAfter,
@@ -183,14 +179,18 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
   {
     id: LANDING_COPY_KEYS.upload,
     title: LANDING_COPY.toolTitle,
-    freeQuotaText: `Free: ${freeExportsLeft} exports left`,
+    freeQuotaText: `Free. ${freeExportsLeft} exports left`,
     containsFreeQuotaText: true,
   },
   {
     id: LANDING_COPY_KEYS.pricingPreview,
     title: LANDING_COPY.pricingPreviewTitle,
     subline: LANDING_COPY.pricingPreviewSubline,
-    cards: LANDING_PRICING_CARDS,
+    cards: PRICING_CARDS.map(({ title, priceLines, recommended }) => ({
+      title,
+      copy: Array.isArray(priceLines) ? priceLines.join(' · ') : '',
+      isRecommended: Boolean(recommended),
+    })),
     cta: LANDING_COPY.pricingPreviewCta,
     href: '/pricing',
     containsFreeQuotaText: false,
@@ -202,12 +202,6 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     containsFreeQuotaText: false,
     cta: LANDING_COPY.privacyStripCta,
     href: '/privacy',
-  },
-  {
-    id: LANDING_COPY_KEYS.footer,
-    links: LANDING_COPY.footerLinks,
-    title: 'Footer',
-    containsFreeQuotaText: false,
   },
 ];
 

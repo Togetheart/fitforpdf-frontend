@@ -60,7 +60,7 @@ export default function GenerateModule({
             <p className="text-sm text-slate-500">{toolSubcopy}</p>
           </div>
           <span className="inline-flex h-9 items-center rounded-full border border-slate-200 px-4 text-sm text-slate-700">
-            Free: {freeExportsLeft} exports left
+            Free. {freeExportsLeft} exports left
           </span>
         </div>
 

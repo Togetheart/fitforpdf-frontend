@@ -7,7 +7,9 @@ function pricingText() {
   return [
     PRICING_PAGE_COPY.pageTitle,
     PRICING_PAGE_COPY.pageSubtitle,
-    ...PRICING_CARDS.map((card) => `${card.title} ${card.priceLine} ${card.points.join(' ')}`),
+    ...PRICING_CARDS.map(
+      (card) => `${card.title} ${card.priceLines.join(' ')} ${card.points.join(' ')}`,
+    ),
   ].join(' ');
 }
 
@@ -23,15 +25,15 @@ test('pricing contains 500 exports and €79', () => {
   assert.ok(content.includes('€79'));
 });
 
-test('pricing contains Pro + API and €29/month', () => {
+test('pricing contains Pro and API and €29/month', () => {
   const content = pricingText();
-  assert.ok(content.includes('Pro + API (coming soon)'));
+  assert.ok(content.includes('Pro and API'));
   assert.ok(content.includes('€29/month'));
 });
 
 test('pricing contains API wording', () => {
   const content = pricingText();
-  assert.equal(content.includes('Usage-based API'), true);
+  assert.equal(content.includes('API: usage-based'), true);
 });
 
 test('pricing has back to app link', () => {

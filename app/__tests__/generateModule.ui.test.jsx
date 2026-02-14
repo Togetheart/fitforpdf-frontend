@@ -79,7 +79,7 @@ test('shows quota pill from free exports state', () => {
   localStorage.setItem('fitforpdf_free_exports_used', '2');
   render(<ModuleHarness />);
 
-  expect(screen.getByText(/Free: 1 exports left/i)).toBeTruthy();
+  expect(screen.getByText(/Free\.\s*1\s*exports left/i)).toBeTruthy();
 });
 
 test('generating state shows spinner text and disables controls', () => {

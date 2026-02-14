@@ -23,7 +23,8 @@ import {
 import { getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
 import GenerateModule from './components/GenerateModule';
-import PricingCardsSection from './components/PricingCardsSection.jsx';
+import Section from './components/Section';
+import PricingCards from './components/PricingCards';
 
 const API_BASE = '/api';
 
@@ -196,21 +197,6 @@ const CTA_BASE = 'inline-flex h-11 items-center justify-center rounded-full bord
 const CTA_PRIMARY = `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white`;
 const CTA_SECONDARY = `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50`;
 const PANEL = 'rounded-xl border border-slate-200 bg-white';
-
-function SectionShell({ id, index, children, testId }) {
-  return (
-    <section
-      id={id}
-      className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
-      data-section-bg={index % 2 === 0 ? 'white' : 'gray'}
-      data-testid={testId ?? `section-${id}`}
-    >
-      <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6 px-4 py-10 sm:px-6 sm:py-12 md:py-14">
-        {children}
-      </div>
-    </section>
-  );
-}
 
 export default function Page() {
   const [file, setFile] = useState(null);
@@ -432,8 +418,8 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <SectionShell id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section">
-        <section className="grid gap-12 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
+      <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section">
+        <section className="grid gap-10 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
           <div className="space-y-6">
             <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
               <span className="block">Client-ready PDFs.</span>
@@ -445,19 +431,32 @@ export default function Page() {
               <a
                 href="#tool"
                 data-testid="primary-cta"
-                className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm hover:bg-red-700 active:scale-[0.99] transition"
+                className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-150 hover:bg-red-700 active:scale-[0.99]"
               >
                 {LANDING_COPY.heroPrimaryCta}
               </a>
             </div>
           </div>
           <div className="hidden md:block">
-            <div className="aspect-[4/3] w-[420px] rounded-2xl border border-black/5 bg-gray-100 shadow-sm" />
+            <div className="w-[440px] rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold tracking-[0.15em] text-black/50">PREVIEW</p>
+              <div className="mt-4 space-y-2">
+                <div className="h-8 rounded-lg border border-black/10 bg-slate-50" />
+                <div className="rounded-lg border border-black/10 bg-slate-50 px-3 py-2">
+                  <p className="text-sm font-medium">Overview page</p>
+                  <p className="mt-2 h-2 w-4/5 rounded-full bg-black/10" />
+                </div>
+                <div className="rounded-lg border border-black/10 bg-slate-50 px-3 py-2">
+                  <p className="text-sm font-medium">1. Rows 1-20 · Page 1/n</p>
+                  <p className="mt-2 h-2 w-3/5 rounded-full bg-black/10" />
+                </div>
+              </div>
+            </div>
           </div>
         </section>
-      </SectionShell>
+      </Section>
 
-      <SectionShell id={LANDING_COPY_KEYS.problem} index={1}>
+      <Section id={LANDING_COPY_KEYS.problem} index={1}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.problemTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
@@ -466,9 +465,9 @@ export default function Page() {
             ))}
           </ul>
         </div>
-      </SectionShell>
+      </Section>
 
-      <SectionShell id={LANDING_COPY_KEYS.beforeAfter} index={2}>
+      <Section id={LANDING_COPY_KEYS.beforeAfter} index={2}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.beforeAfterTitle}
@@ -480,9 +479,9 @@ export default function Page() {
             layoutMode={beforeAfterLayout}
           />
         </div>
-      </SectionShell>
+      </Section>
 
-      <SectionShell id={LANDING_COPY_KEYS.clientReady} index={3}>
+      <Section id={LANDING_COPY_KEYS.clientReady} index={3}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.clientReadyTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
@@ -491,30 +490,28 @@ export default function Page() {
             ))}
           </ul>
         </div>
-      </SectionShell>
+      </Section>
 
-      <SectionShell id={LANDING_COPY_KEYS.upload} index={4} testId="tool-section">
+      <Section id={LANDING_COPY_KEYS.upload} index={4} bg="bg-gray-50" testId="tool-section">
         <div className="space-y-4">
-          <div className="rounded-xl bg-gray-50 p-4 sm:p-6">
-            <GenerateModule
-              toolTitle={LANDING_COPY.toolTitle}
-              toolSubcopy={LANDING_COPY.toolSubcopy}
-              file={file}
-              freeExportsLeft={freeExportsLeft}
-              includeBranding={includeBranding}
-              truncateLongText={truncateLongText}
-              isLoading={isLoading}
-              notice={notice}
-              error={error}
-              hasResultBlob={Boolean(pdfBlob)}
-              onFileSelect={(nextFile) => handleFileSelect(nextFile)}
-              onRemoveFile={handleRemoveFile}
-              onBrandingChange={setIncludeBranding}
-              onTruncateChange={setTruncateLongText}
-              onSubmit={handleSubmit}
-              onDownloadAgain={handleDownloadAnyway}
-            />
-          </div>
+          <GenerateModule
+            toolTitle={LANDING_COPY.toolTitle}
+            toolSubcopy={LANDING_COPY.toolSubcopy}
+            file={file}
+            freeExportsLeft={freeExportsLeft}
+            includeBranding={includeBranding}
+            truncateLongText={truncateLongText}
+            isLoading={isLoading}
+            notice={notice}
+            error={error}
+            hasResultBlob={Boolean(pdfBlob)}
+            onFileSelect={(nextFile) => handleFileSelect(nextFile)}
+            onRemoveFile={handleRemoveFile}
+            onBrandingChange={setIncludeBranding}
+            onTruncateChange={setTruncateLongText}
+            onSubmit={handleSubmit}
+            onDownloadAgain={handleDownloadAnyway}
+          />
 
           {verdict === 'WARN' && (
             <section className={`${PANEL} p-4`}>
@@ -654,15 +651,15 @@ export default function Page() {
             </section>
           )}
         </div>
-      </SectionShell>
+      </Section>
 
-      <SectionShell id={LANDING_COPY_KEYS.pricingPreview} index={5}>
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={5} bg="bg-white">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.pricingPreviewTitle}
           </h2>
           <p className="text-sm text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
-          <PricingCardsSection
+          <PricingCards
             plans={PRICING_CARDS}
             headingTag="h3"
             showActions={false}
@@ -672,9 +669,9 @@ export default function Page() {
             {LANDING_COPY.pricingPreviewCta}
           </a>
         </div>
-      </SectionShell>
+      </Section>
 
-      <SectionShell id={LANDING_COPY_KEYS.privacyStrip} index={6}>
+      <Section id={LANDING_COPY_KEYS.privacyStrip} index={6} bg="bg-gray-50">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.privacyStripTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
@@ -684,7 +681,7 @@ export default function Page() {
           </ul>
           <a href="/privacy" className={`${CTA_SECONDARY} w-fit`}>{LANDING_COPY.privacyStripCta}</a>
         </div>
-      </SectionShell>
+      </Section>
 
     </div>
   );

@@ -1,6 +1,6 @@
 import './globals.css';
-import SiteHeader from './_components/SiteHeader';
-import SiteFooter from './_components/SiteFooter';
+import SiteHeader from './components/SiteHeader';
+import SiteFooter from './components/SiteFooter';
 
 export default function RootLayout({ children }) {
   return (

@@ -3,12 +3,20 @@ import React from 'react';
 import { cleanup, render, screen, within } from '@testing-library/react';
 
 import PricingPage, { default as PricingPageDefaultExport } from '../pricing/page.jsx';
+import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
 
 const pricingPlanTitles = PRICING_CARDS.map((plan) => plan.title);
 
 beforeEach(() => {
-  render(<PricingPage />);
+  render(
+    <>
+      <SiteHeader />
+      <PricingPage />
+      <SiteFooter />
+    </>,
+  );
 });
 
 afterEach(() => {
@@ -21,6 +29,11 @@ describe('pricing page UI', () => {
     expect(PricingPage).toBe(PricingPageDefaultExport);
   });
 
+  test('header and footer are present', () => {
+    expect(screen.getAllByRole('navigation').length).toBeGreaterThan(1);
+    expect(screen.getByRole('contentinfo')).toBeTruthy();
+  });
+
   test('renders 3 cards with desktop 3-col grid classes', () => {
     const grid = screen.getByTestId('pricing-grid');
     const cards = within(grid).getAllByRole('article');
@@ -28,6 +41,7 @@ describe('pricing page UI', () => {
     expect(grid.className.includes('grid-cols-1')).toBe(true);
     expect(grid.className.includes('md:grid-cols-3')).toBe(true);
     expect(cards).toHaveLength(3);
+    expect(cards[1].getAttribute('data-featured')).toBe('true');
   });
 
   test('contains expected pricing titles', () => {
