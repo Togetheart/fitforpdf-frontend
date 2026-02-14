@@ -11,6 +11,8 @@ import PricingComparisonTable from '../components/PricingComparisonTable';
 export default function PricingPage() {
   const backlinkClass =
     'inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-900 transition duration-150 ease-out hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/50 focus-visible:ring-offset-2';
+  const badgeClass =
+    'inline-flex items-center rounded-full border border-[#D92D2A]/20 bg-[#D92D2A]/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-[#B62622]';
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -18,22 +20,22 @@ export default function PricingPage() {
         <div className="relative">
           <HeroBackground variant="pricing" />
           <div className="relative z-10 mx-auto max-w-3xl text-center space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">PRICING</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{PRICING_PAGE_COPY.plansEyebrow}</p>
             <h1 className="mt-4 text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]">
               {PRICING_PAGE_COPY.pageTitle}
             </h1>
             <p className="mt-4 text-sm text-slate-700 sm:text-base">{PRICING_PAGE_COPY.pageSubtitle}</p>
             <p className="mt-3 text-sm text-slate-500">{PRICING_PAGE_COPY.pageMicro}</p>
+            <span className={badgeClass}>{PRICING_PAGE_COPY.pageTagline}</span>
           </div>
         </div>
       </Section>
 
       <Section id="pricing-plans" index={1} bg="bg-gray-50" className="py-16 sm:py-20">
         <div className="mx-auto max-w-6xl space-y-4">
-          <h2 className="text-2xl font-semibold">Pricing plans</h2>
-          <p className="max-w-[60ch] text-sm text-slate-600">
-            Three practical options for clean PDF exports. No subscriptions.
-          </p>
+          <p className={badgeClass}>{PRICING_PAGE_COPY.plansEyebrow}</p>
+          <h2 className="text-2xl font-semibold">{PRICING_PAGE_COPY.plansTitle}</h2>
+          <p className="max-w-[60ch] text-sm text-slate-600">{PRICING_PAGE_COPY.plansCopy}</p>
           <PricingCards
             plans={PRICING_CARDS}
             headingTag="h3"
@@ -48,7 +50,7 @@ export default function PricingPage() {
       <Section id="pricing-comparison" index={2} className="py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <PricingComparisonTable
-            title="Compare plans"
+            title={PRICING_PAGE_COPY.comparisonTitle}
             columns={['Free', 'Credits', 'Pro + API']}
             rows={PRICING_PAGE_COPY.comparison}
           />
@@ -58,7 +60,7 @@ export default function PricingPage() {
       <Section id="pricing-faq" index={3} bg="bg-gray-50" className="py-16 sm:py-20">
         <div className="mx-auto max-w-3xl space-y-4">
           <Accordion
-            title="Frequently asked questions"
+            title={PRICING_PAGE_COPY.faqTitle}
             items={PRICING_PAGE_COPY.faq}
             testId="pricing-faq"
           />

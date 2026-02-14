@@ -80,7 +80,7 @@ export default function PricingCards({
             className={cardClass}
             aria-label={plan.title}
           >
-            {plan.badge ? (
+            {plan.badge && !plan.recommended ? (
               <div className="absolute -top-3 right-3">
                 <span
                   data-testid="pricing-badge"

@@ -80,11 +80,16 @@ export const HOME_FAQ = [
 export const PRICING_PAGE_COPY = {
   pageTitle: 'Pay only for what you export.',
   pageSubtitle: 'Start free. Upgrade only when your PDFs are worth sending.',
-  pageMicro: 'No lock-in. No subscriptions required.',
-  socialProof: 'Used by consultants, finance teams and operators who need clean PDFs without manual formatting.',
+  pageTagline: 'No subscriptions. No lock-in.',
+  pageMicro: 'No subscriptions. No lock-in.',
+  socialProof: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
+
+  plansEyebrow: 'PRICING',
+  plansTitle: 'Choose a plan that scales with output.',
+  plansCopy: 'Start free. Keep everything predictable when you need more.',
 
   freeTitle: 'Free',
-  freeSubtitle: '3 exports',
+  freeSubtitle: '3 exports total',
   freeFeature: 'Branding enabled',
   freeFeatureAlt: 'No account required',
   freeCtaLabel: 'Start free',
@@ -117,6 +122,7 @@ export const PRICING_PAGE_COPY = {
   backToApp: 'Back to app',
   backToAppHref: '/',
 
+  comparisonTitle: 'Compare features',
   comparison: [
     ['Exports', '3', '100 / 500', 'Unlimited'],
     ['Branding removable', 'No', 'Yes', 'Yes'],
@@ -124,6 +130,7 @@ export const PRICING_PAGE_COPY = {
     ['API', 'No', 'No', 'Soon'],
   ],
 
+  faqTitle: 'FAQs',
   faq: [
     {
       id: 'billing',
