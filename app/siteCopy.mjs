@@ -306,8 +306,11 @@ export const PRIVACY_PAGE_COPY = {
   logs: {
     title: 'What we log',
     bullets: [
+      'request timestamp',
+      'file type',
+      'row and column counts',
+      'verdict and score',
       'We do not store file contents in logs.',
-      'Only technical metadata is retained to improve reliability.',
     ],
   },
 
