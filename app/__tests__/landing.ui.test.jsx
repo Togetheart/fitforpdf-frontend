@@ -4,7 +4,7 @@ import { cleanup, render, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import Landing from '../page.jsx';
-import { LANDING_COPY_KEYS, TELEGRAM_BOT_URL } from '../siteCopy.mjs';
+import { LANDING_COPY_KEYS, LANDING_COPY } from '../siteCopy.mjs';
 
 vi.mock('../components/BeforeAfter.mjs', () => ({
   default: () => <div data-testid="before-after-placeholder" />,
@@ -48,25 +48,20 @@ describe('landing structure and UI invariants', () => {
     expect(toolSection.getAttribute('id')).toBe(LANDING_COPY_KEYS.upload);
   });
 
-  test('hero CTAs include one primary and two secondary links with matching sizing', () => {
+  test('hero has exactly one primary CTA and no secondary links', () => {
     const hero = screen.getByTestId('hero-section');
     const primary = within(hero).getByTestId('primary-cta');
-    const secondaryPricing = within(hero).getByTestId('secondary-cta-pricing');
-    const secondaryTelegram = within(hero).getByTestId('secondary-cta-telegram');
     const links = within(hero).getAllByRole('link');
 
     expect(primary.textContent).toBe('Generate PDF');
-    expect(links).toHaveLength(3);
+    expect(links).toHaveLength(1);
     expect(primary.getAttribute('href')).toBe('#tool');
-    expect(secondaryPricing.getAttribute('href')).toBe('/pricing');
-    expect(secondaryTelegram.getAttribute('href')).toBe(TELEGRAM_BOT_URL);
     expect(primary.className.includes('h-11')).toBe(true);
     expect(primary.className.includes('rounded-full')).toBe(true);
-    expect(secondaryPricing.className.includes('h-11')).toBe(true);
-    expect(secondaryPricing.className.includes('rounded-full')).toBe(true);
-    expect(secondaryTelegram.className.includes('h-11')).toBe(true);
-    expect(secondaryTelegram.className.includes('rounded-full')).toBe(true);
     expect(hero.querySelector('button')).toBeNull();
+
+    expect(within(hero).queryByText(LANDING_COPY.heroSecondaryCta)).toBeNull();
+    expect(within(hero).queryByText(LANDING_COPY.heroTertiaryCta)).toBeNull();
   });
 
   test('pricing preview has three cards and responsive grid classes', () => {
@@ -98,4 +93,10 @@ test('free exports text is scoped to tool section only', () => {
   counters.forEach((node) => {
     expect(node.closest('section')).toBe(toolSection);
   });
+});
+
+test('nav keeps pricing and Telegram links', () => {
+  const nav = screen.getByRole('navigation', { name: /main navigation/i });
+  expect(within(nav).getByText('Pricing')).toBeTruthy();
+  expect(within(nav).getByText('Try on Telegram')).toBeTruthy();
 });

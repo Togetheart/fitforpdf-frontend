@@ -183,8 +183,6 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
     title: LANDING_COPY.heroTitle,
     ctas: [
       { label: LANDING_COPY.heroPrimaryCta, href: '#tool', type: 'primary' },
-      { label: LANDING_COPY.heroSecondaryCta, href: '/pricing', type: 'secondary' },
-      { label: LANDING_COPY.heroTertiaryCta, href: TELEGRAM_BOT_URL, type: 'tertiary' },
     ],
     trustLines: [LANDING_COPY.heroTrustLine],
     containsFreeQuotaText: false,

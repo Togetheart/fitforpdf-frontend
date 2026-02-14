@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { LANDING_COPY, LANDING_COPY_KEYS, LANDING_SECTIONS, TELEGRAM_BOT_URL } from '../siteCopy.mjs';
+import { LANDING_COPY, LANDING_COPY_KEYS, LANDING_SECTIONS } from '../siteCopy.mjs';
 
 function landingText() {
   return LANDING_SECTIONS(3).map((section) => `${section.title || ''}`).join(' ');
@@ -28,15 +28,22 @@ test('tool section id exists', () => {
   );
 });
 
-test('hero links to pricing and Telegram', () => {
+test('hero does not include secondary CTAs to pricing or Telegram', () => {
   const heroSection = LANDING_SECTIONS(3).find((section) => section.id === LANDING_COPY_KEYS.hero);
   assert.equal(!!heroSection, true);
+  assert.equal(Array.isArray(heroSection.ctas), true);
+  assert.equal(heroSection.ctas.length, 1);
+  assert.equal(heroSection.ctas[0].label, LANDING_COPY.heroPrimaryCta);
+  assert.equal(heroSection.ctas[0].href, '#tool');
+  assert.equal(heroSection.ctas[0].type, 'primary');
+  assert.equal(heroSection.containsFreeQuotaText, false);
+  assert.equal(heroSection.title, LANDING_COPY.heroTitle);
+});
 
-  const pricingCta = heroSection.ctas.find((cta) => cta.label === LANDING_COPY.heroSecondaryCta);
-  const telegramCta = heroSection.ctas.find((cta) => cta.label === LANDING_COPY.heroTertiaryCta);
-
-  assert.equal(pricingCta?.href, '/pricing');
-  assert.equal(telegramCta?.href, TELEGRAM_BOT_URL);
+test('hero section title is present', () => {
+  const heroSection = LANDING_SECTIONS(3).find((section) => section.id === LANDING_COPY_KEYS.hero);
+  assert.equal(!!heroSection, true);
+  assert.equal(heroSection.title, LANDING_COPY.heroTitle);
 });
 
 test('free exports text does not belong to hero section', () => {

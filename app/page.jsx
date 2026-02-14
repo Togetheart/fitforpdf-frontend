@@ -480,15 +480,13 @@ export default function Page() {
           </h1>
           <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
           <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
-          <div className={`${ctaStackClass} gap-3`} data-testid="hero-ctas">
-            <a href="#tool" className={CTA_PRIMARY} data-testid="primary-cta">
+          <div className="mt-8">
+            <a
+              href="#tool"
+              data-testid="primary-cta"
+              className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm hover:bg-red-700 active:scale-[0.99] transition"
+            >
               {LANDING_COPY.heroPrimaryCta}
-            </a>
-            <a href="/pricing" className={CTA_SECONDARY} data-testid="secondary-cta-pricing">
-              {LANDING_COPY.heroSecondaryCta}
-            </a>
-            <a href={TELEGRAM_BOT_URL} className={CTA_SECONDARY} data-testid="secondary-cta-telegram">
-              {LANDING_COPY.heroTertiaryCta}
             </a>
           </div>
         </section>
