@@ -23,6 +23,7 @@ import {
 import { getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
 import GenerateModule from './components/GenerateModule';
+import PricingCardsSection from './components/PricingCardsSection.jsx';
 
 const API_BASE = '/api';
 
@@ -661,26 +662,12 @@ export default function Page() {
             {LANDING_COPY.pricingPreviewTitle}
           </h2>
           <p className="text-sm text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3" data-section="pricing-grid" data-testid="pricing-grid">
-            {PRICING_CARDS.map((item) => (
-              <article
-                key={item.id}
-                className={`${PANEL} p-4 ${item.recommended ? 'border-[#D92D2A]/30 bg-white shadow-sm ring-1 ring-[#D92D2A]/20' : ''}`}
-                data-plan-card={item.id}
-              >
-                <h3 className="font-semibold text-slate-900">{item.title}</h3>
-                {item.recommended ? (
-                  <p className="mt-1 text-xs font-medium text-[#D92D2A]">Recommended</p>
-                ) : null}
-                <p className="mt-2 text-sm font-medium text-slate-700">
-                  {item.priceLine}
-                </p>
-                <ul className="mt-2 space-y-1 text-sm text-slate-600">
-                  {item.points.map((line) => <li key={line}>{line}</li>)}
-                </ul>
-              </article>
-            ))}
-          </div>
+          <PricingCardsSection
+            plans={PRICING_CARDS}
+            headingTag="h3"
+            showActions={false}
+            gridTestId="pricing-grid"
+          />
           <a href="/pricing" className={`${CTA_SECONDARY} w-fit`}>
             {LANDING_COPY.pricingPreviewCta}
           </a>
