@@ -40,7 +40,7 @@ afterEach(() => {
 describe('landing structure and UI invariants', () => {
   test('hero heading is before tool heading in DOM order', () => {
     const heroHeading = screen.getByRole('heading', { name: /Client-ready PDFs\. From messy spreadsheets\./i, level: 1 });
-    const toolHeading = screen.getByRole('heading', { name: /Try FitForPDF on the web/i, level: 2 });
+    const toolHeading = screen.getByRole('heading', { name: /Generate a client-ready PDF/i, level: 2 });
     expect(heroHeading.compareDocumentPosition(toolHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
@@ -86,9 +86,9 @@ describe('landing structure and UI invariants', () => {
   });
 });
 
-test('free exports text is scoped to tool section only', () => {
+test('free exports pill is scoped to tool section only', () => {
   const toolSection = screen.getByTestId('tool-section');
-  const counters = screen.getAllByText(/Free exports left:/);
+  const counters = screen.getAllByText(/Free: \d+ exports left/i);
 
   expect(counters.length).toBeGreaterThan(0);
   counters.forEach((node) => {

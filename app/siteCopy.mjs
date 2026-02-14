@@ -27,7 +27,7 @@ export const LANDING_COPY = {
     'No manual layout',
   ],
 
-  toolTitle: 'Try FitForPDF on the web',
+  toolTitle: 'Generate a client-ready PDF',
   toolSubcopy: '3 free exports. No account required.',
   brandingOptionLabel: 'Add “Made with FitForPDF” footer',
   truncateOptionLabel: 'Truncate long text to reduce payload',
@@ -189,7 +189,7 @@ export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
   {
     id: LANDING_COPY_KEYS.upload,
     title: LANDING_COPY.toolTitle,
-    freeQuotaText: `Free exports left: ${freeExportsLeft} / 3`,
+    freeQuotaText: `Free: ${freeExportsLeft} exports left`,
     containsFreeQuotaText: true,
   },
   {

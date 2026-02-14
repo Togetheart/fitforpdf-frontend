@@ -14,14 +14,14 @@ import {
   canExport,
   freeLeft,
   incrementUsedCount,
-  resetDevOnly,
 } from './paywall.mjs';
 import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
 } from './siteCopy.mjs';
-import { getCtaLayout, getLayoutMode } from './ui/responsive.mjs';
+import { getLayoutMode } from './ui/responsive.mjs';
 import BeforeAfter from './components/BeforeAfter.mjs';
+import GenerateModule from './components/GenerateModule';
 
 const API_BASE = '/api';
 
@@ -245,7 +245,6 @@ export default function Page() {
   const [failureRecommendations, setFailureRecommendations] = useState([]);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [freeExportsLeft, setFreeExportsLeft] = useState(() => freeLeft());
-  const [showPaywall, setShowPaywall] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -261,28 +260,8 @@ export default function Page() {
     return () => mq.removeEventListener('change', sync);
   }, []);
 
-  const ctaLayout = getCtaLayout({ isMobile });
   const beforeAfterLayout = getLayoutMode({ isMobile });
   const canShowDebug = process.env.NODE_ENV !== 'production' || debugByQuery;
-  const canShowPanel = showPaywall || freeExportsLeft <= 0;
-  const shouldHidePaywallReset = process.env.NODE_ENV === 'production' && !debugByQuery;
-  const ctaStackClass = ctaLayout === 'stack' ? 'grid grid-cols-1' : 'grid grid-cols-1 sm:grid-cols-3';
-
-  function refreshFreeExports() {
-    setFreeExportsLeft(freeLeft());
-  }
-
-  function openPaywallPanel() {
-    setShowPaywall(true);
-  }
-
-  function handleResetPaywallForDev() {
-    resetDevOnly();
-    refreshFreeExports();
-    setShowPaywall(false);
-    setError(null);
-    setNotice(null);
-  }
 
   async function submitRender(mode = 'normal', opts = {}) {
     const { isFallback = false, preserveNotice = false, flowIdOverride = null } = opts;
@@ -294,7 +273,6 @@ export default function Page() {
     if (!canExport()) {
       setError('You\'ve used your 3 free exports.');
       setNotice('You\'ve used your 3 free exports.');
-      openPaywallPanel();
       return;
     }
 
@@ -375,7 +353,6 @@ export default function Page() {
         const used = incrementUsedCount();
         const remaining = 3 - used;
         setFreeExportsLeft(Math.max(0, remaining));
-        if (used >= 3) openPaywallPanel();
       }
 
       setPdfBlob(blob);
@@ -408,7 +385,6 @@ export default function Page() {
       const effectiveVerdict = confidenceData?.verdict ?? 'OK';
       if (effectiveVerdict === 'OK') {
         downloadBlob(blob, responseFilename);
-        setPdfBlob(null);
         setConfidence(null);
         setFlowId(null);
       }
@@ -424,6 +400,22 @@ export default function Page() {
     const nextFlowId = createFlowId();
     setFlowId(nextFlowId);
     await submitRender('normal', { flowIdOverride: nextFlowId });
+  }
+
+  function handleFileSelect(nextFile) {
+    setFile(nextFile);
+    if (nextFile) {
+      setError(null);
+      setNotice(null);
+    }
+    setPdfBlob(null);
+  }
+
+  function handleRemoveFile() {
+    setFile(null);
+    setPdfBlob(null);
+    setError(null);
+    setNotice(null);
   }
 
   async function handleGenerateOptimized() {
@@ -455,20 +447,26 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <SectionShell id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section">
-        <section className="space-y-4">
-          <h1 className="text-[44px] font-[650] leading-tight tracking-tight sm:text-6xl">
-            {LANDING_COPY.heroTitle}
-          </h1>
-          <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
-          <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
-          <div className="mt-8">
-            <a
-              href="#tool"
-              data-testid="primary-cta"
-              className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm hover:bg-red-700 active:scale-[0.99] transition"
-            >
-              {LANDING_COPY.heroPrimaryCta}
-            </a>
+        <section className="grid gap-12 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
+              <span className="block">Client-ready PDFs.</span>
+              <span className="block text-black/70">From messy spreadsheets.</span>
+            </h1>
+            <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
+            <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
+            <div className="mt-8">
+              <a
+                href="#tool"
+                data-testid="primary-cta"
+                className="inline-flex h-11 items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm hover:bg-red-700 active:scale-[0.99] transition"
+              >
+                {LANDING_COPY.heroPrimaryCta}
+              </a>
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <div className="aspect-[4/3] w-[420px] rounded-2xl border border-black/5 bg-gray-100 shadow-sm" />
           </div>
         </section>
       </SectionShell>
@@ -511,83 +509,26 @@ export default function Page() {
 
       <SectionShell id={LANDING_COPY_KEYS.upload} index={4} testId="tool-section">
         <div className="space-y-4">
-          <article className={`${PANEL} p-4 sm:p-6`}>
-            <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
-              {LANDING_COPY.toolTitle}
-            </h2>
-            <p className="text-sm text-slate-500">{LANDING_COPY.toolSubcopy}</p>
-            <p className="mt-3 font-semibold text-slate-900">
-              Free exports left: {freeExportsLeft} / 3
-              {freeExportsLeft === 0 ? <span className="ml-2 text-red-700">Free limit reached</span> : null}
-            </p>
-
-            <form onSubmit={handleSubmit} className="mt-4 space-y-3">
-              <label htmlFor="fitforpdf-file" className="inline-flex h-11 cursor-pointer items-center rounded-lg border border-slate-300 px-4 text-sm font-medium">
-                Select a file (CSV / XLSX)
-                <input
-                  id="fitforpdf-file"
-                  type="file"
-                  accept=".csv,.xlsx"
-                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                  disabled={isLoading}
-                  className="hidden"
-                />
-              </label>
-              <p className="text-sm text-slate-600">{file ? file.name : 'No file selected'}</p>
-
-              <label className="flex items-center text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={includeBranding}
-                  onChange={(e) => setIncludeBranding(e.target.checked)}
-                  disabled={isLoading}
-                  className="mr-2 h-4 w-4"
-                />
-                {LANDING_COPY.brandingOptionLabel}
-              </label>
-
-              <label className="flex items-center text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={truncateLongText}
-                  onChange={(e) => setTruncateLongText(e.target.checked)}
-                  disabled={isLoading}
-                  className="mr-2 h-4 w-4"
-                />
-                {LANDING_COPY.truncateOptionLabel}
-              </label>
-
-              {!truncateLongText ? (
-                <p className="text-xs text-rose-700">{LANDING_COPY.truncateNotice}</p>
-              ) : null}
-
-              <div className={`${ctaStackClass} w-full gap-3`}>
-                <button className={CTA_PRIMARY} type="submit" disabled={isLoading}>
-                  {isLoading ? 'Generating…' : LANDING_COPY.heroPrimaryCta}
-                </button>
-                {!shouldHidePaywallReset ? (
-                  <button
-                    type="button"
-                    className={CTA_SECONDARY}
-                    onClick={handleResetPaywallForDev}
-                    disabled={isLoading}
-                  >
-                    Reset free exports (dev)
-                  </button>
-                ) : null}
-              </div>
-            </form>
-
-            {notice && <p className="mt-2 text-sm text-amber-700">{notice}</p>}
-            {error && <p className="mt-2 text-sm text-rose-700">{error}</p>}
-
-            {canShowPanel ? (
-              <section className="mt-4 rounded-lg border border-rose-200 bg-rose-50 p-3">
-                <p className="mb-2 font-semibold text-rose-700">You&apos;ve used your 3 free exports.</p>
-                <a href="/pricing" className={CTA_SECONDARY}>See pricing</a>
-              </section>
-            ) : null}
-          </article>
+          <div className="rounded-xl bg-gray-50 p-4 sm:p-6">
+            <GenerateModule
+              toolTitle={LANDING_COPY.toolTitle}
+              toolSubcopy={LANDING_COPY.toolSubcopy}
+              file={file}
+              freeExportsLeft={freeExportsLeft}
+              includeBranding={includeBranding}
+              truncateLongText={truncateLongText}
+              isLoading={isLoading}
+              notice={notice}
+              error={error}
+              hasResultBlob={Boolean(pdfBlob)}
+              onFileSelect={(nextFile) => handleFileSelect(nextFile)}
+              onRemoveFile={handleRemoveFile}
+              onBrandingChange={setIncludeBranding}
+              onTruncateChange={setTruncateLongText}
+              onSubmit={handleSubmit}
+              onDownloadAgain={handleDownloadAnyway}
+            />
+          </div>
 
           {verdict === 'WARN' && (
             <section className={`${PANEL} p-4`}>
@@ -616,7 +557,6 @@ export default function Page() {
                   )}
                 </div>
               )}
-
               <div className="mt-4 flex flex-wrap gap-3">
                 <button className={CTA_SECONDARY} type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
                   Download anyway
@@ -646,7 +586,6 @@ export default function Page() {
                   ))}
                 </ul>
               )}
-
               <div className="mt-4 flex flex-wrap gap-3">
                 <button className={CTA_SECONDARY} type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
                   {pageBurdenCopy.primaryCta}

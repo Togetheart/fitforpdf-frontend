@@ -54,5 +54,6 @@ test('free exports text does not belong to hero section', () => {
   assert.equal(heroSection.containsFreeQuotaText, false);
   assert.equal(toolSection.containsFreeQuotaText, true);
   assert.equal(typeof toolSection.freeQuotaText, 'string');
-  assert.equal(toolSection.freeQuotaText.includes('Free exports left:'), true);
+  assert.equal(toolSection.freeQuotaText.includes('Free:'), true);
+  assert.equal(toolSection.freeQuotaText.includes('exports left'), true);
 });
