@@ -41,26 +41,46 @@ describe('pricing page UI', () => {
     expect(grid.className.includes('grid-cols-1')).toBe(true);
     expect(grid.className.includes('md:grid-cols-3')).toBe(true);
     expect(cards).toHaveLength(3);
-    expect(cards[1].getAttribute('data-featured')).toBe('true');
-  });
-
-  test('contains expected pricing titles', () => {
+    const titles = cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent || '');
     pricingPlanTitles.forEach((title) => {
-      expect(screen.getByRole('heading', { name: title, level: 2 })).toBeTruthy();
+      expect(titles).toContain(title);
     });
+    expect(screen.getByText(PRICING_PAGE_COPY.creditsBadge)).toBeTruthy();
+    expect(cards.find((card) => card.getAttribute('data-featured') === 'true')).toBeTruthy();
   });
 
-  test('renders exact expected prices', () => {
+  test('contains exact expected prices', () => {
     const pageText = document.body.textContent || '';
 
+    expect(pageText.includes('100 exports')).toBe(true);
     expect(pageText.includes('€19')).toBe(true);
+    expect(pageText.includes('500 exports')).toBe(true);
     expect(pageText.includes('€79')).toBe(true);
     expect(pageText.includes('€29/month')).toBe(true);
   });
 
-  test('Join early access CTA is present as a link', () => {
-    const joinLink = screen.getByRole('link', { name: /Join early access/i });
+  test('each plan has exactly one CTA', () => {
+    const cards = screen.getAllByRole('article');
+    cards.forEach((card) => {
+      const actions = [...within(card).queryAllByRole('link'), ...within(card).queryAllByRole('button')];
+      expect(actions).toHaveLength(1);
+    });
+  });
 
+  test('credits action is disabled and explained as coming soon', () => {
+    const button = screen.getByRole('button', { name: PRICING_PAGE_COPY.creditsCtaLabel });
+    expect(button.disabled).toBe(true);
+    expect(screen.getByText(PRICING_PAGE_COPY.creditsCtaTooltip)).toBeTruthy();
+  });
+
+  test('comparison table is rendered', () => {
+    expect(screen.getByTestId('pricing-comparison-table')).toBeTruthy();
+    expect(screen.getByRole('table')).toBeTruthy();
+    expect(screen.getByText('Feature comparison')).toBeTruthy();
+  });
+
+  test('Join early access CTA is present as a mail link', () => {
+    const joinLink = screen.getByRole('link', { name: /Join early access/i });
     expect(joinLink).toBeTruthy();
     expect(joinLink.getAttribute('href')).toBe(PRICING_PAGE_COPY.proApiCtaHref);
   });

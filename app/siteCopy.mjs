@@ -56,10 +56,12 @@ export const LANDING_COPY_KEYS = {
 export const PRICING_PAGE_COPY = {
   pageTitle: 'Simple and transparent',
   pageSubtitle: 'Pay per output. No lock-in.',
+  pageMicro: 'Start free. Upgrade when you need more exports.',
 
   freeTitle: 'Free',
-  freeSubtitle: '3 exports total',
+  freeSubtitle: '3 exports',
   freeFeature: 'Branding enabled',
+  freeFeatureAlt: 'No account required',
   freeCtaLabel: 'Start free',
   freeCtaHref: '/#upload',
 
@@ -68,19 +70,32 @@ export const PRICING_PAGE_COPY = {
   credits100Price: '€19',
   credits500Title: '500 exports',
   credits500Price: '€79',
+  creditsFeature: 'No subscription',
+  creditsFeature2: 'Branding optional',
   creditsCtaLabel: 'Buy credits',
+  creditsCtaHref: '#',
   creditsCtaTooltip: 'Checkout coming soon.',
+  creditsBadge: 'Most popular',
 
-  proApiTitle: 'Pro and API',
+  proApiTitle: 'Pro / API',
+  proApiComingSoon: 'Coming soon',
   proPrice: '€29/month',
-  proFeature1: 'API: usage-based',
-  proFeature2: 'Batch export',
-  proFeature3: 'Priority processing',
+  proFeature1: 'Batch export',
+  proFeature2: 'Priority processing',
+  proFeature3: 'API access',
+  proFeature4: 'API: usage-based',
   proApiCtaLabel: 'Join early access',
   proApiCtaHref: 'mailto:support@fitforpdf.com',
 
   backToApp: 'Back to app',
   backToAppHref: '/',
+
+  comparison: [
+    ['Exports', '3', '100 / 500', 'Unlimited'],
+    ['Branding removable', 'No', 'Yes', 'Yes'],
+    ['Batch export', 'No', 'No', 'Yes'],
+    ['API', 'No', 'No', 'Soon'],
+  ],
 
   faq: [
     {
@@ -96,6 +111,14 @@ export const PRICING_PAGE_COPY = {
       question: 'What if my file is huge?',
       answer: 'Use the compact mode or reduce scope before exporting.',
     },
+    {
+      question: 'Can I use this for client work?',
+      answer: 'Yes. The tool is designed for reliable, client-ready exports.',
+    },
+    {
+      question: 'Is there an API?',
+      answer: 'An API access plan is included with the Pro/API offering, coming soon.',
+    },
   ],
 };
 
@@ -103,9 +126,9 @@ export const PRICING_CARDS = [
   {
     id: 'free',
     title: PRICING_PAGE_COPY.freeTitle,
-    priceLine: PRICING_PAGE_COPY.freeSubtitle,
+    priceLine: `${PRICING_PAGE_COPY.freeSubtitle}`,
     priceLines: [PRICING_PAGE_COPY.freeSubtitle],
-    points: [PRICING_PAGE_COPY.freeFeature],
+    points: [PRICING_PAGE_COPY.freeFeature, PRICING_PAGE_COPY.freeFeatureAlt],
     actionLabel: PRICING_PAGE_COPY.freeCtaLabel,
     actionType: 'link',
     actionHref: PRICING_PAGE_COPY.freeCtaHref,
@@ -124,6 +147,8 @@ export const PRICING_CARDS = [
     points: [
       `${PRICING_PAGE_COPY.credits100Title} for ${PRICING_PAGE_COPY.credits100Price}`,
       `${PRICING_PAGE_COPY.credits500Title} for ${PRICING_PAGE_COPY.credits500Price}`,
+      `${PRICING_PAGE_COPY.creditsFeature}`,
+      `${PRICING_PAGE_COPY.creditsFeature2}`,
     ],
     actionLabel: PRICING_PAGE_COPY.creditsCtaLabel,
     actionType: 'button',
@@ -131,14 +156,21 @@ export const PRICING_CARDS = [
     disabled: true,
     tooltip: PRICING_PAGE_COPY.creditsCtaTooltip,
     recommended: true,
+    badge: PRICING_PAGE_COPY.creditsBadge,
     ctaNote: PRICING_PAGE_COPY.creditsCtaTooltip,
   },
   {
     id: 'proApi',
     title: PRICING_PAGE_COPY.proApiTitle,
     priceLine: PRICING_PAGE_COPY.proPrice,
-    priceLines: [PRICING_PAGE_COPY.proPrice, PRICING_PAGE_COPY.proFeature1],
-    points: [PRICING_PAGE_COPY.proFeature2, PRICING_PAGE_COPY.proFeature3],
+    priceLines: [PRICING_PAGE_COPY.proPrice],
+    points: [
+      `${PRICING_PAGE_COPY.proPrice} (coming soon)`,
+      PRICING_PAGE_COPY.proFeature1,
+      PRICING_PAGE_COPY.proFeature2,
+      PRICING_PAGE_COPY.proFeature3,
+      PRICING_PAGE_COPY.proFeature4,
+    ],
     actionLabel: PRICING_PAGE_COPY.proApiCtaLabel,
     actionType: 'link',
     actionHref: PRICING_PAGE_COPY.proApiCtaHref,

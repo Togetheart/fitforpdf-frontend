@@ -1,7 +1,7 @@
 import React from 'react';
 
 const CTA_BASE =
-  'inline-flex h-10 items-center justify-center rounded-full border px-4 text-sm font-semibold transition';
+  'inline-flex h-11 w-full items-center justify-center rounded-full border px-4 text-sm font-semibold transition';
 const CTA_PRIMARY =
   `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white hover:bg-[#c82727]`;
 const CTA_SECONDARY =
@@ -69,8 +69,19 @@ export default function PricingCards({
           <article
             key={plan.id}
             data-featured={cardDataFeatured}
+            data-card-id={plan.id}
             className={cardClass}
           >
+            {plan.badge ? (
+              <div className="mb-3">
+                <span
+                  data-testid="pricing-badge"
+                  className="inline-flex rounded-full border border-[#D92D2A]/30 bg-[#D92D2A]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#D92D2A]"
+                >
+                  {plan.badge}
+                </span>
+              </div>
+            ) : null}
             <HeadingTag className="text-lg font-semibold tracking-tight">{plan.title}</HeadingTag>
             <div className="mt-3 space-y-2">
               {(plan.priceLines && plan.priceLines.length ? plan.priceLines : [plan.priceLine]).map((line) => (
