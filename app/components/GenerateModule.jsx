@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { FileCheck, Loader2, UploadCloud } from 'lucide-react';
 
 const inputId = 'fitforpdf-file';
 
@@ -50,6 +51,7 @@ export default function GenerateModule({
 }) {
   const isOverQuota = freeExportsLeft <= 0;
   const isReady = Boolean(file);
+  const [isDragging, setIsDragging] = useState(false);
 
   return (
     <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -65,18 +67,28 @@ export default function GenerateModule({
         </div>
 
         <div
-          className="rounded-xl border border-dashed border-slate-300 bg-gray-50 px-6 py-8 text-center"
+          className={`rounded-xl border border-dashed px-6 py-8 text-center transition-colors duration-150 ${
+            isDragging ? 'border-[#D92D2A]/60 bg-red-50/30' : 'border-slate-300 bg-gray-50'
+          }`}
+          data-testid="generate-dropzone"
           onDragOver={(event) => event.preventDefault()}
+          onDragEnter={(event) => {
+            event.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={(event) => {
+            event.preventDefault();
+            setIsDragging(false);
+          }}
           onDrop={(event) => {
             event.preventDefault();
+            setIsDragging(false);
             const dropped = event.dataTransfer.files?.[0];
             if (dropped) onFileSelect(dropped);
           }}
         >
           <div className="mx-auto flex w-fit rounded-full border border-black/10 bg-white p-2">
-            <svg aria-hidden="true" className="h-5 w-5 text-slate-700" viewBox="0 0 24 24" fill="none">
-              <path d="M12 3v11m0 0 3-3m-3 3-3-3M4 19h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <UploadCloud aria-hidden="true" className="h-5 w-5 text-slate-700" />
           </div>
           <p className="mt-3 text-sm font-medium text-slate-700">Drop CSV or XLSX here</p>
           <label htmlFor={inputId} className="mt-3 inline-flex text-sm font-medium text-[#D92D2A]">
@@ -95,7 +107,10 @@ export default function GenerateModule({
         {file ? (
           <div className="flex flex-col gap-1 rounded-lg border border-slate-200 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-slate-900">{file.name}</p>
+              <div className="flex items-center gap-2">
+                <FileCheck aria-hidden="true" className="h-4 w-4 text-[#D92D2A]" />
+                <p className="truncate text-sm font-medium text-slate-900">{file.name}</p>
+              </div>
               <p className="text-xs text-slate-500">{formatBytes(file.size)}</p>
             </div>
             <button
@@ -123,7 +138,6 @@ export default function GenerateModule({
             onChange={onTruncateChange}
           />
         </div>
-        <p className="text-xs text-slate-500">Truncation is optional to reduce payload.</p>
 
         {isOverQuota ? (
           <a
@@ -149,7 +163,7 @@ export default function GenerateModule({
           >
             {isLoading ? (
               <>
-                <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <Loader2 aria-hidden="true" className="mr-2 h-4 w-4 animate-spin" />
                 Generating…
               </>
             ) : (

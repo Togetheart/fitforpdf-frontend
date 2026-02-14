@@ -66,6 +66,17 @@ test('selecting a file shows file chip and enables generate action', () => {
   expect(screen.getByRole('button', { name: 'Generate PDF' }).hasAttribute('disabled')).toBe(false);
 });
 
+test('drag-and-drop a file into the dropzone selects it', () => {
+  render(<ModuleHarness />);
+
+  const dropzone = screen.getByTestId('generate-dropzone');
+  fireEvent.dragEnter(dropzone, { dataTransfer: { files: [] } });
+  fireEvent.drop(dropzone, { dataTransfer: { files: [fileSample] } });
+
+  expect(screen.getByText('report.csv')).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Generate PDF' }).hasAttribute('disabled')).toBe(false);
+});
+
 test('branding toggle defaults on and truncate defaults off', () => {
   render(<ModuleHarness />);
   const switches = screen.getAllByRole('switch');
