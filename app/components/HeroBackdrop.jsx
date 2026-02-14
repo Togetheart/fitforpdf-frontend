@@ -6,10 +6,10 @@ import { gsap } from 'gsap';
 const NOISE_URI =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect x='0' y='0' width='48' height='48' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E";
 const HOME_LAYER_ONE =
-  'radial-gradient(circle at 8% 16%, rgba(239,68,68,0.18), transparent 45%), radial-gradient(circle at 70% 5%, rgba(239,68,68,0.08), transparent 55%)';
+  'radial-gradient(circle at var(--r1x) var(--r1y), rgba(239,68,68,0.18), transparent 45%), radial-gradient(circle at 70% 5%, rgba(239,68,68,0.08), transparent 55%)';
 
 const HOME_LAYER_TWO =
-  'radial-gradient(circle at 82% 18%, rgba(59,130,246,0.14), transparent 46%), radial-gradient(circle at 38% 120%, rgba(217,45,42,0.12), transparent 58%)';
+  'radial-gradient(circle at var(--r2x) var(--r2y), rgba(59,130,246,0.14), transparent 46%), radial-gradient(circle at 38% 120%, rgba(217,45,42,0.12), transparent 58%)';
 
 export default function HeroBackdrop({
   variant = 'home',
@@ -38,46 +38,61 @@ export default function HeroBackdrop({
     const root = backdropRef.current;
     if (!layerOne || !layerTwo || !grain || !root) return;
 
-    const quickToLayerOneX = gsap.quickTo(layerOne, 'x', { duration: 0.75, ease: 'power2.out' });
-    const quickToLayerOneY = gsap.quickTo(layerOne, 'y', { duration: 0.75, ease: 'power2.out' });
-    const quickToLayerTwoX = gsap.quickTo(layerTwo, 'x', { duration: 0.95, ease: 'power2.out' });
-    const quickToLayerTwoY = gsap.quickTo(layerTwo, 'y', { duration: 0.95, ease: 'power2.out' });
+    layerOne.style.setProperty('--r1x', '12%');
+    layerOne.style.setProperty('--r1y', '16%');
+    layerTwo.style.setProperty('--r2x', '82%');
+    layerTwo.style.setProperty('--r2y', '18%');
 
-    const driftA = gsap.timeline({ repeat: -1, yoyo: true });
-    const driftB = gsap.timeline({ repeat: -1, yoyo: true });
-    const grainDrift = gsap.timeline({ repeat: -1, yoyo: true });
+    const driftA = gsap.to(layerOne, {
+      '--r1x': '20%',
+      '--r1y': '10%',
+      duration: 18,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
 
-    driftA
-      .to(layerOne, { x: '-12px', y: '8px', rotation: 0.3, scale: 1.015, duration: 26, ease: 'sine.inOut' })
-      .to(layerOne, { x: '18px', y: '-4px', rotation: -0.2, scale: 1.01, duration: 26, ease: 'sine.inOut' });
+    const driftB = gsap.to(layerTwo, {
+      '--r2x': '88%',
+      '--r2y': '24%',
+      duration: 24,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
 
-    driftB
-      .to(layerTwo, { x: '14px', y: '-10px', rotation: -0.2, scale: 1.01, duration: 30, ease: 'sine.inOut' })
-      .to(layerTwo, { x: '-16px', y: '6px', rotation: 0.25, scale: 1.013, duration: 30, ease: 'sine.inOut' });
+    const grainDrift = gsap.to(grain, { x: '8px', y: '-6px', duration: 48, ease: 'none', repeat: -1, yoyo: true });
 
-    grainDrift.to(grain, { x: '8px', y: '-6px', duration: 48, ease: 'none' });
+    const addPointerListeners = mediaQueryMatches('(pointer: fine)');
+    let onPointerMove = null;
+    let onPointerOut = null;
 
-    const onPointerMove = (event) => {
-      const bounds = root.getBoundingClientRect();
-      const x = ((event.clientX - (bounds.left + bounds.width / 2)) / (bounds.width / 2)) * 12;
-      const y = ((event.clientY - (bounds.top + bounds.height / 2)) / (bounds.height / 2)) * 8;
-      const clampedX = Math.max(-12, Math.min(12, x));
-      const clampedY = Math.max(-8, Math.min(8, y));
+    if (addPointerListeners) {
+      const quickToLayerOneX = gsap.quickTo(layerOne, 'x', { duration: 0.75, ease: 'power2.out' });
+      const quickToLayerOneY = gsap.quickTo(layerOne, 'y', { duration: 0.75, ease: 'power2.out' });
+      const quickToLayerTwoX = gsap.quickTo(layerTwo, 'x', { duration: 0.95, ease: 'power2.out' });
+      const quickToLayerTwoY = gsap.quickTo(layerTwo, 'y', { duration: 0.95, ease: 'power2.out' });
 
-      quickToLayerOneX(clampedX);
-      quickToLayerOneY(clampedY);
-      quickToLayerTwoX(clampedX * -0.5);
-      quickToLayerTwoY(clampedY * -0.65);
-    };
+      onPointerMove = (event) => {
+        const bounds = root.getBoundingClientRect();
+        const x = ((event.clientX - (bounds.left + bounds.width / 2)) / (bounds.width / 2)) * 8;
+        const y = ((event.clientY - (bounds.top + bounds.height / 2)) / (bounds.height / 2)) * 6;
+        const clampedX = Math.max(-8, Math.min(8, x));
+        const clampedY = Math.max(-6, Math.min(6, y));
 
-    const onPointerOut = () => {
-      quickToLayerOneX(0);
-      quickToLayerOneY(0);
-      quickToLayerTwoX(0);
-      quickToLayerTwoY(0);
-    };
+        quickToLayerOneX(clampedX);
+        quickToLayerOneY(clampedY);
+        quickToLayerTwoX(clampedX * -0.5);
+        quickToLayerTwoY(clampedY * -0.65);
+      };
 
-    if (mediaQueryMatches('(pointer: fine)')) {
+      onPointerOut = () => {
+        quickToLayerOneX(0);
+        quickToLayerOneY(0);
+        quickToLayerTwoX(0);
+        quickToLayerTwoY(0);
+      };
+
       root.addEventListener('pointermove', onPointerMove);
       root.addEventListener('pointerleave', onPointerOut);
     }
@@ -86,8 +101,10 @@ export default function HeroBackdrop({
       driftA.kill();
       driftB.kill();
       grainDrift.kill();
-      root.removeEventListener('pointermove', onPointerMove);
-      root.removeEventListener('pointerleave', onPointerOut);
+      if (addPointerListeners) {
+        root.removeEventListener('pointermove', onPointerMove);
+        root.removeEventListener('pointerleave', onPointerOut);
+      }
     };
   }, [variant]);
 

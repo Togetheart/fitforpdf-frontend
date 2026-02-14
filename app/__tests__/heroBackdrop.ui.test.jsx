@@ -1,3 +1,5 @@
+'use client';
+
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import React from 'react';
 import { cleanup, render, screen } from '@testing-library/react';
@@ -5,7 +7,7 @@ import { gsap } from 'gsap';
 
 import LandingPage from '../page.jsx';
 
-function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
+function configureMatchMedia({ mobile = false, reduceMotion = false, pointerFine = true } = {}) {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
@@ -15,7 +17,7 @@ function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
         : query.includes('max-width: 768px')
           ? mobile
           : query.includes('(pointer: fine)')
-            ? true
+            ? pointerFine
             : false,
       media: query,
       addEventListener: () => {},
@@ -28,7 +30,7 @@ function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
 }
 
 beforeEach(() => {
-  configureMatchMedia({ mobile: false, reduceMotion: false });
+  configureMatchMedia({ mobile: false, reduceMotion: false, pointerFine: true });
 });
 
 afterEach(() => {
@@ -36,49 +38,67 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('hero backdrop gsap motion engine', () => {
-  test('renders hero backdrop layers and enables motion when supported', () => {
-    const timelineMock = { to: vi.fn().mockReturnThis(), kill: vi.fn() };
-    const timelineSpy = vi.spyOn(gsap, 'timeline').mockReturnValue(timelineMock);
-    const quickToSpy = vi.spyOn(gsap, 'quickTo').mockReturnValue(vi.fn());
+describe('HeroBackdrop', () => {
+  test('renders layers and animates radial center variables when motion is allowed', () => {
+    const toSpy = vi.spyOn(gsap, 'to');
+    const quickToSpy = vi.spyOn(gsap, 'quickTo');
+    const addEventSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
 
     render(<LandingPage />);
 
     const backdrop = screen.getByTestId('hero-backdrop');
-    const heroBg = screen.getByTestId('hero-bg');
     const layerOne = screen.getByTestId('hero-bg-layer-1');
     const layerTwo = screen.getByTestId('hero-bg-layer-2');
     const grain = screen.getByTestId('hero-bg-grain');
-    const heroGradients = screen.getByTestId('hero-bg-gradients');
-    const noise = screen.getByTestId('hero-bg-noise');
 
-    expect(backdrop).toBeTruthy();
     expect(backdrop.getAttribute('data-motion')).toBe('on');
-    expect(heroBg).toBeTruthy();
-    expect(layerOne).toBeTruthy();
-    expect(layerTwo).toBeTruthy();
+    expect(layerOne.style.backgroundImage).toContain('var(--r1x)');
+    expect(layerTwo.style.backgroundImage).toContain('var(--r2x)');
     expect(grain).toBeTruthy();
-    expect(heroGradients).toBeTruthy();
-    expect(noise).toBeTruthy();
-    expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
-    expect((heroBg.getAttribute('class') || '').includes('pointer-events-none')).toBe(true);
-    expect((layerOne.getAttribute('style') || '').includes('radial-gradient')).toBe(true);
-    expect((layerTwo.getAttribute('style') || '').includes('radial-gradient')).toBe(true);
-    expect(timelineSpy).toHaveBeenCalledTimes(3);
+
+    expect(toSpy).toHaveBeenCalledWith(
+      layerOne,
+      expect.objectContaining({ '--r1x': '20%', '--r1y': '10%' }),
+    );
+    expect(toSpy).toHaveBeenCalledWith(
+      layerTwo,
+      expect.objectContaining({ '--r2x': '88%', '--r2y': '24%' }),
+    );
+
     expect(quickToSpy).toHaveBeenCalledTimes(4);
+    expect(addEventSpy).toHaveBeenCalledWith('pointermove', expect.any(Function));
+    expect(addEventSpy).toHaveBeenCalledWith('pointerleave', expect.any(Function));
   });
 
-  test('does not initialize gsap timeline when reduced motion is requested', () => {
+  test('disables all gsap motion when reduced motion is requested', () => {
     cleanup();
-    configureMatchMedia({ mobile: false, reduceMotion: true });
-    const timelineSpy = vi.spyOn(gsap, 'timeline');
+    configureMatchMedia({ mobile: false, reduceMotion: true, pointerFine: true });
+
+    const toSpy = vi.spyOn(gsap, 'to');
     const quickToSpy = vi.spyOn(gsap, 'quickTo');
+    const addEventSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
 
     render(<LandingPage />);
 
     const backdrop = screen.getByTestId('hero-backdrop');
     expect(backdrop.getAttribute('data-motion')).toBe('off');
-    expect(timelineSpy).not.toHaveBeenCalled();
+    expect(toSpy).not.toHaveBeenCalled();
     expect(quickToSpy).not.toHaveBeenCalled();
+    expect(addEventSpy).not.toHaveBeenCalledWith('pointermove', expect.any(Function));
+    expect(addEventSpy).not.toHaveBeenCalledWith('pointerleave', expect.any(Function));
+  });
+
+  test('does not attach pointer listeners on non-fine pointer devices', () => {
+    cleanup();
+    configureMatchMedia({ mobile: true, reduceMotion: false, pointerFine: false });
+
+    const quickToSpy = vi.spyOn(gsap, 'quickTo');
+    const addEventSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
+
+    render(<LandingPage />);
+
+    expect(quickToSpy).not.toHaveBeenCalled();
+    expect(addEventSpy).not.toHaveBeenCalledWith('pointermove', expect.any(Function));
+    expect(addEventSpy).not.toHaveBeenCalledWith('pointerleave', expect.any(Function));
   });
 });
