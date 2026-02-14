@@ -70,7 +70,6 @@ export default function PricingCards({
           .trim();
 
         const cardDataFeatured = plan.recommended ? 'true' : 'false';
-        const recommendedTitleClass = plan.recommended ? 'sr-only' : '';
 
         return (
           <article
@@ -81,11 +80,6 @@ export default function PricingCards({
             className={cardClass}
             aria-label={plan.title}
           >
-            {plan.recommended ? (
-              <span data-testid="plan-highlighted" className={recommendedTitleClass}>
-                {plan.title}
-              </span>
-            ) : null}
             {plan.badge ? (
               <div className="absolute -top-3 right-3">
                 <span
@@ -95,6 +89,14 @@ export default function PricingCards({
                   {plan.badge}
                 </span>
               </div>
+            ) : null}
+            {plan.recommended ? (
+              <span
+                data-testid="plan-highlighted"
+                className="mb-2 inline-flex w-fit items-center rounded-full border border-[#D92D2A]/25 bg-[#D92D2A]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#D92D2A]"
+              >
+                {plan.badge || 'Most popular'}
+              </span>
             ) : null}
             <HeadingTag className="text-lg font-semibold tracking-tight">{plan.title}</HeadingTag>
             <div className="mt-3 space-y-2">

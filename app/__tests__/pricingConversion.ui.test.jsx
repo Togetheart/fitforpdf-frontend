@@ -28,11 +28,14 @@ describe('pricing conversion UI', () => {
   test('renders three plan cards and credits card is highlighted', () => {
     const cards = screen.getAllByTestId('plan-card');
     const titles = cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent);
+    const highlighted = screen.getAllByTestId('plan-highlighted');
 
     expect(cards).toHaveLength(3);
     expect(titles).toContain('Free');
     expect(titles).toContain('Credits');
     expect(titles).toContain('Pro + API');
+    expect(highlighted).toHaveLength(1);
+    expect(String(highlighted[0].textContent || '')).toContain('Most popular');
     expect(screen.getByTestId('plan-highlighted')).toBeTruthy();
   });
 
