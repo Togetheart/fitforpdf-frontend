@@ -3,10 +3,10 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
   heroTitle: 'Client-ready PDFs.\\nFrom raw data.',
-  heroSubheadline: 'Upload a CSV or XLSX. Get a structured PDF ready to send.',
+  heroSubheadline: 'Turn raw spreadsheets into structured PDFs in seconds.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
-  heroTrustLine: 'Files are deleted after conversion. PDF available for 15 minutes.',
+  heroTrustLine: 'No account. No tracking. Files deleted after conversion.',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
 
   problemTitle: 'Spreadsheet exports fail in real life.',

@@ -30,7 +30,8 @@
     overflow: hidden;
     border-radius: inherit;
     pointer-events: none;
-    background: #ffffff;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 58%, rgba(244, 246, 251, 1) 72%, rgba(241, 244, 248, 1) 100%);
   }
 
   .hero-backdrop {
@@ -39,15 +40,38 @@
 
   .hero-bg-gradients {
     position: absolute;
-    inset: 0;
-    background: #ffffff;
+    inset: -18%;
+    opacity: 0.78;
+    filter: blur(4px);
+    mix-blend-mode: soft-light;
+    animation: heroMeshA 22s ease-in-out infinite alternate;
     border-radius: inherit;
+    background:
+      radial-gradient(
+        circle at 16% 8%,
+        rgba(239, 68, 68, 0.16) 0%,
+        rgba(239, 68, 68, 0.08) 34%,
+        transparent 64%
+      ),
+      radial-gradient(
+        circle at 86% 18%,
+        rgba(56, 189, 248, 0.12) 0%,
+        rgba(56, 189, 248, 0.06) 30%,
+        transparent 64%
+      ),
+      radial-gradient(
+        circle at 52% 96%,
+        rgba(15, 23, 42, 0.05) 0%,
+        rgba(15, 23, 42, 0) 46%
+      );
+    background-size: 160% 160%, 150% 150%, 200% 200%;
+    background-repeat: no-repeat;
   }
 
   .hero-bg-gradients--home,
   .hero-bg-gradients--pricing,
   .hero-bg-gradients--privacy {
-    background: #ffffff;
+    background-color: transparent;
   }
 
   .app-backdrop {
@@ -64,6 +88,8 @@
 
   .hero-accent {
     display: inline-block;
+    position: relative;
+    transform: translateZ(0);
     background-image: linear-gradient(
       90deg,
       rgba(251,191,36,0.8) 0%,
@@ -79,12 +105,41 @@
     background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 0.01px rgba(239, 68, 68, 0.06);
+    will-change: filter, transform;
+  }
+
+  .hero-accent[data-anim='on'] {
+    animation: heroGlowPulse 8s ease-in-out infinite;
   }
 
   .hero-accent[data-anim='off'] {
     background: none;
     color: #4b5563;
     -webkit-text-fill-color: #4b5563;
+    text-shadow: none;
+  }
+
+  .hero-headline-line {
+    opacity: 0.98;
+    transform: translateY(0.25rem);
+    animation: heroLineIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-gradients {
+      animation: none;
+    }
+
+    .hero-accent[data-anim='on'] {
+      animation: none;
+    }
+
+    .hero-headline-line {
+      animation: none;
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
   .home-preview-float {
@@ -108,6 +163,52 @@
   @media (min-width: 768px) {
     .home-preview-float {
       animation: float 8s ease-in-out infinite;
+    }
+  }
+
+  @keyframes heroMeshA {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+      background-position: 0% 50%, 100% 40%, 30% 95%;
+    }
+
+    50% {
+      transform: translate3d(1.2%, -0.8%, 0) scale(1.02);
+      background-position: 12% 58%, 84% 36%, 18% 103%;
+    }
+
+    100% {
+      transform: translate3d(-0.6%, 0.7%, 0) scale(1.01);
+      background-position: 4% 46%, 94% 62%, 52% 90%;
+    }
+  }
+
+  @keyframes heroGlowPulse {
+    0% {
+      filter: brightness(1);
+      text-shadow: 0 0 0.01px rgba(239, 68, 68, 0.07);
+    }
+
+    50% {
+      filter: brightness(1.12) saturate(1.04);
+      text-shadow: 0 0 26px rgba(239, 68, 68, 0.12);
+    }
+
+    100% {
+      filter: brightness(1);
+      text-shadow: 0 0 0.01px rgba(239, 68, 68, 0.07);
+    }
+  }
+
+  @keyframes heroLineIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
