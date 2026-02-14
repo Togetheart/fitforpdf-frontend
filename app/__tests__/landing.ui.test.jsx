@@ -4,6 +4,7 @@ import { cleanup, render, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import Landing from '../page.jsx';
+import SiteHeader from '../_components/SiteHeader';
 import { LANDING_COPY_KEYS, LANDING_COPY } from '../siteCopy.mjs';
 
 vi.mock('../components/BeforeAfter.mjs', () => ({
@@ -95,8 +96,17 @@ test('free exports text is scoped to tool section only', () => {
   });
 });
 
-test('nav keeps pricing and Telegram links', () => {
-  const nav = screen.getByRole('navigation', { name: /main navigation/i });
-  expect(within(nav).getByText('Pricing')).toBeTruthy();
-  expect(within(nav).getByText('Try on Telegram')).toBeTruthy();
+test('landing has no local main nav', () => {
+  expect(screen.queryByRole('navigation', { name: /main navigation/i })).toBeNull();
+});
+
+test('global SiteHeader contains nav links', () => {
+  cleanup();
+  render(<SiteHeader />);
+  const headerNav = screen.getByRole('navigation');
+  expect(within(headerNav).getByRole('link', { name: 'Pricing' }).getAttribute('href')).toBe('/pricing');
+  expect(within(headerNav).getByRole('link', { name: 'Privacy' }).getAttribute('href')).toBe('/privacy');
+  expect(within(headerNav).getByRole('link', { name: 'Try on Telegram' }).getAttribute('href')).toBe(
+    'https://t.me/CrabiAssistantBot',
+  );
 });

@@ -32,7 +32,7 @@ function PrivacySection({ title, children, band }) {
 
 export default function PrivacyPage() {
   return React.createElement(
-    'main',
+    'div',
     { className: 'min-h-screen bg-white text-slate-900' },
     React.createElement(
       'section',

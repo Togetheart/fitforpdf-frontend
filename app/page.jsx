@@ -18,7 +18,6 @@ import {
 } from './paywall.mjs';
 import {
   LANDING_COPY,
-  TELEGRAM_BOT_URL,
   LANDING_COPY_KEYS,
 } from './siteCopy.mjs';
 import { getCtaLayout, getLayoutMode } from './ui/responsive.mjs';
@@ -454,26 +453,8 @@ export default function Page() {
   const failReasons = (confidence?.reasons || []).map(reasonLabel).slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <SectionShell id={LANDING_COPY_KEYS.topBar} index={0}>
-        <header className="flex items-center justify-between gap-3">
-          <a href="/" className="text-xl font-semibold text-[#D92D2A]" data-testid="wordmark">
-            {LANDING_COPY.logoText}
-          </a>
-          <nav className="ml-auto flex items-center gap-3" aria-label="Main navigation">
-            {LANDING_COPY.topBarLinks.map((link) => (
-              <a key={link.label} href={link.href} className="text-sm text-slate-900 hover:opacity-80">
-                {link.label}
-              </a>
-            ))}
-            <a href={TELEGRAM_BOT_URL} className="text-sm text-slate-900 hover:opacity-80">
-              {LANDING_COPY.telegramCta}
-            </a>
-          </nav>
-        </header>
-      </SectionShell>
-
-      <SectionShell id={LANDING_COPY_KEYS.hero} index={1} testId="hero-section">
+    <div className="min-h-screen bg-white text-slate-900">
+      <SectionShell id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section">
         <section className="space-y-4">
           <h1 className="text-[44px] font-[650] leading-tight tracking-tight sm:text-6xl">
             {LANDING_COPY.heroTitle}
@@ -492,7 +473,7 @@ export default function Page() {
         </section>
       </SectionShell>
 
-      <SectionShell id={LANDING_COPY_KEYS.problem} index={2}>
+      <SectionShell id={LANDING_COPY_KEYS.problem} index={1}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.problemTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
@@ -503,7 +484,7 @@ export default function Page() {
         </div>
       </SectionShell>
 
-      <SectionShell id={LANDING_COPY_KEYS.beforeAfter} index={3}>
+      <SectionShell id={LANDING_COPY_KEYS.beforeAfter} index={2}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.beforeAfterTitle}
@@ -517,7 +498,7 @@ export default function Page() {
         </div>
       </SectionShell>
 
-      <SectionShell id={LANDING_COPY_KEYS.clientReady} index={4}>
+      <SectionShell id={LANDING_COPY_KEYS.clientReady} index={3}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.clientReadyTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
@@ -528,7 +509,7 @@ export default function Page() {
         </div>
       </SectionShell>
 
-      <SectionShell id={LANDING_COPY_KEYS.upload} index={5} testId="tool-section">
+      <SectionShell id={LANDING_COPY_KEYS.upload} index={4} testId="tool-section">
         <div className="space-y-4">
           <article className={`${PANEL} p-4 sm:p-6`}>
             <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
@@ -750,7 +731,7 @@ export default function Page() {
         </div>
       </SectionShell>
 
-      <SectionShell id={LANDING_COPY_KEYS.pricingPreview} index={6}>
+      <SectionShell id={LANDING_COPY_KEYS.pricingPreview} index={5}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.pricingPreviewTitle}
@@ -773,7 +754,7 @@ export default function Page() {
         </div>
       </SectionShell>
 
-      <SectionShell id={LANDING_COPY_KEYS.privacyStrip} index={7}>
+      <SectionShell id={LANDING_COPY_KEYS.privacyStrip} index={6}>
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.privacyStripTitle}</h2>
           <ul className="ml-4 list-disc space-y-2 text-slate-700">
@@ -785,7 +766,7 @@ export default function Page() {
         </div>
       </SectionShell>
 
-      <SectionShell index={8}>
+      <SectionShell index={7}>
         <footer className="flex flex-col gap-3">
           <nav className="flex flex-wrap items-center gap-4" aria-label="Footer links">
             {LANDING_COPY.footerLinks.map((link) => (
@@ -797,6 +778,6 @@ export default function Page() {
           <p className="text-sm text-slate-500">{LANDING_COPY.footerCopyright}</p>
         </footer>
       </SectionShell>
-    </main>
+    </div>
   );
 }

@@ -52,7 +52,7 @@ export default function PricingPage() {
   const secondaryPlans = PRICING_CARDS.filter((plan) => !isCorePlan(plan));
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen bg-white text-slate-900">
       <section className="bg-white">
         <div className="mx-auto flex w-full max-w-[960px] flex-col gap-2 px-4 py-8 sm:px-6 sm:py-12">
           <a
@@ -121,6 +121,6 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
