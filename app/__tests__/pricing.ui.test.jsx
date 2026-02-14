@@ -83,7 +83,10 @@ describe('pricing page UI', () => {
   });
 
   test('renders the pricing hero heading', () => {
-    expect(screen.getByRole('heading', { level: 1, name: 'Pay only for what you export.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'Pay only when it’s worth sending.' })).toBeTruthy();
+    expect(screen.getAllByText('No subscriptions. No lock-in.').length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByRole('heading', { level: 1, name: 'Pay only for what you export.' })).toBeNull();
+    expect(screen.queryByText('Start free. Upgrade only when your PDFs are worth sending.')).toBeNull();
   });
 
   test('renders exactly 3 plan cards with correct grid behavior', () => {
@@ -139,13 +142,14 @@ describe('pricing page UI', () => {
 
     expect(firstButton.getAttribute('aria-expanded')).toBe('false');
     expect(panel).toBeTruthy();
-    expect(panel.getAttribute('class') || '').toContain('grid-rows-[0fr]');
+    expect(panel.getAttribute('class') || '').toContain('max-h-0');
+    expect(panel.getAttribute('class') || '').toContain('opacity-0');
     expect(iconClass.includes('rotate-180')).toBe(false);
 
     fireEvent.click(firstButton);
 
     expect(firstButton.getAttribute('aria-expanded')).toBe('true');
-    expect(panel.getAttribute('class') || '').toContain('grid-rows-[1fr]');
+    expect(panel.getAttribute('class') || '').toContain('max-h-[20rem]');
     expect(panel.getAttribute('class') || '').toContain('opacity-100');
     const updatedIcon = firstButton.querySelector('[data-testid="faq-chevron"]') || firstButton.querySelector('svg:last-child');
     const updatedIconClass = updatedIcon ? updatedIcon.getAttribute('class') || '' : '';

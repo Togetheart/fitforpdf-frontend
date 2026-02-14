@@ -22,7 +22,9 @@ afterEach(() => {
 
 describe('pricing conversion UI', () => {
   test('renders main pricing title', () => {
-    expect(screen.getByRole('heading', { level: 1, name: 'Pay only for what you export.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'Pay only when it’s worth sending.' })).toBeTruthy();
+    expect(screen.queryByRole('heading', { level: 1, name: 'Pay only for what you export.' })).toBeNull();
+    expect(screen.queryByText('Start free. Upgrade only when your PDFs are worth sending.')).toBeNull();
   });
 
   test('renders three plan cards and credits card is highlighted', () => {

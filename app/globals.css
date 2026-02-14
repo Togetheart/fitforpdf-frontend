@@ -47,9 +47,8 @@
 
   .hero-bg-gradients--home {
     background:
-      radial-gradient(36rem 18rem at 12% 25%, rgba(217, 45, 42, 0.14), rgba(217, 45, 42, 0) 60%),
-      radial-gradient(28rem 16rem at 82% 12%, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0) 58%),
-      radial-gradient(30rem 20rem at 58% 130%, rgba(217, 45, 42, 0.08), rgba(217, 45, 42, 0) 62%);
+      radial-gradient(1200px circle at 20% 20%, rgba(239, 68, 68, 0.06), transparent 60%),
+      radial-gradient(900px circle at 80% 30%, rgba(59, 130, 246, 0.04), transparent 60%);
   }
 
   .hero-bg-gradients--pricing {
@@ -105,6 +104,36 @@
 
     .hero-bg-noise {
       opacity: 0.03;
+    }
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-6px);
+    }
+
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  .home-preview-float {
+    animation: none;
+  }
+
+  @media (min-width: 768px) {
+    .home-preview-float {
+      animation: float 8s ease-in-out infinite;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-preview-float {
+      animation: none;
     }
   }
 }
