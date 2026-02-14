@@ -27,7 +27,7 @@ import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
-import HeroBackground from './components/HeroBackground';
+import PageHero from './components/PageHero';
 
 const API_BASE = '/api';
 
@@ -422,17 +422,21 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Section id={LANDING_COPY_KEYS.hero} index={0} testId="hero-section" className="py-28">
-        <div className="relative">
-          <HeroBackground variant="home" />
-          <section className="relative z-10 grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
+        <PageHero
+          variant="home"
+          eyebrow={LANDING_COPY.heroLabel}
+          title={(
+            <>
+              <span className="block">Client-ready PDFs.</span>
+              <span className="block text-black/70">From messy spreadsheets.</span>
+            </>
+          )}
+          subtitle={LANDING_COPY.heroSubheadline}
+          trustLine={LANDING_COPY.heroTrustLine}
+          contentClassName="gap-10"
+        >
+          <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
             <div className="space-y-6">
-              <p className="text-xs font-semibold tracking-[0.18em] text-black/50">{LANDING_COPY.heroLabel}</p>
-              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
-                <span className="block">Client-ready PDFs.</span>
-                <span className="block text-black/70">From messy spreadsheets.</span>
-              </h1>
-              <p className="max-w-[58ch] text-base text-slate-600">{LANDING_COPY.heroSubheadline}</p>
-              <p className="max-w-[58ch] text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
               <div className="mt-8">
                 <a
                   href="#tool"
@@ -469,8 +473,8 @@ A104,Widget,6900.00`}
                 </div>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </PageHero>
       </Section>
 
       <Section id={LANDING_COPY_KEYS.problem} index={1} bg="bg-gray-50" className="py-24" testId={LANDING_COPY_KEYS.problem}>

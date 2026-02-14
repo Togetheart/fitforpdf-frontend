@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
-import HeroBackground from '../components/HeroBackground';
 import PricingPlans from '../components/PricingPlans';
 import Section from '../components/Section';
 import Accordion from '../components/Accordion';
 import PricingComparisonTable from '../components/PricingComparisonTable';
+import PageHero from '../components/PageHero';
 
 export default function PricingPage() {
   const backlinkClass =
@@ -17,18 +17,18 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Section id="pricing-hero" index={0} bg="bg-white" className="py-24 sm:py-28">
-        <div className="relative">
-          <HeroBackground variant="pricing" />
-          <div className="relative z-10 mx-auto max-w-3xl text-center space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{PRICING_PAGE_COPY.plansEyebrow}</p>
-            <h1 className="mt-4 text-4xl font-[650] leading-tight tracking-tight sm:text-[56px]">
-              {PRICING_PAGE_COPY.pageTitle}
-            </h1>
-            <p className="mt-4 text-sm text-slate-700 sm:text-base">{PRICING_PAGE_COPY.pageSubtitle}</p>
-            <p className="mt-3 text-sm text-slate-500">{PRICING_PAGE_COPY.pageMicro}</p>
-            <span className={badgeClass}>{PRICING_PAGE_COPY.pageTagline}</span>
-          </div>
-        </div>
+        <PageHero
+          variant="pricing"
+          align="center"
+          eyebrow={PRICING_PAGE_COPY.plansEyebrow}
+          title={PRICING_PAGE_COPY.pageTitle}
+          subtitle={PRICING_PAGE_COPY.pageSubtitle}
+          trustLine={PRICING_PAGE_COPY.pageMicro}
+          contentClassName="space-y-6"
+          titleClassName="mt-4 text-4xl md:text-6xl font-[650] leading-tight tracking-tight"
+        >
+          <span className={badgeClass}>{PRICING_PAGE_COPY.pageTagline}</span>
+        </PageHero>
       </Section>
 
       <Section id="pricing-plans" index={1} bg="bg-gray-50" className="py-16 sm:py-20">

@@ -6,7 +6,28 @@ import PrivacyPage from '../privacy/page.jsx';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 
+function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    configurable: true,
+    value: (query) => ({
+      matches: query.includes('prefers-reduced-motion')
+        ? reduceMotion
+        : query.includes('max-width: 768px')
+          ? mobile
+          : false,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => true,
+    }),
+  });
+}
+
 beforeEach(() => {
+  configureMatchMedia({ mobile: false, reduceMotion: false });
   render(
     <>
       <SiteHeader />
@@ -21,6 +42,34 @@ afterEach(() => {
 });
 
 describe('privacy page UI', () => {
+  test('uses shared page hero and shared backdrop', () => {
+    const hero = screen.getByTestId('page-hero');
+    const backdrop = hero.querySelector('[data-testid="hero-backdrop"]');
+    const gradients = hero.querySelector('[data-testid="hero-bg-gradients"]');
+    const noise = hero.querySelector('[data-testid="hero-bg-noise"]');
+
+    expect(hero).toBeTruthy();
+    expect(backdrop).toBeTruthy();
+    expect(backdrop?.getAttribute('aria-hidden')).toBe('true');
+    expect(gradients).toBeTruthy();
+    expect(noise).toBeTruthy();
+  });
+
+  test('reduced-motion disables hero backdrop animation', () => {
+    cleanup();
+    configureMatchMedia({ mobile: false, reduceMotion: true });
+    render(
+      <>
+        <SiteHeader />
+        <PrivacyPage />
+        <SiteFooter />
+      </>,
+    );
+
+    const gradients = screen.getByTestId('hero-bg-gradients');
+    expect((gradients.getAttribute('class') || '').includes('hero-bg-animate')).toBe(false);
+  });
+
   test('has global header and footer', () => {
     expect(screen.getAllByRole('navigation').length).toBeGreaterThan(1);
     expect(screen.getByRole('contentinfo')).toBeTruthy();

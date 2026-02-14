@@ -12,25 +12,28 @@ vi.mock('../components/BeforeAfter.mjs', () => ({
   default: () => <div data-layout="split" data-testid="before-after" />,
 }));
 
-function ensureMatchMedia() {
-  if (window.matchMedia) return;
+function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
-    value: () => ({
-      matches: false,
-      media: '(max-width: 768px)',
+    value: (query) => ({
+      matches: query.includes('prefers-reduced-motion')
+        ? reduceMotion
+        : query.includes('max-width: 768px')
+          ? mobile
+          : false,
+      media: query,
       addEventListener: () => {},
       removeEventListener: () => {},
       addListener: () => {},
       removeListener: () => {},
-      dispatchEvent: () => {},
+      dispatchEvent: () => true,
     }),
   });
 }
 
 beforeEach(() => {
-  ensureMatchMedia();
+  configureMatchMedia({ mobile: false, reduceMotion: false });
   render(
     <>
       <SiteHeader />
@@ -45,6 +48,35 @@ afterEach(() => {
 });
 
 describe('landing structure and UI invariants', () => {
+  test('hero section uses shared PageHero and backdrop', () => {
+    const pageHero = screen.getByTestId('page-hero');
+    const heroBackdrop = within(pageHero).getByTestId('hero-backdrop');
+    const heroBg = within(pageHero).getByTestId('hero-bg');
+    const heroGradients = within(pageHero).getByTestId('hero-bg-gradients');
+    const heroNoise = within(pageHero).getByTestId('hero-bg-noise');
+
+    expect(pageHero.getAttribute('data-testid')).toBe('page-hero');
+    expect(heroBackdrop.getAttribute('aria-hidden')).toBe('true');
+    expect(heroBg).toBeTruthy();
+    expect(heroGradients).toBeTruthy();
+    expect(heroNoise).toBeTruthy();
+  });
+
+  test('reduced motion disables hero backdrop drift animation', async () => {
+    cleanup();
+    configureMatchMedia({ mobile: false, reduceMotion: true });
+    render(
+      <>
+        <SiteHeader />
+        <Landing />
+        <SiteFooter />
+      </>,
+    );
+
+    const heroGradients = screen.getByTestId('hero-bg-gradients');
+    expect((heroGradients.getAttribute('class') || '').includes('hero-bg-animate')).toBe(false);
+  });
+
   test('hero has exactly one primary CTA and no secondary links', () => {
     const hero = screen.getByTestId('hero-section');
     const primary = within(hero).getByTestId('hero-primary-cta');
