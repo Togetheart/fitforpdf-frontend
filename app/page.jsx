@@ -766,18 +766,6 @@ export default function Page() {
         </div>
       </SectionShell>
 
-      <SectionShell index={7}>
-        <footer className="flex flex-col gap-3">
-          <nav className="flex flex-wrap items-center gap-4" aria-label="Footer links">
-            {LANDING_COPY.footerLinks.map((link) => (
-              <a key={link.label} href={link.href} className="text-sm text-slate-700">
-                {link.label}
-              </a>
-            ))}
-          </nav>
-          <p className="text-sm text-slate-500">{LANDING_COPY.footerCopyright}</p>
-        </footer>
-      </SectionShell>
     </div>
   );
 }
