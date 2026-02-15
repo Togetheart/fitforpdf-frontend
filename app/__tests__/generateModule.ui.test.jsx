@@ -86,12 +86,12 @@ test('branding toggle defaults on and truncate defaults off', () => {
   expect(switches[1].getAttribute('aria-checked')).toBe('false');
 });
 
-test('shows quota pill from free exports state', () => {
-  localStorage.setItem('fitforpdf_free_exports_used', '2');
-  render(<ModuleHarness />);
+  test('shows quota pill from free exports state', () => {
+    localStorage.setItem('fitforpdf_free_exports_used', '2');
+    render(<ModuleHarness />);
 
-  expect(screen.getByText(/Free:\s*1\s*exports left/i)).toBeTruthy();
-});
+    expect(screen.getByText(/Free\.\s*1\s*export/i)).toBeTruthy();
+  });
 
 test('generating state shows spinner text and disables controls', () => {
   render(<ModuleHarness isLoading={true} file={fileSample} />);

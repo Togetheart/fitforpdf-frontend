@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   buildRenderUrl,
   getFailKind,
@@ -29,6 +29,18 @@ import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
 
 const API_BASE = '/api';
+const SAMPLE_CSV = `invoice_id,client,total
+A102,ACME Corp,4230.00
+A103,Northline,1120.00
+A104,Widget Co,6900.00
+`;
+const CONVERSION_PROGRESS_MIN_MS = 1800;
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 function createFlowId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -220,6 +232,13 @@ export default function Page() {
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [freeExportsLeft, setFreeExportsLeft] = useState(() => freeLeft());
+  const progressTimersRef = useRef([]);
+  const [conversionProgress, setConversionProgress] = useState({
+    running: false,
+    stepIndex: 0,
+    percent: 0,
+    label: 'Uploading',
+  });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -229,9 +248,73 @@ export default function Page() {
   }, []);
   const canShowDebug = process.env.NODE_ENV !== 'production' || debugByQuery;
 
+  useEffect(() => () => {
+    progressTimersRef.current.forEach(clearTimeout);
+    progressTimersRef.current = [];
+  }, []);
+
+  function clearConversionProgressTimers() {
+    progressTimersRef.current.forEach(clearTimeout);
+    progressTimersRef.current = [];
+  }
+
+  function startConversionProgress() {
+    clearConversionProgressTimers();
+    setConversionProgress({
+      running: true,
+      stepIndex: 0,
+      percent: 14,
+      label: 'Uploading',
+    });
+
+    progressTimersRef.current = [
+      setTimeout(() => {
+        setConversionProgress({
+          running: true,
+          stepIndex: 1,
+          percent: 44,
+          label: 'Structuring (column grouping)',
+        });
+      }, 520),
+      setTimeout(() => {
+        setConversionProgress({
+          running: true,
+          stepIndex: 2,
+          percent: 74,
+          label: 'Generating PDF',
+        });
+      }, 1080),
+      setTimeout(() => {
+        setConversionProgress({
+          running: true,
+          percent: 92,
+          stepIndex: 2,
+          label: 'Generating PDF',
+        });
+      }, 1720),
+    ];
+  }
+
+  function finishConversionProgress() {
+    clearConversionProgressTimers();
+    setConversionProgress({
+      running: false,
+      stepIndex: 2,
+      percent: 100,
+      label: 'Generating PDF',
+    });
+  }
+
   async function submitRender(mode = 'normal', opts = {}) {
-    const { isFallback = false, preserveNotice = false, flowIdOverride = null } = opts;
-    if (!file) {
+    const {
+      isFallback = false,
+      preserveNotice = false,
+      flowIdOverride = null,
+      skipProgress = false,
+      sourceFile = null,
+    } = opts;
+    const targetFile = sourceFile || file;
+    if (!targetFile) {
       setError('Select a file');
       return;
     }
@@ -251,10 +334,14 @@ export default function Page() {
     setColumnMapDebug(null);
     setIsLoading(true);
     setFlowId(activeFlowId);
+    if (!skipProgress) {
+      startConversionProgress();
+    }
+    const startedAt = Date.now();
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', targetFile);
       formData.append('branding', includeBranding ? '1' : '0');
 
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText }), {
@@ -262,7 +349,7 @@ export default function Page() {
         body: formData,
         headers: {
           'X-CleanSheet-Flow-Id': activeFlowId,
-          'X-FitForPDF-Source-Filename': file.name || '',
+          'X-FitForPDF-Source-Filename': targetFile.name || '',
         },
       });
 
@@ -297,7 +384,12 @@ export default function Page() {
 
         if (mode === 'optimized' && !isFallback) {
           setNotice('Optimized mode unavailable; standard version generated.');
-          await submitRender('normal', { isFallback: true, preserveNotice: true, flowIdOverride: activeFlowId });
+          await submitRender('normal', {
+            isFallback: true,
+            skipProgress: true,
+            preserveNotice: true,
+            flowIdOverride: activeFlowId,
+          });
           return;
         }
         throw new Error(data.error || res.statusText || 'Upload failed');
@@ -313,7 +405,7 @@ export default function Page() {
       const isPdfResponse = res.status === 200 && contentType.includes('application/pdf');
       const responseFilename = getFilenameFromContentDisposition(
         res.headers.get('content-disposition'),
-        getPdfFilenameFromSourceFile(file),
+        getPdfFilenameFromSourceFile(targetFile),
       );
 
       if (isPdfResponse) {
@@ -359,6 +451,12 @@ export default function Page() {
     } catch (err) {
       setError(err.message || 'Upload failed');
     } finally {
+      const elapsed = Date.now() - startedAt;
+      const remainingDelay = Math.max(0, CONVERSION_PROGRESS_MIN_MS - elapsed);
+      if (remainingDelay > 0) {
+        await sleep(remainingDelay);
+      }
+      finishConversionProgress();
       setIsLoading(false);
     }
   }
@@ -378,6 +476,16 @@ export default function Page() {
       setNotice(null);
     }
     setPdfBlob(null);
+  }
+
+  async function handleTrySample() {
+    const sample = new File([SAMPLE_CSV], 'sample-sales-report.csv', {
+      type: 'text/csv',
+    });
+    handleFileSelect(sample);
+    const nextFlowId = createFlowId();
+    setFlowId(nextFlowId);
+    await submitRender('normal', { flowIdOverride: nextFlowId, sourceFile: sample });
   }
 
   function handleRemoveFile() {
@@ -557,8 +665,10 @@ A104,Widget,6900.00`}
             onTruncateChange={setTruncateLongText}
             onSubmit={handleSubmit}
             onDownloadAgain={handleDownloadAnyway}
+            onTrySample={handleTrySample}
             downloadedFileName={Boolean(pdfBlob) ? resolvedPdfFilename : null}
             verdict={renderVerdict}
+            conversionProgress={conversionProgress}
           />
 
           {verdict === 'WARN' && (
