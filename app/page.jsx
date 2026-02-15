@@ -29,11 +29,6 @@ import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
 
 const API_BASE = '/api';
-const SAMPLE_CSV = `invoice_id,client,total
-A102,ACME Corp,4230.00
-A103,Northline,1120.00
-A104,Widget Co,6900.00
-`;
 const CONVERSION_PROGRESS_MIN_MS = 1800;
 
 function sleep(ms) {
@@ -479,13 +474,22 @@ export default function Page() {
   }
 
   async function handleTrySample() {
-    const sample = new File([SAMPLE_CSV], 'sample-sales-report.csv', {
-      type: 'text/csv',
-    });
-    handleFileSelect(sample);
-    const nextFlowId = createFlowId();
-    setFlowId(nextFlowId);
-    await submitRender('normal', { flowIdOverride: nextFlowId, sourceFile: sample });
+    try {
+      const sampleResponse = await fetch('/sample/premium.csv');
+      if (!sampleResponse.ok) {
+        throw new Error(`Failed to load sample CSV (${sampleResponse.status})`);
+      }
+      const sampleCsv = await sampleResponse.text();
+      const sample = new File([sampleCsv], 'enterprise-invoices-demo.csv', {
+        type: 'text/csv',
+      });
+      handleFileSelect(sample);
+      const nextFlowId = createFlowId();
+      setFlowId(nextFlowId);
+      await submitRender('normal', { flowIdOverride: nextFlowId, sourceFile: sample });
+    } catch (error) {
+      setError(error.message || 'Unable to load demo file');
+    }
   }
 
   function handleRemoveFile() {
@@ -648,6 +652,26 @@ A104,Widget,6900.00`}
         testId={LANDING_COPY_KEYS.upload}
       >
         <div className="space-y-4">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <p className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+              Enterprise-scale example
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">Real data. Real complexity.</h2>
+              <p className="mt-2 max-w-2xl text-sm text-slate-600">
+              120 rows · 15 columns · long descriptions.
+              <span className="ml-2 text-slate-500">Automatically structured into readable sections.</span>
+            </p>
+            {freeExportsLeft > 0 ? (
+              <button
+                type="button"
+                onClick={handleTrySample}
+                disabled={isLoading}
+                className={`${CTA_SECONDARY} mt-4`}
+              >
+                Run the demo
+              </button>
+            ) : null}
+          </div>
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}
             toolSubcopy={LANDING_COPY.toolSubcopy}

@@ -15,6 +15,7 @@ import LandingPage from '../page.jsx';
 const SAMPLE_FILE = new File(['invoice_id,client,total\nA102,ACME Corp,4230.00'], 'report.csv', {
   type: 'text/csv',
 });
+const SAMPLE_PREMIUM_CSV = 'invoice_id,client_name,client_email,account_manager,segment,status,issue_date,due_date,currency,total_excl_vat,vat_rate,total_incl_vat,payment_terms,description,internal_notes\nINV-1001,Acme Corporation,finance@acme.com,Laura Stein,Enterprise,Paid,2026-01-02,2026-01-30,EUR,12500,20,15000,30 days,"Annual enterprise license covering 250 seats across EU subsidiaries including premium support and SLA tier 2.","Contract renewed after Q4 review."';
 
 function configureMatchMedia({ mobile = false } = {}) {
   Object.defineProperty(window, 'matchMedia', {
@@ -83,6 +84,15 @@ function createJsonResponse(status = 400, body = { error: 'bad request' }) {
     status,
     headers: {
       'content-type': 'application/json',
+    },
+  });
+}
+
+function createSampleCsvResponse() {
+  return new Response(SAMPLE_PREMIUM_CSV, {
+    status: 200,
+    headers: {
+      'content-type': 'text/csv',
     },
   });
 }
@@ -190,26 +200,39 @@ describe('UploadCard conversion flow on landing page', () => {
 
   test('sample button runs /api/render as multipart and uses source filename', async () => {
     const mock = mockFetch({
-      response: createPdfResponse(),
+      responseFactory: (url) => {
+        if (String(url).includes('/sample/premium.csv')) {
+          return createSampleCsvResponse();
+        }
+        return createPdfResponse();
+      },
     });
 
     render(<LandingPage />);
-    fireEvent.click(screen.getByRole('button', { name: 'Try with a sample CSV' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Try premium demo (120 rows · 14 columns)' }));
 
     await waitFor(() => {
-      expect(mock.calls).toHaveLength(1);
+      expect(mock.calls.length).toBeGreaterThanOrEqual(2);
     });
 
-    const [call] = mock.calls;
-    const calledUrl = new URL(call.url, 'http://localhost');
+    const sampleCall = mock.calls.find((call) => String(call.url).includes('/sample/premium.csv'));
+    const renderCall = mock.calls.find((call) => String(call.url).includes('/api/render'));
+    expect(sampleCall).toBeTruthy();
+    expect(renderCall).toBeTruthy();
+
+    const sampleCalledUrl = new URL(sampleCall.url, 'http://localhost');
+    expect(sampleCalledUrl.pathname).toBe('/sample/premium.csv');
+    expect(sampleCall.options.method).toBeUndefined();
+
+    const calledUrl = new URL(renderCall.url, 'http://localhost');
 
     expect(calledUrl.pathname).toBe('/api/render');
     expect(calledUrl.searchParams.get('columnMap')).toBe('force');
-    expect(call.options.method).toBe('POST');
-    expect(call.options.headers['X-FitForPDF-Source-Filename']).toBe('sample-sales-report.csv');
-    expect(call.options.body).toBeInstanceOf(FormData);
-    expect(getUploadedFile(call)?.name).toBe('sample-sales-report.csv');
-    expect(getUploadedPayloadBody(call)?.get('branding')).toBe('1');
+    expect(renderCall.options.method).toBe('POST');
+    expect(renderCall.options.headers['X-FitForPDF-Source-Filename']).toBe('enterprise-invoices-demo.csv');
+    expect(renderCall.options.body).toBeInstanceOf(FormData);
+    expect(getUploadedFile(renderCall)?.name).toBe('enterprise-invoices-demo.csv');
+    expect(getUploadedPayloadBody(renderCall)?.get('branding')).toBe('1');
 
     mock.restore();
   });
@@ -302,7 +325,7 @@ describe('UploadCard conversion flow on landing page', () => {
     expect(screen.getByRole('link', { name: 'Upgrade to continue' })).toBeTruthy();
     expect(screen.getByTestId('upload-paywall')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Try with a sample CSV' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Try premium demo (120 rows · 14 columns)' })).toBeNull();
   });
 
   test('Branding switch updates multipart branding payload', async () => {
