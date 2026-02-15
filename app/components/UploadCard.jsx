@@ -194,7 +194,7 @@ export default function UploadCard({
               disabled={isLoading}
               className="inline-flex h-10 items-center text-sm font-semibold text-slate-700 transition hover:text-[#D92D2A]"
             >
-              Try premium demo (120 rows · 14 columns)
+              Try premium demo (120 rows · 15 columns)
             </button>
             <Button
               type="submit"

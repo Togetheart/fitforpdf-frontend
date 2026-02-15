@@ -73,7 +73,7 @@ describe('Premium sample demo conversion UI', () => {
 
     expect(screen.getByText('Enterprise-scale example')).toBeTruthy();
     expect(screen.getByText('Real data. Real complexity.')).toBeTruthy();
-    expect(screen.getByText(/120 rows · 14 columns · long descriptions/i)).toBeTruthy();
+    expect(screen.getByText(/120 rows · 15 columns · long descriptions/i)).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Run the demo' })).toBeTruthy();
   });
 

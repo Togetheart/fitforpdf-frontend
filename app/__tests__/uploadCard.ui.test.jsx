@@ -209,7 +209,7 @@ describe('UploadCard conversion flow on landing page', () => {
     });
 
     render(<LandingPage />);
-    fireEvent.click(screen.getByRole('button', { name: 'Try premium demo (120 rows · 14 columns)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Try premium demo (120 rows · 15 columns)' }));
 
     await waitFor(() => {
       expect(mock.calls.length).toBeGreaterThanOrEqual(2);
@@ -325,7 +325,7 @@ describe('UploadCard conversion flow on landing page', () => {
     expect(screen.getByRole('link', { name: 'Upgrade to continue' })).toBeTruthy();
     expect(screen.getByTestId('upload-paywall')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Try premium demo (120 rows · 14 columns)' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Try premium demo (120 rows · 15 columns)' })).toBeNull();
   });
 
   test('Branding switch updates multipart branding payload', async () => {
