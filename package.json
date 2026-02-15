@@ -6,7 +6,8 @@
     "dev": "next dev -p 3001",
     "test": "node --test app/pageUiLogic.test.mjs app/__tests__/landing.test.mjs app/__tests__/pricing.test.mjs app/__tests__/privacy.test.mjs app/api/render/route.test.mjs app/api/checkout/route.test.mjs && vitest run",
     "build": "next build",
-    "start": "next start -p 3001"
+    "start": "next start -p 3001",
+    "smoke:web": "node scripts/smoke-web.mjs"
   },
   "dependencies": {
     "gsap": "^3.14.2",

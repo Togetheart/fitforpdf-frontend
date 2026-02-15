@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CheckCircle2, FileText, UploadCloud } from 'lucide-react';
+import { useRef } from 'react';
 
 const DROPZONE_HINT = 'or choose a file';
 
@@ -14,11 +15,24 @@ export default function UploadDropzone({
   inputId,
   file,
   onFileSelect,
+  onFileSelected,
   onRemoveFile,
   accept = '.csv,.xlsx',
   disabled = false,
 }) {
   const [isDragActive, setIsDragActive] = useState(false);
+  const inputRef = useRef(null);
+
+  const emitFile = (nextFile) => {
+    onFileSelect?.(nextFile);
+    onFileSelected?.(nextFile);
+  };
+
+  const emitRemovedFile = () => {
+    onFileSelect?.(null);
+    onFileSelected?.(null);
+    onRemoveFile?.();
+  };
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -27,13 +41,21 @@ export default function UploadDropzone({
 
     const file = event?.dataTransfer?.files?.[0];
     if (!disabled && file) {
-      onFileSelect?.(file);
+      emitFile(file);
     }
   };
 
   const handleDragOver = (event) => {
     event.preventDefault();
     event.stopPropagation();
+  };
+
+  const handleLabelKeyDown = (event) => {
+    if (disabled) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      inputRef.current?.click();
+    }
   };
 
   return (
@@ -44,6 +66,10 @@ export default function UploadDropzone({
         onDragOver={handleDragOver}
         onDragEnter={() => !disabled && setIsDragActive(true)}
         onDragLeave={() => !disabled && setIsDragActive(false)}
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-label="Upload CSV or XLSX file"
+        onKeyDown={handleLabelKeyDown}
         className={`rounded-2xl border-2 border-dashed p-1 transition ${
           isDragActive ? 'border-[#D92D2A] bg-red-50/55' : 'border-slate-200 bg-slate-50'
         } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-[#D92D2A]/60 hover:bg-red-50/30'}`}
@@ -69,7 +95,7 @@ export default function UploadDropzone({
                     event.preventDefault();
                     event.stopPropagation();
                     if (!disabled) {
-                      onRemoveFile?.();
+                      emitRemovedFile();
                     }
                   }}
                   disabled={disabled}
@@ -98,10 +124,11 @@ export default function UploadDropzone({
         accept={accept}
         className="hidden"
         data-testid="generate-file-input"
+        ref={inputRef}
         onChange={(event) => {
           const selectedFile = event.target.files?.[0];
           if (!disabled && selectedFile) {
-            onFileSelect?.(selectedFile);
+            emitFile(selectedFile);
           }
         }}
         disabled={disabled}

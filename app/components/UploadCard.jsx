@@ -85,7 +85,7 @@ export default function UploadCard({
   const shouldShowVerdict = !isLoading && verdictNormalized;
 
   return (
-    <article data-testid="upload-card" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5">
+    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5" data-testid="upload-card">
       <form className="space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
@@ -105,23 +105,17 @@ export default function UploadCard({
           inputId={inputId}
           file={file}
           onFileSelect={onFileSelect}
+          onFileSelected={onFileSelect}
           onRemoveFile={onRemoveFile}
           accept=".csv,.xlsx"
           disabled={isLoading}
         />
 
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={onTrySample}
-          disabled={isLoading}
-          className="w-full !h-10 text-sm"
-        >
-          Try with a sample CSV
-        </Button>
-
         {isLoading && conversionProgress ? (
-          <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <div
+            className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
+            data-testid="upload-progress"
+          >
             <div className="flex items-center justify-between text-sm">
               <p className="font-medium text-slate-800">Converting your file</p>
               <p className="font-semibold text-slate-600">{progressPercent}%</p>
@@ -132,11 +126,14 @@ export default function UploadCard({
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
-            <p className="text-xs font-medium text-slate-600">{progressStepLabel}</p>
+            <p data-testid="upload-progress-label" className="text-xs font-medium text-slate-600">
+              {progressStepLabel}
+            </p>
             <div className="grid grid-cols-1 gap-2 text-xs text-slate-500 sm:grid-cols-3">
               {PROGRESS_STEPS.map((step, idx) => (
                 <p
                   key={step}
+                  data-testid={`upload-progress-step-${idx}`}
                   className={`rounded-full px-2 py-1 text-center ${idx <= progressStepIndex ? 'bg-slate-900 text-white' : 'bg-slate-100'}`}
                 >
                   {step}
@@ -176,34 +173,50 @@ export default function UploadCard({
             Download again
           </Button>
         ) : isOverQuota ? (
-          <Button
-            variant="primary"
-            href="/pricing"
-            className="w-full"
+          <section
+            data-testid="upload-paywall"
+            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
           >
-            Upgrade to continue
-          </Button>
+            <p className="text-xs text-slate-600">You have reached your free exports.</p>
+            <Button
+              variant="primary"
+              href="/pricing"
+              className="mt-3 w-full"
+            >
+              Upgrade to continue
+            </Button>
+          </section>
         ) : (
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-            disabled={isLoading || !file}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 aria-hidden="true" className="mr-2 h-4 w-4 animate-spin" />
-                Generating…
-              </>
-            ) : (
-              'Generate PDF'
-            )}
-          </Button>
+          <>
+            <button
+              type="button"
+              onClick={onTrySample}
+              disabled={isLoading}
+              className="inline-flex h-10 items-center text-sm font-semibold text-slate-700 transition hover:text-[#D92D2A]"
+            >
+              Try with a sample CSV
+            </button>
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-full"
+              disabled={isLoading || !file}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 aria-hidden="true" className="mr-2 h-4 w-4 animate-spin" />
+                  Generating…
+                </>
+              ) : (
+                'Generate PDF'
+              )}
+            </Button>
+          </>
         )}
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">
-          <p>Files deleted immediately after conversion.</p>
-          <p>PDF available for 15 minutes.</p>
+          <p>Files are deleted immediately after conversion.</p>
+          <p>PDF available for up to 15 minutes.</p>
           <p>No file content stored in logs.</p>
         </div>
 
