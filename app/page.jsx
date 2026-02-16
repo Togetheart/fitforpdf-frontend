@@ -475,7 +475,7 @@ export default function Page() {
 
   async function handleTrySample() {
     try {
-      const sampleResponse = await fetch('/sample/premium.csv');
+      const sampleResponse = await fetch('/api/sample/premium');
       if (!sampleResponse.ok) {
         throw new Error(`Failed to load sample CSV (${sampleResponse.status})`);
       }
@@ -486,7 +486,7 @@ export default function Page() {
       handleFileSelect(sample);
       const nextFlowId = createFlowId();
       setFlowId(nextFlowId);
-      await submitRender('normal', { flowIdOverride: nextFlowId, sourceFile: sample });
+      await submitRender('compact', { flowIdOverride: nextFlowId, sourceFile: sample });
     } catch (error) {
       setError(error.message || 'Unable to load demo file');
     }

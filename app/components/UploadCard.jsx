@@ -194,8 +194,10 @@ export default function UploadCard({
               disabled={isLoading}
               className="inline-flex h-10 items-center text-sm font-semibold text-slate-700 transition hover:text-[#D92D2A]"
             >
-              Try premium demo (120 rows · 15 columns)
+              Run the demo
             </button>
+            <p className="text-xs text-slate-500">120 rows · 14 columns · long descriptions</p>
+            <p className="text-xs text-slate-500">See how FitForPDF handles real-world invoice complexity.</p>
             <Button
               type="submit"
               variant="primary"
