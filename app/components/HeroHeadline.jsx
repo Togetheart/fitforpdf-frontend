@@ -57,7 +57,7 @@ export default function HeroHeadline() {
   return (
     <h1 className="leading-tight tracking-tight text-4xl font-semibold sm:text-6xl">
       <span ref={firstLineRef} className="hero-headline-line block">
-        Client-ready PDFs.
+        15 columns?
       </span>
       <span
         ref={secondLineRef}
@@ -65,7 +65,7 @@ export default function HeroHeadline() {
         data-anim={reducedMotion ? 'off' : 'on'}
         className="hero-accent hero-headline-line block text-slate-700"
       >
-        From raw data.
+        We turn them into readable sections.
       </span>
     </h1>
   );

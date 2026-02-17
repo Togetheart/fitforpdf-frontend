@@ -36,7 +36,7 @@ describe('HeroHeadline accent animation', () => {
 
     const accent = screen.getByTestId('hero-headline-accent');
     expect(accent).toBeTruthy();
-    expect(accent.textContent).toBe('From raw data.');
+    expect(accent.textContent).toBe('We turn them into readable sections.');
   });
 
   test('animates accent line when reduced motion is off', () => {
