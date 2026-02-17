@@ -80,6 +80,9 @@ const EXPORT_BADGE_STYLES = {
   warningStrong: 'border-amber-300 bg-amber-600 text-white',
   danger: 'border-red-300 bg-red-600 text-white',
 };
+const BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY = 'fitforpdf_branding_nudge_suppressed_until';
+const BRANDING_UPGRADE_NUDGE_SUPPRESS_MS = 10 * 60 * 1000;
+let inMemoryBrandingNudgeSuppression = 0;
 
 function normalizeFreeExportsLeft(value) {
   const safeValue = Number.parseInt(value, 10);
@@ -87,6 +90,48 @@ function normalizeFreeExportsLeft(value) {
   if (safeValue <= 0) return 0;
   if (safeValue >= 3) return 3;
   return safeValue;
+}
+
+function safeLocalStorage() {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+export function getBrandingNudgeSuppressedUntil() {
+  const storage = safeLocalStorage();
+  if (storage) {
+    try {
+      const value = storage.getItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
+      const parsed = Number.parseInt(value, 10);
+      if (Number.isFinite(parsed)) {
+        if (parsed > Date.now()) return parsed;
+        storage.removeItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
+      }
+    } catch {
+      // fall through to in-memory timestamp
+    }
+  }
+
+  return inMemoryBrandingNudgeSuppression;
+}
+
+export function setBrandingNudgeSuppressedUntil(ts) {
+  const safeTs = Number.parseInt(ts, 10);
+  if (!Number.isFinite(safeTs)) return;
+
+  inMemoryBrandingNudgeSuppression = safeTs;
+  const storage = safeLocalStorage();
+  if (!storage) return;
+
+  try {
+    storage.setItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY, String(safeTs));
+  } catch {
+    // no-op: fallback remains available in memory for this session
+  }
 }
 
 function getFreeExportsBadgeClass(exportsLeft) {
@@ -221,6 +266,9 @@ export default function UploadCard({
   conversionProgress,
   onBuyCredits = () => {},
   showBuyCreditsForTwo = false,
+  isPro = false,
+  onUpgrade = () => {},
+  onEvent = () => {},
 }) {
   const isOverQuota = freeExportsLeft <= 0;
   const inputId = 'fitforpdf-file-input';
@@ -236,6 +284,43 @@ export default function UploadCard({
   const normalizedFreeExportsLeft = normalizeFreeExportsLeft(freeExportsLeft);
   const freeExportsBadgeClass = getFreeExportsBadgeClass(normalizedFreeExportsLeft);
   const showBuyCredits = normalizedFreeExportsLeft <= 1 || (showBuyCreditsForTwo && normalizedFreeExportsLeft === 2);
+  const [showBrandingUpgradeNudge, setShowBrandingUpgradeNudge] = React.useState(false);
+  const isBrandingNudgeSuppressed = React.useCallback(() => getBrandingNudgeSuppressedUntil() > Date.now(), []);
+
+  const trackEvent = (name) => {
+    if (typeof onEvent === 'function') onEvent(name);
+  };
+
+  const handleBrandingChange = (nextChecked) => {
+    const shouldGateBrandingOff = !isPro && includeBranding && !nextChecked;
+    if (shouldGateBrandingOff) {
+      trackEvent('paywall_branding_attempt');
+      if (!isBrandingNudgeSuppressed()) {
+        setShowBrandingUpgradeNudge(true);
+      }
+      return;
+    }
+
+    setShowBrandingUpgradeNudge(false);
+    onBrandingChange(nextChecked);
+  };
+
+  const handleBrandingUpgrade = () => {
+    trackEvent('paywall_upgrade_clicked');
+    onUpgrade();
+  };
+
+  const handleBrandingNudgeDismiss = () => {
+    trackEvent('paywall_dismissed');
+    setBrandingNudgeSuppressedUntil(Date.now() + BRANDING_UPGRADE_NUDGE_SUPPRESS_MS);
+    setShowBrandingUpgradeNudge(false);
+  };
+
+  React.useEffect(() => {
+    if (isPro) {
+      setShowBrandingUpgradeNudge(false);
+    }
+  }, [isPro]);
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5" data-testid="upload-card">
@@ -325,11 +410,46 @@ export default function UploadCard({
             title="Branding"
             description="Adds a lightweight brand treatment by default"
             checked={includeBranding}
-            onChange={onBrandingChange}
+            onChange={handleBrandingChange}
             tooltip={<InfoTooltip label="Branding" text="Keep this on to display the FitForPDF styling in exports." />}
             rowTestId="setting-row-branding"
             disabled={isLoading}
           />
+          <div
+            data-testid="branding-upgrade-nudge-slot"
+            aria-live="polite"
+            className="min-h-0 px-4 pt-2 pb-1"
+          >
+            {!isBrandingNudgeSuppressed() && !isPro && showBrandingUpgradeNudge ? (
+              <section
+                className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+                data-testid="branding-upgrade-nudge"
+              >
+                <p className="text-sm font-semibold text-slate-900">
+                  Remove branding is a Pro feature
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                  Upgrade to remove FitForPDF branding from exported PDFs.
+                </p>
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleBrandingUpgrade}
+                    className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
+                  >
+                    Upgrade
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleBrandingNudgeDismiss}
+                    className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                  >
+                    Not now
+                  </button>
+                </div>
+              </section>
+            ) : null}
+          </div>
 
           <div className="h-px bg-slate-100" />
 

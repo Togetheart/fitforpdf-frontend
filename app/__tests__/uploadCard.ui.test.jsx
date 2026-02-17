@@ -10,7 +10,10 @@ import {
   waitFor,
 } from '@testing-library/react';
 
-import UploadCard from '../components/UploadCard';
+import UploadCard, {
+  getBrandingNudgeSuppressedUntil,
+  setBrandingNudgeSuppressedUntil,
+} from '../components/UploadCard';
 import LandingPage from '../page.jsx';
 import { LANDING_COPY_KEYS } from '../siteCopy.mjs';
 
@@ -46,9 +49,14 @@ function UploadCardHarness({
   hasResultBlob = false,
   onBrandingChange = () => {},
   onTruncateChange = () => {},
+  isPro = true,
+  onEvent = () => {},
+  onUpgrade = () => {},
 }) {
   return function Harness() {
     const [currentFile, setCurrentFile] = useState(file);
+    const [brandingEnabled, setBrandingEnabled] = useState(true);
+    const [truncateEnabled, setTruncateEnabled] = useState(false);
 
     return (
       <UploadCard
@@ -56,14 +64,20 @@ function UploadCardHarness({
         toolSubcopy="3 free exports. No account."
         file={currentFile}
         freeExportsLeft={freeExportsLeft}
-        includeBranding
-        truncateLongText={false}
+        includeBranding={brandingEnabled}
+        truncateLongText={truncateEnabled}
         isLoading={isLoading}
         hasResultBlob={hasResultBlob}
         onFileSelect={setCurrentFile}
         onRemoveFile={() => setCurrentFile(null)}
-        onBrandingChange={onBrandingChange}
-        onTruncateChange={onTruncateChange}
+        onBrandingChange={(nextValue) => {
+          setBrandingEnabled(nextValue);
+          onBrandingChange(nextValue);
+        }}
+        onTruncateChange={(nextValue) => {
+          setTruncateEnabled(nextValue);
+          onTruncateChange(nextValue);
+        }}
         onSubmit={onSubmit}
         onDownloadAgain={() => {}}
         onTrySample={() => {}}
@@ -72,6 +86,9 @@ function UploadCardHarness({
         conversionProgress={conversionProgress}
         onBuyCredits={onBuyCredits}
         showBuyCreditsForTwo={showBuyCreditsForTwo}
+        isPro={isPro}
+        onEvent={onEvent}
+        onUpgrade={onUpgrade}
       />
     );
   };
@@ -86,6 +103,9 @@ function renderUploadCardHarness({
   conversionProgress = null,
   onBrandingChange = () => {},
   onTruncateChange = () => {},
+  isPro = true,
+  onEvent = () => {},
+  onUpgrade = () => {},
 }) {
   const Harness = UploadCardHarness({
     freeExportsLeft,
@@ -96,9 +116,18 @@ function renderUploadCardHarness({
     conversionProgress,
     onBrandingChange,
     onTruncateChange,
+    isPro,
+    onEvent,
+    onUpgrade,
   });
   render(<Harness />);
   return { onBuyCredits, onBrandingChange, onTruncateChange };
+}
+
+function clearBrandingNudgeSuppression() {
+  if (typeof window === 'undefined') return;
+  setBrandingNudgeSuppressedUntil(0);
+  window.localStorage.removeItem('fitforpdf_branding_nudge_suppressed_until');
 }
 
 function createPdfResponse() {
@@ -182,6 +211,7 @@ async function advanceConversion(ms = 1900) {
 describe('UploadCard unit behavior', () => {
   beforeEach(() => {
     localStorage.clear();
+    clearBrandingNudgeSuppression();
     configureMatchMedia({ mobile: true });
     renderUploadCardHarness({ freeExportsLeft: 3 });
   });
@@ -271,6 +301,147 @@ describe('UploadCard unit behavior', () => {
 
     fireEvent.click(buyButton);
     expect(onBuyCredits).toHaveBeenCalledTimes(1);
+  });
+
+  test('free users cannot disable branding and see an inline upgrade nudge', () => {
+    cleanup();
+    clearBrandingNudgeSuppression();
+    const onEvent = vi.fn();
+    const onBrandingChange = vi.fn();
+    renderUploadCardHarness({
+      isPro: false,
+      onEvent,
+      onBrandingChange,
+    });
+
+    const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
+    const brandingSwitch = screen.getByRole('switch', { name: 'Branding' });
+
+    expect(brandingSwitch.getAttribute('aria-checked')).toBe('true');
+    fireEvent.click(brandingTitle);
+
+    expect(brandingSwitch.getAttribute('aria-checked')).toBe('true');
+    expect(onBrandingChange).not.toHaveBeenCalled();
+    expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
+    expect(screen.getByText('Remove branding is a Pro feature')).toBeTruthy();
+    expect(screen.getByText('Upgrade to remove FitForPDF branding from exported PDFs.')).toBeTruthy();
+    expect(screen.getByTestId('branding-upgrade-nudge-slot').getAttribute('aria-live')).toBe('polite');
+    expect(onEvent).toHaveBeenCalledWith('paywall_branding_attempt');
+  });
+
+  test('pro users can disable branding without upgrade nudge', () => {
+    cleanup();
+    clearBrandingNudgeSuppression();
+    const onBrandingChange = vi.fn();
+    renderUploadCardHarness({
+      isPro: true,
+      onBrandingChange,
+    });
+
+    const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
+    fireEvent.click(brandingTitle);
+
+    expect(screen.getByRole('switch', { name: 'Branding' }).getAttribute('aria-checked')).toBe('false');
+    expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+    expect(onBrandingChange).toHaveBeenCalledWith(false);
+  });
+
+  test('not now hides the branding upgrade nudge and tracks dismissal', () => {
+    cleanup();
+    clearBrandingNudgeSuppression();
+    const onEvent = vi.fn();
+    const onBrandingChange = vi.fn();
+    renderUploadCardHarness({
+      isPro: false,
+      onEvent,
+      onBrandingChange,
+    });
+
+    const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
+    fireEvent.click(brandingTitle);
+    expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
+
+    expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+    expect(onBrandingChange).not.toHaveBeenCalled();
+    expect(onEvent).toHaveBeenCalledWith('paywall_dismissed');
+    expect(screen.getByRole('switch', { name: 'Branding' }).getAttribute('aria-checked')).toBe('true');
+  });
+
+  test('upgrade click triggers callback and tracks event', () => {
+    cleanup();
+    clearBrandingNudgeSuppression();
+    const onUpgrade = vi.fn();
+    const onEvent = vi.fn();
+    const onBrandingChange = vi.fn();
+    renderUploadCardHarness({
+      isPro: false,
+      onUpgrade,
+      onEvent,
+      onBrandingChange,
+    });
+
+    const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
+    fireEvent.click(brandingTitle);
+    fireEvent.click(screen.getByRole('button', { name: 'Upgrade' }));
+
+    expect(onUpgrade).toHaveBeenCalledTimes(1);
+    expect(onEvent).toHaveBeenCalledWith('paywall_upgrade_clicked');
+  });
+
+  test('suppression timestamp prevents re-showing nudge for 10 minutes', () => {
+    cleanup();
+    clearBrandingNudgeSuppression();
+    const onEvent = vi.fn();
+    const onBrandingChange = vi.fn();
+    renderUploadCardHarness({
+      isPro: false,
+      onEvent,
+      onBrandingChange,
+    });
+
+    const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
+    fireEvent.click(brandingTitle);
+    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
+    expect(getBrandingNudgeSuppressedUntil()).toBeGreaterThan(Date.now());
+
+    fireEvent.click(brandingTitle);
+    expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+    expect(onBrandingChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('switch', { name: 'Branding' }).getAttribute('aria-checked')).toBe('true');
+    expect(onEvent).toHaveBeenCalledWith('paywall_dismissed');
+  });
+
+  test('branding nudge reappears after 10-minute suppression window', () => {
+    cleanup();
+    clearBrandingNudgeSuppression();
+    const onEvent = vi.fn();
+    const onBrandingChange = vi.fn();
+    vi.useFakeTimers();
+    const now = Date.now();
+    vi.setSystemTime(now);
+
+    renderUploadCardHarness({
+      isPro: false,
+      onEvent,
+      onBrandingChange,
+    });
+
+    const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
+    fireEvent.click(brandingTitle);
+    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
+
+    expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+
+    vi.advanceTimersByTime(10 * 60 * 1000 + 5);
+    vi.setSystemTime(now + (10 * 60 * 1000 + 5));
+    fireEvent.click(brandingTitle);
+
+    expect(onEvent).toHaveBeenCalledWith('paywall_branding_attempt');
+    expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
+    expect(onBrandingChange).not.toHaveBeenCalled();
+    vi.useRealTimers();
   });
 
   test('click on setting title or description toggles the row', () => {
@@ -635,7 +806,7 @@ describe('UploadCard conversion flow on landing page', () => {
     await advanceConversion(1900);
 
     const [call] = mock.calls;
-    expect(getUploadedPayloadBody(call)?.get('branding')).toBe('0');
+    expect(getUploadedPayloadBody(call)?.get('branding')).toBe('1');
     mock.restore();
   });
 

@@ -11,6 +11,7 @@ afterEach(() => {
 function SettingsHarness({
   initialBranding = true,
   initialTruncate = false,
+  isPro = true,
 }) {
   return function Harness() {
     const [branding, setBranding] = useState(initialBranding);
@@ -35,6 +36,7 @@ function SettingsHarness({
         onTrySample={() => {}}
         downloadedFileName={null}
         verdict={null}
+        isPro={isPro}
       />
     );
   };
