@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { CheckCircle2, FileText, UploadCloud } from 'lucide-react';
+import { CheckCircle2, UploadCloud } from 'lucide-react';
 import { useRef } from 'react';
 
-const DROPZONE_HINT = 'or choose a file';
+const DROPZONE_HINT = 'or click to upload';
 
 function formatBytes(bytes) {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
@@ -110,10 +110,6 @@ export default function UploadDropzone({
               <UploadCloud aria-hidden="true" className="mx-auto h-8 w-8 text-slate-500" />
               <p className="mt-3 text-sm font-semibold text-slate-900">Drop CSV or XLSX here</p>
               <p className="mt-1 text-xs text-slate-500">{DROPZONE_HINT}</p>
-              <p className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-[#D92D2A]">
-                <FileText aria-hidden="true" className="h-4 w-4" />
-                2-step import: drop or click
-              </p>
             </div>
           )}
         </label>

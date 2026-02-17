@@ -51,7 +51,7 @@ test('renders dropzone and disabled generate action when no file is selected', (
   );
 
   expect(screen.getByText('Drop CSV or XLSX here')).toBeTruthy();
-  expect(screen.getByText('or choose a file')).toBeTruthy();
+  expect(screen.getByText('or click to upload')).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Generate PDF' })).toHaveProperty('disabled', true);
 });
 
@@ -90,7 +90,7 @@ test('branding toggle defaults on and truncate defaults off', () => {
     localStorage.setItem('fitforpdf_free_exports_used', '2');
     render(<ModuleHarness />);
 
-    expect(screen.getByText(/Free\.\s*1\s*export/i)).toBeTruthy();
+    expect(screen.getByText(/Free\s*·\s*1\s*export/i)).toBeTruthy();
   });
 
 test('generating state shows spinner text and disables controls', () => {

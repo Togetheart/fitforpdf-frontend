@@ -63,7 +63,7 @@ describe('landing conversion-first structure', () => {
 
     expect(primary).toBeTruthy();
     expect(primary.textContent).toBe('Generate PDF');
-    expect(primary.getAttribute('href')).toBe('#tool');
+    expect(primary.getAttribute('href')).toBe('#generate');
     expect(links).toHaveLength(1);
   });
 

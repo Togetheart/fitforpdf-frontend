@@ -1,11 +1,31 @@
 import React from 'react';
-import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import {
+  AlertCircle,
+  CheckCircle2,
+  CircleHelp,
+  Loader2,
+  ShoppingCart,
+} from 'lucide-react';
 
 import Button from './Button';
-import Toggle from './Toggle';
 import UploadDropzone from './UploadDropzone';
+import Switch from './ui/Switch';
 
 const PROGRESS_STEPS = ['Uploading', 'Structuring (column grouping)', 'Generating PDF'];
+const PROGRESS_STEP_STATES = {
+  completed: {
+    circle: 'border border-emerald-300 bg-emerald-50 text-emerald-700',
+    label: 'text-slate-700',
+  },
+  active: {
+    circle: 'border border-rose-600 bg-rose-600 text-white',
+    label: 'text-slate-900 font-medium',
+  },
+  pending: {
+    circle: 'border border-slate-200 bg-slate-100 text-slate-400',
+    label: 'text-slate-400',
+  },
+};
 
 function getProgressStepLabel(progress, stepIndex) {
   if (progress?.label) return progress.label;
@@ -13,9 +33,67 @@ function getProgressStepLabel(progress, stepIndex) {
   return PROGRESS_STEPS[safeIndex];
 }
 
+function StepIndicator({ activeStepIndex }) {
+  const safeActiveStepIndex = Number.isInteger(activeStepIndex)
+    ? Math.min(Math.max(activeStepIndex, 0), PROGRESS_STEPS.length - 1)
+    : 0;
+
+  return (
+    <div
+      role="list"
+      aria-label="conversion steps"
+      className="h-14 flex items-center gap-3"
+    >
+      {PROGRESS_STEPS.map((step, index) => {
+        const isCompleted = index < safeActiveStepIndex;
+        const isActive = index === safeActiveStepIndex;
+        const state = isCompleted ? 'completed' : isActive ? 'active' : 'pending';
+        const stateClasses = PROGRESS_STEP_STATES[state];
+        return (
+          <div
+            key={step}
+            role="listitem"
+            aria-current={isActive ? 'step' : undefined}
+            className="min-w-0 flex flex-1 items-center gap-2"
+          >
+            <span
+              className={`grid h-7 w-7 place-items-center rounded-full text-xs font-semibold transition-colors duration-200 ${stateClasses.circle}`}
+            >
+              {index + 1}
+            </span>
+            <span className={`text-xs leading-snug ${stateClasses.label} sm:text-sm sm:leading-5`}>{step}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function getProgressPercent(progress) {
   if (!progress || !Number.isFinite(progress.percent)) return 0;
   return Math.min(100, Math.max(0, Math.round(progress.percent)));
+}
+
+const EXPORT_BADGE_STYLES = {
+  neutral: 'border-slate-200 bg-slate-100 text-slate-700',
+  warning: 'border-amber-200 bg-amber-400 text-white',
+  warningStrong: 'border-amber-300 bg-amber-600 text-white',
+  danger: 'border-red-300 bg-red-600 text-white',
+};
+
+function normalizeFreeExportsLeft(value) {
+  const safeValue = Number.parseInt(value, 10);
+  if (!Number.isFinite(safeValue)) return 0;
+  if (safeValue <= 0) return 0;
+  if (safeValue >= 3) return 3;
+  return safeValue;
+}
+
+function getFreeExportsBadgeClass(exportsLeft) {
+  if (exportsLeft <= 0) return EXPORT_BADGE_STYLES.danger;
+  if (exportsLeft === 1) return EXPORT_BADGE_STYLES.warningStrong;
+  if (exportsLeft === 2) return EXPORT_BADGE_STYLES.warning;
+  return EXPORT_BADGE_STYLES.neutral;
 }
 
 function verdictVisualStyle(verdict) {
@@ -40,14 +118,84 @@ function verdictVisualStyle(verdict) {
 }
 
 function freeExportsText(value) {
-  if (value <= 0) return '0 exports left';
-  if (value === 1) return '1 export left';
-  return `${value} exports left`;
+  const safeValue = Number.isFinite(Number.parseInt(value, 10)) ? Number.parseInt(value, 10) : 0;
+  if (safeValue <= 0) return '0 exports left';
+  if (safeValue === 1) return '1 export left';
+  return `${safeValue} exports left`;
 }
 
 function getVerdictIcon(verdict) {
   if (verdict === 'OK') return CheckCircle2;
   return AlertCircle;
+}
+
+function InfoTooltip({ label, text }) {
+  return (
+    <button
+      type="button"
+      aria-label={`${label} info`}
+      className="inline-flex h-4 w-4 items-center justify-center rounded-full text-slate-400 transition hover:text-slate-600"
+      title={text}
+      onClick={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      }}
+    >
+      <CircleHelp aria-hidden="true" className="h-3.5 w-3.5" />
+    </button>
+  );
+}
+
+function SettingRow({
+  title,
+  description,
+  checked,
+  onChange,
+  tooltip,
+  disabled,
+  rowTestId,
+}) {
+  const handleTextToggle = (event) => {
+    if (disabled) return;
+    event.preventDefault();
+    onChange(!checked);
+  };
+
+  return (
+    <div className="flex w-full items-start justify-between gap-6 rounded-sm py-4">
+      <div
+        data-testid={rowTestId}
+        tabIndex={-1}
+        className="min-w-0"
+      >
+        <div
+          className="rounded-md px-1 py-0.5 transition-colors cursor-pointer hover:bg-slate-50"
+          onClick={handleTextToggle}
+        >
+          <div className="flex items-center gap-2">
+            <div className="text-sm font-semibold text-slate-900">{title}</div>
+            {tooltip ? (
+              <span
+                className="shrink-0"
+                onClick={(event) => event.stopPropagation()}
+              >
+                {tooltip}
+              </span>
+            ) : null}
+          </div>
+          <div
+            className="mt-1 text-sm text-slate-500"
+          >
+            {description}
+          </div>
+        </div>
+      </div>
+
+      <div className="shrink-0 flex w-12 justify-end pt-0.5">
+        <Switch checked={checked} onChange={() => onChange(!checked)} disabled={disabled} ariaLabel={title} />
+      </div>
+    </div>
+  );
 }
 
 export default function UploadCard({
@@ -71,6 +219,8 @@ export default function UploadCard({
   downloadedFileName,
   verdict,
   conversionProgress,
+  onBuyCredits = () => {},
+  showBuyCreditsForTwo = false,
 }) {
   const isOverQuota = freeExportsLeft <= 0;
   const inputId = 'fitforpdf-file-input';
@@ -83,22 +233,59 @@ export default function UploadCard({
   const VerdictIcon = getVerdictIcon(verdictNormalized);
   const verdictStyle = verdictVisualStyle(verdictNormalized);
   const shouldShowVerdict = !isLoading && verdictNormalized;
+  const normalizedFreeExportsLeft = normalizeFreeExportsLeft(freeExportsLeft);
+  const freeExportsBadgeClass = getFreeExportsBadgeClass(normalizedFreeExportsLeft);
+  const showBuyCredits = normalizedFreeExportsLeft <= 1 || (showBuyCreditsForTwo && normalizedFreeExportsLeft === 2);
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5" data-testid="upload-card">
       <form className="space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
-            <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{toolTitle}</h2>
+            <h2
+              id="generate"
+              className="scroll-mt-24 text-2xl font-semibold leading-snug sm:text-3xl"
+            >
+              {toolTitle}
+            </h2>
             <p className="text-sm text-slate-500">{toolSubcopy}</p>
           </div>
-          <span
-            data-testid="quota-pill"
-            className="inline-flex h-9 items-center rounded-full border border-slate-200 bg-white px-4 text-xs font-medium text-slate-600 shadow-sm"
-            aria-label="free exports remaining"
-          >
-            Free. {freeExportsText(freeExportsLeft)}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              data-testid="quota-buy-slot"
+              className="flex h-9 w-9 shrink-0 items-center justify-center"
+              aria-hidden={showBuyCredits ? 'false' : 'true'}
+            >
+              {showBuyCredits ? (
+                <span className="group relative inline-flex">
+                  <button
+                    type="button"
+                    aria-label="Buy credits"
+                    aria-describedby="buy-credits-tooltip"
+                    title="Buy credits"
+                    onClick={onBuyCredits}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/80"
+                  >
+                    <ShoppingCart aria-hidden="true" className="h-4 w-4" />
+                  </button>
+                  <span
+                    id="buy-credits-tooltip"
+                    role="tooltip"
+                    className="pointer-events-none absolute right-0 top-full mt-1 translate-y-0.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 group-focus:opacity-100"
+                  >
+                    Buy credits
+                  </span>
+                </span>
+              ) : null}
+            </span>
+            <span
+              data-testid="quota-pill"
+              className={`inline-flex h-9 min-w-0 items-center rounded-full border px-4 text-xs font-medium shadow-sm ${freeExportsBadgeClass}`}
+              aria-label="free exports remaining"
+            >
+              Free · {freeExportsText(normalizedFreeExportsLeft)}
+            </span>
+          </div>
         </div>
 
         <UploadDropzone
@@ -129,36 +316,31 @@ export default function UploadCard({
             <p data-testid="upload-progress-label" className="text-xs font-medium text-slate-600">
               {progressStepLabel}
             </p>
-            <div className="grid grid-cols-1 gap-2 text-xs text-slate-500 sm:grid-cols-3">
-              {PROGRESS_STEPS.map((step, idx) => (
-                <p
-                  key={step}
-                  data-testid={`upload-progress-step-${idx}`}
-                  className={`rounded-full px-2 py-1 text-center ${idx <= progressStepIndex ? 'bg-slate-900 text-white' : 'bg-slate-100'}`}
-                >
-                  {step}
-                </p>
-              ))}
-            </div>
+            <StepIndicator activeStepIndex={progressStepIndex} />
           </div>
         ) : null}
 
-        <div className="space-y-3">
-          <Toggle
-            label="Branding"
-            checked={includeBranding}
+        <div className="rounded-xl border border-slate-200 bg-white px-4">
+          <SettingRow
+            title="Branding"
             description="Adds a lightweight brand treatment by default"
-            tooltip="Keep this on to display the FitForPDF styling in exports."
-            disabled={isLoading}
+            checked={includeBranding}
             onChange={onBrandingChange}
-          />
-          <Toggle
-            label="Truncate long text"
-            checked={truncateLongText}
-            description="Auto-crops very long content to keep layout stable"
-            tooltip="Enable this to avoid rows pushing beyond column width."
+            tooltip={<InfoTooltip label="Branding" text="Keep this on to display the FitForPDF styling in exports." />}
+            rowTestId="setting-row-branding"
             disabled={isLoading}
+          />
+
+          <div className="h-px bg-slate-100" />
+
+          <SettingRow
+            title="Truncate long text"
+            description="Auto-crops very long content to keep layout stable"
+            checked={truncateLongText}
             onChange={onTruncateChange}
+            tooltip={<InfoTooltip label="Truncate long text" text="Enable this to avoid rows pushing beyond column width." />}
+            rowTestId="setting-row-truncate"
+            disabled={isLoading}
           />
         </div>
 
@@ -188,16 +370,19 @@ export default function UploadCard({
           </section>
         ) : (
           <>
-            <button
-              type="button"
-              onClick={onTrySample}
-              disabled={isLoading}
-              className="inline-flex h-10 items-center text-sm font-semibold text-slate-700 transition hover:text-[#D92D2A]"
-            >
-              Run the demo
-            </button>
-            <p className="text-xs text-slate-500">120 rows · 14 columns · long descriptions</p>
-            <p className="text-xs text-slate-500">See how FitForPDF handles real-world invoice complexity.</p>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm" data-testid="run-demo-row">
+              <button
+                type="button"
+                onClick={onTrySample}
+                disabled={isLoading}
+                className="inline-flex h-10 items-center font-semibold text-slate-900 transition hover:text-[#D92D2A]"
+              >
+                Run the demo
+              </button>
+              <span className="text-slate-600">See how FitForPDF handles real-world invoice complexity.</span>
+              <span className="text-slate-400">·</span>
+              <span className="text-slate-500">120 rows · 14 columns · long descriptions</span>
+            </div>
             <Button
               type="submit"
               variant="primary"

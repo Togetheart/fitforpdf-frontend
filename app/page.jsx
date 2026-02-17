@@ -541,7 +541,7 @@ export default function Page() {
       >
         <div className="space-y-6">
           <a
-            href="#tool"
+            href="#generate"
             data-testid="hero-primary-cta"
             className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:bg-red-700 hover:shadow-[0_0_40px_rgba(239,68,68,0.25)] active:scale-[0.99]"
           >
@@ -661,16 +661,6 @@ A104,Widget,6900.00`}
               120 rows · 15 columns · long descriptions.
               <span className="ml-2 text-slate-500">Automatically structured into readable sections.</span>
             </p>
-            {freeExportsLeft > 0 ? (
-              <button
-                type="button"
-                onClick={handleTrySample}
-                disabled={isLoading}
-                className={`${CTA_SECONDARY} mt-4`}
-              >
-                Run the demo
-              </button>
-            ) : null}
           </div>
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}

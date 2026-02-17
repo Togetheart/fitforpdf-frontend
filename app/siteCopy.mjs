@@ -225,11 +225,11 @@ export const PRICING_CARDS = [
 ];
 
 export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
-  {
-    id: LANDING_COPY_KEYS.hero,
-    title: LANDING_COPY.heroTitle,
-    ctas: [
-      { label: LANDING_COPY.heroPrimaryCta, href: '#tool', type: 'primary' },
+    {
+      id: LANDING_COPY_KEYS.hero,
+      title: LANDING_COPY.heroTitle,
+      ctas: [
+      { label: LANDING_COPY.heroPrimaryCta, href: '#generate', type: 'primary' },
     ],
     trustLines: [LANDING_COPY.heroTrustLine],
     containsFreeQuotaText: false,

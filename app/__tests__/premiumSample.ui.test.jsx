@@ -1,6 +1,6 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 import LandingPage from '../page.jsx';
 
@@ -74,24 +74,26 @@ describe('Premium sample demo conversion UI', () => {
     expect(screen.getByText('Enterprise-scale example')).toBeTruthy();
     expect(screen.getByText('Real data. Real complexity.')).toBeTruthy();
     expect(screen.getByText(/120 rows · 15 columns · long descriptions/i)).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Run the demo' })).toBeTruthy();
+    const uploadCard = screen.getByTestId('upload-card');
+    expect(within(uploadCard).getByRole('button', { name: 'Run the demo' })).toBeTruthy();
   });
 
   test('Run the demo triggers premium CSV fetch then /api/render', async () => {
     const mock = mockFetch({
-      responseFactory: (url) => (String(url).includes('/sample/premium.csv')
+      responseFactory: (url) => (String(url).includes('/api/sample/premium')
         ? createSampleCsvResponse()
         : createPdfResponse()),
     });
 
     render(<LandingPage />);
-    fireEvent.click(screen.getByRole('button', { name: 'Run the demo' }));
+    const uploadCard = screen.getByTestId('upload-card');
+    fireEvent.click(within(uploadCard).getByRole('button', { name: 'Run the demo' }));
 
     await waitFor(() => {
       expect(mock.calls).toHaveLength(2);
     });
 
-    const sampleCall = mock.calls.find((call) => String(call.url).includes('/sample/premium.csv'));
+    const sampleCall = mock.calls.find((call) => String(call.url).includes('/api/sample/premium'));
     const renderCall = mock.calls.find((call) => String(call.url).includes('/api/render'));
 
     expect(sampleCall).toBeTruthy();

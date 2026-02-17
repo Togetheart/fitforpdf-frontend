@@ -26,6 +26,79 @@ function pdfFilenameFromSourceHeader(raw) {
   return `${base}.pdf`;
 }
 
+function parseNumber(value) {
+  const parsed = Number.parseFloat(value);
+  if (!Number.isFinite(parsed) || parsed < 0) return null;
+  return parsed;
+}
+
+function extractScoreMsFromDebugHeader(raw) {
+  if (!raw) return null;
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+
+  const candidates = [
+    'score_ms',
+    'scoreMs',
+    'score_millis',
+    'scoreMillis',
+    'score_ms_total',
+    'scoreDurationMs',
+  ];
+  for (const key of candidates) {
+    const value = parseNumber(parsed?.[key]);
+    if (value != null) return Math.round(value);
+  }
+  return null;
+}
+
+function extractRenderMsFromDebugHeader(raw) {
+  if (!raw) return null;
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+
+  const candidates = [
+    'render_ms',
+    'renderMs',
+    'render_millis',
+    'renderMillis',
+    'render_time_ms',
+    'renderTimeMs',
+  ];
+  for (const key of candidates) {
+    const value = parseNumber(parsed?.[key]);
+    if (value != null) return Math.round(value);
+  }
+  return null;
+}
+
+function emitRenderMetrics({
+  upstreamStatus,
+  renderMs,
+  scoreMs,
+  sourceFilename,
+  requestSearch,
+  flowId,
+}) {
+  console.info('[fitforpdf-metrics] render', JSON.stringify({
+    route: '/api/render',
+    status: upstreamStatus,
+    sourceFilename: sourceFilename || '',
+    search: requestSearch || '',
+    flowId: flowId || '',
+    renderMs,
+    scoreMs,
+  }));
+}
+
 function buildUpstreamUrl(reqUrl, upstream) {
   const source = new URL(reqUrl);
   const base = upstream.replace(/\/$/, '');
@@ -90,6 +163,7 @@ export async function POST(req) {
 
   const formData = await req.formData();
   const upstreamHeaders = buildUpstreamHeaders(apiKey, req);
+  const startMs = performance.now();
 
   let upstreamResponse;
   try {
@@ -103,24 +177,47 @@ export async function POST(req) {
       error: error instanceof Error ? error.message : 'unknown',
     });
   }
+  const requestMs = performance.now() - startMs;
+  const debugMetricsHeader = upstreamResponse.headers.get('x-cleansheet-debug-metrics');
+  const debugScoreMs = extractScoreMsFromDebugHeader(debugMetricsHeader);
+  const debugRenderMs = extractRenderMsFromDebugHeader(debugMetricsHeader);
+  const upstreamScoreMs = parseNumber(upstreamResponse.headers.get('x-cleansheet-score-ms'))
+    || parseNumber(upstreamResponse.headers.get('x-score-ms'));
 
-  const headers = copyPassThroughHeaders(upstreamResponse.headers);
+  const scoreMs = Number.isFinite(upstreamScoreMs) ? upstreamScoreMs : debugScoreMs;
+  const finalRenderMs = debugRenderMs ?? Math.round(requestMs);
+  const totalMs = Number.isFinite(scoreMs) ? scoreMs + finalRenderMs : finalRenderMs;
+  const responseHeaders = copyPassThroughHeaders(upstreamResponse.headers);
+
+  responseHeaders.set('X-Render-MS', String(finalRenderMs));
+  responseHeaders.set('X-Score-MS', String(scoreMs != null ? scoreMs : finalRenderMs));
+  responseHeaders.set('X-Total-MS', String(totalMs));
+
+  emitRenderMetrics({
+    upstreamStatus: upstreamResponse.status,
+    renderMs: finalRenderMs,
+    scoreMs,
+    sourceFilename,
+    requestSearch: targetUrl.search,
+    flowId: req.headers.get('x-cleansheet-flow-id'),
+  });
+
   const upstreamContentType = (upstreamResponse.headers.get('content-type') || '').toLowerCase();
   if (upstreamContentType.includes('application/pdf')) {
-    headers.set('content-disposition', `attachment; filename="${pdfFilenameFromSourceHeader(sourceFilename)}"`);
+    responseHeaders.set('content-disposition', `attachment; filename="${pdfFilenameFromSourceHeader(sourceFilename)}"`);
   }
 
   if (upstreamContentType.includes('application/json')) {
     const text = await upstreamResponse.text();
     return new Response(text, {
       status: upstreamResponse.status,
-      headers,
+      headers: responseHeaders,
     });
   }
 
   return new Response(upstreamResponse.body, {
     status: upstreamResponse.status,
-    headers,
+    headers: responseHeaders,
   });
 }
 

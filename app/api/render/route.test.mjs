@@ -141,6 +141,85 @@ test('POST /api/render forces columnMap=force and derives PDF filename from X-Fi
   restoreEnv();
 });
 
+test('POST /api/render exposes render and score timing headers', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-cleansheet-score': '88',
+      'x-cleansheet-debug-metrics': JSON.stringify({
+        score_ms: 47,
+        render_ms: 123,
+      }),
+    },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=compact', {
+    method: 'POST',
+    body: makeRequestBody('report.csv'),
+    headers: {
+      'X-FitForPDF-Source-Filename': 'report.csv',
+    },
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  const renderMs = Number.parseInt(res.headers.get('x-render-ms'), 10);
+  const scoreMs = Number.parseInt(res.headers.get('x-score-ms'), 10);
+  assert.equal(renderMs, 123);
+  assert.equal(scoreMs, 47);
+  assert.equal(Number.parseInt(res.headers.get('x-total-ms'), 10), 170);
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render emits metrics log for render timing', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const originalInfo = console.info;
+  const logs = [];
+  console.info = (...args) => {
+    logs.push(args);
+  };
+
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+    },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody('report.csv'),
+    headers: {
+      'X-FitForPDF-Source-Filename': 'report.csv',
+    },
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+
+  assert.ok(logs.some(([message, payload]) => message === '[fitforpdf-metrics] render' && typeof payload === 'string'));
+  const [json] = logs
+    .filter(([message]) => message === '[fitforpdf-metrics] render')
+    .map(([, payload]) => payload)
+    .filter((value) => value);
+  const parsed = JSON.parse(json);
+  assert.equal(parsed.route, '/api/render');
+  assert.equal(parsed.status, 200);
+  assert.equal(parsed.sourceFilename, 'report.csv');
+
+  fetchMock.restore();
+  console.info = originalInfo;
+  restoreEnv();
+});
+
 test('POST /api/render does not rewrite content-disposition for non-PDF upstream response', async () => {
   const restoreEnv = setupEnv({
     CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',

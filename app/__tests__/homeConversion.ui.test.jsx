@@ -48,7 +48,7 @@ describe('home conversion-critical UI', () => {
     const primary = screen.getByTestId('hero-primary-cta');
     const links = within(hero).getAllByRole('link');
 
-    expect(primary.getAttribute('href')).toBe('#tool');
+    expect(primary.getAttribute('href')).toBe('#generate');
     expect(primary.textContent).toBe('Generate PDF');
     expect(links).toHaveLength(1);
     expect(within(hero).queryByRole('link', { name: 'See pricing' })).toBeNull();
@@ -71,7 +71,14 @@ describe('home conversion-critical UI', () => {
     expect(within(tool).getAllByRole('switch')).toHaveLength(2);
     expect(within(tool).getByRole('switch', { name: 'Branding' })).toBeTruthy();
     expect(within(tool).getByRole('switch', { name: 'Truncate long text' })).toBeTruthy();
-    expect(within(tool).getByTestId('quota-pill').textContent).toMatch(/Free\.\s*(?:\d+\s*exports left|1 export left)/i);
+    expect(within(tool).getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*(?:\d+\s*exports left|1 export left)/i);
+  });
+
+  test('hero CTA points to the generate button anchor', () => {
+    const generateTitle = screen.getByRole('heading', { name: 'Generate a client-ready PDF' });
+    expect(screen.getByTestId('hero-primary-cta').getAttribute('href')).toBe('#generate');
+    expect(generateTitle.getAttribute('id')).toBe('generate');
+    expect(generateTitle.className).toContain('scroll-mt-24');
   });
 
   test('upload action is not available before file selection and enabled after selecting', () => {

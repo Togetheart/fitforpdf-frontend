@@ -34,7 +34,7 @@ test('hero does not include secondary CTAs to pricing or Telegram', () => {
   assert.equal(Array.isArray(heroSection.ctas), true);
   assert.equal(heroSection.ctas.length, 1);
   assert.equal(heroSection.ctas[0].label, LANDING_COPY.heroPrimaryCta);
-  assert.equal(heroSection.ctas[0].href, '#tool');
+  assert.equal(heroSection.ctas[0].href, '#generate');
   assert.equal(heroSection.ctas[0].type, 'primary');
   assert.equal(heroSection.containsFreeQuotaText, false);
   assert.equal(heroSection.title, LANDING_COPY.heroTitle);
