@@ -56,16 +56,21 @@ export default function HeroHeadline() {
 
   return (
     <h1 className="leading-tight tracking-tight text-4xl font-semibold sm:text-6xl">
-      <span ref={firstLineRef} className="hero-headline-line block">
-        15 columns?
+      <span ref={firstLineRef} className="hero-headline-line block text-slate-900">
+        Your spreadsheet.
+      </span>
+      <span
+        className="hero-headline-line block text-slate-900"
+      >
+        Reorganized into readable sections.
       </span>
       <span
         ref={secondLineRef}
         data-testid="hero-headline-accent"
         data-anim={reducedMotion ? 'off' : 'on'}
-        className="hero-accent hero-headline-line block text-slate-700"
+        className="hero-accent hero-headline-line block"
       >
-        We turn them into readable sections.
+        Instantly.
       </span>
     </h1>
   );
