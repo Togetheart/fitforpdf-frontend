@@ -70,7 +70,7 @@ export default function HeroHeadline() {
         data-anim={reducedMotion ? 'off' : 'on'}
         className="hero-accent hero-headline-line block"
       >
-        Instantly.
+        Ready to send.
       </span>
     </h1>
   );
