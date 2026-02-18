@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, X } from 'lucide-react';
+import Card from './Card';
 
 function valueNode(value) {
   const normalized = String(value || '').trim();
@@ -40,9 +41,9 @@ export default function PricingComparisonTable({
         {title}
       </h2>
 
-      <div
+      <Card
         data-testid={testId}
-        className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white"
+        className="mt-6 overflow-hidden"
       >
         <div className="overflow-x-auto hidden md:block">
           <table className="min-w-full text-sm">
@@ -76,7 +77,11 @@ export default function PricingComparisonTable({
 
         <div className="space-y-3 p-4 md:hidden">
           {rows.map((row) => (
-            <div key={`${row[0]}-mobile`} className="space-y-2 rounded-xl border border-slate-100 p-3">
+            <div
+              key={`${row[0]}-mobile`}
+              data-testid="pricing-compare-row"
+              className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5 p-3"
+            >
               <p className="text-sm font-medium text-slate-700">{row[0]}</p>
               <dl className="space-y-1 text-sm">
                 <div className="grid grid-cols-2 gap-2">
@@ -95,7 +100,7 @@ export default function PricingComparisonTable({
             </div>
           ))}
         </div>
-      </div>
+      </Card>
     </section>
   );
 }

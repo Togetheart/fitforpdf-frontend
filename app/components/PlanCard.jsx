@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check, X } from 'lucide-react';
 
+import Card from './Card';
 import Button from './Button';
 import Badge from './Badge';
 
@@ -61,7 +62,7 @@ export default function PlanCard({
     : [plan.priceLine];
 
   const cardClasses = [
-    'relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-150',
+    'relative p-5 transition-all duration-150',
     isFeatured
       ? `md:${featuredScaleClass} border-2 border-[#D92D2A]/35 shadow-[0_14px_45px_-34px_rgba(0,0,0,0.45)]`
       : 'hover:-translate-y-0.5 hover:shadow-md',
@@ -72,7 +73,8 @@ export default function PlanCard({
     .trim();
 
   return (
-    <article
+    <Card
+      as="article"
       data-testid={dataTestId}
       data-featured={isFeatured ? 'true' : 'false'}
       className={cardClasses}
@@ -124,6 +126,6 @@ export default function PlanCard({
 
       {showAction ? <div className="mt-6">{renderAction(plan)}</div> : null}
       {plan.ctaNote ? <p className="mt-2 text-xs text-slate-500">{plan.ctaNote}</p> : null}
-    </article>
+    </Card>
   );
 }

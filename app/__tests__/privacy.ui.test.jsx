@@ -102,6 +102,33 @@ describe('privacy page UI', () => {
     expect(screen.getByTestId('privacy-sensitive-callout').textContent).toContain('Do not upload sensitive data.');
   });
 
+  test('uses glass styling for privacy cards', () => {
+    const handlingCards = screen.getAllByTestId('privacy-handling-card');
+    const logsCard = screen.getByTestId('privacy-logs-card');
+    const sensitiveCallout = screen.getByTestId('privacy-sensitive-callout');
+
+    expect(handlingCards).toHaveLength(2);
+    handlingCards.forEach((card) => {
+      const className = card.getAttribute('class') || '';
+      expect(className).toContain('bg-white/55');
+      expect(className).toContain('backdrop-blur-[5px]');
+      expect(className).toContain('ring-1');
+      expect(className).toContain('border-white/');
+    });
+
+    const logsCardClass = logsCard.getAttribute('class') || '';
+    expect(logsCardClass).toContain('bg-white/55');
+    expect(logsCardClass).toContain('backdrop-blur-[5px]');
+    expect(logsCardClass).toContain('ring-1');
+    expect(logsCardClass).toContain('border-white/40');
+
+    const calloutClass = sensitiveCallout.getAttribute('class') || '';
+    expect(calloutClass).toContain('bg-white/55');
+    expect(calloutClass).toContain('backdrop-blur-[5px]');
+    expect(calloutClass).toContain('ring-1');
+    expect(calloutClass).toContain('border-white/45');
+  });
+
   test('contains legal footer line', () => {
     expect(screen.getByText('For legal terms, see Terms of Service.')).toBeTruthy();
   });

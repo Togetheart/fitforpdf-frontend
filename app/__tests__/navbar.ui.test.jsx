@@ -62,4 +62,19 @@ describe('site navbar style and behavior', () => {
 
     expect(document.activeElement).toBe(pricingLink);
   });
+
+  test('logo link uses black text color', () => {
+    render(
+      <SiteShell>
+        <main data-testid="page-content">content</main>
+      </SiteShell>,
+    );
+
+    const header = screen.getByTestId('site-header');
+    const logoLink = header.querySelector('a[href="/"]');
+
+    expect(logoLink).not.toBeNull();
+    expect(hasClass(logoLink, 'text-black')).toBe(true);
+    expect(logoLink.textContent).toBe('FITFORPDF');
+  });
 });

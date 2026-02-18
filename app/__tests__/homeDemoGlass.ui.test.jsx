@@ -81,7 +81,12 @@ afterEach(() => {
 
 describe('home demo proof block', () => {
   test('keeps hero heading and CTA text unchanged', () => {
-    expect(screen.getByRole('heading', { level: 1, name: 'Your spreadsheet. Reorganized into readable sections. Ready to send.' })).toBeTruthy();
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /Your spreadsheet\. Reorganized into readable sections\s*\. Ready to send\./,
+      }),
+    ).toBeTruthy();
     expect(screen.getByTestId('hero-primary-cta').textContent?.trim()).toBe(LANDING_COPY.heroPrimaryCta);
   });
 

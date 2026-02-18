@@ -252,6 +252,13 @@ describe('UploadCard unit behavior', () => {
     expect(screen.getByText('Free exports. No account required.').className).toContain('text-left');
   });
 
+  test('upload dropzone keeps glass surface style', () => {
+    const dropzone = screen.getByTestId('upload-dropzone');
+
+    expect(dropzone.className).toContain('bg-white/55');
+    expect(dropzone.className).toContain('backdrop-blur-[3px]');
+  });
+
   test('upload card uses transparent glass styling with a single translucent layer', () => {
     const uploadCard = screen.getByTestId('upload-card');
     const cardClass = uploadCard.className;
@@ -312,6 +319,32 @@ describe('UploadCard unit behavior', () => {
     expect(brandingRow.className).toContain('border-b');
     expect(brandingRow.className).not.toContain('border-t');
     expect(truncateRow.className).not.toContain('border-b');
+  });
+
+  test('upload card nested panels use glass styling', () => {
+    renderUploadCardHarness({
+      initialOptionsExpanded: true,
+      isLoading: true,
+      conversionProgress: { stepIndex: 0, percent: 12 },
+    });
+
+    const optionsShell = screen.getByTestId('upload-options-shell');
+    const progressPanel = screen.getByTestId('upload-progress');
+    const privacyPanel = screen.getByTestId('upload-privacy-messages');
+
+    expect(optionsShell.className).toContain('border-white/45');
+    expect(optionsShell.className).toContain('bg-white/55');
+    expect(optionsShell.className).toContain('backdrop-blur-[5px]');
+    expect(optionsShell.className).toContain('shadow-[0_10px_28px_rgba(2,6,23,0.10)]');
+
+    expect(progressPanel.className).toContain('border-white/45');
+    expect(progressPanel.className).toContain('bg-white/55');
+    expect(progressPanel.className).toContain('backdrop-blur-[5px]');
+
+    expect(privacyPanel.className).toContain('border-white/45');
+    expect(privacyPanel.className).toContain('bg-white/55');
+    expect(privacyPanel.className).toContain('backdrop-blur-[5px]');
+    expect(privacyPanel.className).toContain('ring-1');
   });
 
   test('dropzone helper copy has no two-step mention and keeps the new two-line message', () => {

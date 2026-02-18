@@ -134,6 +134,22 @@ describe('landing conversion-first structure', () => {
     expect(within(previewCard).getByText('Structured PDF (v8)')).toBeTruthy();
   });
 
+  test('cards in proof and how-it-works sections are glass-styled', () => {
+    const previewCard = screen.getByTestId('home-preview-card');
+    const howItWorksSection = screen.getByTestId('section-how-it-works');
+    const howItWorksCards = Array.from(howItWorksSection.querySelectorAll('[data-testid=\"how-it-works-card\"]'));
+
+    expect((previewCard.className || '').includes('backdrop-blur-[5px]')).toBe(true);
+    expect((previewCard.className || '').includes('bg-white/55')).toBe(true);
+    expect((previewCard.className || '').includes('ring-1')).toBe(true);
+    expect(howItWorksCards).toHaveLength(3);
+    howItWorksCards.forEach((card) => {
+      expect((card.className || '').includes('bg-white/55')).toBe(true);
+      expect((card.className || '').includes('backdrop-blur-[5px]')).toBe(true);
+      expect((card.className || '').includes('ring-1')).toBe(true);
+    });
+  });
+
   test('landing section spacing is compacted to medium rhythm', () => {
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const howItWorks = screen.getByTestId('section-how-it-works');

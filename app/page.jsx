@@ -18,6 +18,7 @@ import {
 } from './siteCopy.mjs';
 import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
+import Card from './components/Card';
 import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
 import PageHero from './components/PageHero';
@@ -320,7 +321,6 @@ async function parseConfidenceFromJsonIfAvailable(res) {
 }
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150 border-slate-300 bg-white text-slate-900 hover:bg-slate-50';
-const PANEL = 'rounded-xl border border-slate-200 bg-white';
 
 export default function Page() {
   const [file, setFile] = useState(null);
@@ -929,9 +929,9 @@ export default function Page() {
           </h2>
           <div
             data-testid="home-preview-card"
-            className="home-preview-float mx-auto max-w-7xl rounded-2xl border border-black/10 bg-white/80 p-4 shadow-sm backdrop-blur md:p-8"
+            className="home-preview-float mx-auto max-w-7xl rounded-2xl border border-white/45 bg-white/55 p-4 backdrop-blur-[5px] shadow-[0_10px_28px_rgba(2,6,23,0.12)] ring-1 ring-black/5 md:p-8"
           >
-            <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[1fr_1.1fr]">
+            <div className="grid gap-4 rounded-xl border border-white/35 bg-white/45 p-4 backdrop-blur-[3px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5 sm:grid-cols-[1fr_1.1fr]">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                   CSV input
@@ -965,21 +965,21 @@ A104,Widget,6900.00`}
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">How it works</h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <Card data-testid="how-it-works-card" className="p-5">
               <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">1</p>
               <h3 className="text-lg font-semibold">Upload your file</h3>
               <p className="mt-2 text-sm text-slate-700">Drop CSV or XLSX into the secure converter.</p>
-            </article>
-            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            </Card>
+            <Card data-testid="how-it-works-card" className="p-5">
               <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">2</p>
               <h3 className="text-lg font-semibold">Generate structure</h3>
               <p className="mt-2 text-sm text-slate-700">We build a client-ready PDF with overview and sections.</p>
-            </article>
-            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            </Card>
+            <Card data-testid="how-it-works-card" className="p-5">
               <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">3</p>
               <h3 className="text-lg font-semibold">Download</h3>
               <p className="mt-2 text-sm text-slate-700">Get a polished file in seconds and send it immediately.</p>
-            </article>
+            </Card>
           </div>
         </div>
       </Section>
@@ -1036,7 +1036,7 @@ A104,Widget,6900.00`}
           <h2 className="text-center text-2xl font-semibold text-slate-900 sm:text-3xl">
             Frequently asked questions
           </h2>
-          <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+          <div className="divide-y divide-slate-200 rounded-2xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_10px_28px_rgba(2,6,23,0.12)] ring-1 ring-black/5">
             <Accordion
               items={HOME_FAQ}
               testId="home-faq"

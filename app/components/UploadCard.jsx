@@ -596,7 +596,7 @@ export default function UploadCard({
 
         {isLoading && conversionProgress ? (
           <div
-            className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="space-y-3 rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5"
             data-testid="upload-progress"
           >
             <div className="flex items-center justify-between text-sm">
@@ -616,7 +616,10 @@ export default function UploadCard({
           </div>
         ) : null}
 
-        <div className="mt-6 rounded-2xl border border-slate-200">
+        <div
+          className="mt-6 rounded-2xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_10px_28px_rgba(2,6,23,0.10)] ring-1 ring-black/5"
+          data-testid="upload-options-shell"
+        >
           <button
             type="button"
             data-testid="options-accordion-toggle"
@@ -641,7 +644,7 @@ export default function UploadCard({
             >
               <div className="min-h-0 divide-y divide-slate-100">
                 {effectiveShowBuyCreditsPanel && isOptionsExpanded ? (
-                  <section className="rounded-xl border border-slate-200 bg-slate-50 p-4" data-testid="credits-purchase-panel">
+                  <section className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5" data-testid="credits-purchase-panel">
                     <div className="mb-3 flex items-center justify-between">
                       <p className="text-sm font-semibold text-slate-900">Buy credits</p>
                       <button
@@ -766,7 +769,7 @@ export default function UploadCard({
         </div>
 
         {effectiveShowBuyCreditsPanel && !isOptionsExpanded ? (
-          <section className="rounded-xl border border-slate-200 bg-slate-50 p-4" data-testid="credits-purchase-panel">
+          <section className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5" data-testid="credits-purchase-panel">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-900">Buy credits</p>
               <button
@@ -806,7 +809,7 @@ export default function UploadCard({
             </Button>
             <section
               data-testid="upload-paywall"
-              className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+              className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5"
             >
               <p className="text-xs text-slate-600">{paywallReason || 'You have reached your exports limit for this plan.'}</p>
               <div className="mt-3 flex flex-wrap gap-2" data-testid="quota-upgrade-inline">
@@ -862,7 +865,7 @@ export default function UploadCard({
         )}
 
         <div
-          className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600"
+          className="space-y-2 rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5 p-3 text-xs text-slate-600"
           data-testid="upload-privacy-messages"
         >
           <div className="flex items-center justify-center gap-2">

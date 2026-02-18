@@ -97,6 +97,11 @@ describe('pricing page UI', () => {
     expect((grid.getAttribute('class') || '').includes('grid-cols-1')).toBe(true);
     expect((grid.getAttribute('class') || '').includes('md:grid-cols-2')).toBe(true);
     expect(cards).toHaveLength(2);
+    cards.forEach((card) => {
+      expect((card.className || '').includes('bg-white/55')).toBe(true);
+      expect((card.className || '').includes('backdrop-blur-[5px]')).toBe(true);
+      expect((card.className || '').includes('border-white/40')).toBe(true);
+    });
     expect(screen.getByRole('heading', { level: 3, name: 'Free' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 3, name: 'Credits' })).toBeTruthy();
   });
@@ -115,12 +120,28 @@ describe('pricing page UI', () => {
   test('comparison table is present and has comparison test id', () => {
     const compare = screen.getByTestId('pricing-compare');
     expect(compare).toBeTruthy();
+    expect((compare.className || '').includes('bg-white/55')).toBe(true);
+    expect((compare.className || '').includes('backdrop-blur-[5px]')).toBe(true);
+    expect((compare.className || '').includes('border-white/40')).toBe(true);
     const compareText = compare.textContent || '';
 
     expect(compareText).toContain('Client-ready PDF output');
     expect(compareText).toContain('Branding removable');
     expect(compareText).toContain('Batch export');
     expect(compareText).toContain('API access');
+  });
+
+  test('pricing comparison mobile cards are glass-styled', () => {
+    const featureRows = screen.getAllByTestId('feature-compare-row');
+    expect(featureRows.length).toBeGreaterThan(0);
+
+    featureRows.forEach((row) => {
+      const className = row.getAttribute('class') || '';
+      expect(className).toContain('bg-white/55');
+      expect(className).toContain('backdrop-blur-[5px]');
+      expect(className).toContain('ring-1');
+      expect(className).toContain('border-white/45');
+    });
   });
 
   test('FAQ exists and is interactive', () => {

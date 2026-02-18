@@ -78,7 +78,7 @@ export default function UploadDropzone({
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="block rounded-2xl bg-white px-4 py-7 text-center"
+          className="block rounded-2xl bg-white/55 px-4 py-7 text-center backdrop-blur-[3px]"
         >
           {file ? (
             <div className="mx-auto max-w-xl">

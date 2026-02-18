@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 
 export default function HeroHeadline() {
   const firstLineRef = useRef(null);
-  const secondLineRef = useRef(null);
+  const sectionWordRef = useRef(null);
 
   const hasWindow = typeof window !== 'undefined';
   const reducedMotion =
@@ -17,7 +17,7 @@ export default function HeroHeadline() {
   useEffect(() => {
     if (!hasWindow || reducedMotion) return;
 
-    const accentNode = secondLineRef.current;
+    const accentNode = sectionWordRef.current;
     const firstNode = firstLineRef.current;
     if (!accentNode) return;
 
@@ -65,13 +65,18 @@ export default function HeroHeadline() {
       <span
         className="hero-headline-line block text-slate-900"
       >
-        Reorganized into readable sections.
+        Reorganized into readable{' '}
+        <span
+          ref={sectionWordRef}
+          data-testid="hero-headline-accent"
+          data-anim={reducedMotion ? 'off' : 'on'}
+          className="hero-accent hero-accent--sections inline-block"
+        >
+          sections.
+        </span>
       </span>
       <span
-        ref={secondLineRef}
-        data-testid="hero-headline-accent"
-        data-anim={reducedMotion ? 'off' : 'on'}
-        className="hero-accent hero-accent--sections hero-headline-line block"
+        className="hero-headline-line block text-slate-900"
       >
         Ready to send.
       </span>

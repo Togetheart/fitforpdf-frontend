@@ -31,18 +31,23 @@ afterEach(() => {
 });
 
 describe('HeroHeadline accent animation', () => {
-  test('renders accent line with test id and visible on hero', () => {
+  test('renders section word accent and Ready to send. in plain color', () => {
     render(<HeroHeadline />);
 
     expect(screen.getByText('Your spreadsheet.')).toBeTruthy();
-    expect(screen.getByText('Reorganized into readable sections.')).toBeTruthy();
+    expect(screen.getByText((content) => content.includes('Reorganized into readable'))).toBeTruthy();
+    expect(screen.getByText('sections.')).toBeTruthy();
 
-    const accent = screen.getByTestId('hero-headline-accent');
-    expect(accent).toBeTruthy();
-    expect(accent.textContent).toBe('Ready to send.');
-    expect(accent.className).toContain('hero-accent');
-    expect(accent.className).toContain('hero-accent--sections');
-    expect(screen.getByText('Reorganized into readable sections.').className).not.toContain('hero-accent');
+    const sectionWordAccent = screen.getByTestId('hero-headline-accent');
+    expect(sectionWordAccent).toBeTruthy();
+    expect(sectionWordAccent.textContent).toBe('sections.');
+    expect(sectionWordAccent.className).toContain('hero-accent');
+    expect(sectionWordAccent.className).toContain('hero-accent--sections');
+
+    const readyLine = screen.getByText('Ready to send.');
+    expect(readyLine).toBeTruthy();
+    expect(readyLine.className).not.toContain('hero-accent');
+    expect(readyLine.className).not.toContain('hero-accent--sections');
   });
 
   test('animates accent line at load when not reduced motion', () => {

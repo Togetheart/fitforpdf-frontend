@@ -24,7 +24,7 @@ function SectionBullets({ items, compact = false }) {
 
 function HandlingCard({ title, description, items }) {
   return (
-    <Card className="relative border border-slate-200/80 bg-white p-6 sm:p-7">
+    <Card className="p-6 sm:p-7" data-testid="privacy-handling-card">
       <h3 className="mb-2 text-sm font-semibold tracking-[0.08em] text-black/55">{title}</h3>
       <p className="mb-3 text-sm text-slate-700">{description}</p>
       <SectionBullets items={items} compact />
@@ -73,7 +73,7 @@ export default function PrivacyPage() {
       <Section id="privacy-logs" index={2} bg="bg-gray-50" className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl space-y-4">
           <h2 className="text-3xl font-semibold tracking-tight">{PRIVACY_PAGE_COPY.logs.title}</h2>
-          <Card className="p-6 sm:p-8">
+          <Card className="p-6 sm:p-8" data-testid="privacy-logs-card">
             <SectionBullets items={PRIVACY_PAGE_COPY.logs.bullets} />
           </Card>
         </div>
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
         <div className="mx-auto flex max-w-4xl">
           <div
             data-testid="privacy-sensitive-callout"
-            className="w-full rounded-2xl border border-[#D92D2A]/25 bg-[#D92D2A]/5 px-6 py-4"
+            className="w-full rounded-2xl border border-white/45 bg-white/55 px-6 py-4 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5"
           >
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#B62622]">
               Safety note

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Check, X } from 'lucide-react';
+import Card from './Card';
 
 function compareValue(value) {
   const normalized = String(value || '').trim();
@@ -35,12 +36,16 @@ export default function FeatureComparison({
   const visibleRows = Array.isArray(rows) ? rows : [];
 
   return (
-    <section aria-labelledby="feature-comparison-title" data-testid="pricing-compare" className="space-y-4">
+    <section
+      aria-labelledby="feature-comparison-title"
+      data-testid="pricing-compare"
+      className="space-y-4 rounded-2xl border border-white/40 bg-white/55 p-6 backdrop-blur-[5px] shadow-[0_12px_30px_rgba(2,6,23,0.10)] ring-1 ring-black/5"
+    >
       <h2 id="feature-comparison-title" className="text-2xl font-semibold">
         {title}
       </h2>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <Card className="mt-6 overflow-hidden">
         <div className="hidden overflow-x-auto md:block">
           <table className="min-w-full text-sm">
             <thead>
@@ -75,7 +80,11 @@ export default function FeatureComparison({
 
         <div className="space-y-3 p-4 md:hidden">
           {visibleRows.map((row) => (
-            <div key={row[0]} className="rounded-xl border border-slate-100 p-3">
+            <div
+              key={row[0]}
+              data-testid="feature-compare-row"
+              className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5 p-3"
+            >
               <p className="text-sm font-medium text-slate-800">{row[0]}</p>
               <dl className="mt-2 space-y-1 text-sm">
                 {featureColumns.map((column, index) => (
@@ -88,7 +97,7 @@ export default function FeatureComparison({
             </div>
           ))}
         </div>
-      </div>
+      </Card>
     </section>
   );
 }
