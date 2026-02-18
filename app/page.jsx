@@ -541,7 +541,7 @@ export default function Page() {
         contentMaxWidthClassName="max-w-7xl"
         subtitleClassName="w-full max-w-none lg:whitespace-nowrap"
         className="py-0 w-full"
-      >
+        >
         <div className="space-y-6">
           <a
             href="#generate"
@@ -551,10 +551,11 @@ export default function Page() {
             {LANDING_COPY.heroPrimaryCta}
           </a>
           <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
+          <div className="mt-12">
+            <DemoGlassCard />
+          </div>
         </div>
       </PageHero>
-
-      <DemoGlassCard />
 
       <Section id="transformation" index={1} bg="bg-gray-50" className="py-24 w-full">
         <div className="mx-auto max-w-3xl text-center">

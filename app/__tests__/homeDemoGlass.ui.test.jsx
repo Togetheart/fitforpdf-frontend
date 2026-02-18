@@ -55,6 +55,13 @@ describe('home demo glass block', () => {
     expect(markers.indexOf(demoCard)).toBeGreaterThan(markers.indexOf(cta));
   });
 
+  test('demo glass card is inside the hero block (not a separate section)', () => {
+    const hero = screen.getByTestId('hero-section');
+    const demoCard = screen.getByTestId('demo-glass-card');
+
+    expect(hero.contains(demoCard)).toBe(true);
+  });
+
   test('demo glass card has Apple glass utility classes', () => {
     const demoCard = screen.getByTestId('demo-glass-card');
     const classes = demoCard.className;
