@@ -5,7 +5,7 @@ export default function SiteHeader() {
   return (
     <header
       data-testid="site-header"
-      className="sticky top-0 z-50 border-b border-black/5 bg-white/90 backdrop-blur"
+      className="sticky top-0 z-50 border-b border-slate-200/60 bg-white/60 backdrop-blur-xl ring-1 ring-black/5 shadow-sm supports-[backdrop-filter]:bg-white/50"
     >
       <div className="mx-auto flex w-full max-w-[960px] items-center justify-between px-4 py-4 sm:px-6">
         <a href="/" className="text-lg font-semibold tracking-tight text-[#D92D2A]">
