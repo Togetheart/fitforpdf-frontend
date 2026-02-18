@@ -1023,7 +1023,7 @@ A104,Widget,6900.00`}
       </section>
 
       <section className="bg-white py-16 sm:py-20" data-testid="faq-section">
-        <div className="mx-auto max-w-3xl px-6">
+        <div className="mx-auto w-full max-w-7xl px-6" data-testid="faq-section-inner">
           <h2 className="text-center text-2xl font-semibold text-slate-900 sm:text-3xl">
             Frequently asked questions
           </h2>
