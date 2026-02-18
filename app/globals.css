@@ -121,6 +121,11 @@
     );
   }
 
+  .hero-accent--sections[data-anim='on'],
+  .hero-accent--sections[data-anim='off'] {
+    animation: none;
+  }
+
   .hero-accent[data-anim='on'] {
     animation: heroGlowPulse 8s ease-in-out infinite;
   }

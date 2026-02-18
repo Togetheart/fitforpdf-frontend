@@ -21,17 +21,22 @@ export default function HeroHeadline() {
     const firstNode = firstLineRef.current;
     if (!accentNode) return;
 
-    const timeline = gsap.timeline({
-      repeat: -1,
-      yoyo: true,
-      defaults: { ease: 'sine.inOut' },
-    });
+    const accentShouldAnimate = !accentNode.classList?.contains('hero-accent--sections');
 
-    timeline.to(accentNode, {
-      backgroundPosition: '100% 50%',
-      filter: 'brightness(1.08)',
-      duration: 12,
-    });
+    let timeline = null;
+    if (accentShouldAnimate) {
+      timeline = gsap.timeline({
+        repeat: -1,
+        yoyo: true,
+        defaults: { ease: 'sine.inOut' },
+      });
+
+      timeline.to(accentNode, {
+        backgroundPosition: '100% 50%',
+        filter: 'brightness(1.08)',
+        duration: 12,
+      });
+    }
 
     let introTween = null;
     if (firstNode) {
@@ -49,7 +54,9 @@ export default function HeroHeadline() {
     }
 
     return () => {
-      timeline.kill();
+      if (timeline) {
+        timeline.kill();
+      }
       if (introTween && typeof introTween.kill === 'function') introTween.kill();
     };
   }, [hasWindow, reducedMotion]);
