@@ -148,14 +148,17 @@ describe('landing conversion-first structure', () => {
 
     const privacyClass = privacy.getAttribute('class') || '';
     const faqSectionClass = faq.getAttribute('class') || '';
+    const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
+    const pricingInner = pricing.firstElementChild;
     const faqAccordionClass = faqAccordion.getAttribute('class') || '';
-    const faqSectionInner = faq.querySelector('[class*="max-w-7xl"]');
+    const faqInner = faq.firstElementChild;
 
     expect(privacyClass).toContain('bg-slate-50');
     expect(faqSectionClass).toContain('bg-white');
     expect(privacy).toHaveTextContent('Your data. Not our business.');
     expect(faq).toHaveTextContent('Frequently asked questions');
-    expect(faqSectionInner).toBeTruthy();
+    expect(pricingInner?.getAttribute('class') || '').toContain('max-w-[960px]');
+    expect(faqInner?.getAttribute('class') || '').toContain('max-w-[960px]');
     expect(faqAccordionClass).toContain('w-full');
   });
 

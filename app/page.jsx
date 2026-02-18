@@ -1031,7 +1031,6 @@ A104,Widget,6900.00`}
         bg="bg-white"
         className="py-16 sm:py-20"
         testId="faq-section"
-        maxWidth="max-w-7xl"
       >
         <div>
           <h2 className="text-center text-2xl font-semibold text-slate-900 sm:text-3xl">
