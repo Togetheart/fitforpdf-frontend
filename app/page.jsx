@@ -26,7 +26,6 @@ import DemoGlassCard from './components/DemoGlassCard';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
-const FREE_QUOTA_DEFAULT = 5;
 const PRO_PERIOD_LIMIT_DEFAULT = 500;
 const QUOTA_STATUS_BY_RENDER_CODE = {
   free_quota_exhausted: 'free',
@@ -69,19 +68,30 @@ function getQuotaExhaustedMessage(planType, rawCode) {
 
 function normalizeQuotaState(raw = {}) {
   const planType = normalizePlanType(raw.plan_type || raw.planType || raw.plan || 'free');
+  const freePayload = raw && typeof raw.free === 'object' && !Array.isArray(raw.free) ? raw.free : null;
+  const freeScalar = raw && (typeof raw.free === 'number' || typeof raw.free === 'string')
+    ? raw.free
+    : null;
   const freeExportsLeft = (() => {
     const value = pickFirstDefined(
+      freePayload?.remaining,
       raw.free_exports_left,
       raw.freeExportsLeft,
       raw.free_left,
-      raw.free,
+      freeScalar,
       raw.remaining,
     );
     const parsed = toFiniteInt(value);
-    if (planType === 'free' && !Number.isFinite(parsed)) return FREE_QUOTA_DEFAULT;
     if (Number.isFinite(parsed)) return Math.max(0, parsed);
     return null;
   })();
+  const freeExportsLimit = toFiniteInt(
+    pickFirstDefined(
+      freePayload?.limit,
+      raw.free_limit,
+      raw.freeLimit,
+    ),
+  );
 
   const remainingInPeriod = toFiniteInt(
     pickFirstDefined(
@@ -112,7 +122,8 @@ function normalizeQuotaState(raw = {}) {
 
   return {
     planType,
-    freeExportsLeft: Number.isFinite(freeExportsLeft) ? freeExportsLeft : FREE_QUOTA_DEFAULT,
+    freeExportsLeft: Number.isFinite(freeExportsLeft) ? freeExportsLeft : null,
+    freeExportsLimit: Number.isFinite(freeExportsLimit) ? freeExportsLimit : null,
     remainingInPeriod: Number.isFinite(remainingInPeriod)
       ? remainingInPeriod
       : (planType === 'pro' ? PRO_PERIOD_LIMIT_DEFAULT : null),
@@ -332,7 +343,8 @@ export default function Page() {
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [planType, setPlanType] = useState('free');
-  const [freeExportsLeft, setFreeExportsLeft] = useState(FREE_QUOTA_DEFAULT);
+  const [freeExportsLeft, setFreeExportsLeft] = useState(null);
+  const [freeExportsLimit, setFreeExportsLimit] = useState(null);
   const [remainingInPeriod, setRemainingInPeriod] = useState(null);
   const [usedInPeriod, setUsedInPeriod] = useState(null);
   const [periodLimit, setPeriodLimit] = useState(PRO_PERIOD_LIMIT_DEFAULT);
@@ -375,6 +387,7 @@ export default function Page() {
       const normalized = normalizeQuotaState(raw);
       setPlanType(normalized.planType);
       setFreeExportsLeft(normalized.freeExportsLeft);
+      setFreeExportsLimit(normalized.freeExportsLimit);
       setRemainingInPeriod(normalized.remainingInPeriod);
       setUsedInPeriod(normalized.usedInPeriod);
       setPeriodLimit(normalized.periodLimit);
@@ -412,8 +425,13 @@ export default function Page() {
       const overrideFreeLeft = toFiniteInt(payload?.free_exports_left)
         ?? toFiniteInt(payload?.freeExportsLeft)
         ?? toFiniteInt(payload?.free_left)
+        ?? toFiniteInt(payload?.free?.remaining)
         ?? 0;
       setFreeExportsLeft(Math.max(0, overrideFreeLeft));
+      const overrideFreeLimit = toFiniteInt(payload?.free?.limit)
+        ?? toFiniteInt(payload?.free_limit)
+        ?? toFiniteInt(payload?.freeLimit);
+      setFreeExportsLimit(Number.isFinite(overrideFreeLimit) ? overrideFreeLimit : freeExportsLimit);
       setRemainingInPeriod(null);
       setUsedInPeriod(0);
       setPeriodLimit(overrideLimit(nextPlan, payload));
@@ -942,7 +960,13 @@ A104,Widget,6900.00`}
           </div>
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}
-            toolSubcopy={LANDING_COPY.toolSubcopy}
+            toolSubcopy={(() => {
+              if (planType !== 'free') return LANDING_COPY.toolSubcopy;
+              if (Number.isFinite(freeExportsLimit)) {
+                return `${freeExportsLimit} free exports. No account required.`;
+              }
+              return 'Free exports. No account required.';
+            })()}
             file={file}
             freeExportsLeft={freeExportsLeft}
             includeBranding={includeBranding}

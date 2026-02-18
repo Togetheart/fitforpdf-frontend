@@ -69,7 +69,7 @@ describe('pricing highlight on home', () => {
 
     expect(freeCard).toBeTruthy();
     expect(proCard).toBeTruthy();
-    expect(freeCard?.textContent || '').toContain('5 exports total');
+    expect(freeCard?.textContent || '').toContain('Free');
     expect(proCard?.textContent || '').toContain('€29/month');
   });
 });

@@ -48,7 +48,14 @@ function createJsonResponse(status = 400, body = { error: 'bad request' }) {
   });
 }
 
-function createQuotaResponse(payload = { plan_type: 'free', free_exports_left: 5 }) {
+function createQuotaResponse(payload = {
+  plan_type: 'free',
+  free_exports_left: 3,
+  free: {
+    limit: 3,
+    remaining: 3,
+  },
+}) {
   return new Response(JSON.stringify(payload), {
     status: 200,
     headers: {
@@ -110,7 +117,12 @@ describe('quota-driven plan state and paywall flows', () => {
   test.each([
     {
       plan: 'free',
-      quota: { plan_type: 'free', free_exports_left: 3 },
+      quota: {
+        plan_type: 'free',
+        free_exports_left: 3,
+        free: { limit: 3, remaining: 3 },
+      },
+      helperCopy: '3 free exports. No account required.',
       expected: 'Free · 3 exports left',
     },
     {
@@ -135,6 +147,30 @@ describe('quota-driven plan state and paywall flows', () => {
     await waitFor(() => {
       expect(screen.getByTestId('quota-pill').textContent).toContain(expected);
     });
+    expect(screen.queryByText('5 free exports. No account required.')).toBeNull();
+
+    mock.restore();
+  });
+
+  test('free helper copy uses free.limit from quota', async () => {
+    const mock = mockFetch((url) => {
+      if (url.includes('/api/quota')) {
+        return createQuotaResponse({
+          plan_type: 'free',
+          free_exports_left: 3,
+          free: { limit: 3, remaining: 3 },
+        });
+      }
+      return createJsonResponse(500, { error: 'unexpected' });
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('3 free exports. No account required.')).toBeTruthy();
+      expect(screen.getByTestId('quota-pill').textContent).toContain('Free · 3 exports left');
+    });
+    expect(screen.queryByText('5 free exports. No account required.')).toBeNull();
 
     mock.restore();
   });
@@ -142,7 +178,11 @@ describe('quota-driven plan state and paywall flows', () => {
   test('free users get inline upsell for branding and layout toggles', async () => {
     const mock = mockFetch((url) => {
       if (url.includes('/api/quota')) {
-        return createQuotaResponse({ plan_type: 'free', free_exports_left: 5 });
+        return createQuotaResponse({
+          plan_type: 'free',
+          free_exports_left: 3,
+          free: { limit: 3, remaining: 3 },
+        });
       }
       return createJsonResponse(500, { error: 'unexpected' });
     });

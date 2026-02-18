@@ -71,7 +71,9 @@ describe('home conversion-critical UI', () => {
     expect(within(tool).getAllByRole('switch')).toHaveLength(5);
     expect(within(tool).getByRole('switch', { name: 'Branding' })).toBeTruthy();
     expect(within(tool).getByRole('switch', { name: 'Truncate long text' })).toBeTruthy();
-    expect(within(tool).getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*(?:\d+\s*exports left|1 export left)/i);
+    expect(
+      within(tool).getByTestId('quota-pill').textContent,
+    ).toMatch(/(?:Free$|Free\s*·\s*(?:\d+\s*exports left|1 export left))/i);
   });
 
   test('hero CTA points to the generate button anchor', () => {

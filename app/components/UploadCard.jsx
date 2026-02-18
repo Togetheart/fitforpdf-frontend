@@ -108,11 +108,11 @@ function getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedThi
     if (limit != null && periodUsed != null) return Math.max(0, limit - periodUsed);
     if (remaining != null) return Math.max(0, remaining);
     if (limit != null) return limit;
-    return 0;
+    return null;
   }
 
   if (remaining != null) return Math.max(0, remaining);
-  return 0;
+  return null;
 }
 
 function getQuotaBadgeText(planType, freeExportsLeft, remainingInPeriod, usedThisPeriod, periodLimit) {
@@ -130,12 +130,20 @@ function getQuotaBadgeText(planType, freeExportsLeft, remainingInPeriod, usedThi
     if (periodUsed != null && limit != null) {
       return `Pro · ${periodUsed}/${limit}`;
     }
-    return `Pro · ${safeRemaining} exports left`;
+    if (safeRemaining != null) {
+      return `Pro · ${safeRemaining} exports left`;
+    }
+    return 'Pro';
   }
 
   if (normalizedPlan === 'credits') {
+    if (safeRemaining == null) {
+      return 'Credits';
+    }
     return `Credits · ${safeRemaining} exports left`;
   }
+
+  if (!Number.isFinite(remaining)) return 'Free';
 
   return `Free · ${safeRemaining} exports left`;
 }
@@ -148,7 +156,8 @@ function freeExportsText(value) {
 }
 
 function getFreeExportsBadgeClass(exportsLeft) {
-  const safeValue = toFiniteInt(exportsLeft) ?? 0;
+  const safeValue = toFiniteInt(exportsLeft);
+  if (safeValue === null) return EXPORT_BADGE_STYLES.neutral;
   if (safeValue <= 0) return EXPORT_BADGE_STYLES.danger;
   if (safeValue === 1) return EXPORT_BADGE_STYLES.warningStrong;
   if (safeValue === 2) return EXPORT_BADGE_STYLES.warning;
@@ -251,7 +260,7 @@ function SettingRow({
 }
 
 function normalizeFreeExportsLeft(value) {
-  return toFiniteInt(value) ?? 0;
+  return toFiniteInt(value);
 }
 
 function safeLocalStorage() {
@@ -376,7 +385,11 @@ export default function UploadCard({
   const normalizedFreeExportsLeft = normalizeFreeExportsLeft(freeExportsLeft);
   const badgeClassValue = getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedInPeriod, periodLimit);
   const freeExportsBadgeClass = getFreeExportsBadgeClass(badgeClassValue);
-  const showBuyCredits = normalizedFreeExportsLeft <= 1 || (showBuyCreditsForTwo && normalizedFreeExportsLeft === 2);
+  const showBuyCredits = (
+    Number.isFinite(normalizedFreeExportsLeft)
+      ? normalizedFreeExportsLeft <= 1
+      : false
+  ) || (showBuyCreditsForTwo && normalizedFreeExportsLeft === 2);
   const quotaText = getQuotaBadgeText(planType, freeExportsLeft, remainingInPeriod, usedInPeriod, periodLimit);
   const [showBrandingUpgradeNudge, setShowBrandingUpgradeNudge] = React.useState(false);
   const [nudgeTarget, setNudgeTarget] = React.useState('branding');

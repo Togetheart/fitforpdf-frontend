@@ -39,7 +39,7 @@ function configureMatchMedia({ mobile = false } = {}) {
 }
 
 function UploadCardHarness({
-  freeExportsLeft = 5,
+  freeExportsLeft = 3,
   onSubmit = () => {},
   onBuyCredits = () => {},
   showBuyCreditsForTwo = false,
@@ -61,7 +61,7 @@ function UploadCardHarness({
     return (
       <UploadCard
         toolTitle="Generate a client-ready PDF"
-        toolSubcopy="5 free exports. No account."
+        toolSubcopy="Free exports. No account required."
         file={currentFile}
         freeExportsLeft={freeExportsLeft}
         includeBranding={brandingEnabled}
@@ -149,7 +149,7 @@ function createJsonResponse(status = 400, body = { error: 'bad request' }) {
   });
 }
 
-function createQuotaResponse(payload = { plan_type: 'free', free_exports_left: 5 }) {
+function createQuotaResponse(payload = { plan_type: 'free', free_exports_left: 3 }) {
   return new Response(JSON.stringify(payload), {
     status: 200,
     headers: {
@@ -233,6 +233,7 @@ describe('UploadCard unit behavior', () => {
 
   test('renders free exports badge with premium copy', () => {
     expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*3\s*exports\s*left/i);
+    expect(screen.queryByText(/5 free exports/i)).toBeNull();
   });
 
   test('dropzone helper copy has no two-step mention and keeps the new two-line message', () => {
@@ -741,10 +742,10 @@ describe('UploadCard conversion flow on landing page', () => {
 
   test('quota increments only for successful PDF responses', async () => {
     const responses = [
-      createQuotaResponse({ plan_type: 'free', free_exports_left: 5 }),
+      createQuotaResponse({ plan_type: 'free', free_exports_left: 3 }),
       createPdfResponse(),
-      createQuotaResponse({ plan_type: 'free', free_exports_left: 4 }),
-      createQuotaResponse({ plan_type: 'free', free_exports_left: 4 }),
+      createQuotaResponse({ plan_type: 'free', free_exports_left: 2 }),
+      createQuotaResponse({ plan_type: 'free', free_exports_left: 2 }),
     ];
 
     const mock = mockFetch({
@@ -759,7 +760,7 @@ describe('UploadCard conversion flow on landing page', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
 
     await waitFor(() => {
-      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*4\s*exports\s*left/i);
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*2\s*exports\s*left/i);
     }, { timeout: 5000 });
     const quotaCalls = mock.calls.filter((call) => String(call.url).includes('/api/quota'));
     expect(quotaCalls.length).toBeGreaterThanOrEqual(2);
