@@ -41,6 +41,7 @@ describe('HeroHeadline accent animation', () => {
     expect(accent).toBeTruthy();
     expect(accent.textContent).toBe('Ready to send.');
     expect(accent.className).toContain('hero-accent');
+    expect(accent.className).toContain('hero-accent--sections');
     expect(screen.getByText('Reorganized into readable sections.').className).not.toContain('hero-accent');
   });
 

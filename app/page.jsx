@@ -863,7 +863,7 @@ export default function Page() {
             variant="primary"
             href="#generate"
             data-testid="hero-primary-cta"
-            className="w-fit px-7"
+            className="w-fit px-7 !bg-blue-600 !text-white hover:!bg-blue-700"
             onClick={handleHeroGenerateClick}
           >
             {LANDING_COPY.heroPrimaryCta}

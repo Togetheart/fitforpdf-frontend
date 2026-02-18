@@ -87,14 +87,16 @@ describe('home conversion-critical UI', () => {
     expect(screen.getByTestId('hero-primary-cta').getAttribute('href')).toBe('#generate');
     expect(generateTitle.getAttribute('id')).toBe('generate');
     expect(generateTitle.className).toContain('scroll-mt-24');
-    expect(screen.getByTestId('hero-primary-cta').getAttribute('class') || '').toContain('bg-[#D92D2A]');
+    expect(screen.getByTestId('hero-primary-cta').getAttribute('class') || '').toContain('bg-blue-600');
   });
 
   test('upload action is not available before file selection and enabled after selecting', () => {
     const tool = screen.getByTestId(LANDING_COPY_KEYS.upload);
     const cta = within(tool).getByRole('button', { name: 'Generate PDF' });
+    const ctaClass = cta.getAttribute('class') || '';
 
     expect(cta).toHaveProperty('disabled', true);
+    expect(ctaClass).toContain('bg-blue-600');
 
     const input = screen.getByTestId('generate-file-input');
     const file = new File(['name,score\na,1'], 'report.csv', { type: 'text/csv' });

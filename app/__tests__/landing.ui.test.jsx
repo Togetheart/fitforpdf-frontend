@@ -77,6 +77,15 @@ describe('landing conversion-first structure', () => {
     expect(screen.getAllByText(LANDING_COPY.heroTrustLine)).toHaveLength(1);
   });
 
+  test('upload block includes a second Generate PDF button under hero', () => {
+    const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
+    const uploadGenerate = within(toolSection).getByRole('button', { name: 'Generate PDF' });
+
+    expect(uploadGenerate).toBeTruthy();
+    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-blue-600');
+    expect(screen.getByTestId('hero-primary-cta').getAttribute('class') || '').toContain('bg-blue-600');
+  });
+
   test('hero includes subtle gradient background and CTA glow utility', () => {
     const heroBackdrop = screen.getByTestId('hero-backdrop');
     const heroBg = screen.getByTestId('hero-bg');
@@ -86,7 +95,7 @@ describe('landing conversion-first structure', () => {
     expect((heroBackdrop.getAttribute('class') || '').includes('hero-backdrop')).toBe(true);
     expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
     expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients')).toBe(true);
-    expect((primary.getAttribute('class') || '').includes('bg-[#D92D2A]')).toBe(true);
+    expect((primary.getAttribute('class') || '').includes('bg-blue-600')).toBe(true);
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
   });
 

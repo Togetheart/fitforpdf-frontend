@@ -785,7 +785,7 @@ export default function UploadCard({
             <Button
               type="submit"
               variant="primary"
-              className="w-full"
+              className="w-full !bg-blue-600 !text-white hover:!bg-blue-700"
               disabled
             >
               Generate PDF
@@ -833,7 +833,7 @@ export default function UploadCard({
           <Button
             type="submit"
             variant="primary"
-            className="w-full"
+            className="w-full !bg-blue-600 !text-white hover:!bg-blue-700"
             disabled={isLoading || !file}
           >
             {isLoading ? (

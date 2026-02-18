@@ -68,7 +68,7 @@ export default function HeroHeadline() {
         ref={secondLineRef}
         data-testid="hero-headline-accent"
         data-anim={reducedMotion ? 'off' : 'on'}
-        className="hero-accent hero-headline-line block"
+        className="hero-accent hero-accent--sections hero-headline-line block"
       >
         Ready to send.
       </span>
