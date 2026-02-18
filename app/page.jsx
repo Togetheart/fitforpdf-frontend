@@ -1009,7 +1009,7 @@ A104,Widget,6900.00`}
         id={LANDING_COPY_KEYS.privacyStrip}
         index={4}
         bg="bg-slate-50"
-        className="py-16 sm:py-20"
+        className="py-12"
         testId="privacy-section"
         maxWidth="max-w-3xl"
       >

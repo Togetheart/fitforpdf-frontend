@@ -135,8 +135,8 @@ describe('landing conversion-first structure', () => {
     expect((proof.getAttribute('class') || '').includes('py-12')).toBe(true);
     expect((howItWorks.getAttribute('class') || '').includes('py-12')).toBe(true);
     expect((pricing.getAttribute('class') || '').includes('py-12')).toBe(true);
-    expect((privacy.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((privacy.getAttribute('class') || '').includes('sm:py-20')).toBe(true);
+    expect((privacy.getAttribute('class') || '').includes('py-16')).toBe(false);
+    expect((privacy.getAttribute('class') || '').includes('sm:py-20')).toBe(false);
     expect((faq.getAttribute('class') || '').includes('py-12')).toBe(true);
   });
 
