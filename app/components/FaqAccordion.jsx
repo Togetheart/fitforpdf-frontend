@@ -11,6 +11,8 @@ export default function FaqAccordion({
   items = [],
   title,
   testId,
+  listClassName,
+  itemClassName,
 }) {
   const itemList = useMemo(
     () =>
@@ -47,7 +49,7 @@ export default function FaqAccordion({
     <div className="mx-auto w-full">
       {title ? <h2 className="text-2xl font-semibold leading-tight">{title}</h2> : null}
       <div
-        className="mt-8 space-y-0 divide-y divide-black/10"
+        className={`mt-8 space-y-0 divide-y divide-black/10 ${listClassName || ''}`}
         data-testid={testId ?? 'faq-accordion'}
       >
         {itemList.map((item) => {
@@ -56,7 +58,7 @@ export default function FaqAccordion({
           const panelId = `faq-a-${item.id}`;
 
           return (
-            <section key={item.id} className="py-4" data-faq-id={item.id}>
+            <section key={item.id} className={`py-4 ${itemClassName || ''}`} data-faq-id={item.id}>
               <button
                 type="button"
                 id={buttonId}

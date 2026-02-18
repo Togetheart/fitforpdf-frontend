@@ -1032,12 +1032,17 @@ A104,Widget,6900.00`}
         className="py-12"
         testId="faq-section"
       >
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h2 className="text-center text-2xl font-semibold text-slate-900 sm:text-3xl">
             Frequently asked questions
           </h2>
           <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
-            <Accordion items={HOME_FAQ} testId="home-faq" />
+            <Accordion
+              items={HOME_FAQ}
+              testId="home-faq"
+              listClassName="mt-4"
+              itemClassName="py-3"
+            />
           </div>
         </div>
       </Section>
