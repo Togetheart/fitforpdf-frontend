@@ -616,14 +616,14 @@ export default function UploadCard({
           </div>
         ) : null}
 
-        <div className="mt-6 rounded-2xl bg-white shadow-sm">
+        <div className="mt-6 rounded-2xl border border-slate-200">
           <button
             type="button"
             data-testid="options-accordion-toggle"
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className="group flex w-full items-center justify-between gap-2 border-b border-slate-200 px-5 py-4 text-left text-sm font-medium text-slate-800 transition hover:bg-slate-50"
+            className="group flex w-full items-center justify-between gap-2 border-b border-slate-200 px-5 py-4 text-left text-sm font-medium text-slate-800 transition"
           >
             <span>Options</span>
             <ChevronDown

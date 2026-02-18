@@ -283,6 +283,7 @@ describe('UploadCard unit behavior', () => {
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
     expect(optionsToggle.className).toContain('px-5');
     expect(optionsToggle.className).toContain('py-4');
+    expect(optionsToggle.className).not.toContain('bg-');
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
     expect(screen.queryByTestId('upload-options')).toBeNull();
 
