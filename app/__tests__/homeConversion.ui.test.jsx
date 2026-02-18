@@ -68,6 +68,11 @@ describe('home conversion-critical UI', () => {
     const tool = screen.getByTestId(LANDING_COPY_KEYS.upload);
 
     expect(within(tool).getByTestId('upload-dropzone')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Options' })).toBeTruthy();
+    expect(screen.queryByRole('switch')).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
+
     expect(within(tool).getAllByRole('switch')).toHaveLength(5);
     expect(within(tool).getByRole('switch', { name: 'Branding' })).toBeTruthy();
     expect(within(tool).getByRole('switch', { name: 'Truncate long text' })).toBeTruthy();

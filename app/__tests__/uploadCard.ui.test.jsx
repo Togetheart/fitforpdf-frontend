@@ -54,7 +54,7 @@ function UploadCardHarness({
   onUpgrade = () => {},
   planType = 'free',
   remainingInPeriod = null,
-  initialOptionsExpanded = true,
+  initialOptionsExpanded = false,
 }) {
   return function Harness() {
     const [currentFile, setCurrentFile] = useState(file);
@@ -114,7 +114,7 @@ function renderUploadCardHarness({
   onUpgrade = () => {},
   planType = 'free',
   remainingInPeriod = null,
-  initialOptionsExpanded = true,
+  initialOptionsExpanded = false,
 }) {
   const Harness = UploadCardHarness({
     freeExportsLeft,
@@ -250,23 +250,26 @@ describe('UploadCard unit behavior', () => {
 
   test('options section is an accordion and can be collapsed/expanded', () => {
     const optionsToggle = screen.getByRole('button', { name: 'Options' });
-    const optionsPanel = document.getElementById('upload-options');
+
+    expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
+    expect(optionsToggle.className).toContain('px-5');
+    expect(optionsToggle.className).toContain('py-4');
+    expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
+    expect(screen.queryByTestId('upload-options')).toBeNull();
+
+    fireEvent.click(optionsToggle);
 
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('true');
-    expect(optionsPanel?.getAttribute('hidden')).toBe(null);
+    const optionsPanel = screen.getByTestId('upload-options');
+    expect(optionsPanel.className).toContain('px-5');
+    expect(optionsPanel.className).toContain('py-4');
     expect(screen.getByRole('switch', { name: 'Branding' })).toBeTruthy();
 
     fireEvent.click(optionsToggle);
 
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
-    expect(optionsPanel?.getAttribute('hidden')).toBe('');
+    expect(screen.queryByTestId('upload-options')).toBeNull();
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
-
-    fireEvent.click(optionsToggle);
-
-    expect(optionsToggle.getAttribute('aria-expanded')).toBe('true');
-    expect(optionsPanel?.getAttribute('hidden')).toBe(null);
-    expect(screen.getByRole('switch', { name: 'Branding' })).toBeTruthy();
   });
 
   test('dropzone helper copy has no two-step mention and keeps the new two-line message', () => {
@@ -357,6 +360,7 @@ describe('UploadCard unit behavior', () => {
       isPro: false,
       onEvent,
       onBrandingChange,
+      initialOptionsExpanded: true,
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
@@ -381,6 +385,7 @@ describe('UploadCard unit behavior', () => {
     renderUploadCardHarness({
       isPro: true,
       onBrandingChange,
+      initialOptionsExpanded: true,
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
@@ -400,6 +405,7 @@ describe('UploadCard unit behavior', () => {
       isPro: false,
       onEvent,
       onBrandingChange,
+      initialOptionsExpanded: true,
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
@@ -425,6 +431,7 @@ describe('UploadCard unit behavior', () => {
       onBuyCredits,
       onEvent,
       onBrandingChange,
+      initialOptionsExpanded: true,
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
@@ -445,6 +452,7 @@ describe('UploadCard unit behavior', () => {
       isPro: false,
       onEvent,
       onBrandingChange,
+      initialOptionsExpanded: true,
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
@@ -472,6 +480,7 @@ describe('UploadCard unit behavior', () => {
       isPro: false,
       onEvent,
       onBrandingChange,
+      initialOptionsExpanded: true,
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
@@ -493,7 +502,7 @@ describe('UploadCard unit behavior', () => {
   test('click on setting title or description toggles the row', () => {
     cleanup();
     const onBrandingChange = vi.fn();
-    renderUploadCardHarness({ onBrandingChange });
+    renderUploadCardHarness({ onBrandingChange, initialOptionsExpanded: true });
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
     const brandingDescription = screen.getByText('Adds a lightweight brand treatment by default');
 
@@ -505,7 +514,7 @@ describe('UploadCard unit behavior', () => {
   test('clicking tooltip inside row does not toggle setting', () => {
     cleanup();
     const onBrandingChange = vi.fn();
-    renderUploadCardHarness({ onBrandingChange });
+    renderUploadCardHarness({ onBrandingChange, initialOptionsExpanded: true });
 
     fireEvent.click(screen.getByLabelText('Branding info'));
     expect(onBrandingChange).toHaveBeenCalledTimes(0);
@@ -527,7 +536,7 @@ describe('UploadCard unit behavior', () => {
   test('keyboard focus stays on native controls only', () => {
     cleanup();
     const onBuyCredits = vi.fn();
-    renderUploadCardHarness({ freeExportsLeft: 1, onBuyCredits });
+    renderUploadCardHarness({ freeExportsLeft: 1, onBuyCredits, initialOptionsExpanded: true });
 
     expect(screen.getByTestId('setting-row-branding').tabIndex).toBe(-1);
     expect(screen.getByTestId('setting-row-truncate').tabIndex).toBe(-1);
@@ -567,6 +576,7 @@ describe('UploadCard unit behavior', () => {
 
   test('keyboard and tooltip accessibility', () => {
     const dropzone = screen.getByRole('button', { name: 'Upload CSV or XLSX file' });
+    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
     const tooltip = screen.getByLabelText('Branding info');
 
     expect(dropzone.getAttribute('role')).toBe('button');
@@ -597,9 +607,9 @@ describe('UploadCard conversion flow on landing page', () => {
     });
 
     render(<LandingPage />);
-    const uploadSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
-    const uploadCard = screen.getByTestId('upload-card');
-    fireEvent.click(within(uploadCard).getByRole('button', { name: 'Run the demo' }));
+    const realDataCard = screen.getByTestId('real-data-card');
+    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+    fireEvent.click(demoButton);
 
     await waitFor(() => {
       expect(mock.calls.length).toBeGreaterThanOrEqual(2);
@@ -647,20 +657,15 @@ describe('UploadCard conversion flow on landing page', () => {
     });
 
     render(<LandingPage />);
-    const uploadCard = screen.getByTestId('upload-card');
-    const demoRow = within(uploadCard).getByTestId('run-demo-row');
-    const demoButton = within(demoRow).getByRole('button', { name: 'Run the demo' });
-    const runDemoCopy = within(demoRow).getByText('See how FitForPDF handles real-world invoice complexity.');
+    const realDataCard = screen.getByTestId('real-data-card');
+    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+    const runDemoCopy = within(realDataCard).getByText('See how FitForPDF handles real-world invoice complexity.');
 
     expect(demoButton).toBeTruthy();
     expect(runDemoCopy).toBeTruthy();
-    expect(demoRow.className).toContain('flex');
-    expect(demoRow.className).toContain('flex-col');
-    expect(demoRow.className).toContain('gap-1');
-    expect(demoRow.className).toContain('text-sm');
-    expect(demoButton.className).toContain('font-semibold');
-    expect(runDemoCopy.className).toContain('text-slate-500');
-    expect(demoRow.children).toHaveLength(2);
+    expect(demoButton.className).toContain('rounded-full');
+    expect(demoButton.className).toContain('inline-flex');
+    expect(screen.queryByTestId('run-demo-row')).toBeNull();
 
     mock.restore();
   });
@@ -673,6 +678,7 @@ describe('UploadCard conversion flow on landing page', () => {
     });
     render(<LandingPage />);
 
+    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
     fireEvent.click(brandingTitle);
     expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
@@ -851,6 +857,7 @@ describe('UploadCard conversion flow on landing page', () => {
     fireEvent.change(screen.getByTestId('generate-file-input'), {
       target: { files: [SAMPLE_FILE] },
     });
+    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
     fireEvent.click(screen.getByRole('switch', { name: 'Branding' }));
     fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
 
@@ -874,6 +881,7 @@ describe('UploadCard conversion flow on landing page', () => {
       target: { files: [SAMPLE_FILE] },
     });
 
+    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
     fireEvent.click(screen.getByRole('switch', { name: 'Truncate long text' }));
     fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
 

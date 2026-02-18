@@ -75,7 +75,8 @@ describe('Premium sample demo conversion UI', () => {
     expect(screen.getByText('Real data. Real complexity.')).toBeTruthy();
     expect(screen.getByText(/120 rows · 15 columns · long descriptions/i)).toBeTruthy();
     const uploadCard = screen.getByTestId('upload-card');
-    expect(within(uploadCard).getByRole('button', { name: 'Run the demo' })).toBeTruthy();
+    const realDataCard = screen.getByTestId('real-data-card');
+    expect(within(realDataCard).getByRole('button', { name: 'Run the demo' })).toBeTruthy();
   });
 
   test('Run the demo triggers premium CSV fetch then /api/render', async () => {
@@ -86,8 +87,8 @@ describe('Premium sample demo conversion UI', () => {
     });
 
     render(<LandingPage />);
-    const uploadCard = screen.getByTestId('upload-card');
-    fireEvent.click(within(uploadCard).getByRole('button', { name: 'Run the demo' }));
+    const realDataCard = screen.getByTestId('real-data-card');
+    fireEvent.click(within(realDataCard).getByRole('button', { name: 'Run the demo' }));
 
     await waitFor(() => {
       expect(mock.calls).toHaveLength(2);

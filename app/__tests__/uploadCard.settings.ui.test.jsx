@@ -37,6 +37,7 @@ function SettingsHarness({
         downloadedFileName={null}
         verdict={null}
         isPro={isPro}
+        initialOptionsExpanded
       />
     );
   };

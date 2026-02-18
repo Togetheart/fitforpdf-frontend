@@ -373,7 +373,7 @@ export default function UploadCard({
   onBuyCreditsPack = () => {},
   purchaseMessage = '',
   onGoPro = onUpgrade,
-  initialOptionsExpanded = true,
+  initialOptionsExpanded = false,
 }) {
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
   const showProBanner = getPlanTypeLabel(planType) === 'pro' || isPro;
@@ -574,7 +574,7 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left"
+            className="flex w-full items-center justify-between gap-2 px-5 py-4 text-left"
           >
             <span className="text-sm font-semibold text-slate-900">Options</span>
             <ChevronDown
@@ -583,146 +583,142 @@ export default function UploadCard({
             />
           </button>
 
-          <div
-            id="upload-options"
-            hidden={!isOptionsExpanded}
-            data-testid="upload-options"
-            className="overflow-hidden"
-            aria-live="polite"
-          >
-            <div className="min-h-0 px-4 pt-2 pb-1">
-              <div
-                data-testid="branding-upgrade-nudge-slot"
-                aria-live="polite"
-                className={`overflow-hidden transition-all duration-200 ${showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}
-              >
-                {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
-                  <section
-                    className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
-                    data-testid="branding-upgrade-nudge"
-                  >
-                    <p className="text-sm font-semibold text-slate-900">
-                      {nudgeData?.title || 'Upgrade to unlock this feature'}
-                    </p>
-                    <p className="mt-1 text-sm text-slate-600">
-                      {nudgeData?.description || 'Upgrade to unlock this feature.'}
-                    </p>
-                    <div className="mt-3 flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={handleBrandingUpgrade}
-                        className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
-                      >
-                        Buy credits
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleProUpgrade}
-                        className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
-                      >
-                        Go Pro
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleBrandingNudgeDismiss}
-                        className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                      >
-                        Not now
-                      </button>
-                    </div>
-                  </section>
-                ) : null}
-              </div>
-
-              <section
-                className={`overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 ${showBuyCreditsPanel ? 'max-h-96 opacity-100' : 'max-h-0 border-slate-100 bg-transparent p-0 opacity-0'}`}
-                data-testid={showBuyCreditsPanel && isOptionsExpanded ? 'credits-purchase-panel' : 'credits-purchase-panel-inline'}
-                aria-hidden={!showBuyCreditsPanel}
-              >
-                <div className={`transition-opacity duration-150 ${showBuyCreditsPanel ? 'opacity-100' : 'opacity-0'}`}>
-                  <div className="mb-3 flex items-center justify-between">
-                    <p className="text-sm font-semibold text-slate-900">Buy credits</p>
-                    <button
-                      type="button"
-                      onClick={onCloseBuyPanel}
-                      className="text-xs font-semibold text-slate-600 underline"
+          {isOptionsExpanded ? (
+            <div
+              id="upload-options"
+              data-testid="upload-options"
+              className="px-5 py-4"
+              aria-live="polite"
+            >
+              <div className="min-h-0 divide-y divide-slate-200">
+                <div
+                  data-testid="branding-upgrade-nudge-slot"
+                  aria-live="polite"
+                  className={`overflow-hidden transition-all duration-200 ${showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}
+                >
+                  {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+                    <section
+                      className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+                      data-testid="branding-upgrade-nudge"
                     >
-                      Close
-                    </button>
-                  </div>
-                  {CREDIT_PACKS.map((pack) => (
-                    <button
-                      type="button"
-                      key={pack.pack}
-                      onClick={() => onBuyCreditsPack(pack.pack)}
-                      className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
-                    >
-                      <span>{pack.exportsLabel}</span>
-                      <span>{pack.price}</span>
-                    </button>
-                  ))}
-                  {purchaseMessage ? (
-                    <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
+                      <p className="text-sm font-semibold text-slate-900">
+                        {nudgeData?.title || 'Upgrade to unlock this feature'}
+                      </p>
+                      <p className="mt-1 text-sm text-slate-600">
+                        {nudgeData?.description || 'Upgrade to unlock this feature.'}
+                      </p>
+                      <div className="mt-3 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleBrandingUpgrade}
+                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
+                        >
+                          Buy credits
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleProUpgrade}
+                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
+                        >
+                          Go Pro
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleBrandingNudgeDismiss}
+                          className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                        >
+                          Not now
+                        </button>
+                      </div>
+                    </section>
                   ) : null}
                 </div>
-              </section>
+
+                <section
+                  className={`overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 ${showBuyCreditsPanel ? 'max-h-96 opacity-100' : 'max-h-0 border-slate-100 bg-transparent p-0 opacity-0'}`}
+                  data-testid={showBuyCreditsPanel && isOptionsExpanded ? 'credits-purchase-panel' : 'credits-purchase-panel-inline'}
+                  aria-hidden={!showBuyCreditsPanel}
+                >
+                  <div className={`transition-opacity duration-150 ${showBuyCreditsPanel ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className="mb-3 flex items-center justify-between">
+                      <p className="text-sm font-semibold text-slate-900">Buy credits</p>
+                      <button
+                        type="button"
+                        onClick={onCloseBuyPanel}
+                        className="text-xs font-semibold text-slate-600 underline"
+                      >
+                        Close
+                      </button>
+                    </div>
+                    {CREDIT_PACKS.map((pack) => (
+                      <button
+                        type="button"
+                        key={pack.pack}
+                        onClick={() => onBuyCreditsPack(pack.pack)}
+                        className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
+                      >
+                        <span>{pack.exportsLabel}</span>
+                        <span>{pack.price}</span>
+                      </button>
+                    ))}
+                    {purchaseMessage ? (
+                      <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
+                    ) : null}
+                  </div>
+                </section>
+
+                <SettingRow
+                  title="Branding"
+                  description="Adds a lightweight brand treatment by default"
+                  checked={includeBranding}
+                  onChange={handleBrandingChange}
+                  tooltip={<InfoTooltip label="Branding" text="Keep this on to display the FitForPDF styling in exports." />}
+                  rowTestId="setting-row-branding"
+                  disabled={isLoading}
+                />
+
+                <SettingRow
+                  title="Keep overview"
+                  description="Show overview summary page in the export."
+                  checked={layout?.overview !== false}
+                  onChange={(nextChecked) => handleLayoutChange('overview', nextChecked)}
+                  tooltip={<InfoTooltip label="Keep overview" text="Keep overview content in the generated PDF." />}
+                  rowTestId="setting-row-overview"
+                  disabled={isLoading}
+                />
+
+                <SettingRow
+                  title="Keep headers"
+                  description="Keep repeated headers for multi-page outputs."
+                  checked={layout?.headers !== false}
+                  onChange={(nextChecked) => handleLayoutChange('headers', nextChecked)}
+                  tooltip={<InfoTooltip label="Keep headers" text="Keep your table headers visible on each page." />}
+                  rowTestId="setting-row-headers"
+                  disabled={isLoading}
+                />
+
+                <SettingRow
+                  title="Keep footer"
+                  description="Keep footer metadata in the exported PDF."
+                  checked={layout?.footer !== false}
+                  onChange={(nextChecked) => handleLayoutChange('footer', nextChecked)}
+                  tooltip={<InfoTooltip label="Keep footer" text="Keep the footer content in the exported PDF." />}
+                  rowTestId="setting-row-footer"
+                  disabled={isLoading}
+                />
+
+                <SettingRow
+                  title="Truncate long text"
+                  description="Auto-crops very long content to keep layout stable"
+                  checked={truncateLongText}
+                  onChange={onTruncateChange}
+                  tooltip={<InfoTooltip label="Truncate long text" text="Enable this to avoid rows pushing beyond column width." />}
+                  rowTestId="setting-row-truncate"
+                  disabled={isLoading}
+                />
+              </div>
             </div>
-
-            <div className="h-px bg-slate-100" />
-
-            <SettingRow
-              title="Branding"
-              description="Adds a lightweight brand treatment by default"
-              checked={includeBranding}
-              onChange={handleBrandingChange}
-              tooltip={<InfoTooltip label="Branding" text="Keep this on to display the FitForPDF styling in exports." />}
-              rowTestId="setting-row-branding"
-              disabled={isLoading}
-            />
-            <div className="h-px bg-slate-100" />
-
-            <SettingRow
-              title="Keep overview"
-              description="Show overview summary page in the export."
-              checked={layout?.overview !== false}
-              onChange={(nextChecked) => handleLayoutChange('overview', nextChecked)}
-              tooltip={<InfoTooltip label="Keep overview" text="Keep overview content in the generated PDF." />}
-              rowTestId="setting-row-overview"
-              disabled={isLoading}
-            />
-            <div className="h-px bg-slate-100" />
-            <SettingRow
-              title="Keep headers"
-              description="Keep repeated headers for multi-page outputs."
-              checked={layout?.headers !== false}
-              onChange={(nextChecked) => handleLayoutChange('headers', nextChecked)}
-              tooltip={<InfoTooltip label="Keep headers" text="Keep your table headers visible on each page." />}
-              rowTestId="setting-row-headers"
-              disabled={isLoading}
-            />
-            <div className="h-px bg-slate-100" />
-            <SettingRow
-              title="Keep footer"
-              description="Keep footer metadata in the exported PDF."
-              checked={layout?.footer !== false}
-              onChange={(nextChecked) => handleLayoutChange('footer', nextChecked)}
-              tooltip={<InfoTooltip label="Keep footer" text="Keep the footer content in the exported PDF." />}
-              rowTestId="setting-row-footer"
-              disabled={isLoading}
-            />
-
-            <div className="h-px bg-slate-100" />
-
-            <SettingRow
-              title="Truncate long text"
-              description="Auto-crops very long content to keep layout stable"
-              checked={truncateLongText}
-              onChange={onTruncateChange}
-              tooltip={<InfoTooltip label="Truncate long text" text="Enable this to avoid rows pushing beyond column width." />}
-              rowTestId="setting-row-truncate"
-              disabled={isLoading}
-            />
-          </div>
+          ) : null}
         </div>
 
         {showBuyCreditsPanel && !isOptionsExpanded ? (
@@ -804,36 +800,21 @@ export default function UploadCard({
             Download again
           </Button>
         ) : (
-          <>
-            <div className="flex flex-col gap-1 text-sm" data-testid="run-demo-row">
-              <button
-                type="button"
-                onClick={onTrySample}
-                disabled={isLoading}
-                className="inline-flex h-10 items-center font-semibold text-slate-900 transition hover:text-[#D92D2A]"
-              >
-                Run the demo
-              </button>
-              <p className="text-slate-500">
-                See how FitForPDF handles real-world invoice complexity.
-              </p>
-            </div>
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-full"
-              disabled={isLoading || !file}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 aria-hidden="true" className="mr-2 h-4 w-4 animate-spin" />
-                  Generating…
-                </>
-              ) : (
-                'Generate PDF'
-              )}
-            </Button>
-          </>
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full"
+            disabled={isLoading || !file}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 aria-hidden="true" className="mr-2 h-4 w-4 animate-spin" />
+                Generating…
+              </>
+            ) : (
+              'Generate PDF'
+            )}
+          </Button>
         )}
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">

@@ -948,7 +948,10 @@ A104,Widget,6900.00`}
         testId={LANDING_COPY_KEYS.upload}
       >
         <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div
+            className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+            data-testid="real-data-card"
+          >
             <p className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
               Enterprise-scale example
             </p>
@@ -957,6 +960,15 @@ A104,Widget,6900.00`}
               120 rows · 15 columns · long descriptions.
               <span className="ml-2 text-slate-500">Automatically structured into readable sections.</span>
             </p>
+            <button
+              type="button"
+              onClick={handleTrySample}
+              disabled={isLoading}
+              className={`${CTA_SECONDARY} mt-4 inline-flex h-10`}
+            >
+              Run the demo
+            </button>
+            <p className="mt-2 text-sm text-slate-600">See how FitForPDF handles real-world invoice complexity.</p>
           </div>
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}

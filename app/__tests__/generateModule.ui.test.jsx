@@ -80,6 +80,7 @@ test('drag-and-drop a file into the dropzone selects it', () => {
 test('branding toggle defaults on and truncate defaults off', () => {
   render(<ModuleHarness />);
 
+  fireEvent.click(screen.getByRole('button', { name: 'Options' }));
   expect(screen.getAllByRole('switch')).toHaveLength(5);
   expect(screen.getByRole('switch', { name: 'Branding' }).getAttribute('aria-checked')).toBe('true');
   expect(screen.getByRole('switch', { name: 'Keep overview' }).getAttribute('aria-checked')).toBe('true');

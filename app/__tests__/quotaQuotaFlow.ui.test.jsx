@@ -218,6 +218,7 @@ describe('quota-driven plan state and paywall flows', () => {
       expect(screen.getByTestId('quota-pill')).toBeTruthy();
     });
 
+    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
     fireEvent.click(brandingTitle);
 
@@ -245,6 +246,7 @@ describe('quota-driven plan state and paywall flows', () => {
       expect(screen.getByText('Credits · 6 exports left')).toBeTruthy();
     });
 
+    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
     const brandingSwitch = screen.getByRole('switch', { name: 'Branding' });
     const overviewSwitch = screen.getByRole('switch', { name: 'Keep overview' });
     expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
