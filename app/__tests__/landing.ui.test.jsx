@@ -136,9 +136,8 @@ describe('landing conversion-first structure', () => {
     expect((howItWorks.getAttribute('class') || '').includes('py-12')).toBe(true);
     expect((pricing.getAttribute('class') || '').includes('py-12')).toBe(true);
     expect((privacy.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((faq.getAttribute('class') || '').includes('py-16')).toBe(true);
     expect((privacy.getAttribute('class') || '').includes('sm:py-20')).toBe(true);
-    expect((faq.getAttribute('class') || '').includes('sm:py-20')).toBe(true);
+    expect((faq.getAttribute('class') || '').includes('py-12')).toBe(true);
   });
 
   test('privacy and faq sections use dedicated sizing and layout', () => {
