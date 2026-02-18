@@ -41,6 +41,9 @@ export default function PricingPage() {
             gridTestId="pricing-grid"
             variant="pricing"
           />
+          <p className="text-sm text-slate-700">
+            Need higher limits, API access, or team plans? <a href="mailto:hello@fitforpdf.com" className="underline">Contact us</a>.
+          </p>
         </div>
       </Section>
 
@@ -48,7 +51,7 @@ export default function PricingPage() {
         <div className={sectionClass}>
           <FeatureComparison
             title={PRICING_PAGE_COPY.comparisonTitle}
-            columns={['Free', 'Credits', 'Pro']}
+            columns={['Free', 'Credits']}
             rows={PRICING_PAGE_COPY.comparison}
           />
         </div>

@@ -289,7 +289,8 @@ describe('quota-driven plan state and paywall flows', () => {
       expect(!!checkoutCall).toBe(true);
       expect(checkoutCall.options.method).toBe('POST');
       expect(JSON.parse(checkoutCall.options.body).pack).toBe('credits_50');
-      expect(screen.getByText('Coming soon')).toBeTruthy();
+      expect(screen.queryByText('Coming soon')).toBeNull();
+      expect(screen.queryByTestId('credits-purchase-panel')).toBeNull();
     });
 
     mock.restore();

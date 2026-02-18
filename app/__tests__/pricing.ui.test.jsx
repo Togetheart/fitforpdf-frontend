@@ -89,17 +89,16 @@ describe('pricing page UI', () => {
     expect(screen.queryByText('Start free. Upgrade only when your PDFs are worth sending.')).toBeNull();
   });
 
-  test('renders exactly 3 plan cards with correct grid behavior', () => {
+  test('renders exactly 2 plan cards with correct grid behavior', () => {
     const grid = screen.getByTestId('pricing-grid');
     const cards = screen.getAllByTestId('plan-card');
 
     expect(grid).toBeTruthy();
     expect((grid.getAttribute('class') || '').includes('grid-cols-1')).toBe(true);
-    expect((grid.getAttribute('class') || '').includes('md:grid-cols-3')).toBe(true);
-    expect(cards).toHaveLength(3);
+    expect((grid.getAttribute('class') || '').includes('md:grid-cols-2')).toBe(true);
+    expect(cards).toHaveLength(2);
     expect(screen.getByRole('heading', { level: 3, name: 'Free' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 3, name: 'Credits' })).toBeTruthy();
-    expect(screen.getByRole('heading', { level: 3, name: 'Pro + API' })).toBeTruthy();
   });
 
   test('credits card lists both packs and prices', () => {
@@ -161,7 +160,8 @@ describe('pricing page UI', () => {
 
     expect(pageText.includes('100 exports · €19')).toBe(true);
     expect(pageText.includes('500 exports · €79')).toBe(true);
-    expect(pageText.includes('€29/month')).toBe(true);
+    expect(pageText.includes('€29/month')).toBe(false);
+    expect(pageText.includes('Coming soon')).toBe(false);
   });
 
   test('pricing CTA items are intentional for no-Stripe state', () => {

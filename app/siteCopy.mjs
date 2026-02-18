@@ -82,7 +82,7 @@ export const HOME_FAQ = [
   {
     id: 'api',
     q: 'Do you offer an API?',
-    a: 'Not yet. API access is planned once the core workflow is proven.',
+    a: 'Contact us for Team/API access and dedicated onboarding.',
   },
 ];
 
@@ -116,17 +116,10 @@ export const PRICING_PAGE_COPY = {
   creditsFeature4: 'Structured sections',
   creditsCtaLabel: 'Buy credits',
   creditsCtaHref: '#',
-  creditsCtaTooltip: 'Stripe checkout coming soon.',
+  creditsCtaTooltip: 'Stripe checkout is not connected yet.',
   creditsBadge: 'Most popular',
-
-  proApiTitle: 'Pro + API',
-  proApiComingSoon: 'Coming soon',
-  proPrice: '€29/month',
-  proFeature1: 'Batch export',
-  proFeature2: 'Priority processing',
-  proFeature3: 'API access (usage-based)',
-  proFeature4: 'Coming soon',
-  proApiCtaLabel: 'Join early access',
+  proApiTitle: 'Team/API',
+  proApiCtaLabel: 'Contact us',
   proApiCtaHref: 'mailto:hello@fitforpdf.com',
 
   backToApp: 'Back to app',
@@ -134,10 +127,10 @@ export const PRICING_PAGE_COPY = {
 
   comparisonTitle: 'Compare features',
   comparison: [
-    ['Client-ready PDF output', '✓', '✓', '✓'],
-    ['Branding removable', '✗', '✓', '✓'],
-    ['Batch export', '✗', '✗', '✓'],
-    ['API access', '✗', '✗', '✓'],
+    ['Client-ready PDF output', '✓', '✓'],
+    ['Branding removable', '✗', '✓'],
+    ['Batch export', '✗', '✗'],
+    ['API access', '✗', 'Contact us'],
   ],
 
   faqTitle: 'FAQs',
@@ -160,7 +153,7 @@ export const PRICING_PAGE_COPY = {
     {
       id: 'api',
       q: 'Do you offer an API?',
-      a: 'API access is planned and currently in the Pro + API coming-soon path.',
+      a: 'We support Team/API access—please contact us to discuss your volume and requirements.',
     },
   ],
 };
@@ -202,25 +195,6 @@ export const PRICING_CARDS = [
     recommended: true,
     badge: PRICING_PAGE_COPY.creditsBadge,
     ctaNote: PRICING_PAGE_COPY.creditsCtaTooltip,
-  },
-  {
-    id: 'proApi',
-    title: PRICING_PAGE_COPY.proApiTitle,
-    priceLine: PRICING_PAGE_COPY.proPrice,
-    priceLines: [PRICING_PAGE_COPY.proPrice],
-    points: [
-      `${PRICING_PAGE_COPY.proPrice} (coming soon)`,
-      PRICING_PAGE_COPY.proFeature1,
-      PRICING_PAGE_COPY.proFeature2,
-      PRICING_PAGE_COPY.proFeature3,
-      PRICING_PAGE_COPY.proFeature4,
-    ],
-    actionLabel: PRICING_PAGE_COPY.proApiCtaLabel,
-    actionType: 'link',
-    actionHref: PRICING_PAGE_COPY.proApiCtaHref,
-    disabled: false,
-    recommended: false,
-    ctaNote: null,
   },
 ];
 

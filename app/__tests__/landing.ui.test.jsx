@@ -36,24 +36,25 @@ afterEach(() => {
 
 describe('landing conversion-first structure', () => {
   test('sections exist in strict order', () => {
-    const hero = screen.getByTestId('hero-section');
-    const transformation = screen.getByTestId('section-transformation');
-    const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
-    const howItWorks = screen.getByTestId('section-how-it-works');
-    const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
-    const privacy = screen.getByTestId(`section-${LANDING_COPY_KEYS.privacyStrip}`);
+      const hero = screen.getByTestId('hero-section');
+      const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
+      const howItWorks = screen.getByTestId('section-how-it-works');
+      const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
+      const privacy = screen.getByTestId(`section-${LANDING_COPY_KEYS.privacyStrip}`);
 
     expect(hero).toBeTruthy();
-    expect(transformation).toBeTruthy();
     expect(proof).toBeTruthy();
     expect(howItWorks).toBeTruthy();
     expect(pricing).toBeTruthy();
     expect(privacy).toBeTruthy();
-    expect(hero.compareDocumentPosition(transformation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(transformation.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(hero.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(proof.compareDocumentPosition(howItWorks) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(howItWorks.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(pricing.compareDocumentPosition(privacy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  test('legacy demo section below options is removed', () => {
+    expect(screen.queryByTestId('section-home-demo')).toBeNull();
   });
 
   test('hero has exactly one primary CTA and no other hero links', () => {
@@ -86,21 +87,32 @@ describe('landing conversion-first structure', () => {
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
   });
 
-  test('pricing preview renders three cards', () => {
+  test('pricing preview renders free + credits cards only', () => {
     const pricingGrid = screen.getByTestId('pricing-grid');
     const cards = within(pricingGrid).getAllByTestId('pricing-preview-card');
 
     expect(pricingGrid).toBeTruthy();
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
   });
 
-  test('transformation statement exists', () => {
-    expect(screen.getByRole('heading', { level: 2, name: /Look professional\./i })).toBeTruthy();
-    expect(screen.getByText('Even with messy spreadsheets.')).toBeTruthy();
+  test('proof statement exists', () => {
+    expect(screen.getByRole('heading', { level: 2, name: /From raw data to structured document/i })).toBeTruthy();
+  });
+
+  test('Run the demo is in the proof section and unique', () => {
+    const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
+    const realDataCard = screen.getByTestId('real-data-card');
+    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+
+    expect(proofSection.contains(realDataCard)).toBe(true);
+    expect(demoButton).toBeTruthy();
+    expect(screen.getAllByRole('button', { name: 'Run the demo' })).toHaveLength(1);
   });
 
   test('preview card has desktop float animation class', () => {
     const previewCard = screen.getByTestId('home-preview-card');
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
+    expect(within(previewCard).getByRole('img')).toHaveAttribute('src', expect.stringContaining('/fitforpdf-proof-v8.svg'));
+    expect(within(previewCard).getByText('Structured PDF (v8)')).toBeTruthy();
   });
 });

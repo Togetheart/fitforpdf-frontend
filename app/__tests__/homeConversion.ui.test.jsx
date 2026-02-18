@@ -60,8 +60,9 @@ describe('home conversion-critical UI', () => {
     const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     const faq = screen.getByTestId('home-faq');
 
-    expect(hero.compareDocumentPosition(toolSection) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(hero.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_PRECEDING).toBeFalsy();
+    expect(hero.contains(toolSection)).toBe(true);
+    expect(hero.contains(faq)).toBeFalsy();
+    expect(screen.getAllByTestId(LANDING_COPY_KEYS.upload)).toHaveLength(1);
   });
 
   test('upload module includes dropzone, toggles and quota badge', () => {
@@ -104,9 +105,9 @@ describe('home conversion-critical UI', () => {
     expect(within(tool).getByRole('button', { name: 'Generate PDF' })).toHaveProperty('disabled', false);
   });
 
-  test('pricing preview renders three cards', () => {
+  test('pricing preview renders two cards', () => {
     const pricingCards = screen.getAllByTestId('pricing-preview-card');
-    expect(pricingCards).toHaveLength(3);
+    expect(pricingCards).toHaveLength(2);
   });
 
   test('home faq uses accordion items with expanding behavior', () => {

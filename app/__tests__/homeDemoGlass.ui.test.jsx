@@ -1,6 +1,6 @@
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import React from 'react';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 
 import LandingPage from '../page.jsx';
 import { LANDING_COPY } from '../siteCopy.mjs';
@@ -30,6 +30,47 @@ function renderHome() {
   return render(<LandingPage />);
 }
 
+function createPdfResponse() {
+  return new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+    },
+  });
+}
+
+function createSampleCsvResponse() {
+  return new Response('invoice_id,client_name,client_email\nINV-1001,Acme,finance@acme.com', {
+    status: 200,
+    headers: {
+      'content-type': 'text/csv',
+    },
+  });
+}
+
+function mockFetch() {
+  const originalFetch = global.fetch;
+  const calls = [];
+  global.fetch = vi.fn((url, options = {}) => {
+    let response = createPdfResponse();
+
+    if (String(url).includes('/api/sample/premium')) {
+      response = createSampleCsvResponse();
+    }
+
+    calls.push({ url, options, response });
+
+    return Promise.resolve(response);
+  });
+
+  return {
+    calls,
+    restore: () => {
+      global.fetch = originalFetch;
+    },
+  };
+}
+
 beforeEach(() => {
   renderHome();
 });
@@ -38,80 +79,66 @@ afterEach(() => {
   cleanup();
 });
 
-describe('home demo glass block', () => {
+describe('home demo proof block', () => {
   test('keeps hero heading and CTA text unchanged', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Your spreadsheet. Reorganized into readable sections. Ready to send.' })).toBeTruthy();
     expect(screen.getByTestId('hero-primary-cta').textContent?.trim()).toBe(LANDING_COPY.heroPrimaryCta);
   });
 
-  test('demo glass card appears directly below hero CTA in DOM order', () => {
-    const demoCard = screen.getByTestId('demo-glass-card');
-    const cta = screen.getByTestId('hero-primary-cta');
-    const markers = Array.from(
-      document.querySelectorAll('[data-testid="hero-primary-cta"], [data-testid="demo-glass-card"]'),
-    );
+  test('proof block is in dedicated home-demo section', () => {
+    const proofSection = screen.getByTestId('section-before-after');
+    const demoCard = screen.getByTestId('real-data-card');
+    const demoButton = within(demoCard).getByRole('button', { name: 'Run the demo' });
 
-    expect(markers.indexOf(cta)).toBeGreaterThan(-1);
-    expect(markers.indexOf(demoCard)).toBeGreaterThan(markers.indexOf(cta));
+    expect(screen.queryByTestId('demo-glass-card')).toBeNull();
+    expect(screen.queryByTestId('section-home-demo')).toBeNull();
+    expect(proofSection).toBeTruthy();
+    expect(proofSection.contains(demoCard)).toBe(true);
+    expect(demoButton).toBeTruthy();
   });
 
-  test('demo glass card is inside the hero block (not a separate section)', () => {
-    const hero = screen.getByTestId('hero-section');
-    const demoCard = screen.getByTestId('demo-glass-card');
-
-    expect(hero.contains(demoCard)).toBe(true);
+  test('Run the demo CTA is unique on landing', () => {
+    const buttons = screen.getAllByRole('button', { name: 'Run the demo' });
+    expect(buttons).toHaveLength(1);
   });
 
-  test('demo glass card has Apple glass utility classes', () => {
-    const demoCard = screen.getByTestId('demo-glass-card');
-    const classes = demoCard.className;
+  test('run the demo helper content is present', () => {
+    const realDataCard = screen.getByTestId('real-data-card');
+    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+    const helperText = within(realDataCard).getByText('See how FitForPDF handles real-world invoice complexity.');
 
-    expect(classes).toContain('backdrop-blur');
-    expect(classes).toContain('bg-white/');
-    expect(classes).toContain('border');
-    expect(classes).toContain('rounded-3xl');
-    expect(classes).toContain('shadow-[0_10px_30px_rgba(0,0,0,0.06)]');
-    expect(classes).toContain('ring-1');
-    expect(classes).toContain('ring-black/5');
+    expect(realDataCard).toBeTruthy();
+    expect(demoButton.className).toContain('rounded-full');
+    expect(helperText).toBeTruthy();
   });
 
-  test('demo embed area exists with rounded overflow classes', () => {
-    const embed = screen.getByTestId('demo-glass-embed');
-    const embedClasses = embed.className;
+  test('Run the demo flow loads premium CSV and converts', async () => {
+    const fetchMock = mockFetch();
+    const realDataCard = screen.getByTestId('real-data-card');
+    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+    fireEvent.click(demoButton);
 
-    expect(embedClasses).toContain('overflow-hidden');
-    expect(embedClasses).toContain('rounded-xl');
-    expect(embedClasses).toContain('bg-white/40');
+    await waitFor(() => {
+      expect(fetchMock.calls.length).toBe(2);
+    });
+
+    const sampleCall = fetchMock.calls.find((call) => String(call.url).includes('/api/sample/premium'));
+    const renderCall = fetchMock.calls.find((call) => String(call.url).includes('/api/render'));
+    expect(sampleCall).toBeTruthy();
+    expect(renderCall).toBeTruthy();
+
+    const sampleUrl = new URL(sampleCall.url, 'http://localhost');
+    const renderUrl = new URL(renderCall.url, 'http://localhost');
+
+    expect(sampleUrl.pathname).toBe('/api/sample/premium');
+    expect(renderUrl.pathname).toBe('/api/render');
+    expect(renderCall.options.method).toBe('POST');
+    expect(renderCall.options.body).toBeInstanceOf(FormData);
+
+    fetchMock.restore();
   });
 
-  test('demo card has subtle inner highlight overlay', () => {
-    const highlight = screen.getByTestId('demo-glass-highlight');
-    const classes = highlight.className;
-
-    expect(classes).toContain('pointer-events-none');
-    expect(classes).toContain('absolute');
-    expect(classes).toContain('inset-0');
-    expect(classes).toContain('rounded-3xl');
-    expect(classes).toContain('bg-gradient-to-b');
-    expect(classes).toContain('from-white/50');
-    expect(classes).toContain('to-transparent');
-  });
-
-  test('demo embed is an iframe with lazy loading and secure attributes', () => {
-    const iframe = screen.getByTestId('demo-glass-iframe');
-
-    expect(iframe.tagName.toLowerCase()).toBe('iframe');
-    expect(iframe.getAttribute('loading')).toBe('lazy');
-    expect(iframe.getAttribute('title')).toBe('FitForPDF interactive demo');
-    expect(iframe.getAttribute('sandbox')).toContain('allow-scripts');
-    expect(iframe.getAttribute('sandbox')).toContain('allow-same-origin');
-    expect(iframe.getAttribute('sandbox')).toContain('allow-forms');
-  });
-
-  test('shows a lightweight skeleton while the demo iframe is loading', () => {
-    const iframe = screen.getByTestId('demo-glass-iframe');
-    expect(screen.getByTestId('demo-glass-skeleton')).toBeTruthy();
-    fireEvent.load(iframe);
-    expect(screen.queryByTestId('demo-glass-skeleton')).toBeNull();
+  test('no demo glass embed remains on landing', () => {
+    expect(screen.queryByTestId('demo-glass-card')).toBeNull();
   });
 });

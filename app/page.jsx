@@ -22,7 +22,6 @@ import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
 import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
-import DemoGlassCard from './components/DemoGlassCard';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
@@ -710,7 +709,7 @@ export default function Page() {
 
   function showCheckoutComingSoon() {
     setShowBuyCreditsPanel(false);
-    setPurchaseMessage('Coming soon');
+    setPurchaseMessage('Checkout is not available yet.');
   }
 
   async function postCheckout(url, payload = {}) {
@@ -841,22 +840,60 @@ export default function Page() {
             {LANDING_COPY.heroPrimaryCta}
           </a>
           <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
-          <div className="mt-12">
-            <DemoGlassCard />
+          <div
+            id={LANDING_COPY_KEYS.upload}
+            data-testid={LANDING_COPY_KEYS.upload}
+            className="mt-8"
+          >
+            <UploadCard
+              toolTitle={LANDING_COPY.toolTitle}
+              toolSubcopy={(() => {
+                if (planType !== 'free') return LANDING_COPY.toolSubcopy;
+                if (Number.isFinite(freeExportsLimit)) {
+                  return `${freeExportsLimit} free exports. No account required.`;
+                }
+                return 'Free exports. No account required.';
+              })()}
+              file={file}
+              freeExportsLeft={freeExportsLeft}
+              includeBranding={includeBranding}
+              truncateLongText={truncateLongText}
+              isLoading={isLoading}
+              notice={notice}
+              error={error}
+              hasResultBlob={Boolean(pdfBlob)}
+              onFileSelect={(nextFile) => handleFileSelect(nextFile)}
+              onRemoveFile={handleRemoveFile}
+              onBrandingChange={setIncludeBranding}
+              onTruncateChange={setTruncateLongText}
+              onSubmit={handleSubmit}
+              onDownloadAgain={handleDownloadAnyway}
+              onTrySample={handleTrySample}
+              downloadedFileName={Boolean(pdfBlob) ? resolvedPdfFilename : null}
+              verdict={renderVerdict}
+              conversionProgress={conversionProgress}
+              onBuyCredits={openBuyCreditsPanel}
+              isPro={planType === 'pro'}
+              showBuyCreditsForTwo={false}
+              isQuotaLocked={isQuotaLocked}
+              planType={planType}
+              remainingInPeriod={remainingInPeriod}
+              usedInPeriod={usedInPeriod}
+              periodLimit={periodLimit}
+              paywallReason={paywallReason}
+              onBuyCreditsPack={handleBuyCreditsPack}
+              showBuyCreditsPanel={showBuyCreditsPanel}
+              onCloseBuyPanel={closeBuyCreditsPanel}
+              purchaseMessage={purchaseMessage}
+              onGoPro={handleGoProCheckout}
+              onLayoutChange={handleLayoutChange}
+              layout={layout}
+            />
           </div>
         </div>
       </PageHero>
 
-      <Section id="transformation" index={1} bg="bg-gray-50" className="py-24 w-full">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-            Look professional.
-            <span className="block">Even with messy spreadsheets.</span>
-          </h2>
-        </div>
-      </Section>
-
-      <Section id={LANDING_COPY_KEYS.beforeAfter} index={2} className="py-24">
+      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-12">
         <div className="space-y-6">
           <h2 className="text-center text-2xl font-semibold leading-snug sm:text-3xl">
             From raw data to structured document.
@@ -865,10 +902,12 @@ export default function Page() {
             data-testid="home-preview-card"
             className="home-preview-float mx-auto max-w-5xl rounded-2xl border border-black/10 bg-white/80 p-4 shadow-sm backdrop-blur md:p-8"
           >
-            <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2">
+            <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[1fr_1.1fr]">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{LANDING_COPY.beforeLabel}</p>
-                <pre className="mt-2 min-h-28 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-3 text-[11px] leading-4 text-slate-700">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                  CSV input
+                </p>
+                <pre className="mt-2 min-h-[212px] overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 text-[11px] leading-4 text-slate-700">
 {`invoice_id,client,total
 A102,ACME Corp,4230.00
 A103,Northline,1120.00
@@ -876,19 +915,46 @@ A104,Widget,6900.00`}
                 </pre>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{LANDING_COPY.afterLabel}</p>
-                <div className="mt-2 space-y-1 text-sm text-slate-700">
-                  <p className="font-semibold">Overview page</p>
-                  <p>Rows 1–20 · Page 1/2</p>
-                  <p>Columns grouped by section</p>
-                </div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                  Structured PDF (v8)
+                </p>
+                <figure className="mt-2 overflow-hidden rounded-lg border border-slate-200">
+                  <img
+                    src="/fitforpdf-proof-v8.svg"
+                    alt="FitForPDF v8 structured document preview with overview and grouped columns"
+                    className="h-auto w-full"
+                  />
+                </figure>
               </div>
             </div>
+          </div>
+
+          <div
+            className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-slate-50 p-5"
+            data-testid="real-data-card"
+          >
+            <p className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+              Enterprise-scale example
+            </p>
+            <h3 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">Real data. Real complexity.</h3>
+            <p className="mt-2 max-w-2xl text-sm text-slate-600">
+              120 rows · 15 columns · long descriptions.
+              <span className="ml-2 text-slate-500">Automatically structured into readable sections.</span>
+            </p>
+            <button
+              type="button"
+              onClick={handleTrySample}
+              disabled={isLoading}
+              className={`${CTA_SECONDARY} mt-4 inline-flex h-10`}
+            >
+              Run the demo
+            </button>
+            <p className="mt-2 text-sm text-slate-600">See how FitForPDF handles real-world invoice complexity.</p>
           </div>
         </div>
       </Section>
 
-      <Section id="how-it-works" index={3} className="py-24" bg="bg-gray-50">
+      <Section id="how-it-works" index={2} className="py-12" bg="bg-gray-50">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">How it works</h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -911,7 +977,7 @@ A104,Widget,6900.00`}
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={4} className="py-24" bg="bg-white">
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-12" bg="bg-white">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.pricingPreviewTitle}
@@ -923,241 +989,28 @@ A104,Widget,6900.00`}
             gridTestId="pricing-grid"
             cardTestId="pricing-preview-card"
           />
+          <p className="text-sm text-slate-700">
+            Need higher limits, API access or team plans? <a href="mailto:hello@fitforpdf.com" className="underline">Contact us</a>.
+          </p>
           <a href="/pricing" className={CTA_SECONDARY}>
             {LANDING_COPY.pricingPreviewCta}
           </a>
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.privacyStrip} index={5} bg="bg-gray-50" className="py-24">
-        <div className="mx-auto max-w-3xl space-y-4 text-center">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">Your data. Not our business.</h2>
-          <ul className="mx-auto inline-flex max-w-2xl flex-col gap-2 pl-5 text-left text-slate-700">
-            <li>Files are deleted immediately after conversion.</li>
-            <li>The generated PDF is available for up to 15 minutes.</li>
-            <li>We do not store file contents in logs.</li>
-          </ul>
-        </div>
-      </Section>
-
-      <Section
-        id={LANDING_COPY_KEYS.upload}
-        index={6}
-        className="py-24"
-        bg="bg-white"
-        testId={LANDING_COPY_KEYS.upload}
-      >
-        <div className="space-y-4">
-          <div
-            className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
-            data-testid="real-data-card"
-          >
-            <p className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-              Enterprise-scale example
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">Real data. Real complexity.</h2>
-              <p className="mt-2 max-w-2xl text-sm text-slate-600">
-              120 rows · 15 columns · long descriptions.
-              <span className="ml-2 text-slate-500">Automatically structured into readable sections.</span>
-            </p>
-            <button
-              type="button"
-              onClick={handleTrySample}
-              disabled={isLoading}
-              className={`${CTA_SECONDARY} mt-4 inline-flex h-10`}
-            >
-              Run the demo
-            </button>
-            <p className="mt-2 text-sm text-slate-600">See how FitForPDF handles real-world invoice complexity.</p>
+      <Section id={LANDING_COPY_KEYS.privacyStrip} index={4} bg="bg-gray-50" className="py-12">
+        <div className="mx-auto grid w-full gap-8 lg:grid-cols-[1.2fr_1fr]">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">Your data. Not our business.</h2>
+            <ul className="mx-auto inline-flex max-w-2xl flex-col gap-2 pl-5 text-left text-slate-700">
+              <li>Files are deleted immediately after conversion.</li>
+              <li>The generated PDF is available for up to 15 minutes.</li>
+              <li>We do not store file contents in logs.</li>
+            </ul>
           </div>
-          <UploadCard
-            toolTitle={LANDING_COPY.toolTitle}
-            toolSubcopy={(() => {
-              if (planType !== 'free') return LANDING_COPY.toolSubcopy;
-              if (Number.isFinite(freeExportsLimit)) {
-                return `${freeExportsLimit} free exports. No account required.`;
-              }
-              return 'Free exports. No account required.';
-            })()}
-            file={file}
-            freeExportsLeft={freeExportsLeft}
-            includeBranding={includeBranding}
-            truncateLongText={truncateLongText}
-            isLoading={isLoading}
-            notice={notice}
-            error={error}
-            hasResultBlob={Boolean(pdfBlob)}
-            onFileSelect={(nextFile) => handleFileSelect(nextFile)}
-            onRemoveFile={handleRemoveFile}
-            onBrandingChange={setIncludeBranding}
-            onTruncateChange={setTruncateLongText}
-            onSubmit={handleSubmit}
-            onDownloadAgain={handleDownloadAnyway}
-            onTrySample={handleTrySample}
-            downloadedFileName={Boolean(pdfBlob) ? resolvedPdfFilename : null}
-            verdict={renderVerdict}
-            conversionProgress={conversionProgress}
-            onBuyCredits={openBuyCreditsPanel}
-            isPro={planType === 'pro'}
-            showBuyCreditsForTwo={false}
-            isQuotaLocked={isQuotaLocked}
-            planType={planType}
-            remainingInPeriod={remainingInPeriod}
-            usedInPeriod={usedInPeriod}
-            periodLimit={periodLimit}
-            paywallReason={paywallReason}
-            onBuyCreditsPack={handleBuyCreditsPack}
-            showBuyCreditsPanel={showBuyCreditsPanel}
-            onCloseBuyPanel={closeBuyCreditsPanel}
-            purchaseMessage={purchaseMessage}
-            onGoPro={handleGoProCheckout}
-            onLayoutChange={handleLayoutChange}
-            layout={layout}
-          />
-
-          {verdict === 'WARN' && (
-            <section className={`${PANEL} p-4`}>
-              <p>
-                <span className="inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-                  Recommended check
-                </span>
-                {confidence?.score != null ? <span className="ml-2 text-slate-700">Score: {confidence.score}</span> : null}
-              </p>
-              {warnReasons.length > 0 && (
-                <div className="mt-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowDetails((v) => !v)}
-                    aria-expanded={showDetails}
-                    className={CTA_SECONDARY}
-                  >
-                    {showDetails ? 'Hide details' : 'Show details'}
-                  </button>
-                  {showDetails && (
-                    <ul className="mt-3 space-y-1 list-disc pl-6 text-sm text-slate-700">
-                      {warnReasons.map((reason, idx) => (
-                        <li key={`${reason}-${idx}`}>{reason}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-              <div className="mt-4 flex flex-wrap gap-3">
-                <button className={CTA_SECONDARY} type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
-                  Download anyway
-                </button>
-                {!stillRiskAfterOptimized && (
-                  <button className={CTA_SECONDARY} type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
-                    Generate optimized version
-                  </button>
-                )}
-              </div>
-              {stillRiskAfterOptimized ? (
-                <p className="mt-3 text-sm text-slate-700">
-                  Optimized version generated. Please review before using.
-                </p>
-              ) : null}
-            </section>
-          )}
-
-          {verdict === 'FAIL' && failKind === 'page_burden' && (
-            <section className={`${PANEL} p-4`}>
-              <p className="font-semibold text-amber-700">{pageBurdenCopy.title}</p>
-              <p className="mt-3 text-sm text-amber-800">{pageBurdenCopy.description}</p>
-              {failureRecommendations.length > 0 && (
-                <ul className="mt-3 space-y-1 list-disc pl-6 text-sm text-slate-700">
-                  {failureRecommendations.map((recommendation, idx) => (
-                    <li key={`${recommendation}-${idx}`}>{recommendationLabel(recommendation)}</li>
-                  ))}
-                </ul>
-              )}
-              <div className="mt-4 flex flex-wrap gap-3">
-                <button className={CTA_SECONDARY} type="button" onClick={handleGenerateCompact} disabled={isLoading || stillRiskAfterCompact}>
-                  {pageBurdenCopy.primaryCta}
-                </button>
-                <button className={CTA_SECONDARY} type="button" disabled title="Coming soon">
-                  {pageBurdenCopy.secondaryCta}
-                </button>
-              </div>
-              {stillRiskAfterCompact ? (
-                <p className="mt-3 text-sm text-slate-700">
-                  Even in compact mode it is still too large. Reduce scope.
-                </p>
-              ) : null}
-            </section>
-          )}
-
-          {verdict === 'FAIL' && failKind !== 'page_burden' && (
-            <section className={`${PANEL} p-4`}>
-              <p className="font-semibold text-rose-700">
-                PDF risk {confidence?.score != null ? `(Score: ${confidence.score})` : ''}
-              </p>
-              {failReasons.length > 0 && (
-                <ul className="mt-3 space-y-1 list-disc pl-6 text-sm text-slate-700">
-                  {failReasons.map((reason, idx) => (
-                    <li key={`${reason}-${idx}`}>{reason}</li>
-                  ))}
-                </ul>
-              )}
-              <div className="mt-4 flex flex-wrap gap-3">
-                {stillRiskAfterOptimized ? (
-                  <button className={CTA_SECONDARY} type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
-                    Download anyway
-                  </button>
-                ) : (
-                  <>
-                    <button className={CTA_SECONDARY} type="button" onClick={handleGenerateOptimized} disabled={isLoading}>
-                      Generate optimized version
-                    </button>
-                    <button className={CTA_SECONDARY} type="button" onClick={handleDownloadAnyway} disabled={isLoading || !pdfBlob}>
-                      Download anyway
-                    </button>
-                  </>
-                )}
-              </div>
-              {stillRiskAfterOptimized ? (
-                <p className="mt-3 text-sm text-slate-700">
-                  Optimized version generated. Please review before using.
-                </p>
-              ) : null}
-            </section>
-          )}
-
-          {canShowDebug && (debugMetrics || columnMapDebug) && (
-            <section className={`${PANEL} p-4`}>
-              <button
-                type="button"
-                onClick={() => setShowDebug((v) => !v)}
-                aria-expanded={showDebug}
-                className={CTA_SECONDARY}
-              >
-                {showDebug ? 'Hide debug' : 'Debug'}
-              </button>
-              {showDebug && (
-                <>
-                  {columnMapDebug && (
-                    <div className="mt-3 space-y-1 text-sm text-slate-700">
-                      <p className="font-semibold">Column Map</p>
-                      <p>mode: {columnMapDebug.mode}</p>
-                      <p>rendered: {columnMapDebug.rendered}</p>
-                      <p>sections: {columnMapDebug.entries ?? 'unknown'}</p>
-                    </div>
-                  )}
-                  {debugMetrics && (
-                    <pre className="mt-3 max-h-48 overflow-auto text-xs text-slate-700">
-                      {JSON.stringify(debugMetrics, null, 2)}
-                    </pre>
-                  )}
-                </>
-              )}
-            </section>
-          )}
-        </div>
-      </Section>
-
-      <Section id="home-faq" index={8} bg="bg-white" className="py-24">
-        <div className="space-y-4">
-          <Accordion title="Frequently asked questions" items={HOME_FAQ} testId="home-faq" />
+          <div>
+            <Accordion title="Frequently asked questions" items={HOME_FAQ} testId="home-faq" />
+          </div>
         </div>
       </Section>
 

@@ -25,15 +25,15 @@ test('pricing contains 500 exports and €79', () => {
   assert.ok(content.includes('€79'));
 });
 
-test('pricing contains Pro and API and €29/month', () => {
+test('pricing contains only Free and Credits plans', () => {
   const content = pricingText();
-  assert.ok(content.includes('Pro + API'));
-  assert.ok(content.includes('€29/month'));
+  assert.equal(content.includes('Pro + API'), false);
+  assert.equal(content.includes('€29/month'), false);
 });
 
 test('pricing contains API wording', () => {
   const content = pricingText();
-  assert.equal(content.includes('API access (usage-based)'), true);
+  assert.equal(content.includes('Team/API'), true);
 });
 
 test('pricing has back to app link', () => {

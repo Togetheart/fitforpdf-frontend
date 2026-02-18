@@ -13,12 +13,12 @@ afterEach(() => {
 });
 
 describe('pricing page highlight', () => {
-  test('pricing page renders exactly three plan cards', () => {
+  test('pricing page renders exactly two plan cards', () => {
     const cards = screen.getAllByTestId('plan-card');
     const grid = screen.getByTestId('pricing-grid');
 
     expect(grid).toBeTruthy();
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
   });
 
   test('only credits card is highlighted and has Most popular', () => {

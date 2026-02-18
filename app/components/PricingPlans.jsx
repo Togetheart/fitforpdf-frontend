@@ -13,7 +13,8 @@ export default function PricingPlans({
   className = '',
 }) {
   const showActions = variant === 'pricing';
-  const gridClassName = ['grid grid-cols-1 gap-5', 'md:grid-cols-3', className]
+  const planColumnsClass = plans.length <= 2 ? 'md:grid-cols-2' : 'md:grid-cols-3';
+  const gridClassName = ['grid grid-cols-1 gap-5', planColumnsClass, className]
     .filter(Boolean)
     .join(' ')
     .trim();

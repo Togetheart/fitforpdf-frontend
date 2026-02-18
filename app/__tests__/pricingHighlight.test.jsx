@@ -35,11 +35,11 @@ afterEach(() => {
 });
 
 describe('pricing highlight on home', () => {
-  test('home pricing preview renders exactly three cards', () => {
+  test('home pricing preview renders exactly two cards', () => {
     const pricingGrid = screen.getByTestId('pricing-grid');
     const cards = within(pricingGrid).getAllByTestId('plan-card');
 
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
   });
 
   test('credits is the only highlighted plan card', () => {
@@ -47,7 +47,7 @@ describe('pricing highlight on home', () => {
     const allCards = screen.getAllByTestId('plan-card');
 
     expect(highlightedCards).toHaveLength(1);
-    expect(allCards).toHaveLength(3);
+    expect(allCards).toHaveLength(2);
 
     const creditsCard = screen.getByTestId('plan-highlighted').closest('[data-testid="plan-card"]');
     expect(creditsCard).toBeTruthy();
@@ -62,14 +62,14 @@ describe('pricing highlight on home', () => {
     expect(cardText).toContain('500 exports · €79');
   });
 
-  test('free card and pro card contain required pricing text', () => {
+  test('free card and credits card contain required pricing text', () => {
     const cards = screen.getAllByTestId('plan-card');
     const freeCard = cards.find((card) => /Free/i.test(card.querySelector('h3')?.textContent || ''));
-    const proCard = cards.find((card) => /Pro \+ API/i.test(card.querySelector('h3')?.textContent || ''));
+    const creditsCard = cards.find((card) => /Credits/i.test(card.querySelector('h3')?.textContent || ''));
 
     expect(freeCard).toBeTruthy();
-    expect(proCard).toBeTruthy();
+    expect(creditsCard).toBeTruthy();
     expect(freeCard?.textContent || '').toContain('Free');
-    expect(proCard?.textContent || '').toContain('€29/month');
+    expect(creditsCard?.textContent || '').toContain('€19');
   });
 });

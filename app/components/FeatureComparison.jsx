@@ -32,6 +32,7 @@ export default function FeatureComparison({
   rows,
 }) {
   const featureColumns = columns || [];
+  const visibleRows = Array.isArray(rows) ? rows : [];
 
   return (
     <section aria-labelledby="feature-comparison-title" data-testid="pricing-compare" className="space-y-4">
@@ -53,7 +54,7 @@ export default function FeatureComparison({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, rowIndex) => (
+              {visibleRows.map((row, rowIndex) => (
                 <tr
                   key={row[0]}
                   className={`border-b border-slate-100 last:border-b-0 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-slate-50/55'}`}
@@ -61,9 +62,11 @@ export default function FeatureComparison({
                   <th className="px-4 py-3 text-left font-medium text-slate-700">
                     {row[0]}
                   </th>
-                  <td className="px-4 py-3">{compareValue(row[1])}</td>
-                  <td className="px-4 py-3">{compareValue(row[2])}</td>
-                  <td className="px-4 py-3">{compareValue(row[3])}</td>
+                  {featureColumns.map((_, index) => (
+                    <td key={index} className="px-4 py-3">
+                      {compareValue(row[index + 1])}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -71,22 +74,16 @@ export default function FeatureComparison({
         </div>
 
         <div className="space-y-3 p-4 md:hidden">
-          {rows.map((row) => (
+          {visibleRows.map((row) => (
             <div key={row[0]} className="rounded-xl border border-slate-100 p-3">
               <p className="text-sm font-medium text-slate-800">{row[0]}</p>
               <dl className="mt-2 space-y-1 text-sm">
-                <div className="grid grid-cols-2 gap-2">
-                  <dt className="text-slate-500">{featureColumns[0]}</dt>
-                  <dd>{compareValue(row[1])}</dd>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <dt className="text-slate-500">{featureColumns[1]}</dt>
-                  <dd>{compareValue(row[2])}</dd>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <dt className="text-slate-500">{featureColumns[2]}</dt>
-                  <dd>{compareValue(row[3])}</dd>
-                </div>
+                {featureColumns.map((column, index) => (
+                  <div key={`${row[0]}-${column}`} className="grid grid-cols-2 gap-2">
+                    <dt className="text-slate-500">{column}</dt>
+                    <dd>{compareValue(row[index + 1])}</dd>
+                  </div>
+                ))}
               </dl>
             </div>
           ))}
@@ -95,4 +92,3 @@ export default function FeatureComparison({
     </section>
   );
 }
-
