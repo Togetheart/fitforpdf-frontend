@@ -585,7 +585,7 @@ export default function UploadCard({
             type="button"
             onClick={onTrySample}
             disabled={isLoading}
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
             <span aria-hidden="true">▶</span>
