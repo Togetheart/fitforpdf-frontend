@@ -3,6 +3,7 @@ import {
   AlertCircle,
   CheckCircle2,
   CircleHelp,
+  ChevronDown,
   Loader2,
   ShoppingCart,
 } from 'lucide-react';
@@ -372,8 +373,11 @@ export default function UploadCard({
   onBuyCreditsPack = () => {},
   purchaseMessage = '',
   onGoPro = onUpgrade,
+  initialOptionsExpanded = true,
 }) {
-  const canUseAdvanced = getPlanTypeLabel(planType) !== 'free' || isPro;
+  const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
+  const showProBanner = getPlanTypeLabel(planType) === 'pro' || isPro;
+  const canUseAdvanced = isAdvancedPlan;
   const progressStepIndex = Number.isInteger(conversionProgress?.stepIndex)
     ? conversionProgress.stepIndex
     : 0;
@@ -394,6 +398,7 @@ export default function UploadCard({
   const [showBrandingUpgradeNudge, setShowBrandingUpgradeNudge] = React.useState(false);
   const [nudgeTarget, setNudgeTarget] = React.useState('branding');
   const [nudgeData, setNudgeData] = React.useState(null);
+  const [isOptionsExpanded, setIsOptionsExpanded] = React.useState(initialOptionsExpanded);
   const isBrandingNudgeSuppressed = React.useCallback(() => getBrandingNudgeSuppressedUntil() > Date.now(), []);
 
   const trackEvent = (name) => {
@@ -475,7 +480,7 @@ export default function UploadCard({
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5" data-testid="upload-card">
       <form className="space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-2">
+        <div className="space-y-2">
             <h2
               id="generate"
               className="scroll-mt-24 text-2xl font-semibold leading-snug sm:text-3xl"
@@ -484,6 +489,14 @@ export default function UploadCard({
             </h2>
             <p className="text-sm text-slate-500">{toolSubcopy}</p>
           </div>
+          {showProBanner ? (
+            <p
+              data-testid="pro-top-banner"
+              className="rounded-full bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700"
+            >
+              Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
+            </p>
+          ) : null}
           <div className="flex items-center gap-2">
             <span
               data-testid="quota-buy-slot"
@@ -554,102 +567,126 @@ export default function UploadCard({
           </div>
         ) : null}
 
-        <div className="rounded-xl border border-slate-200 bg-white px-4">
-          <SettingRow
-            title="Branding"
-            description="Adds a lightweight brand treatment by default"
-            checked={includeBranding}
-            onChange={handleBrandingChange}
-            tooltip={<InfoTooltip label="Branding" text="Keep this on to display the FitForPDF styling in exports." />}
-            rowTestId="setting-row-branding"
-            disabled={isLoading}
-          />
-          <div
-            data-testid="branding-upgrade-nudge-slot"
-            aria-live="polite"
-            className="min-h-0 px-4 pt-2 pb-1"
+        <div className="rounded-xl border border-slate-200 bg-white">
+          <button
+            type="button"
+            data-testid="options-accordion-toggle"
+            aria-expanded={isOptionsExpanded}
+            aria-controls="upload-options"
+            onClick={() => setIsOptionsExpanded((current) => !current)}
+            className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left"
           >
-            {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
-              <section
-                className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
-                data-testid="branding-upgrade-nudge"
-              >
-                <p className="text-sm font-semibold text-slate-900">
-                  {nudgeData?.title || 'Upgrade to unlock this feature'}
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {nudgeData?.description || 'Upgrade to unlock this feature.'}
-                </p>
-                <div className="mt-3 flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleBrandingUpgrade}
-                    className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
-                  >
-                    Buy credits
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleProUpgrade}
-                    className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
-                  >
-                    Go Pro
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleBrandingNudgeDismiss}
-                    className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                  >
-                    Not now
-                  </button>
-                </div>
-              </section>
-            ) : null}
+            <span className="text-sm font-semibold text-slate-900">Options</span>
+            <ChevronDown
+              aria-hidden="true"
+              className={`h-4 w-4 text-slate-500 transition-transform duration-150 ${isOptionsExpanded ? 'rotate-180' : ''}`}
+            />
+          </button>
+
+          <div
+            id="upload-options"
+            hidden={!isOptionsExpanded}
+            className="overflow-hidden"
+            aria-live="polite"
+          >
+            <div
+              data-testid="branding-upgrade-nudge-slot"
+              aria-live="polite"
+              className="min-h-0 px-4 pt-2 pb-1"
+            >
+              {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+                <section
+                  className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+                  data-testid="branding-upgrade-nudge"
+                >
+                  <p className="text-sm font-semibold text-slate-900">
+                    {nudgeData?.title || 'Upgrade to unlock this feature'}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {nudgeData?.description || 'Upgrade to unlock this feature.'}
+                  </p>
+                  <div className="mt-3 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleBrandingUpgrade}
+                      className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
+                    >
+                      Buy credits
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleProUpgrade}
+                      className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
+                    >
+                      Go Pro
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleBrandingNudgeDismiss}
+                      className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                    >
+                      Not now
+                    </button>
+                  </div>
+                </section>
+              ) : null}
+            </div>
+
+            <div className="h-px bg-slate-100" />
+
+            <SettingRow
+              title="Branding"
+              description="Adds a lightweight brand treatment by default"
+              checked={includeBranding}
+              onChange={handleBrandingChange}
+              tooltip={<InfoTooltip label="Branding" text="Keep this on to display the FitForPDF styling in exports." />}
+              rowTestId="setting-row-branding"
+              disabled={isLoading}
+            />
+            <div className="h-px bg-slate-100" />
+
+            <SettingRow
+              title="Keep overview"
+              description="Show overview summary page in the export."
+              checked={layout?.overview !== false}
+              onChange={(nextChecked) => handleLayoutChange('overview', nextChecked)}
+              tooltip={<InfoTooltip label="Keep overview" text="Keep overview content in the generated PDF." />}
+              rowTestId="setting-row-overview"
+              disabled={isLoading}
+            />
+            <div className="h-px bg-slate-100" />
+            <SettingRow
+              title="Keep headers"
+              description="Keep repeated headers for multi-page outputs."
+              checked={layout?.headers !== false}
+              onChange={(nextChecked) => handleLayoutChange('headers', nextChecked)}
+              tooltip={<InfoTooltip label="Keep headers" text="Keep your table headers visible on each page." />}
+              rowTestId="setting-row-headers"
+              disabled={isLoading}
+            />
+            <div className="h-px bg-slate-100" />
+            <SettingRow
+              title="Keep footer"
+              description="Keep footer metadata in the exported PDF."
+              checked={layout?.footer !== false}
+              onChange={(nextChecked) => handleLayoutChange('footer', nextChecked)}
+              tooltip={<InfoTooltip label="Keep footer" text="Keep the footer content in the exported PDF." />}
+              rowTestId="setting-row-footer"
+              disabled={isLoading}
+            />
+
+            <div className="h-px bg-slate-100" />
+
+            <SettingRow
+              title="Truncate long text"
+              description="Auto-crops very long content to keep layout stable"
+              checked={truncateLongText}
+              onChange={onTruncateChange}
+              tooltip={<InfoTooltip label="Truncate long text" text="Enable this to avoid rows pushing beyond column width." />}
+              rowTestId="setting-row-truncate"
+              disabled={isLoading}
+            />
           </div>
-
-          <div className="h-px bg-slate-100" />
-
-          <SettingRow
-            title="Keep overview"
-            description="Show overview summary page in the export."
-            checked={layout?.overview !== false}
-            onChange={(nextChecked) => handleLayoutChange('overview', nextChecked)}
-            tooltip={<InfoTooltip label="Keep overview" text="Keep overview content in the generated PDF." />}
-            rowTestId="setting-row-overview"
-            disabled={isLoading}
-          />
-          <div className="h-px bg-slate-100" />
-          <SettingRow
-            title="Keep headers"
-            description="Keep repeated headers for multi-page outputs."
-            checked={layout?.headers !== false}
-            onChange={(nextChecked) => handleLayoutChange('headers', nextChecked)}
-            tooltip={<InfoTooltip label="Keep headers" text="Keep your table headers visible on each page." />}
-            rowTestId="setting-row-headers"
-            disabled={isLoading}
-          />
-          <div className="h-px bg-slate-100" />
-          <SettingRow
-            title="Keep footer"
-            description="Keep footer metadata in the exported PDF."
-            checked={layout?.footer !== false}
-            onChange={(nextChecked) => handleLayoutChange('footer', nextChecked)}
-            tooltip={<InfoTooltip label="Keep footer" text="Keep the footer content in the exported PDF." />}
-            rowTestId="setting-row-footer"
-            disabled={isLoading}
-          />
-
-          <div className="h-px bg-slate-100" />
-
-          <SettingRow
-            title="Truncate long text"
-            description="Auto-crops very long content to keep layout stable"
-            checked={truncateLongText}
-            onChange={onTruncateChange}
-            tooltip={<InfoTooltip label="Truncate long text" text="Enable this to avoid rows pushing beyond column width." />}
-            rowTestId="setting-row-truncate"
-            disabled={isLoading}
-          />
         </div>
 
         {showBuyCreditsPanel ? (
@@ -682,33 +719,43 @@ export default function UploadCard({
         ) : null}
 
         {isQuotaLocked ? (
-          <section
-            data-testid="upload-paywall"
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
-          >
-            <p className="text-xs text-slate-600">{paywallReason || 'You have reached your exports limit for this plan.'}</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Button
-                type="button"
-                variant="primary"
-                onClick={onBuyCredits}
-                className="min-w-0"
-              >
-                Buy credits
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={onGoPro}
-                className="min-w-0"
-              >
-                Go Pro
-              </Button>
-            </div>
-            <p className="mt-3 text-xs text-slate-600">
-              <a href="mailto:hello@fitforpdf.com" className="underline">Contact us for Team/API</a>
-            </p>
-          </section>
+          <>
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-full"
+              disabled
+            >
+              Generate PDF
+            </Button>
+            <section
+              data-testid="upload-paywall"
+              className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            >
+              <p className="text-xs text-slate-600">{paywallReason || 'You have reached your exports limit for this plan.'}</p>
+              <div className="mt-3 flex flex-wrap gap-2" data-testid="quota-upgrade-inline">
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={onBuyCredits}
+                  className="min-w-0"
+                >
+                  Buy credits
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={onGoPro}
+                  className="min-w-0"
+                >
+                  Go Pro
+                </Button>
+              </div>
+              <p className="mt-3 text-xs text-slate-600">
+                <a href="mailto:hello@fitforpdf.com" className="underline">Contact us for Team/API</a>
+              </p>
+            </section>
+          </>
         ) : hasResultBlob ? (
           <Button
             type="button"
@@ -731,7 +778,6 @@ export default function UploadCard({
               >
                 Run the demo
               </button>
-              <span className="text-slate-600">See how FitForPDF handles real-world invoice complexity.</span>
               <span className="text-slate-400">·</span>
               <span className="text-slate-500">120 rows · 14 columns · long descriptions</span>
             </div>

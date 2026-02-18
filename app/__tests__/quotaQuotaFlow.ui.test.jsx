@@ -152,6 +152,32 @@ describe('quota-driven plan state and paywall flows', () => {
     mock.restore();
   });
 
+  test('pro plan shows top banner once with quota remaining', async () => {
+    const mock = mockFetch((url) => {
+      if (url.includes('/api/quota')) {
+        return createQuotaResponse({
+          plan_type: 'pro',
+          remaining_in_period: 7,
+          period_limit: 500,
+          used_in_period: 493,
+        });
+      }
+      return createJsonResponse(500, { error: 'unexpected' });
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('pro-top-banner')).toBeTruthy();
+    });
+
+    const banners = screen.getAllByTestId('pro-top-banner');
+    expect(banners).toHaveLength(1);
+    expect(banners[0].textContent).toContain('Pro · 7 exports left this month');
+
+    mock.restore();
+  });
+
   test('free helper copy uses free.limit from quota', async () => {
     const mock = mockFetch((url) => {
       if (url.includes('/api/quota')) {
@@ -401,7 +427,7 @@ describe('quota-driven plan state and paywall flows', () => {
     }, { timeout: 2000 });
     expect(within(screen.getByTestId('upload-paywall')).getByRole('button', { name: 'Buy credits' })).toBeTruthy();
     expect(within(screen.getByTestId('upload-paywall')).getByRole('button', { name: 'Go Pro' })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Generate PDF' })).toHaveProperty('disabled', true);
 
     const renderCallsBeforeFourthAttempt = mock.calls.filter((call) => String(call.url).includes('/api/render')).length;
     const generateButton = screen.queryByRole('button', { name: 'Generate PDF' });

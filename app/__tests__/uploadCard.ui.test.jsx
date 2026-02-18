@@ -52,6 +52,9 @@ function UploadCardHarness({
   isPro = true,
   onEvent = () => {},
   onUpgrade = () => {},
+  planType = 'free',
+  remainingInPeriod = null,
+  initialOptionsExpanded = true,
 }) {
   return function Harness() {
     const [currentFile, setCurrentFile] = useState(file);
@@ -89,6 +92,9 @@ function UploadCardHarness({
         isPro={isPro}
         onEvent={onEvent}
         onUpgrade={onUpgrade}
+        planType={planType}
+        remainingInPeriod={remainingInPeriod}
+        initialOptionsExpanded={initialOptionsExpanded}
       />
     );
   };
@@ -106,6 +112,9 @@ function renderUploadCardHarness({
   isPro = true,
   onEvent = () => {},
   onUpgrade = () => {},
+  planType = 'free',
+  remainingInPeriod = null,
+  initialOptionsExpanded = true,
 }) {
   const Harness = UploadCardHarness({
     freeExportsLeft,
@@ -119,6 +128,9 @@ function renderUploadCardHarness({
     isPro,
     onEvent,
     onUpgrade,
+    planType,
+    remainingInPeriod,
+    initialOptionsExpanded,
   });
   render(<Harness />);
   return { onBuyCredits, onBrandingChange, onTruncateChange };
@@ -234,6 +246,27 @@ describe('UploadCard unit behavior', () => {
   test('renders free exports badge with premium copy', () => {
     expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*3\s*exports\s*left/i);
     expect(screen.queryByText(/5 free exports/i)).toBeNull();
+  });
+
+  test('options section is an accordion and can be collapsed/expanded', () => {
+    const optionsToggle = screen.getByRole('button', { name: 'Options' });
+    const optionsPanel = document.getElementById('upload-options');
+
+    expect(optionsToggle.getAttribute('aria-expanded')).toBe('true');
+    expect(optionsPanel?.getAttribute('hidden')).toBe(null);
+    expect(screen.getByRole('switch', { name: 'Branding' })).toBeTruthy();
+
+    fireEvent.click(optionsToggle);
+
+    expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
+    expect(optionsPanel?.getAttribute('hidden')).toBe('');
+    expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
+
+    fireEvent.click(optionsToggle);
+
+    expect(optionsToggle.getAttribute('aria-expanded')).toBe('true');
+    expect(optionsPanel?.getAttribute('hidden')).toBe(null);
+    expect(screen.getByRole('switch', { name: 'Branding' })).toBeTruthy();
   });
 
   test('dropzone helper copy has no two-step mention and keeps the new two-line message', () => {
@@ -617,12 +650,10 @@ describe('UploadCard conversion flow on landing page', () => {
     const uploadCard = screen.getByTestId('upload-card');
     const demoRow = within(uploadCard).getByTestId('run-demo-row');
     const demoButton = within(demoRow).getByRole('button', { name: 'Run the demo' });
-    const demoPhrase = within(demoRow).getByText('See how FitForPDF handles real-world invoice complexity.');
     const separator = within(demoRow).getByText('·');
     const stats = within(demoRow).getByText('120 rows · 14 columns · long descriptions');
 
     expect(demoButton).toBeTruthy();
-    expect(demoPhrase).toBeTruthy();
     expect(separator).toBeTruthy();
     expect(stats).toBeTruthy();
     expect(demoRow.className).toContain('flex');
@@ -632,10 +663,9 @@ describe('UploadCard conversion flow on landing page', () => {
     expect(demoRow.className).toContain('items-center');
     expect(demoRow.className).toContain('text-sm');
     expect(demoButton.className).toContain('font-semibold');
-    expect(demoPhrase.className).toContain('text-slate-600');
     expect(separator.className).toContain('text-slate-400');
     expect(stats.className).toContain('text-slate-500');
-    expect(demoRow.children).toHaveLength(4);
+    expect(demoRow.children).toHaveLength(3);
 
     mock.restore();
   });
@@ -781,7 +811,8 @@ describe('UploadCard conversion flow on landing page', () => {
     const uploadPaywall = screen.getByTestId('upload-paywall');
     expect(within(uploadPaywall).getByRole('button', { name: 'Buy credits' })).toBeTruthy();
     expect(within(uploadPaywall).getByRole('button', { name: 'Go Pro' })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Generate PDF' })).toHaveProperty('disabled', true);
+    expect(within(uploadPaywall).getByTestId('quota-upgrade-inline')).toBeTruthy();
     const uploadSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     const uploadCard = screen.getByTestId('upload-card');
     expect(within(screen.getByTestId('quota-buy-slot')).getByLabelText('Buy credits')).toBeTruthy();
