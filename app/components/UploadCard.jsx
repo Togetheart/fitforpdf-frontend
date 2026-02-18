@@ -608,7 +608,7 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className="group flex w-full items-center justify-between gap-2 rounded-t-2xl border-b border-slate-200 px-5 py-4 text-left text-sm font-medium text-slate-800 transition hover:bg-slate-50"
+            className="group flex w-full items-center justify-between gap-2 border-b border-slate-200 px-5 py-4 text-left text-sm font-medium text-slate-800 transition hover:bg-slate-50"
           >
             <span>Options</span>
             <ChevronDown
