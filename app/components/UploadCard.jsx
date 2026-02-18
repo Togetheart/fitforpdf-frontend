@@ -216,6 +216,7 @@ function SettingRow({
   tooltip,
   disabled,
   rowTestId,
+  showBottomBorder = true,
 }) {
   const handleTextToggle = (event) => {
     if (disabled) return;
@@ -224,14 +225,18 @@ function SettingRow({
   };
 
   return (
-    <div className="flex w-full items-start justify-between gap-6 rounded-sm py-4">
+    <div
+      className={`flex w-full items-start justify-between gap-6 px-0 py-4 ${showBottomBorder ? 'border-b border-slate-100' : ''}`}
+    >
       <div
         data-testid={rowTestId}
         tabIndex={-1}
         className="min-w-0"
       >
         <div
-          className="rounded-md px-1 py-0.5 transition-colors cursor-pointer hover:bg-slate-50"
+          role="button"
+          tabIndex={-1}
+          className="w-full cursor-pointer px-1 py-0.5 text-left transition-colors hover:bg-slate-50"
           onClick={handleTextToggle}
         >
           <div className="flex items-center gap-2">
@@ -399,6 +404,8 @@ export default function UploadCard({
   const [nudgeTarget, setNudgeTarget] = React.useState('branding');
   const [nudgeData, setNudgeData] = React.useState(null);
   const [isOptionsExpanded, setIsOptionsExpanded] = React.useState(initialOptionsExpanded);
+  const [showBuyCreditsPanelInternal, setShowBuyCreditsPanelInternal] = React.useState(false);
+  const effectiveShowBuyCreditsPanel = showBuyCreditsPanel || showBuyCreditsPanelInternal;
   const isBrandingNudgeSuppressed = React.useCallback(() => getBrandingNudgeSuppressedUntil() > Date.now(), []);
 
   const trackEvent = (name) => {
@@ -424,6 +431,7 @@ export default function UploadCard({
   const openNudge = (feature) => {
     if (!isBrandingNudgeSuppressed()) {
       requestNudge(feature);
+      setShowBuyCreditsPanelInternal(false);
       setShowBrandingUpgradeNudge(true);
     }
   };
@@ -453,6 +461,7 @@ export default function UploadCard({
   const handleBrandingUpgrade = () => {
     onBuyCredits();
     setShowBrandingUpgradeNudge(false);
+    setShowBuyCreditsPanelInternal(true);
     trackEvent('paywall_upgrade_clicked');
   };
 
@@ -466,6 +475,11 @@ export default function UploadCard({
     trackEvent('paywall_dismissed');
     setBrandingNudgeSuppressedUntil(Date.now() + BRANDING_UPGRADE_NUDGE_SUPPRESS_MS);
     setShowBrandingUpgradeNudge(false);
+  };
+
+  const handleBuyCreditsPanelClose = () => {
+    setShowBuyCreditsPanelInternal(false);
+    onCloseBuyPanel();
   };
 
   React.useEffect(() => {
@@ -594,7 +608,7 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className="flex w-full items-center justify-between gap-2 px-5 py-4 text-left text-sm font-medium text-slate-800 transition hover:bg-slate-50"
+            className="group flex w-full items-center justify-between gap-2 rounded-t-2xl border-b border-slate-200 px-5 py-4 text-left text-sm font-medium text-slate-800 transition hover:bg-slate-50"
           >
             <span>Options</span>
             <ChevronDown
@@ -607,16 +621,43 @@ export default function UploadCard({
             <div
               id="upload-options"
               data-testid="upload-options"
-              className="border-t border-slate-100 px-5 py-5 space-y-4"
+              className="px-5 py-5 space-y-4"
               aria-live="polite"
             >
               <div className="min-h-0 divide-y divide-slate-100">
-                <div
-                  data-testid="branding-upgrade-nudge-slot"
-                  aria-live="polite"
-                  className={`overflow-hidden transition-all duration-200 ${showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}
-                >
-                  {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+                {effectiveShowBuyCreditsPanel && isOptionsExpanded ? (
+                  <section className="rounded-xl border border-slate-200 bg-slate-50 p-4" data-testid="credits-purchase-panel">
+                    <div className="mb-3 flex items-center justify-between">
+                      <p className="text-sm font-semibold text-slate-900">Buy credits</p>
+                      <button
+                        type="button"
+                        onClick={handleBuyCreditsPanelClose}
+                        className="text-xs font-semibold text-slate-600 underline"
+                      >
+                        Close
+                      </button>
+                    </div>
+                    {CREDIT_PACKS.map((pack) => (
+                      <button
+                        type="button"
+                        key={pack.pack}
+                        onClick={() => onBuyCreditsPack(pack.pack)}
+                        className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
+                      >
+                        <span>{pack.exportsLabel}</span>
+                        <span>{pack.price}</span>
+                      </button>
+                    ))}
+                    {purchaseMessage ? (
+                      <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
+                    ) : null}
+                  </section>
+                ) : null}
+                {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+                  <div
+                    data-testid="branding-upgrade-nudge-slot"
+                    aria-live="polite"
+                  >
                     <section
                       className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
                       data-testid="branding-upgrade-nudge"
@@ -651,41 +692,8 @@ export default function UploadCard({
                         </button>
                       </div>
                     </section>
-                  ) : null}
-                </div>
-
-                <section
-                  className={`overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 ${showBuyCreditsPanel ? 'max-h-96 opacity-100' : 'max-h-0 border-slate-100 bg-transparent p-0 opacity-0'}`}
-                  data-testid={showBuyCreditsPanel && isOptionsExpanded ? 'credits-purchase-panel' : 'credits-purchase-panel-inline'}
-                  aria-hidden={!showBuyCreditsPanel}
-                >
-                  <div className={`transition-opacity duration-150 ${showBuyCreditsPanel ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="mb-3 flex items-center justify-between">
-                      <p className="text-sm font-semibold text-slate-900">Buy credits</p>
-                      <button
-                        type="button"
-                        onClick={onCloseBuyPanel}
-                        className="text-xs font-semibold text-slate-600 underline"
-                      >
-                        Close
-                      </button>
-                    </div>
-                    {CREDIT_PACKS.map((pack) => (
-                      <button
-                        type="button"
-                        key={pack.pack}
-                        onClick={() => onBuyCreditsPack(pack.pack)}
-                        className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
-                      >
-                        <span>{pack.exportsLabel}</span>
-                        <span>{pack.price}</span>
-                      </button>
-                    ))}
-                    {purchaseMessage ? (
-                      <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
-                    ) : null}
                   </div>
-                </section>
+                ) : null}
 
                 <SettingRow
                   title="Branding"
@@ -735,19 +743,20 @@ export default function UploadCard({
                   tooltip={<InfoTooltip label="Truncate long text" text="Enable this to avoid rows pushing beyond column width." />}
                   rowTestId="setting-row-truncate"
                   disabled={isLoading}
+                  showBottomBorder={false}
                 />
               </div>
             </div>
           ) : null}
         </div>
 
-        {showBuyCreditsPanel && !isOptionsExpanded ? (
+        {effectiveShowBuyCreditsPanel && !isOptionsExpanded ? (
           <section className="rounded-xl border border-slate-200 bg-slate-50 p-4" data-testid="credits-purchase-panel">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-900">Buy credits</p>
               <button
                 type="button"
-                onClick={onCloseBuyPanel}
+                onClick={handleBuyCreditsPanelClose}
                 className="text-xs font-semibold text-slate-600 underline"
               >
                 Close
