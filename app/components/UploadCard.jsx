@@ -601,7 +601,7 @@ export default function UploadCard({
           </div>
         ) : null}
 
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="mt-6 rounded-2xl bg-white shadow-sm">
           <button
             type="button"
             data-testid="options-accordion-toggle"
