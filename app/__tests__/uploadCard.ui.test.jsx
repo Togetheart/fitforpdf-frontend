@@ -248,6 +248,10 @@ describe('UploadCard unit behavior', () => {
     expect(screen.queryByText(/5 free exports/i)).toBeNull();
   });
 
+  test('toolSubcopy is aligned left for upload card helper text', () => {
+    expect(screen.getByText('Free exports. No account required.').className).toContain('text-left');
+  });
+
   test('options section is an accordion and can be collapsed/expanded', () => {
     const optionsToggle = screen.getByRole('button', { name: 'Options' });
 
@@ -270,6 +274,18 @@ describe('UploadCard unit behavior', () => {
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByTestId('upload-options')).toBeNull();
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
+  });
+
+  test('option rows keep bottom-only separators and no top border on first row', () => {
+    cleanup();
+    renderUploadCardHarness({ initialOptionsExpanded: true });
+
+    const brandingRow = screen.getByTestId('setting-row-branding').parentElement;
+    const truncateRow = screen.getByTestId('setting-row-truncate').parentElement;
+
+    expect(brandingRow.className).toContain('border-b');
+    expect(brandingRow.className).not.toContain('border-t');
+    expect(truncateRow.className).not.toContain('border-b');
   });
 
   test('dropzone helper copy has no two-step mention and keeps the new two-line message', () => {
@@ -439,6 +455,32 @@ describe('UploadCard unit behavior', () => {
     const brandingNudge = screen.getByTestId('branding-upgrade-nudge');
     fireEvent.click(within(brandingNudge).getByRole('button', { name: 'Buy credits' }));
 
+    expect(onBuyCredits).toHaveBeenCalledTimes(1);
+    expect(onEvent).toHaveBeenCalledWith('paywall_upgrade_clicked');
+  });
+
+  test('switch click triggers nudge and buy credits click replaces nudge with buy credits panel in options', () => {
+    cleanup();
+    clearBrandingNudgeSuppression();
+    const onBuyCredits = vi.fn();
+    const onEvent = vi.fn();
+    renderUploadCardHarness({
+      isPro: false,
+      onBuyCredits,
+      onEvent,
+      initialOptionsExpanded: true,
+    });
+
+    const brandingSwitch = screen.getByRole('switch', { name: 'Branding' });
+    fireEvent.click(brandingSwitch);
+
+    const brandingNudge = screen.getByTestId('branding-upgrade-nudge');
+    const nudgeBuyButton = within(brandingNudge).getByRole('button', { name: 'Buy credits' });
+    fireEvent.click(nudgeBuyButton);
+
+    expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+    expect(screen.getByTestId('credits-purchase-panel')).toBeTruthy();
+    expect(screen.getByTestId('upload-options').contains(screen.getByTestId('credits-purchase-panel'))).toBe(true);
     expect(onBuyCredits).toHaveBeenCalledTimes(1);
     expect(onEvent).toHaveBeenCalledWith('paywall_upgrade_clicked');
   });
@@ -669,7 +711,7 @@ describe('UploadCard conversion flow on landing page', () => {
     mock.restore();
   });
 
-  test('buy credits panel appears inline under options upgrade nudge', () => {
+  test('buy credits panel appears after clicking upgrade nudge', () => {
     clearBrandingNudgeSuppression();
     const mock = mockFetch({
       response: createPdfResponse(),
@@ -687,8 +729,8 @@ describe('UploadCard conversion flow on landing page', () => {
 
     const panel = screen.getByTestId('credits-purchase-panel');
     expect(panel).toBeTruthy();
-    const buyPanelHost = screen.getByTestId('branding-upgrade-nudge-slot').parentElement;
-    expect(buyPanelHost?.children[1]).toBe(panel);
+    expect(screen.getByTestId('upload-options').contains(panel)).toBe(true);
+    expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
 
     mock.restore();
   });

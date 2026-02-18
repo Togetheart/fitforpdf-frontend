@@ -494,14 +494,14 @@ export default function UploadCard({
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5" data-testid="upload-card">
       <form className="space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2">
+        <div className="space-y-2 text-left">
             <h2
               id="generate"
               className="scroll-mt-24 text-2xl font-semibold leading-snug sm:text-3xl"
             >
               {toolTitle}
             </h2>
-            <p className="text-sm text-slate-500">{toolSubcopy}</p>
+            <p className="text-sm text-slate-500 text-left">{toolSubcopy}</p>
           </div>
           {showProBanner ? (
             <p
