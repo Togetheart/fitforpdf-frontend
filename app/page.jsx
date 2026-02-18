@@ -27,6 +27,7 @@ import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
 import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
+import DemoGlassCard from './components/DemoGlassCard';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
@@ -552,6 +553,8 @@ export default function Page() {
           <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
         </div>
       </PageHero>
+
+      <DemoGlassCard />
 
       <Section id="transformation" index={1} bg="bg-gray-50" className="py-24 w-full">
         <div className="mx-auto max-w-3xl text-center">
