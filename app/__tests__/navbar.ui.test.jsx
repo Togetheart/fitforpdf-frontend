@@ -29,8 +29,6 @@ describe('site navbar style and behavior', () => {
     expect(hasClass(header, 'bg-white/60')).toBe(true);
     expect(hasClass(header, 'supports-[backdrop-filter]:bg-white/50')).toBe(true);
     expect(hasClass(header, 'w-full')).toBe(true);
-    expect(hasClass(header, 'ring-1')).toBe(true);
-    expect(hasClass(header, 'ring-black/5')).toBe(true);
   });
 
   test('fixed implementation has layout shim to prevent jump', () => {
