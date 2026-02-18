@@ -342,7 +342,7 @@ describe('UploadCard unit behavior', () => {
     const buyButton = screen.getByRole('button', { name: 'Buy credits' });
 
     expect(buyButton.getAttribute('aria-label')).toBe('Buy credits');
-    expect(screen.getByText('Buy credits')).toBeTruthy();
+    expect(screen.getByTestId('quota-buy-slot')).toBeTruthy();
 
     fireEvent.click(buyButton);
     expect(onBuyCredits).toHaveBeenCalledTimes(1);
@@ -650,22 +650,40 @@ describe('UploadCard conversion flow on landing page', () => {
     const uploadCard = screen.getByTestId('upload-card');
     const demoRow = within(uploadCard).getByTestId('run-demo-row');
     const demoButton = within(demoRow).getByRole('button', { name: 'Run the demo' });
-    const separator = within(demoRow).getByText('·');
-    const stats = within(demoRow).getByText('120 rows · 14 columns · long descriptions');
+    const runDemoCopy = within(demoRow).getByText('See how FitForPDF handles real-world invoice complexity.');
 
     expect(demoButton).toBeTruthy();
-    expect(separator).toBeTruthy();
-    expect(stats).toBeTruthy();
+    expect(runDemoCopy).toBeTruthy();
     expect(demoRow.className).toContain('flex');
-    expect(demoRow.className).toContain('flex-wrap');
-    expect(demoRow.className).toContain('gap-x-2');
-    expect(demoRow.className).toContain('gap-y-1');
-    expect(demoRow.className).toContain('items-center');
+    expect(demoRow.className).toContain('flex-col');
+    expect(demoRow.className).toContain('gap-1');
     expect(demoRow.className).toContain('text-sm');
     expect(demoButton.className).toContain('font-semibold');
-    expect(separator.className).toContain('text-slate-400');
-    expect(stats.className).toContain('text-slate-500');
-    expect(demoRow.children).toHaveLength(3);
+    expect(runDemoCopy.className).toContain('text-slate-500');
+    expect(demoRow.children).toHaveLength(2);
+
+    mock.restore();
+  });
+
+  test('buy credits panel appears inline under options upgrade nudge', () => {
+    clearBrandingNudgeSuppression();
+    const mock = mockFetch({
+      response: createPdfResponse(),
+      delayMs: 30,
+    });
+    render(<LandingPage />);
+
+    const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
+    fireEvent.click(brandingTitle);
+    expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
+
+    const nudgeSection = screen.getByTestId('branding-upgrade-nudge');
+    fireEvent.click(within(nudgeSection).getByRole('button', { name: 'Buy credits' }));
+
+    const panel = screen.getByTestId('credits-purchase-panel');
+    expect(panel).toBeTruthy();
+    const buyPanelHost = screen.getByTestId('branding-upgrade-nudge-slot').parentElement;
+    expect(buyPanelHost?.children[1]).toBe(panel);
 
     mock.restore();
   });

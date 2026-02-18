@@ -586,50 +586,86 @@ export default function UploadCard({
           <div
             id="upload-options"
             hidden={!isOptionsExpanded}
+            data-testid="upload-options"
             className="overflow-hidden"
             aria-live="polite"
           >
-            <div
-              data-testid="branding-upgrade-nudge-slot"
-              aria-live="polite"
-              className="min-h-0 px-4 pt-2 pb-1"
-            >
-              {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
-                <section
-                  className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
-                  data-testid="branding-upgrade-nudge"
-                >
-                  <p className="text-sm font-semibold text-slate-900">
-                    {nudgeData?.title || 'Upgrade to unlock this feature'}
-                  </p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {nudgeData?.description || 'Upgrade to unlock this feature.'}
-                  </p>
-                  <div className="mt-3 flex items-center gap-2">
+            <div className="min-h-0 px-4 pt-2 pb-1">
+              <div
+                data-testid="branding-upgrade-nudge-slot"
+                aria-live="polite"
+                className={`overflow-hidden transition-all duration-200 ${showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+                  <section
+                    className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+                    data-testid="branding-upgrade-nudge"
+                  >
+                    <p className="text-sm font-semibold text-slate-900">
+                      {nudgeData?.title || 'Upgrade to unlock this feature'}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      {nudgeData?.description || 'Upgrade to unlock this feature.'}
+                    </p>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleBrandingUpgrade}
+                        className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
+                      >
+                        Buy credits
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleProUpgrade}
+                        className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
+                      >
+                        Go Pro
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleBrandingNudgeDismiss}
+                        className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                      >
+                        Not now
+                      </button>
+                    </div>
+                  </section>
+                ) : null}
+              </div>
+
+              <section
+                className={`overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 ${showBuyCreditsPanel ? 'max-h-96 opacity-100' : 'max-h-0 border-slate-100 bg-transparent p-0 opacity-0'}`}
+                data-testid={showBuyCreditsPanel && isOptionsExpanded ? 'credits-purchase-panel' : 'credits-purchase-panel-inline'}
+                aria-hidden={!showBuyCreditsPanel}
+              >
+                <div className={`transition-opacity duration-150 ${showBuyCreditsPanel ? 'opacity-100' : 'opacity-0'}`}>
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="text-sm font-semibold text-slate-900">Buy credits</p>
                     <button
                       type="button"
-                      onClick={handleBrandingUpgrade}
-                      className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
+                      onClick={onCloseBuyPanel}
+                      className="text-xs font-semibold text-slate-600 underline"
                     >
-                      Buy credits
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleProUpgrade}
-                      className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
-                    >
-                      Go Pro
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleBrandingNudgeDismiss}
-                      className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                    >
-                      Not now
+                      Close
                     </button>
                   </div>
-                </section>
-              ) : null}
+                  {CREDIT_PACKS.map((pack) => (
+                    <button
+                      type="button"
+                      key={pack.pack}
+                      onClick={() => onBuyCreditsPack(pack.pack)}
+                      className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
+                    >
+                      <span>{pack.exportsLabel}</span>
+                      <span>{pack.price}</span>
+                    </button>
+                  ))}
+                  {purchaseMessage ? (
+                    <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
+                  ) : null}
+                </div>
+              </section>
             </div>
 
             <div className="h-px bg-slate-100" />
@@ -689,7 +725,7 @@ export default function UploadCard({
           </div>
         </div>
 
-        {showBuyCreditsPanel ? (
+        {showBuyCreditsPanel && !isOptionsExpanded ? (
           <section className="rounded-xl border border-slate-200 bg-slate-50 p-4" data-testid="credits-purchase-panel">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-900">Buy credits</p>
@@ -769,7 +805,7 @@ export default function UploadCard({
           </Button>
         ) : (
           <>
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm" data-testid="run-demo-row">
+            <div className="flex flex-col gap-1 text-sm" data-testid="run-demo-row">
               <button
                 type="button"
                 onClick={onTrySample}
@@ -778,8 +814,9 @@ export default function UploadCard({
               >
                 Run the demo
               </button>
-              <span className="text-slate-400">·</span>
-              <span className="text-slate-500">120 rows · 14 columns · long descriptions</span>
+              <p className="text-slate-500">
+                See how FitForPDF handles real-world invoice complexity.
+              </p>
             </div>
             <Button
               type="submit"
