@@ -144,19 +144,18 @@ describe('landing conversion-first structure', () => {
   test('privacy and faq sections use dedicated sizing and layout', () => {
     const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
-    const faqInner = screen.getByTestId('faq-section-inner');
     const faqAccordion = screen.getByTestId('home-faq');
 
     const privacyClass = privacy.getAttribute('class') || '';
     const faqSectionClass = faq.getAttribute('class') || '';
-    const faqClass = faqInner.getAttribute('class') || '';
     const faqAccordionClass = faqAccordion.getAttribute('class') || '';
+    const faqSectionInner = faq.querySelector('[class*="max-w-7xl"]');
 
     expect(privacyClass).toContain('bg-slate-50');
     expect(faqSectionClass).toContain('bg-white');
     expect(privacy).toHaveTextContent('Your data. Not our business.');
     expect(faq).toHaveTextContent('Frequently asked questions');
-    expect(faqClass).toContain('max-w-7xl');
+    expect(faqSectionInner).toBeTruthy();
     expect(faqAccordionClass).toContain('w-full');
   });
 

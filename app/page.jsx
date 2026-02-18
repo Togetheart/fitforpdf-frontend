@@ -1005,12 +1005,15 @@ A104,Widget,6900.00`}
         </div>
       </Section>
 
-      <section
+      <Section
         id={LANDING_COPY_KEYS.privacyStrip}
-        className="bg-slate-50 py-16 sm:py-20"
-        data-testid="privacy-section"
+        index={4}
+        bg="bg-slate-50"
+        className="py-16 sm:py-20"
+        testId="privacy-section"
+        maxWidth="max-w-3xl"
       >
-        <div className="mx-auto max-w-3xl px-6 text-center">
+        <div className="text-center">
           <h2 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
             Your data. Not our business.
           </h2>
@@ -1020,10 +1023,17 @@ A104,Widget,6900.00`}
             <p>No file content is stored in logs.</p>
           </div>
         </div>
-      </section>
+      </Section>
 
-      <section className="bg-white py-16 sm:py-20" data-testid="faq-section">
-        <div className="mx-auto w-full max-w-7xl px-6" data-testid="faq-section-inner">
+      <Section
+        id="home-faq"
+        index={5}
+        bg="bg-white"
+        className="py-16 sm:py-20"
+        testId="faq-section"
+        maxWidth="max-w-7xl"
+      >
+        <div>
           <h2 className="text-center text-2xl font-semibold text-slate-900 sm:text-3xl">
             Frequently asked questions
           </h2>
@@ -1031,7 +1041,7 @@ A104,Widget,6900.00`}
             <Accordion items={HOME_FAQ} testId="home-faq" />
           </div>
         </div>
-      </section>
+      </Section>
 
     </div>
   );
