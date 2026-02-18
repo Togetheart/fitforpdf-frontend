@@ -11,7 +11,6 @@ import useQuota from './hooks/useQuota.mjs';
 import useConversion from './hooks/useConversion.mjs';
 import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
-import Card from './components/Card';
 import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
 import PageHero from './components/PageHero';
@@ -48,7 +47,7 @@ export default function Page() {
         heroTestId="hero-section"
         variant="home"
         align="center"
-        height="min-h-screen"
+        height="min-h-0 sm:min-h-screen"
         title={<HeroHeadline />}
         subtitle={LANDING_COPY.heroSubheadline}
         contentClassName="items-center gap-8 text-center"
@@ -57,7 +56,10 @@ export default function Page() {
         className="py-0 w-full"
       >
         <div className="space-y-6">
-          <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
+          <div className="space-y-1.5">
+            <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
+            <p className="max-w-prose text-xs text-slate-400">{LANDING_COPY.socialProofLine}</p>
+          </div>
           <div
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
@@ -111,7 +113,7 @@ export default function Page() {
         </div>
       </PageHero>
 
-      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-12">
+      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-16 sm:py-20">
         <div className="space-y-6">
           <h2 className="text-center text-2xl font-semibold leading-snug sm:text-3xl">
             From raw data to structured document.
@@ -120,7 +122,7 @@ export default function Page() {
             data-testid="home-preview-card"
             className="home-preview-float mx-auto max-w-7xl rounded-xl glass-elevated p-4 md:p-8"
           >
-            <div className="grid gap-4 sm:grid-cols-[1fr_1.1fr]">
+            <div className="grid gap-6 sm:grid-cols-[1fr_1.3fr]">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                   CSV INPUT
@@ -136,6 +138,7 @@ export default function Page() {
                     className="h-auto w-full rounded-lg object-cover"
                   />
                 </ImageLightbox>
+                <p className="mt-2 text-xs text-slate-400">Raw spreadsheet data — columns overflow, no structure.</p>
               </div>
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
@@ -153,36 +156,34 @@ export default function Page() {
                     className="h-auto w-full rounded-lg object-cover"
                   />
                 </ImageLightbox>
+                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-400">
+                  <span>Overview page</span>
+                  <span aria-hidden="true" className="text-slate-300">·</span>
+                  <span>Grouped columns</span>
+                  <span aria-hidden="true" className="text-slate-300">·</span>
+                  <span>Page i/n</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </Section>
 
-      <Section id="how-it-works" index={2} className="py-12" bg="bg-gray-50">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">How it works</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <Card data-testid="how-it-works-card" className="p-5">
-                <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white">1</p>
-                <h3 className="text-lg font-semibold">Upload your file</h3>
-                <p className="mt-2 text-sm text-slate-700">Drop CSV or XLSX into the secure converter.</p>
-              </Card>
-              <Card data-testid="how-it-works-card" className="p-5">
-                <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white">2</p>
-                <h3 className="text-lg font-semibold">Generate structure</h3>
-                <p className="mt-2 text-sm text-slate-700">We build a client-ready PDF with overview and sections.</p>
-              </Card>
-              <Card data-testid="how-it-works-card" className="p-5">
-                <p className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white">3</p>
-                <h3 className="text-lg font-semibold">Download</h3>
-                <p className="mt-2 text-sm text-slate-700">Get a polished file in seconds and send it immediately.</p>
-              </Card>
-          </div>
+      <Section id="client-ready" index={2} className="py-10" bg="bg-gray-50">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.clientReadyTitle}</h2>
+          <ul className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-slate-600">
+            {LANDING_COPY.clientReadyBullets.map((point) => (
+              <li key={point} className="flex items-center gap-1.5">
+                <svg className="h-4 w-4 flex-shrink-0 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                {point}
+              </li>
+            ))}
+          </ul>
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-12" bg="bg-white">
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-20" bg="bg-white">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">
             {LANDING_COPY.pricingPreviewTitle}
@@ -207,7 +208,7 @@ export default function Page() {
         id={LANDING_COPY_KEYS.privacyStrip}
         index={4}
         bg="bg-slate-50"
-        className="py-12"
+        className="py-10"
         testId="privacy-section"
         maxWidth="max-w-3xl"
       >
@@ -227,7 +228,7 @@ export default function Page() {
         id="home-faq"
         index={5}
         bg="bg-white"
-        className="py-12"
+        className="py-16 sm:py-20"
         testId="faq-section"
       >
         <div className="space-y-3">
@@ -241,6 +242,29 @@ export default function Page() {
               itemClassName="py-3"
             />
           </div>
+        </div>
+      </Section>
+
+      <Section
+        id="final-cta"
+        index={6}
+        bg="bg-gray-50"
+        className="py-16 sm:py-20"
+        testId="final-cta-section"
+      >
+        <div className="mx-auto max-w-xl text-center">
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            {LANDING_COPY.finalCtaTitle}
+          </h2>
+          <p className="mt-3 text-base text-slate-500">{LANDING_COPY.finalCtaCopy}</p>
+          <Button
+            variant="primary"
+            href="#generate"
+            onClick={handleHeroGenerateClick}
+            className="mt-6"
+          >
+            {LANDING_COPY.finalCtaLabel}
+          </Button>
         </div>
       </Section>
 

@@ -3,7 +3,7 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
   heroTitle: 'Client-ready PDFs.\\nFrom raw data.',
-  heroSubheadline: 'Smart column grouping. Full data integrity. Automatic pagination. From any CSV or Excel file.',
+  heroSubheadline: 'Upload a spreadsheet. Get a structured, readable PDF. Ready to send to your client.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'No account. No tracking. Files deleted after conversion.',
@@ -51,6 +51,14 @@ export const LANDING_COPY = {
     'We do not store file contents in logs.',
   ],
   privacyStripCta: 'Read privacy policy',
+
+  socialProofLine: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
+
+  finalCtaTitle: 'Ready to send professional PDFs?',
+  finalCtaCopy: 'No signup required. Free exports included.',
+  finalCtaLabel: 'Try it now',
+
+  footerTagline: 'Transform spreadsheets into professional PDFs.',
 };
 
 export const LANDING_COPY_KEYS = {

@@ -69,7 +69,7 @@ describe('shared site shell navigation', () => {
     expect(footer.querySelector('a[href=\"/pricing\"]')).toBeTruthy();
     expect(footer.querySelector('a[href=\"/privacy\"]')).toBeTruthy();
     expect(footer.querySelector('a[href=\"https://t.me/CrabiAssistantBot\"]')).toBeTruthy();
-    expect((footer.textContent || '').includes('© FitForPDF')).toBe(true);
+    expect((footer.textContent || '').includes('FitForPDF')).toBe(true);
   });
 
   test('pricing has shared header/footer links and single instances', () => {

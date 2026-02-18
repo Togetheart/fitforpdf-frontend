@@ -36,24 +36,27 @@ afterEach(() => {
 
 describe('landing conversion-first structure', () => {
   test('sections exist in strict order', () => {
-      const hero = screen.getByTestId('hero-section');
-      const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
-      const howItWorks = screen.getByTestId('section-how-it-works');
-      const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
-      const privacy = screen.getByTestId('privacy-section');
-      const faq = screen.getByTestId('faq-section');
+    const hero = screen.getByTestId('hero-section');
+    const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
+    const clientReady = screen.getByTestId('section-client-ready');
+    const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
+    const privacy = screen.getByTestId('privacy-section');
+    const faq = screen.getByTestId('faq-section');
+    const finalCta = screen.getByTestId('final-cta-section');
 
     expect(hero).toBeTruthy();
     expect(proof).toBeTruthy();
-    expect(howItWorks).toBeTruthy();
+    expect(clientReady).toBeTruthy();
     expect(pricing).toBeTruthy();
     expect(privacy).toBeTruthy();
-      expect(faq).toBeTruthy();
+    expect(faq).toBeTruthy();
+    expect(finalCta).toBeTruthy();
     expect(hero.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(proof.compareDocumentPosition(howItWorks) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(howItWorks.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(proof.compareDocumentPosition(clientReady) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(clientReady.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(pricing.compareDocumentPosition(privacy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privacy.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(faq.compareDocumentPosition(finalCta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('legacy demo section below options is removed', () => {
@@ -133,31 +136,27 @@ describe('landing conversion-first structure', () => {
     expect(within(previewCard).getByText('STRUCTURED PDF')).toBeTruthy();
   });
 
-  test('cards in proof and how-it-works sections are glass-styled', () => {
+  test('proof card is glass-elevated and client-ready section exists', () => {
     const previewCard = screen.getByTestId('home-preview-card');
-    const howItWorksSection = screen.getByTestId('section-how-it-works');
-    const howItWorksCards = Array.from(howItWorksSection.querySelectorAll('[data-testid=\"how-it-works-card\"]'));
+    const clientReady = screen.getByTestId('section-client-ready');
 
     expect((previewCard.className || '').includes('glass-elevated')).toBe(true);
-    expect(howItWorksCards).toHaveLength(3);
-    howItWorksCards.forEach((card) => {
-      expect((card.className || '').includes('glass')).toBe(true);
-    });
+    expect(clientReady).toBeTruthy();
+    expect(clientReady.textContent).toContain('Client-ready means');
   });
 
-  test('landing section spacing is compacted to medium rhythm', () => {
+  test('landing section spacing uses varied rhythm', () => {
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
-    const howItWorks = screen.getByTestId('section-how-it-works');
+    const clientReady = screen.getByTestId('section-client-ready');
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
     const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
 
-    expect((proof.getAttribute('class') || '').includes('py-12')).toBe(true);
-    expect((howItWorks.getAttribute('class') || '').includes('py-12')).toBe(true);
-    expect((pricing.getAttribute('class') || '').includes('py-12')).toBe(true);
-    expect((privacy.getAttribute('class') || '').includes('py-16')).toBe(false);
-    expect((privacy.getAttribute('class') || '').includes('sm:py-20')).toBe(false);
-    expect((faq.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((proof.getAttribute('class') || '').includes('py-16')).toBe(true);
+    expect((clientReady.getAttribute('class') || '').includes('py-10')).toBe(true);
+    expect((pricing.getAttribute('class') || '').includes('py-16')).toBe(true);
+    expect((privacy.getAttribute('class') || '').includes('py-10')).toBe(true);
+    expect((faq.getAttribute('class') || '').includes('py-16')).toBe(true);
   });
 
   test('privacy and faq sections use dedicated sizing and layout', () => {

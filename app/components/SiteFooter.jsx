@@ -4,8 +4,14 @@ export default function SiteFooter() {
   return (
     <footer data-testid="site-footer" className="border-t border-black/5 bg-gray-50">
       <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p className="text-sm text-black/60">© FitForPDF</p>
+        <div className="space-y-1">
+          <p className="text-sm font-semibold text-black/70">FitForPDF</p>
+          <p className="text-xs text-black/40">Transform spreadsheets into professional PDFs.</p>
+        </div>
         <nav className="flex items-center gap-4 text-sm text-black/70 sm:gap-6">
+          <a className="transition hover:text-black" href="/#tool">
+            Try free
+          </a>
           <a className="transition hover:text-black" href="/pricing">
             Pricing
           </a>
@@ -18,7 +24,7 @@ export default function SiteFooter() {
             target="_blank"
             rel="noreferrer"
           >
-            Try on Telegram
+            Telegram
           </a>
         </nav>
       </div>
