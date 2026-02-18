@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 describe('site navbar style and behavior', () => {
-  test('navbar uses sticky glassmorphism classes', () => {
+  test('navbar uses glassmorphism classes and is sticky/fixed', () => {
     render(
       <SiteShell>
         <main data-testid="page-content">content</main>
@@ -20,12 +20,15 @@ describe('site navbar style and behavior', () => {
 
     const header = screen.getByTestId('site-header');
 
-    expect(hasClass(header, 'sticky')).toBe(true);
+    expect(hasClass(header, 'sticky') || hasClass(header, 'fixed')).toBe(true);
     expect(hasClass(header, 'top-0')).toBe(true);
+    expect(hasClass(header, 'left-0')).toBe(true);
+    expect(hasClass(header, 'right-0')).toBe(true);
     expect(hasClass(header, 'z-50')).toBe(true);
     expect(hasClass(header, 'backdrop-blur-xl')).toBe(true);
     expect(hasClass(header, 'bg-white/60')).toBe(true);
     expect(hasClass(header, 'supports-[backdrop-filter]:bg-white/50')).toBe(true);
+    expect(hasClass(header, 'w-full')).toBe(true);
     expect(hasClass(header, 'border-b')).toBe(true);
     expect(hasClass(header, 'border-slate-200/60')).toBe(true);
     expect(hasClass(header, 'ring-1')).toBe(true);
@@ -33,7 +36,7 @@ describe('site navbar style and behavior', () => {
     expect(hasClass(header, 'shadow-sm')).toBe(true);
   });
 
-  test('sticky implementation has no fixed spacer shim', () => {
+  test('fixed implementation has layout shim to prevent jump', () => {
     render(
       <SiteShell>
         <main data-testid="page-content">content</main>
@@ -43,8 +46,9 @@ describe('site navbar style and behavior', () => {
     const header = screen.getByTestId('site-header');
     const maybeSpacer = screen.queryByTestId('site-header-spacer');
 
-    expect(hasClass(header, 'fixed')).toBe(false);
-    expect(maybeSpacer).toBeNull();
+    expect(hasClass(header, 'fixed')).toBe(true);
+    expect(maybeSpacer).toBeTruthy();
+    expect(hasClass(maybeSpacer, 'h-16')).toBe(true);
   });
 
   test('navbar links remain keyboard focusable', () => {
