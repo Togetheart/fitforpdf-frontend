@@ -45,7 +45,7 @@ describe('HeroHeadline accent animation', () => {
     expect(screen.getByText('Reorganized into readable sections.').className).not.toContain('hero-accent');
   });
 
-  test('does not animate accent line because section accent is static gradient', () => {
+  test('animates accent line at load when not reduced motion', () => {
     configureMatchMedia(false);
     const timelineTo = vi.fn().mockReturnThis();
     const timeline = { to: timelineTo, kill: vi.fn() };
@@ -58,7 +58,14 @@ describe('HeroHeadline accent animation', () => {
 
     const accent = screen.getByTestId('hero-headline-accent');
     expect(accent.getAttribute('data-anim')).toBe('on');
-    expect(timelineSpy).not.toHaveBeenCalled();
+    expect(timelineSpy).toHaveBeenCalledTimes(1);
+    expect(timelineTo).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        backgroundPosition: '100% 50%',
+        duration: 12,
+      }),
+    );
   });
 
   test('keeps reduced-motion static and does not animate', () => {

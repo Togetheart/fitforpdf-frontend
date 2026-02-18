@@ -21,22 +21,18 @@ export default function HeroHeadline() {
     const firstNode = firstLineRef.current;
     if (!accentNode) return;
 
-    const accentShouldAnimate = !accentNode.classList?.contains('hero-accent--sections');
-
     let timeline = null;
-    if (accentShouldAnimate) {
-      timeline = gsap.timeline({
-        repeat: -1,
-        yoyo: true,
-        defaults: { ease: 'sine.inOut' },
-      });
+    timeline = gsap.timeline({
+      repeat: -1,
+      yoyo: true,
+      defaults: { ease: 'sine.inOut' },
+    });
 
-      timeline.to(accentNode, {
-        backgroundPosition: '100% 50%',
-        filter: 'brightness(1.08)',
-        duration: 12,
-      });
-    }
+    timeline.to(accentNode, {
+      backgroundPosition: '100% 50%',
+      filter: 'brightness(1.08)',
+      duration: 12,
+    });
 
     let introTween = null;
     if (firstNode) {
