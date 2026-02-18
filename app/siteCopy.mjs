@@ -3,7 +3,7 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
   heroTitle: 'Client-ready PDFs.\\nFrom raw data.',
-  heroSubheadline: 'Turn raw spreadsheets into structured PDFs in seconds.',
+  heroSubheadline: 'Smart column grouping. Full data integrity. Automatic pagination. From any CSV or Excel file.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'No account. No tracking. Files deleted after conversion.',
