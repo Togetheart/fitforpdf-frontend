@@ -40,17 +40,20 @@ describe('landing conversion-first structure', () => {
       const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
       const howItWorks = screen.getByTestId('section-how-it-works');
       const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
-      const privacy = screen.getByTestId(`section-${LANDING_COPY_KEYS.privacyStrip}`);
+      const privacy = screen.getByTestId('privacy-section');
+      const faq = screen.getByTestId('faq-section');
 
     expect(hero).toBeTruthy();
     expect(proof).toBeTruthy();
     expect(howItWorks).toBeTruthy();
     expect(pricing).toBeTruthy();
     expect(privacy).toBeTruthy();
+      expect(faq).toBeTruthy();
     expect(hero.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(proof.compareDocumentPosition(howItWorks) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(howItWorks.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(pricing.compareDocumentPosition(privacy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(privacy.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('legacy demo section below options is removed', () => {
@@ -126,9 +129,35 @@ describe('landing conversion-first structure', () => {
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const howItWorks = screen.getByTestId('section-how-it-works');
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
+    const privacy = screen.getByTestId('privacy-section');
+    const faq = screen.getByTestId('faq-section');
 
     expect((proof.getAttribute('class') || '').includes('py-12')).toBe(true);
     expect((howItWorks.getAttribute('class') || '').includes('py-12')).toBe(true);
     expect((pricing.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((privacy.getAttribute('class') || '').includes('py-16')).toBe(true);
+    expect((faq.getAttribute('class') || '').includes('py-16')).toBe(true);
+    expect((privacy.getAttribute('class') || '').includes('sm:py-20')).toBe(true);
+    expect((faq.getAttribute('class') || '').includes('sm:py-20')).toBe(true);
+  });
+
+  test('privacy and faq sections use dedicated sizing and layout', () => {
+    const privacy = screen.getByTestId('privacy-section');
+    const faq = screen.getByTestId('faq-section');
+
+    const privacyClass = privacy.getAttribute('class') || '';
+    const faqClass = faq.getAttribute('class') || '';
+
+    expect(privacyClass).toContain('bg-slate-50');
+    expect(faqClass).toContain('bg-white');
+    expect(privacy).toHaveTextContent('Your data. Not our business.');
+    expect(faq).toHaveTextContent('Frequently asked questions');
+  });
+
+  test('faq section keeps a single heading and a single home FAQ mount', () => {
+    const faq = screen.getByTestId('faq-section');
+
+    expect(screen.getAllByRole('heading', { name: 'Frequently asked questions' })).toHaveLength(1);
+    expect(screen.getAllByTestId('home-faq')).toHaveLength(1);
   });
 });

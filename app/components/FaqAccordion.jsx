@@ -9,7 +9,7 @@ function normalizeId(value) {
 
 export default function FaqAccordion({
   items = [],
-  title = 'Frequently asked questions',
+  title,
   testId,
 }) {
   const itemList = useMemo(
@@ -45,7 +45,7 @@ export default function FaqAccordion({
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h2 className="text-2xl font-semibold leading-tight">{title}</h2>
+      {title ? <h2 className="text-2xl font-semibold leading-tight">{title}</h2> : null}
       <div
         className="mt-8 space-y-0 divide-y divide-black/10"
         data-testid={testId ?? 'faq-accordion'}

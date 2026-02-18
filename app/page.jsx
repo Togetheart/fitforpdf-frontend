@@ -1005,21 +1005,33 @@ A104,Widget,6900.00`}
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.privacyStrip} index={4} bg="bg-gray-50" className="py-12">
-        <div className="mx-auto grid w-full gap-8 lg:grid-cols-[1.2fr_1fr]">
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">Your data. Not our business.</h2>
-            <ul className="mx-auto inline-flex max-w-2xl flex-col gap-2 pl-5 text-left text-slate-700">
-              <li>Files are deleted immediately after conversion.</li>
-              <li>The generated PDF is available for up to 15 minutes.</li>
-              <li>We do not store file contents in logs.</li>
-            </ul>
-          </div>
-          <div>
-            <Accordion title="Frequently asked questions" items={HOME_FAQ} testId="home-faq" />
+      <section
+        id={LANDING_COPY_KEYS.privacyStrip}
+        className="bg-slate-50 py-16 sm:py-20"
+        data-testid="privacy-section"
+      >
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <h2 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+            Your data. Not our business.
+          </h2>
+          <div className="mt-6 space-y-2 text-base leading-relaxed text-slate-500">
+            <p>Files are deleted immediately after conversion.</p>
+            <p>The generated PDF is available for up to 15 minutes.</p>
+            <p>No file content is stored in logs.</p>
           </div>
         </div>
-      </Section>
+      </section>
+
+      <section className="bg-white py-16 sm:py-20" data-testid="faq-section">
+        <div className="mx-auto max-w-3xl px-6">
+          <h2 className="text-center text-2xl font-semibold text-slate-900 sm:text-3xl">
+            Frequently asked questions
+          </h2>
+          <div className="mt-10 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+            <Accordion items={HOME_FAQ} testId="home-faq" />
+          </div>
+        </div>
+      </section>
 
     </div>
   );
