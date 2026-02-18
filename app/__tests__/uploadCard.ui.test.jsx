@@ -607,8 +607,7 @@ describe('UploadCard conversion flow on landing page', () => {
     });
 
     render(<LandingPage />);
-    const realDataCard = screen.getByTestId('real-data-card');
-    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
     fireEvent.click(demoButton);
 
     await waitFor(() => {
@@ -645,7 +644,7 @@ describe('UploadCard conversion flow on landing page', () => {
 
     render(<LandingPage />);
 
-    expect(screen.getAllByRole('button', { name: 'Run the demo' })).toHaveLength(1);
+    expect(screen.getAllByRole('button', { name: 'Try with demo file' })).toHaveLength(1);
 
     mock.restore();
   });
@@ -657,15 +656,15 @@ describe('UploadCard conversion flow on landing page', () => {
     });
 
     render(<LandingPage />);
-    const realDataCard = screen.getByTestId('real-data-card');
-    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
-    const runDemoCopy = within(realDataCard).getByText('See how FitForPDF handles real-world invoice complexity.');
+    const uploadCard = screen.getByTestId('upload-card');
+    const demoButton = within(uploadCard).getByRole('button', { name: 'Try with demo file' });
+    const runDemoCopy = within(uploadCard).getByText('120 rows · 15 columns · invoices');
 
     expect(demoButton).toBeTruthy();
     expect(runDemoCopy).toBeTruthy();
     expect(demoButton.className).toContain('rounded-full');
     expect(demoButton.className).toContain('inline-flex');
-    expect(screen.queryByTestId('run-demo-row')).toBeNull();
+    expect(screen.getByTestId('demo-try-row')).toBeTruthy();
 
     mock.restore();
   });
@@ -841,7 +840,7 @@ describe('UploadCard conversion flow on landing page', () => {
     const uploadCard = screen.getByTestId('upload-card');
     expect(within(screen.getByTestId('quota-buy-slot')).getByLabelText('Buy credits')).toBeTruthy();
     expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*0\s*exports\s*left/i);
-    expect(within(uploadCard).queryByRole('button', { name: 'Run the demo' })).toBeNull();
+    expect(within(uploadCard).getByRole('button', { name: 'Try with demo file' })).toBeTruthy();
     mock.restore();
   });
 

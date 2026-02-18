@@ -31,9 +31,10 @@ test('pricing contains only Free and Credits plans', () => {
   assert.equal(content.includes('€29/month'), false);
 });
 
-test('pricing contains API wording', () => {
-  const content = pricingText();
-  assert.equal(content.includes('Team/API'), true);
+test('pricing exposes only free and credits plan cards', () => {
+  assert.equal(PRICING_CARDS.length, 2);
+  const planIds = PRICING_CARDS.map((card) => card.id);
+  assert.deepEqual(planIds, ['free', 'credits']);
 });
 
 test('pricing has back to app link', () => {

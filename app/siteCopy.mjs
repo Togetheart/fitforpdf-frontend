@@ -116,7 +116,7 @@ export const PRICING_PAGE_COPY = {
   creditsFeature4: 'Structured sections',
   creditsCtaLabel: 'Buy credits',
   creditsCtaHref: '#',
-  creditsCtaTooltip: 'Stripe checkout is not connected yet.',
+  creditsCtaTooltip: 'Payments coming soon. Contact us.',
   creditsBadge: 'Most popular',
   proApiTitle: 'Team/API',
   proApiCtaLabel: 'Contact us',

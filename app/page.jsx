@@ -22,10 +22,12 @@ import Section from './components/ui/Section';
 import PricingPlans from './components/PricingPlans';
 import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
+import Button from './components/ui/Button';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
 const PRO_PERIOD_LIMIT_DEFAULT = 500;
+const CHECKOUT_COMING_SOON_MESSAGE = 'Payments coming soon. Contact us.';
 const QUOTA_STATUS_BY_RENDER_CODE = {
   free_quota_exhausted: 'free',
   credits_exhausted: 'credits',
@@ -317,9 +319,7 @@ async function parseConfidenceFromJsonIfAvailable(res) {
   return null;
 }
 
-const CTA_BASE = 'inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150';
-const CTA_PRIMARY = `${CTA_BASE} border-[#D92D2A] bg-[#D92D2A] text-white`;
-const CTA_SECONDARY = `${CTA_BASE} border-slate-300 bg-white text-slate-900 hover:bg-slate-50`;
+const CTA_SECONDARY = 'inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150 border-slate-300 bg-white text-slate-900 hover:bg-slate-50';
 const PANEL = 'rounded-xl border border-slate-200 bg-white';
 
 export default function Page() {
@@ -709,7 +709,34 @@ export default function Page() {
 
   function showCheckoutComingSoon() {
     setShowBuyCreditsPanel(false);
-    setPurchaseMessage('Checkout is not available yet.');
+    setPurchaseMessage(CHECKOUT_COMING_SOON_MESSAGE);
+  }
+
+  function handleHeroGenerateClick(event) {
+    if (!event) return;
+    event.preventDefault();
+    const target = document.getElementById('generate');
+    if (!target) return;
+
+    const scrollOptions = {
+      behavior: 'smooth',
+      block: 'start',
+    };
+
+    if (typeof target.scrollIntoView === 'function') {
+      target.scrollIntoView(scrollOptions);
+      return;
+    }
+
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      const top = typeof target.getBoundingClientRect === 'function'
+        ? target.getBoundingClientRect().top + window.pageYOffset - 24
+        : 0;
+      window.scrollTo({
+        top,
+        behavior: 'smooth',
+      });
+    }
   }
 
   async function postCheckout(url, payload = {}) {
@@ -832,13 +859,15 @@ export default function Page() {
         className="py-0 w-full"
         >
         <div className="space-y-6">
-          <a
+          <Button
+            variant="primary"
             href="#generate"
             data-testid="hero-primary-cta"
-            className="inline-flex h-11 w-fit items-center justify-center rounded-full bg-red-600 px-7 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:bg-red-700 hover:shadow-[0_0_40px_rgba(239,68,68,0.25)] active:scale-[0.99]"
+            className="w-fit px-7"
+            onClick={handleHeroGenerateClick}
           >
             {LANDING_COPY.heroPrimaryCta}
-          </a>
+          </Button>
           <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
           <div
             id={LANDING_COPY_KEYS.upload}
@@ -900,7 +929,7 @@ export default function Page() {
           </h2>
           <div
             data-testid="home-preview-card"
-            className="home-preview-float mx-auto max-w-5xl rounded-2xl border border-black/10 bg-white/80 p-4 shadow-sm backdrop-blur md:p-8"
+            className="home-preview-float mx-auto max-w-7xl rounded-2xl border border-black/10 bg-white/80 p-4 shadow-sm backdrop-blur md:p-8"
           >
             <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[1fr_1.1fr]">
               <div>
@@ -922,34 +951,12 @@ A104,Widget,6900.00`}
                   <img
                     src="/fitforpdf-proof-v8.svg"
                     alt="FitForPDF v8 structured document preview with overview and grouped columns"
-                    className="h-auto w-full"
+                    className="h-auto w-full rounded-lg object-cover"
+                    data-testid="proof-pdf-image"
                   />
                 </figure>
               </div>
             </div>
-          </div>
-
-          <div
-            className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-slate-50 p-5"
-            data-testid="real-data-card"
-          >
-            <p className="inline-flex rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-              Enterprise-scale example
-            </p>
-            <h3 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">Real data. Real complexity.</h3>
-            <p className="mt-2 max-w-2xl text-sm text-slate-600">
-              120 rows · 15 columns · long descriptions.
-              <span className="ml-2 text-slate-500">Automatically structured into readable sections.</span>
-            </p>
-            <button
-              type="button"
-              onClick={handleTrySample}
-              disabled={isLoading}
-              className={`${CTA_SECONDARY} mt-4 inline-flex h-10`}
-            >
-              Run the demo
-            </button>
-            <p className="mt-2 text-sm text-slate-600">See how FitForPDF handles real-world invoice complexity.</p>
           </div>
         </div>
       </Section>

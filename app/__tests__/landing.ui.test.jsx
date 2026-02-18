@@ -83,7 +83,7 @@ describe('landing conversion-first structure', () => {
     expect((heroBackdrop.getAttribute('class') || '').includes('hero-backdrop')).toBe(true);
     expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
     expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients')).toBe(true);
-    expect(primary.getAttribute('class') || '').toContain('hover:shadow-[0_0_40px_rgba(239,68,68,0.25)]');
+    expect((primary.getAttribute('class') || '').includes('bg-[#D92D2A]')).toBe(true);
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
   });
 
@@ -99,20 +99,36 @@ describe('landing conversion-first structure', () => {
     expect(screen.getByRole('heading', { level: 2, name: /From raw data to structured document/i })).toBeTruthy();
   });
 
-  test('Run the demo is in the proof section and unique', () => {
+  test('single demo entrypoint is in the upload block', () => {
     const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
-    const realDataCard = screen.getByTestId('real-data-card');
-    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+    const uploadCard = screen.getByTestId('upload-card');
+    const proofCard = screen.getByTestId('home-preview-card');
+    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
 
-    expect(proofSection.contains(realDataCard)).toBe(true);
+    expect(proofSection.contains(uploadCard)).toBe(false);
+    expect(uploadCard).toBeTruthy();
+    expect(proofCard).toBeTruthy();
     expect(demoButton).toBeTruthy();
-    expect(screen.getAllByRole('button', { name: 'Run the demo' })).toHaveLength(1);
+    expect(screen.queryByRole('button', { name: 'Run the demo' })).toBeNull();
+    expect(screen.getAllByRole('button', { name: 'Try with demo file' })).toHaveLength(1);
   });
 
   test('preview card has desktop float animation class', () => {
     const previewCard = screen.getByTestId('home-preview-card');
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
-    expect(within(previewCard).getByRole('img')).toHaveAttribute('src', expect.stringContaining('/fitforpdf-proof-v8.svg'));
+    expect((previewCard.className || '').includes('max-w-7xl')).toBe(true);
+    expect((within(previewCard).getByRole('img').getAttribute('src') || '')).toContain('/fitforpdf-proof-v8.svg');
+    expect(screen.getByTestId('proof-pdf-image').getAttribute('class') || '').toContain('w-full');
     expect(within(previewCard).getByText('Structured PDF (v8)')).toBeTruthy();
+  });
+
+  test('landing section spacing is compacted to medium rhythm', () => {
+    const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
+    const howItWorks = screen.getByTestId('section-how-it-works');
+    const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
+
+    expect((proof.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((howItWorks.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((pricing.getAttribute('class') || '').includes('py-12')).toBe(true);
   });
 });

@@ -289,7 +289,7 @@ describe('quota-driven plan state and paywall flows', () => {
       expect(!!checkoutCall).toBe(true);
       expect(checkoutCall.options.method).toBe('POST');
       expect(JSON.parse(checkoutCall.options.body).pack).toBe('credits_50');
-      expect(screen.queryByText('Coming soon')).toBeNull();
+      expect(screen.getByText('Payments coming soon. Contact us.')).toBeTruthy();
       expect(screen.queryByTestId('credits-purchase-panel')).toBeNull();
     });
 
@@ -321,6 +321,8 @@ describe('quota-driven plan state and paywall flows', () => {
       const checkoutCall = mock.calls.find((call) => call.url.includes('/api/plan/pro/checkout'));
       expect(!!checkoutCall).toBe(true);
       expect(checkoutCall.options.method).toBe('POST');
+      expect(screen.getByText('Payments coming soon. Contact us.')).toBeTruthy();
+      expect(screen.queryByText('Stripe checkout is not connected yet.')).toBeNull();
     });
 
     mock.restore();

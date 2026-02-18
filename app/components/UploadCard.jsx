@@ -544,6 +544,26 @@ export default function UploadCard({
           accept=".csv,.xlsx"
           disabled={isLoading}
         />
+        <div className="space-y-2" data-testid="demo-try-row">
+          <div className="my-1 flex items-center gap-3">
+            <span className="h-px w-full bg-slate-200" />
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+              — or —
+            </span>
+            <span className="h-px w-full bg-slate-200" />
+          </div>
+          <button
+            type="button"
+            onClick={onTrySample}
+            disabled={isLoading}
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            data-testid="demo-try-button"
+          >
+            <span aria-hidden="true">▶</span>
+            Try with demo file
+          </button>
+          <p className="text-xs text-slate-500">120 rows · 15 columns · invoices</p>
+        </div>
 
         {isLoading && conversionProgress ? (
           <div

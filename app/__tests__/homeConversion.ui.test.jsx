@@ -87,6 +87,7 @@ describe('home conversion-critical UI', () => {
     expect(screen.getByTestId('hero-primary-cta').getAttribute('href')).toBe('#generate');
     expect(generateTitle.getAttribute('id')).toBe('generate');
     expect(generateTitle.className).toContain('scroll-mt-24');
+    expect(screen.getByTestId('hero-primary-cta').getAttribute('class') || '').toContain('bg-[#D92D2A]');
   });
 
   test('upload action is not available before file selection and enabled after selecting', () => {

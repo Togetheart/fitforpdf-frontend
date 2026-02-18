@@ -87,35 +87,34 @@ describe('home demo proof block', () => {
 
   test('proof block is in dedicated home-demo section', () => {
     const proofSection = screen.getByTestId('section-before-after');
-    const demoCard = screen.getByTestId('real-data-card');
-    const demoButton = within(demoCard).getByRole('button', { name: 'Run the demo' });
+    const previewCard = screen.getByTestId('home-preview-card');
+    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
 
     expect(screen.queryByTestId('demo-glass-card')).toBeNull();
     expect(screen.queryByTestId('section-home-demo')).toBeNull();
     expect(proofSection).toBeTruthy();
-    expect(proofSection.contains(demoCard)).toBe(true);
+    expect(proofSection.contains(previewCard)).toBe(true);
     expect(demoButton).toBeTruthy();
   });
 
-  test('Run the demo CTA is unique on landing', () => {
-    const buttons = screen.getAllByRole('button', { name: 'Run the demo' });
+  test('Try with demo CTA is unique on landing', () => {
+    const buttons = screen.getAllByRole('button', { name: 'Try with demo file' });
     expect(buttons).toHaveLength(1);
   });
 
-  test('run the demo helper content is present', () => {
-    const realDataCard = screen.getByTestId('real-data-card');
-    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
-    const helperText = within(realDataCard).getByText('See how FitForPDF handles real-world invoice complexity.');
+  test('demo helper content is present', () => {
+    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
+    const uploadCard = screen.getByTestId('upload-card');
+    const helperText = within(uploadCard).getByText('120 rows · 15 columns · invoices');
 
-    expect(realDataCard).toBeTruthy();
+    expect(uploadCard).toBeTruthy();
     expect(demoButton.className).toContain('rounded-full');
     expect(helperText).toBeTruthy();
   });
 
-  test('Run the demo flow loads premium CSV and converts', async () => {
+  test('Try with demo flow loads premium CSV and converts', async () => {
     const fetchMock = mockFetch();
-    const realDataCard = screen.getByTestId('real-data-card');
-    const demoButton = within(realDataCard).getByRole('button', { name: 'Run the demo' });
+    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
     fireEvent.click(demoButton);
 
     await waitFor(() => {
