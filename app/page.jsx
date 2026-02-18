@@ -872,7 +872,7 @@ export default function Page() {
           <div
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
-            className="mt-8"
+            className="mt-8 relative rounded-[16px] bg-gradient-to-br from-sky-200/35 via-indigo-200/25 to-white/95"
           >
             <UploadCard
               toolTitle={LANDING_COPY.toolTitle}

@@ -492,8 +492,22 @@ export default function UploadCard({
   const buyCreditsButtonText = paywallReason ? 'Buy credits' : 'Buy credits';
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5" data-testid="upload-card">
-      <form className="space-y-5" onSubmit={onSubmit}>
+    <article
+      className="relative overflow-hidden rounded-[16px] bg-white/20 backdrop-blur-[5px] border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+      data-testid="upload-card"
+    >
+      <div
+        aria-hidden="true"
+        data-testid="uploadcard-glass-backdrop"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.75),transparent_52%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.45),transparent_65%)]"
+      />
+      <div
+        aria-hidden="true"
+        data-testid="uploadcard-glass-highlight"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-20 rounded-[16px] bg-gradient-to-b from-white/40 to-transparent"
+      />
+      <div className="relative z-10 p-5">
+        <form className="relative space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2 text-left">
             <h2
@@ -880,7 +894,8 @@ export default function UploadCard({
 
         {notice ? <p className="text-sm text-slate-700">{notice}</p> : null}
         {error && <p className="text-sm text-rose-700">{error}</p>}
-      </form>
+            </form>
+          </div>
     </article>
   );
 }

@@ -252,6 +252,31 @@ describe('UploadCard unit behavior', () => {
     expect(screen.getByText('Free exports. No account required.').className).toContain('text-left');
   });
 
+  test('upload card uses transparent glass styling with a single translucent layer', () => {
+    const uploadCard = screen.getByTestId('upload-card');
+    const cardClass = uploadCard.className;
+    const glassBackdrop = screen.getByTestId('uploadcard-glass-backdrop');
+    const glassHighlight = screen.getByTestId('uploadcard-glass-highlight');
+
+    expect(cardClass).toContain('relative');
+    expect(cardClass).toContain('overflow-hidden');
+    expect(cardClass).toContain('rounded-[16px]');
+    expect(cardClass).toContain('bg-white/20');
+    expect(cardClass).toContain('backdrop-blur-[5px]');
+    expect(cardClass).toContain('border-white/30');
+    expect(cardClass).toContain('shadow-[0_4px_30px_rgba(0,0,0,0.1)]');
+    expect(cardClass).not.toContain('rounded-[28px]');
+    expect(cardClass).not.toContain('p-[8px]');
+    expect(glassBackdrop).toBeTruthy();
+    expect(glassBackdrop.className).toContain('absolute');
+    expect(glassBackdrop.className).toContain('inset-0');
+    expect(glassBackdrop.className).toContain('bg-[radial-gradient');
+    expect(glassHighlight.className).toContain('bg-gradient-to-b');
+    expect(glassHighlight.className).toContain('rounded-[16px]');
+    expect(screen.queryByTestId('uploadcard-glass-frame')).toBeNull();
+    expect(screen.queryByTestId('uploadcard-glass-inner')).toBeNull();
+  });
+
   test('options section is an accordion and can be collapsed/expanded', () => {
     const optionsToggle = screen.getByRole('button', { name: 'Options' });
 
