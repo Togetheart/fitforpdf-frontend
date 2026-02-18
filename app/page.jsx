@@ -537,6 +537,8 @@ export default function Page() {
         title={<HeroHeadline />}
         subtitle={LANDING_COPY.heroSubheadline}
         contentClassName="items-center gap-8 text-center"
+        contentMaxWidthClassName="max-w-7xl"
+        subtitleClassName="w-full max-w-none lg:whitespace-nowrap"
         className="py-0 w-full"
       >
         <div className="space-y-6">
