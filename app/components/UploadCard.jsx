@@ -5,7 +5,7 @@ import {
   CircleHelp,
   ChevronDown,
   Loader2,
-  Lock,
+  ShieldUser,
   ShoppingCart,
 } from 'lucide-react';
 
@@ -851,17 +851,16 @@ export default function UploadCard({
           className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600"
           data-testid="upload-privacy-messages"
         >
-          <div className="flex items-start gap-2" data-testid="upload-privacy-message">
-            <Lock aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-500" />
-            <p>Files are deleted immediately after conversion.</p>
-          </div>
-          <div className="flex items-start gap-2" data-testid="upload-privacy-message">
-            <Lock aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-500" />
-            <p>PDF available for up to 15 minutes.</p>
-          </div>
-          <div className="flex items-start gap-2" data-testid="upload-privacy-message">
-            <Lock aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-500" />
-            <p>No file content stored in logs.</p>
+          <div className="flex items-center justify-center gap-2">
+            <ShieldUser
+              aria-hidden="true"
+              className="h-14 w-14 shrink-0 text-slate-500"
+            />
+            <div className="space-y-1 text-left">
+              <p data-testid="upload-privacy-message">Files are deleted immediately after conversion.</p>
+              <p data-testid="upload-privacy-message">PDF available for up to 15 minutes.</p>
+              <p data-testid="upload-privacy-message">No file content stored in logs.</p>
+            </div>
           </div>
         </div>
 

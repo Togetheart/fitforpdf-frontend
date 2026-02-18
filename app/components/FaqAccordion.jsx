@@ -49,7 +49,7 @@ export default function FaqAccordion({
     <div className="mx-auto w-full">
       {title ? <h2 className="text-2xl font-semibold leading-tight">{title}</h2> : null}
       <div
-        className={`mt-8 space-y-0 divide-y divide-black/10 ${listClassName || ''}`}
+        className={`space-y-0 divide-y divide-black/10 ${listClassName || ''}`}
         data-testid={testId ?? 'faq-accordion'}
       >
         {itemList.map((item) => {

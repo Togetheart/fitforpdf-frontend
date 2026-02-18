@@ -154,11 +154,11 @@ describe('landing conversion-first structure', () => {
 
     expect(privacyClass).toContain('bg-slate-50');
     expect(faqSectionClass).toContain('bg-white');
-    expect(privacy).toHaveTextContent('Your data. Not our business.');
-    expect(faq).toHaveTextContent('Frequently asked questions');
+    expect((privacy.textContent || '').includes('Your data. Not our business.')).toBe(true);
+    expect((faq.textContent || '').includes('Frequently asked questions')).toBe(true);
     expect(pricingInner?.getAttribute('class') || '').toContain('max-w-[960px]');
     expect(faqInner?.getAttribute('class') || '').toContain('max-w-[960px]');
-    expect(faqAccordionClass).toContain('w-full');
+    expect(faqAccordion.parentElement?.getAttribute('class') || '').toContain('w-full');
   });
 
   test('faq section keeps a single heading and a single home FAQ mount', () => {

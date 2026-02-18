@@ -294,19 +294,17 @@ describe('UploadCard unit behavior', () => {
     expect(screen.getByText('or click to upload')).toBeTruthy();
   });
 
-  test('privacy helper block shows lock icon for each file handling line', () => {
+  test('privacy helper block shows one shield icon and three lines of copy', () => {
     const privacyBlock = screen.getByTestId('upload-privacy-messages');
     const lines = within(privacyBlock).getAllByTestId('upload-privacy-message');
     const icons = privacyBlock.querySelectorAll('svg');
 
     expect(lines).toHaveLength(3);
-    expect(lines[0].className).toContain('flex');
-    expect(lines[1].className).toContain('flex');
-    expect(lines[2].className).toContain('flex');
     expect(within(lines[0]).getByText('Files are deleted immediately after conversion.')).toBeTruthy();
     expect(within(lines[1]).getByText('PDF available for up to 15 minutes.')).toBeTruthy();
     expect(within(lines[2]).getByText('No file content stored in logs.')).toBeTruthy();
-    expect(icons.length).toBeGreaterThanOrEqual(3);
+    expect(icons).toHaveLength(1);
+    expect(icons[0].getAttribute('class') || '').toContain('h-14');
   });
 
   test.each([

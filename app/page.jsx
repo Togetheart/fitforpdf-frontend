@@ -858,7 +858,7 @@ export default function Page() {
         subtitleClassName="w-full max-w-none lg:whitespace-nowrap"
         className="py-0 w-full"
         >
-        <div className="space-y-6">
+          <div className="space-y-6">
           <Button
             variant="primary"
             href="#generate"
@@ -1040,7 +1040,6 @@ A104,Widget,6900.00`}
             <Accordion
               items={HOME_FAQ}
               testId="home-faq"
-              listClassName="mt-4"
               itemClassName="py-3"
             />
           </div>
