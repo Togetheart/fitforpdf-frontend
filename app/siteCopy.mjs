@@ -30,7 +30,7 @@ export const LANDING_COPY = {
   ],
 
   toolTitle: 'Generate a client-ready PDF',
-  toolSubcopy: '3 free exports. No account required.',
+  toolSubcopy: '5 free exports. No account required.',
 
   credibilityTitle: 'Why this is reliable',
   credibilityBullets: [
@@ -98,7 +98,7 @@ export const PRICING_PAGE_COPY = {
   plansCopy: 'Start free. Keep everything predictable when you need more.',
 
   freeTitle: 'Free',
-  freeSubtitle: '3 exports total',
+  freeSubtitle: '5 exports total',
   freeFeature: 'Branding enabled',
   freeFeatureAlt: 'No account required',
   freeCtaLabel: 'Start free',
@@ -224,7 +224,7 @@ export const PRICING_CARDS = [
   },
 ];
 
-export const LANDING_SECTIONS = (freeExportsLeft = 3) => [
+export const LANDING_SECTIONS = (freeExportsLeft = 5) => [
     {
       id: LANDING_COPY_KEYS.hero,
       title: LANDING_COPY.heroTitle,

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "test": "node --test app/pageUiLogic.test.mjs app/__tests__/landing.test.mjs app/__tests__/pricing.test.mjs app/__tests__/privacy.test.mjs app/api/render/route.test.mjs app/api/checkout/route.test.mjs && vitest run",
+    "test": "node --test app/pageUiLogic.test.mjs app/__tests__/landing.test.mjs app/__tests__/pricing.test.mjs app/__tests__/privacy.test.mjs app/api/render/route.test.mjs app/api/checkout/route.test.mjs app/api/quota/route.test.mjs app/api/credits/purchase/checkout/route.test.mjs app/api/plan/pro/checkout/route.test.mjs && vitest run",
     "build": "next build",
     "start": "next start -p 3001",
     "smoke:web": "node scripts/smoke-web.mjs"

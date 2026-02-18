@@ -27,6 +27,11 @@ const PROGRESS_STEP_STATES = {
   },
 };
 
+const CREDIT_PACKS = [
+  { pack: 'credits_50', exportsLabel: '50 exports', price: '€9' },
+  { pack: 'credits_200', exportsLabel: '200 exports', price: '€29' },
+];
+
 function getProgressStepLabel(progress, stepIndex) {
   if (progress?.label) return progress.label;
   const safeIndex = Math.min(Math.max(stepIndex, 0), PROGRESS_STEPS.length - 1);
@@ -80,64 +85,73 @@ const EXPORT_BADGE_STYLES = {
   warningStrong: 'border-amber-300 bg-amber-600 text-white',
   danger: 'border-red-300 bg-red-600 text-white',
 };
+
 const BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY = 'fitforpdf_branding_nudge_suppressed_until';
 const BRANDING_UPGRADE_NUDGE_SUPPRESS_MS = 10 * 60 * 1000;
 let inMemoryBrandingNudgeSuppression = 0;
 
-function normalizeFreeExportsLeft(value) {
-  const safeValue = Number.parseInt(value, 10);
-  if (!Number.isFinite(safeValue)) return 0;
-  if (safeValue <= 0) return 0;
-  if (safeValue >= 3) return 3;
-  return safeValue;
+function toFiniteInt(value) {
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed)) return null;
+  return parsed;
 }
 
-function safeLocalStorage() {
-  if (typeof window === 'undefined') return null;
-  try {
-    return window.localStorage;
-  } catch {
-    return null;
+function getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedThisPeriod, periodLimit) {
+  const normalizedPlan = String(planType || '').toLowerCase();
+  const remaining = toFiniteInt(freeExportsLeft);
+  const periodRemaining = toFiniteInt(remainingInPeriod);
+  const periodUsed = toFiniteInt(usedThisPeriod);
+  const limit = toFiniteInt(periodLimit);
+
+  if (normalizedPlan === 'pro') {
+    if (periodRemaining != null) return Math.max(0, periodRemaining);
+    if (limit != null && periodUsed != null) return Math.max(0, limit - periodUsed);
+    if (remaining != null) return Math.max(0, remaining);
+    if (limit != null) return limit;
+    return 0;
   }
+
+  if (remaining != null) return Math.max(0, remaining);
+  return 0;
 }
 
-export function getBrandingNudgeSuppressedUntil() {
-  const storage = safeLocalStorage();
-  if (storage) {
-    try {
-      const value = storage.getItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
-      const parsed = Number.parseInt(value, 10);
-      if (Number.isFinite(parsed)) {
-        if (parsed > Date.now()) return parsed;
-        storage.removeItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
-      }
-    } catch {
-      // fall through to in-memory timestamp
+function getQuotaBadgeText(planType, freeExportsLeft, remainingInPeriod, usedThisPeriod, periodLimit) {
+  const normalizedPlan = String(planType || '').toLowerCase();
+  const remaining = toFiniteInt(freeExportsLeft);
+  const periodRemaining = toFiniteInt(remainingInPeriod);
+  const periodUsed = toFiniteInt(usedThisPeriod);
+  const limit = toFiniteInt(periodLimit);
+  const safeRemaining = getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedThisPeriod, periodLimit);
+
+  if (normalizedPlan === 'pro') {
+    if (periodRemaining != null) {
+      return `Pro · ${periodRemaining} exports left this month`;
     }
+    if (periodUsed != null && limit != null) {
+      return `Pro · ${periodUsed}/${limit}`;
+    }
+    return `Pro · ${safeRemaining} exports left`;
   }
 
-  return inMemoryBrandingNudgeSuppression;
+  if (normalizedPlan === 'credits') {
+    return `Credits · ${safeRemaining} exports left`;
+  }
+
+  return `Free · ${safeRemaining} exports left`;
 }
 
-export function setBrandingNudgeSuppressedUntil(ts) {
-  const safeTs = Number.parseInt(ts, 10);
-  if (!Number.isFinite(safeTs)) return;
-
-  inMemoryBrandingNudgeSuppression = safeTs;
-  const storage = safeLocalStorage();
-  if (!storage) return;
-
-  try {
-    storage.setItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY, String(safeTs));
-  } catch {
-    // no-op: fallback remains available in memory for this session
-  }
+function freeExportsText(value) {
+  const safeValue = toFiniteInt(value) ?? 0;
+  if (safeValue <= 0) return '0 exports left';
+  if (safeValue === 1) return '1 export left';
+  return `${safeValue} exports left`;
 }
 
 function getFreeExportsBadgeClass(exportsLeft) {
-  if (exportsLeft <= 0) return EXPORT_BADGE_STYLES.danger;
-  if (exportsLeft === 1) return EXPORT_BADGE_STYLES.warningStrong;
-  if (exportsLeft === 2) return EXPORT_BADGE_STYLES.warning;
+  const safeValue = toFiniteInt(exportsLeft) ?? 0;
+  if (safeValue <= 0) return EXPORT_BADGE_STYLES.danger;
+  if (safeValue === 1) return EXPORT_BADGE_STYLES.warningStrong;
+  if (safeValue === 2) return EXPORT_BADGE_STYLES.warning;
   return EXPORT_BADGE_STYLES.neutral;
 }
 
@@ -160,13 +174,6 @@ function verdictVisualStyle(verdict) {
     badge: 'border-emerald-200 bg-emerald-50 text-emerald-700',
     icon: 'text-emerald-700',
   };
-}
-
-function freeExportsText(value) {
-  const safeValue = Number.isFinite(Number.parseInt(value, 10)) ? Number.parseInt(value, 10) : 0;
-  if (safeValue <= 0) return '0 exports left';
-  if (safeValue === 1) return '1 export left';
-  return `${safeValue} exports left`;
 }
 
 function getVerdictIcon(verdict) {
@@ -243,6 +250,76 @@ function SettingRow({
   );
 }
 
+function normalizeFreeExportsLeft(value) {
+  return toFiniteInt(value) ?? 0;
+}
+
+function safeLocalStorage() {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+function getBrandingNudgeSuppressedUntil() {
+  const storage = safeLocalStorage();
+  if (storage) {
+    try {
+      const value = storage.getItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
+      const parsed = Number.parseInt(value, 10);
+      if (Number.isFinite(parsed)) {
+        if (parsed > Date.now()) return parsed;
+        storage.removeItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
+      }
+    } catch {
+      // fall through to in-memory value
+    }
+  }
+
+  return inMemoryBrandingNudgeSuppression;
+}
+
+function setBrandingNudgeSuppressedUntil(ts) {
+  const safeTs = Number.parseInt(ts, 10);
+  if (!Number.isFinite(safeTs)) return;
+
+  inMemoryBrandingNudgeSuppression = safeTs;
+  const storage = safeLocalStorage();
+  if (!storage) return;
+
+  try {
+    storage.setItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY, String(safeTs));
+  } catch {
+    // no-op
+  }
+}
+
+function getPlanTypeLabel(planType) {
+  return String(planType || 'free').toLowerCase();
+}
+
+function getLayoutNudgeLabel(key) {
+  if (key === 'overview') {
+    return 'overview';
+  }
+  if (key === 'headers') {
+    return 'headers';
+  }
+  if (key === 'footer') {
+    return 'footer';
+  }
+  return 'layout';
+}
+
+function getLayoutNudgeCopy(key) {
+  return {
+    title: 'Unlock layout controls',
+    description: `Remove ${getLayoutNudgeLabel(key)} in advanced plans only.`,
+  };
+}
+
 export default function UploadCard({
   toolTitle,
   toolSubcopy,
@@ -269,35 +346,74 @@ export default function UploadCard({
   isPro = false,
   onUpgrade = () => {},
   onEvent = () => {},
+  onLayoutChange = () => {},
+  layout = {
+    overview: true,
+    headers: true,
+    footer: true,
+  },
+  planType = 'free',
+  isQuotaLocked = false,
+  remainingInPeriod = null,
+  usedInPeriod = null,
+  periodLimit = 500,
+  paywallReason = '',
+  showBuyCreditsPanel = false,
+  onCloseBuyPanel = () => {},
+  onBuyCreditsPack = () => {},
+  purchaseMessage = '',
+  onGoPro = onUpgrade,
 }) {
-  const isOverQuota = freeExportsLeft <= 0;
-  const inputId = 'fitforpdf-file-input';
-  const verdictNormalized = verdict ? String(verdict).toUpperCase() : '';
+  const canUseAdvanced = getPlanTypeLabel(planType) !== 'free' || isPro;
   const progressStepIndex = Number.isInteger(conversionProgress?.stepIndex)
     ? conversionProgress.stepIndex
     : 0;
   const progressPercent = getProgressPercent(conversionProgress);
   const progressStepLabel = getProgressStepLabel(conversionProgress, progressStepIndex);
-  const VerdictIcon = getVerdictIcon(verdictNormalized);
-  const verdictStyle = verdictVisualStyle(verdictNormalized);
-  const shouldShowVerdict = !isLoading && verdictNormalized;
+  const VerdictIcon = getVerdictIcon(verdict ? String(verdict).toUpperCase() : '');
+  const verdictStyle = verdictVisualStyle(verdict ? String(verdict).toUpperCase() : '');
+  const shouldShowVerdict = !isLoading && verdict;
   const normalizedFreeExportsLeft = normalizeFreeExportsLeft(freeExportsLeft);
-  const freeExportsBadgeClass = getFreeExportsBadgeClass(normalizedFreeExportsLeft);
+  const badgeClassValue = getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedInPeriod, periodLimit);
+  const freeExportsBadgeClass = getFreeExportsBadgeClass(badgeClassValue);
   const showBuyCredits = normalizedFreeExportsLeft <= 1 || (showBuyCreditsForTwo && normalizedFreeExportsLeft === 2);
+  const quotaText = getQuotaBadgeText(planType, freeExportsLeft, remainingInPeriod, usedInPeriod, periodLimit);
   const [showBrandingUpgradeNudge, setShowBrandingUpgradeNudge] = React.useState(false);
+  const [nudgeTarget, setNudgeTarget] = React.useState('branding');
+  const [nudgeData, setNudgeData] = React.useState(null);
   const isBrandingNudgeSuppressed = React.useCallback(() => getBrandingNudgeSuppressedUntil() > Date.now(), []);
 
   const trackEvent = (name) => {
     if (typeof onEvent === 'function') onEvent(name);
   };
 
-  const handleBrandingChange = (nextChecked) => {
-    const shouldGateBrandingOff = !isPro && includeBranding && !nextChecked;
-    if (shouldGateBrandingOff) {
+  const requestNudge = (feature) => {
+    setNudgeTarget(feature);
+    if (feature === 'branding') {
+      setNudgeData({
+        title: 'Remove branding is a Pro feature',
+        description: 'Upgrade to remove FitForPDF branding from exported PDFs.',
+      });
       trackEvent('paywall_branding_attempt');
-      if (!isBrandingNudgeSuppressed()) {
-        setShowBrandingUpgradeNudge(true);
-      }
+      return;
+    }
+
+    const copy = getLayoutNudgeCopy(feature);
+    setNudgeData(copy);
+    trackEvent('paywall_layout_attempt');
+  };
+
+  const openNudge = (feature) => {
+    if (!isBrandingNudgeSuppressed()) {
+      requestNudge(feature);
+      setShowBrandingUpgradeNudge(true);
+    }
+  };
+
+  const handleBrandingChange = (nextChecked) => {
+    const shouldGateBrandingOff = !canUseAdvanced && includeBranding && !nextChecked;
+    if (shouldGateBrandingOff) {
+      openNudge('branding');
       return;
     }
 
@@ -305,9 +421,27 @@ export default function UploadCard({
     onBrandingChange(nextChecked);
   };
 
+  const handleLayoutChange = (key, nextChecked) => {
+    const shouldGateLayoutOff = !canUseAdvanced && Boolean(layout?.[key]) && !nextChecked;
+    if (shouldGateLayoutOff) {
+      openNudge(key);
+      return;
+    }
+
+    setShowBrandingUpgradeNudge(false);
+    onLayoutChange(key, nextChecked);
+  };
+
   const handleBrandingUpgrade = () => {
+    onBuyCredits();
+    setShowBrandingUpgradeNudge(false);
     trackEvent('paywall_upgrade_clicked');
-    onUpgrade();
+  };
+
+  const handleProUpgrade = () => {
+    onGoPro();
+    setShowBrandingUpgradeNudge(false);
+    trackEvent('paywall_upgrade_clicked');
   };
 
   const handleBrandingNudgeDismiss = () => {
@@ -317,10 +451,12 @@ export default function UploadCard({
   };
 
   React.useEffect(() => {
-    if (isPro) {
+    if (canUseAdvanced) {
       setShowBrandingUpgradeNudge(false);
     }
-  }, [isPro]);
+  }, [canUseAdvanced]);
+
+  const buyCreditsButtonText = paywallReason ? 'Buy credits' : 'Buy credits';
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5" data-testid="upload-card">
@@ -358,7 +494,7 @@ export default function UploadCard({
                     role="tooltip"
                     className="pointer-events-none absolute right-0 top-full mt-1 translate-y-0.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 group-focus:opacity-100"
                   >
-                    Buy credits
+                    {buyCreditsButtonText}
                   </span>
                 </span>
               ) : null}
@@ -366,15 +502,15 @@ export default function UploadCard({
             <span
               data-testid="quota-pill"
               className={`inline-flex h-9 min-w-0 items-center rounded-full border px-4 text-xs font-medium shadow-sm ${freeExportsBadgeClass}`}
-              aria-label="free exports remaining"
+              aria-label="remaining exports"
             >
-              Free · {freeExportsText(normalizedFreeExportsLeft)}
+              {quotaText}
             </span>
           </div>
         </div>
 
         <UploadDropzone
-          inputId={inputId}
+          inputId="fitforpdf-file-input"
           file={file}
           onFileSelect={onFileSelect}
           onFileSelected={onFileSelect}
@@ -420,16 +556,16 @@ export default function UploadCard({
             aria-live="polite"
             className="min-h-0 px-4 pt-2 pb-1"
           >
-            {!isBrandingNudgeSuppressed() && !isPro && showBrandingUpgradeNudge ? (
+            {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
               <section
                 className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
                 data-testid="branding-upgrade-nudge"
               >
                 <p className="text-sm font-semibold text-slate-900">
-                  Remove branding is a Pro feature
+                  {nudgeData?.title || 'Upgrade to unlock this feature'}
                 </p>
                 <p className="mt-1 text-sm text-slate-600">
-                  Upgrade to remove FitForPDF branding from exported PDFs.
+                  {nudgeData?.description || 'Upgrade to unlock this feature.'}
                 </p>
                 <div className="mt-3 flex items-center gap-2">
                   <button
@@ -437,7 +573,14 @@ export default function UploadCard({
                     onClick={handleBrandingUpgrade}
                     className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
                   >
-                    Upgrade
+                    Buy credits
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleProUpgrade}
+                    className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
+                  >
+                    Go Pro
                   </button>
                   <button
                     type="button"
@@ -454,6 +597,38 @@ export default function UploadCard({
           <div className="h-px bg-slate-100" />
 
           <SettingRow
+            title="Keep overview"
+            description="Show overview summary page in the export."
+            checked={layout?.overview !== false}
+            onChange={(nextChecked) => handleLayoutChange('overview', nextChecked)}
+            tooltip={<InfoTooltip label="Keep overview" text="Keep overview content in the generated PDF." />}
+            rowTestId="setting-row-overview"
+            disabled={isLoading}
+          />
+          <div className="h-px bg-slate-100" />
+          <SettingRow
+            title="Keep headers"
+            description="Keep repeated headers for multi-page outputs."
+            checked={layout?.headers !== false}
+            onChange={(nextChecked) => handleLayoutChange('headers', nextChecked)}
+            tooltip={<InfoTooltip label="Keep headers" text="Keep your table headers visible on each page." />}
+            rowTestId="setting-row-headers"
+            disabled={isLoading}
+          />
+          <div className="h-px bg-slate-100" />
+          <SettingRow
+            title="Keep footer"
+            description="Keep footer metadata in the exported PDF."
+            checked={layout?.footer !== false}
+            onChange={(nextChecked) => handleLayoutChange('footer', nextChecked)}
+            tooltip={<InfoTooltip label="Keep footer" text="Keep the footer content in the exported PDF." />}
+            rowTestId="setting-row-footer"
+            disabled={isLoading}
+          />
+
+          <div className="h-px bg-slate-100" />
+
+          <SettingRow
             title="Truncate long text"
             description="Auto-crops very long content to keep layout stable"
             checked={truncateLongText}
@@ -464,30 +639,74 @@ export default function UploadCard({
           />
         </div>
 
-        {hasResultBlob ? (
+        {showBuyCreditsPanel ? (
+          <section className="rounded-xl border border-slate-200 bg-slate-50 p-4" data-testid="credits-purchase-panel">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-semibold text-slate-900">Buy credits</p>
+              <button
+                type="button"
+                onClick={onCloseBuyPanel}
+                className="text-xs font-semibold text-slate-600 underline"
+              >
+                Close
+              </button>
+            </div>
+            {CREDIT_PACKS.map((pack) => (
+              <button
+                type="button"
+                key={pack.pack}
+                onClick={() => onBuyCreditsPack(pack.pack)}
+                className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
+              >
+                <span>{pack.exportsLabel}</span>
+                <span>{pack.price}</span>
+              </button>
+            ))}
+            {purchaseMessage ? (
+              <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
+            ) : null}
+          </section>
+        ) : null}
+
+        {isQuotaLocked ? (
+          <section
+            data-testid="upload-paywall"
+            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+          >
+            <p className="text-xs text-slate-600">{paywallReason || 'You have reached your exports limit for this plan.'}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="primary"
+                onClick={onBuyCredits}
+                className="min-w-0"
+              >
+                Buy credits
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={onGoPro}
+                className="min-w-0"
+              >
+                Go Pro
+              </Button>
+            </div>
+            <p className="mt-3 text-xs text-slate-600">
+              <a href="mailto:hello@fitforpdf.com" className="underline">Contact us for Team/API</a>
+            </p>
+          </section>
+        ) : hasResultBlob ? (
           <Button
             type="button"
             variant="primary"
             className="w-full"
+            data-testid="download-again"
             onClick={onDownloadAgain}
             disabled={isLoading}
           >
             Download again
           </Button>
-        ) : isOverQuota ? (
-          <section
-            data-testid="upload-paywall"
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
-          >
-            <p className="text-xs text-slate-600">You have reached your free exports.</p>
-            <Button
-              variant="primary"
-              href="/pricing"
-              className="mt-3 w-full"
-            >
-              Upgrade to continue
-            </Button>
-          </section>
         ) : (
           <>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm" data-testid="run-demo-row">
@@ -535,7 +754,7 @@ export default function UploadCard({
                 className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-[11px] font-semibold ${verdictStyle.badge}`}
               >
                 <VerdictIcon aria-hidden="true" className={`h-3.5 w-3.5 ${verdictStyle.icon}`} />
-                {verdictNormalized}
+                {String(verdict).toUpperCase()}
               </span>
             ) : null}
           </div>
@@ -547,3 +766,5 @@ export default function UploadCard({
     </article>
   );
 }
+
+export { getBrandingNudgeSuppressedUntil, setBrandingNudgeSuppressedUntil };

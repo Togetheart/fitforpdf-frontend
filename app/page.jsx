@@ -11,11 +11,6 @@ import {
   recommendationLabel,
 } from './pageUiLogic.mjs';
 import {
-  canExport,
-  freeLeft,
-  incrementUsedCount,
-} from './paywall.mjs';
-import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
   PRICING_CARDS,
@@ -31,6 +26,115 @@ import DemoGlassCard from './components/DemoGlassCard';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
+const FREE_QUOTA_DEFAULT = 5;
+const PRO_PERIOD_LIMIT_DEFAULT = 500;
+const QUOTA_STATUS_BY_RENDER_CODE = {
+  free_quota_exhausted: 'free',
+  credits_exhausted: 'credits',
+  pro_quota_exhausted: 'pro',
+};
+const QUOTA_EXHAUSTION_MESSAGE = {
+  free: 'You have reached your free export limit.',
+  credits: 'You have used your credits.',
+  pro: 'You have reached your monthly Pro export limit.',
+};
+
+function toFiniteInt(value) {
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed)) return null;
+  return parsed;
+}
+
+function normalizePlanType(value) {
+  const normalized = String(value || 'free').trim().toLowerCase();
+  return normalized || 'free';
+}
+
+function pickFirstDefined(...values) {
+  for (const value of values) {
+    if (value !== undefined && value !== null) {
+      return value;
+    }
+  }
+  return null;
+}
+
+function getQuotaExhaustedMessage(planType, rawCode) {
+  if (rawCode && rawCode === 'free_quota_exhausted') return QUOTA_EXHAUSTION_MESSAGE.free;
+  if (rawCode && rawCode === 'credits_exhausted') return QUOTA_EXHAUSTION_MESSAGE.credits;
+  if (rawCode && rawCode === 'pro_quota_exhausted') return QUOTA_EXHAUSTION_MESSAGE.pro;
+  const normalizedPlan = normalizePlanType(planType);
+  return QUOTA_EXHAUSTION_MESSAGE[normalizedPlan] || 'You have reached your exports limit.';
+}
+
+function normalizeQuotaState(raw = {}) {
+  const planType = normalizePlanType(raw.plan_type || raw.planType || raw.plan || 'free');
+  const freeExportsLeft = (() => {
+    const value = pickFirstDefined(
+      raw.free_exports_left,
+      raw.freeExportsLeft,
+      raw.free_left,
+      raw.free,
+      raw.remaining,
+    );
+    const parsed = toFiniteInt(value);
+    if (planType === 'free' && !Number.isFinite(parsed)) return FREE_QUOTA_DEFAULT;
+    if (Number.isFinite(parsed)) return Math.max(0, parsed);
+    return null;
+  })();
+
+  const remainingInPeriod = toFiniteInt(
+    pickFirstDefined(
+      raw.remaining_in_period,
+      raw.remainingInPeriod,
+      raw.remaining,
+      raw.remainingThisPeriod,
+      raw.monthly_remaining,
+    ),
+  );
+  const usedInPeriod = toFiniteInt(
+    pickFirstDefined(
+      raw.used_in_period,
+      raw.usedInPeriod,
+      raw.used,
+      raw.usedThisPeriod,
+      raw.monthly_used,
+    ),
+  );
+  const periodLimit = toFiniteInt(
+    pickFirstDefined(
+      raw.period_limit,
+      raw.periodLimit,
+      raw.monthly_limit,
+      raw.monthlyLimit,
+    ),
+  );
+
+  return {
+    planType,
+    freeExportsLeft: Number.isFinite(freeExportsLeft) ? freeExportsLeft : FREE_QUOTA_DEFAULT,
+    remainingInPeriod: Number.isFinite(remainingInPeriod)
+      ? remainingInPeriod
+      : (planType === 'pro' ? PRO_PERIOD_LIMIT_DEFAULT : null),
+    usedInPeriod: Number.isFinite(usedInPeriod) ? usedInPeriod : null,
+    periodLimit: Number.isFinite(periodLimit) ? periodLimit : (planType === 'pro' ? PRO_PERIOD_LIMIT_DEFAULT : null),
+  };
+}
+
+function getPlanExhausted(planType, remaining, remainingInPeriod) {
+  if (normalizePlanType(planType) === 'pro') {
+    return Number.isFinite(remainingInPeriod) ? remainingInPeriod <= 0 : false;
+  }
+
+  return Number.isFinite(remaining) ? remaining <= 0 : false;
+}
+
+function getQuotaErrorCode(response, payload) {
+  const headerCode = response?.headers?.get?.('x-cleansheet-code');
+  const headerError = response?.headers?.get?.('x-error-code');
+  const payloadCode = payload && (payload.code || payload.errorCode || payload.error_code);
+  return headerCode || headerError || payloadCode || null;
+}
 
 function sleep(ms) {
   return new Promise((resolve) => {
@@ -227,7 +331,19 @@ export default function Page() {
   const [failureRecommendations, setFailureRecommendations] = useState([]);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
-  const [freeExportsLeft, setFreeExportsLeft] = useState(() => freeLeft());
+  const [planType, setPlanType] = useState('free');
+  const [freeExportsLeft, setFreeExportsLeft] = useState(FREE_QUOTA_DEFAULT);
+  const [remainingInPeriod, setRemainingInPeriod] = useState(null);
+  const [usedInPeriod, setUsedInPeriod] = useState(null);
+  const [periodLimit, setPeriodLimit] = useState(PRO_PERIOD_LIMIT_DEFAULT);
+  const [showBuyCreditsPanel, setShowBuyCreditsPanel] = useState(false);
+  const [paywallReason, setPaywallReason] = useState('');
+  const [purchaseMessage, setPurchaseMessage] = useState('');
+  const [layout, setLayout] = useState({
+    overview: true,
+    headers: true,
+    footer: true,
+  });
   const progressTimersRef = useRef([]);
   const [conversionProgress, setConversionProgress] = useState({
     running: false,
@@ -240,9 +356,81 @@ export default function Page() {
     if (typeof window === 'undefined') return;
     const debugParam = new URLSearchParams(window.location.search).get('debug');
     setDebugByQuery(debugParam === '1');
-    setFreeExportsLeft(freeLeft());
+  }, []);
+  const isQuotaLocked = getPlanExhausted(planType, freeExportsLeft, remainingInPeriod);
+
+  useEffect(() => {
+    void syncQuotaState();
   }, []);
   const canShowDebug = process.env.NODE_ENV !== 'production' || debugByQuery;
+
+  async function syncQuotaState() {
+    try {
+      const response = await fetch('/api/quota', {
+        method: 'GET',
+      });
+      if (!response.ok) return;
+      const raw = await response.json().catch(() => null);
+      if (!raw || typeof raw !== 'object') return;
+      const normalized = normalizeQuotaState(raw);
+      setPlanType(normalized.planType);
+      setFreeExportsLeft(normalized.freeExportsLeft);
+      setRemainingInPeriod(normalized.remainingInPeriod);
+      setUsedInPeriod(normalized.usedInPeriod);
+      setPeriodLimit(normalized.periodLimit);
+      setPaywallReason('');
+      setPurchaseMessage('');
+      setShowBuyCreditsPanel(false);
+    } catch {
+      // keep current quota state when sync fails
+    }
+  }
+
+  function applyQuotaExhaustion(code, payload = {}) {
+    const normalizedCode = String(code || '').trim();
+    const nextPlan = QUOTA_STATUS_BY_RENDER_CODE[normalizedCode] || 'free';
+    const nextMessage = getQuotaExhaustedMessage(nextPlan, normalizedCode);
+    setPlanType(nextPlan);
+    setPaywallReason(nextMessage);
+    setError(nextMessage);
+    setNotice(nextMessage);
+    if (nextPlan === 'pro') {
+      const overrideUsed = toFiniteInt(payload?.used_in_period)
+        ?? toFiniteInt(payload?.usedInPeriod)
+        ?? toFiniteInt(payload?.used)
+        ?? 0;
+      const overrideLimit = toFiniteInt(payload?.period_limit)
+        ?? toFiniteInt(payload?.periodLimit)
+        ?? toFiniteInt(payload?.monthly_limit)
+        ?? toFiniteInt(payload?.monthlyLimit)
+        ?? PRO_PERIOD_LIMIT_DEFAULT;
+      setRemainingInPeriod(0);
+      setUsedInPeriod(overrideUsed);
+      setPeriodLimit(overrideLimit);
+      setFreeExportsLeft(0);
+    } else {
+      const overrideFreeLeft = toFiniteInt(payload?.free_exports_left)
+        ?? toFiniteInt(payload?.freeExportsLeft)
+        ?? toFiniteInt(payload?.free_left)
+        ?? 0;
+      setFreeExportsLeft(Math.max(0, overrideFreeLeft));
+      setRemainingInPeriod(null);
+      setUsedInPeriod(0);
+      setPeriodLimit(overrideLimit(nextPlan, payload));
+    }
+  }
+
+  function overrideLimit(currentPlanType, payload = {}) {
+    if (currentPlanType === 'pro') {
+      return toFiniteInt(payload?.period_limit)
+        ?? toFiniteInt(payload?.periodLimit)
+        ?? toFiniteInt(payload?.monthly_limit)
+        ?? toFiniteInt(payload?.monthlyLimit)
+        ?? PRO_PERIOD_LIMIT_DEFAULT;
+    }
+
+    return null;
+  }
 
   useEffect(() => () => {
     progressTimersRef.current.forEach(clearTimeout);
@@ -315,12 +503,6 @@ export default function Page() {
       return;
     }
 
-    if (!canExport()) {
-      setError('You\'ve used your 3 free exports.');
-      setNotice('You\'ve used your 3 free exports.');
-      return;
-    }
-
     const activeFlowId = flowIdOverride || flowId || createFlowId();
 
     setError(null);
@@ -339,6 +521,9 @@ export default function Page() {
       const formData = new FormData();
       formData.append('file', targetFile);
       formData.append('branding', includeBranding ? '1' : '0');
+      formData.append('keep_overview', layout.overview !== false ? '1' : '0');
+      formData.append('keep_headers', layout.headers !== false ? '1' : '0');
+      formData.append('keep_footer', layout.footer !== false ? '1' : '0');
 
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText }), {
         method: 'POST',
@@ -351,6 +536,15 @@ export default function Page() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        const quotaCode = getQuotaErrorCode(res, data);
+        if (
+          res.status === 402
+          && quotaCode
+          && Object.prototype.hasOwnProperty.call(QUOTA_STATUS_BY_RENDER_CODE, String(quotaCode))
+        ) {
+          applyQuotaExhaustion(quotaCode, data);
+          return;
+        }
         const confidenceFromErrorHeaders = parseConfidenceFromHeaders(res.headers);
         const failureConfidence = normalizeConfidence(
           (data && data.confidence) || confidenceFromErrorHeaders
@@ -404,10 +598,10 @@ export default function Page() {
         getPdfFilenameFromSourceFile(targetFile),
       );
 
-      if (isPdfResponse) {
-        const used = incrementUsedCount();
-        const remaining = 3 - used;
-        setFreeExportsLeft(Math.max(0, remaining));
+      await syncQuotaState();
+      if (!isPdfResponse) {
+        setError('PDF response is missing.');
+        return;
       }
 
       setPdfBlob(blob);
@@ -459,6 +653,9 @@ export default function Page() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (isQuotaLocked) {
+      return;
+    }
     const nextFlowId = createFlowId();
     setFlowId(nextFlowId);
     await submitRender('normal', { flowIdOverride: nextFlowId });
@@ -491,6 +688,81 @@ export default function Page() {
     } catch (error) {
       setError(error.message || 'Unable to load demo file');
     }
+  }
+
+  function showCheckoutComingSoon() {
+    setShowBuyCreditsPanel(false);
+    setPurchaseMessage('Coming soon');
+  }
+
+  async function postCheckout(url, payload = {}) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (response.status === 501) {
+      showCheckoutComingSoon();
+      return { ok: false, response, data, shouldStop: true };
+    }
+
+    if (!response.ok) {
+      setNotice(data?.error || 'Checkout request failed.');
+      return { ok: false, response, data, shouldStop: true };
+    }
+
+    const checkoutUrl = data?.url;
+    if (typeof checkoutUrl === 'string' && checkoutUrl) {
+      if (typeof window !== 'undefined') {
+        window.location.assign(checkoutUrl);
+      }
+      return { ok: true, response, data, shouldStop: true };
+    }
+
+    return { ok: true, response, data, shouldStop: true };
+  }
+
+  async function handleBuyCreditsPack(pack) {
+    setPurchaseMessage('');
+    if (!pack) return;
+    await postCheckout('/api/credits/purchase/checkout', { pack });
+  }
+
+  async function handleGoProCheckout() {
+    setPaywallReason('');
+    setPurchaseMessage('');
+    await postCheckout('/api/plan/pro/checkout', {});
+  }
+
+  function openBuyCreditsPanel() {
+    setPurchaseMessage('');
+    setShowBuyCreditsPanel(true);
+  }
+
+  function closeBuyCreditsPanel() {
+    setShowBuyCreditsPanel(false);
+    setPurchaseMessage('');
+  }
+
+  function handleLayoutChange(nextKey, nextChecked) {
+    setLayout((current) => {
+      if (!current || typeof current !== 'object') {
+        return {
+          overview: true,
+          headers: true,
+          footer: true,
+          [nextKey]: Boolean(nextChecked),
+        };
+      }
+      return {
+        ...current,
+        [nextKey]: Boolean(nextChecked),
+      };
+    });
   }
 
   function handleRemoveFile() {
@@ -689,6 +961,22 @@ A104,Widget,6900.00`}
             downloadedFileName={Boolean(pdfBlob) ? resolvedPdfFilename : null}
             verdict={renderVerdict}
             conversionProgress={conversionProgress}
+            onBuyCredits={openBuyCreditsPanel}
+            isPro={planType === 'pro'}
+            showBuyCreditsForTwo={false}
+            isQuotaLocked={isQuotaLocked}
+            planType={planType}
+            remainingInPeriod={remainingInPeriod}
+            usedInPeriod={usedInPeriod}
+            periodLimit={periodLimit}
+            paywallReason={paywallReason}
+            onBuyCreditsPack={handleBuyCreditsPack}
+            showBuyCreditsPanel={showBuyCreditsPanel}
+            onCloseBuyPanel={closeBuyCreditsPanel}
+            purchaseMessage={purchaseMessage}
+            onGoPro={handleGoProCheckout}
+            onLayoutChange={handleLayoutChange}
+            layout={layout}
           />
 
           {verdict === 'WARN' && (

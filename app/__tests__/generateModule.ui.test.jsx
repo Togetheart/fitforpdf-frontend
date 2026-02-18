@@ -9,7 +9,7 @@ const fileSample = new File(['name,score\na,1'], 'report.csv', { type: 'text/csv
 
 function getFreeExportsLeftFromStorage() {
   const used = Number.parseInt(localStorage.getItem('fitforpdf_free_exports_used') || '0', 10);
-  return Math.max(0, 3 - (Number.isFinite(used) ? used : 0));
+  return Math.max(0, 5 - (Number.isFinite(used) ? used : 0));
 }
 
 afterEach(() => {
@@ -28,7 +28,7 @@ function ModuleHarness({
   return (
     <GenerateModule
       toolTitle="Generate a client-ready PDF"
-      toolSubcopy="3 free exports. No account."
+      toolSubcopy="5 free exports. No account."
       file={currentFile}
       freeExportsLeft={freeExportsLeft}
       includeBranding
@@ -79,18 +79,20 @@ test('drag-and-drop a file into the dropzone selects it', () => {
 
 test('branding toggle defaults on and truncate defaults off', () => {
   render(<ModuleHarness />);
-  const switches = screen.getAllByRole('switch');
 
-  expect(switches).toHaveLength(2);
-  expect(switches[0].getAttribute('aria-checked')).toBe('true');
-  expect(switches[1].getAttribute('aria-checked')).toBe('false');
+  expect(screen.getAllByRole('switch')).toHaveLength(5);
+  expect(screen.getByRole('switch', { name: 'Branding' }).getAttribute('aria-checked')).toBe('true');
+  expect(screen.getByRole('switch', { name: 'Keep overview' }).getAttribute('aria-checked')).toBe('true');
+  expect(screen.getByRole('switch', { name: 'Keep headers' }).getAttribute('aria-checked')).toBe('true');
+  expect(screen.getByRole('switch', { name: 'Keep footer' }).getAttribute('aria-checked')).toBe('true');
+  expect(screen.getByRole('switch', { name: 'Truncate long text' }).getAttribute('aria-checked')).toBe('false');
 });
 
   test('shows quota pill from free exports state', () => {
     localStorage.setItem('fitforpdf_free_exports_used', '2');
     render(<ModuleHarness />);
 
-    expect(screen.getByText(/Free\s*·\s*1\s*export/i)).toBeTruthy();
+    expect(screen.getByText(/Free\s*·\s*3\s*exports\s*left/i)).toBeTruthy();
   });
 
 test('generating state shows spinner text and disables controls', () => {

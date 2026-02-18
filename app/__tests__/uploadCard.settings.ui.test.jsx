@@ -20,7 +20,7 @@ function SettingsHarness({
     return (
       <UploadCard
         toolTitle="Generate a client-ready PDF"
-        toolSubcopy="3 free exports. No account."
+        toolSubcopy="5 free exports. No account."
         file={null}
         freeExportsLeft={3}
         includeBranding={branding}

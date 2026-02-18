@@ -68,7 +68,7 @@ describe('home conversion-critical UI', () => {
     const tool = screen.getByTestId(LANDING_COPY_KEYS.upload);
 
     expect(within(tool).getByTestId('upload-dropzone')).toBeTruthy();
-    expect(within(tool).getAllByRole('switch')).toHaveLength(2);
+    expect(within(tool).getAllByRole('switch')).toHaveLength(5);
     expect(within(tool).getByRole('switch', { name: 'Branding' })).toBeTruthy();
     expect(within(tool).getByRole('switch', { name: 'Truncate long text' })).toBeTruthy();
     expect(within(tool).getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*(?:\d+\s*exports left|1 export left)/i);

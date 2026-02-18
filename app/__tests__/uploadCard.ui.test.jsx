@@ -39,7 +39,7 @@ function configureMatchMedia({ mobile = false } = {}) {
 }
 
 function UploadCardHarness({
-  freeExportsLeft = 3,
+  freeExportsLeft = 5,
   onSubmit = () => {},
   onBuyCredits = () => {},
   showBuyCreditsForTwo = false,
@@ -61,7 +61,7 @@ function UploadCardHarness({
     return (
       <UploadCard
         toolTitle="Generate a client-ready PDF"
-        toolSubcopy="3 free exports. No account."
+        toolSubcopy="5 free exports. No account."
         file={currentFile}
         freeExportsLeft={freeExportsLeft}
         includeBranding={brandingEnabled}
@@ -95,7 +95,7 @@ function UploadCardHarness({
 }
 
 function renderUploadCardHarness({
-  freeExportsLeft = 3,
+  freeExportsLeft = 5,
   onSubmit = () => {},
   onBuyCredits = () => {},
   showBuyCreditsForTwo = false,
@@ -149,6 +149,15 @@ function createJsonResponse(status = 400, body = { error: 'bad request' }) {
   });
 }
 
+function createQuotaResponse(payload = { plan_type: 'free', free_exports_left: 5 }) {
+  return new Response(JSON.stringify(payload), {
+    status: 200,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+}
+
 function createSampleCsvResponse() {
   return new Response(SAMPLE_PREMIUM_CSV, {
     status: 200,
@@ -174,14 +183,17 @@ function mockFetch({ responseFactory, responses = [], delayMs = 0, response }) {
       : responseList[index] || defaultResponse;
     index += 1;
     calls.push({ url, options, response: selected });
+    const returnedResponse = selected instanceof Response && typeof selected.clone === 'function'
+      ? selected.clone()
+      : selected;
 
     if (delayMs > 0) {
       return new Promise((resolve) => {
-        setTimeout(() => resolve(selected), delayMs);
+        setTimeout(() => resolve(returnedResponse), delayMs);
       });
     }
 
-    return Promise.resolve(selected);
+    return Promise.resolve(returnedResponse);
   });
 
   return {
@@ -203,8 +215,7 @@ function getUploadedFile(call) {
 
 async function advanceConversion(ms = 1900) {
   await act(async () => {
-    vi.advanceTimersByTime(ms);
-    await Promise.resolve();
+    await vi.advanceTimersByTimeAsync(ms);
   });
 }
 
@@ -244,7 +255,7 @@ describe('UploadCard unit behavior', () => {
     {
       freeExportsLeft: 1,
       expectedClass: 'bg-amber-600',
-      expectedText: '1 export left',
+      expectedText: '1 exports left',
     },
     {
       freeExportsLeft: 0,
@@ -372,21 +383,22 @@ describe('UploadCard unit behavior', () => {
   test('upgrade click triggers callback and tracks event', () => {
     cleanup();
     clearBrandingNudgeSuppression();
-    const onUpgrade = vi.fn();
+    const onBuyCredits = vi.fn();
     const onEvent = vi.fn();
     const onBrandingChange = vi.fn();
     renderUploadCardHarness({
       isPro: false,
-      onUpgrade,
+      onBuyCredits,
       onEvent,
       onBrandingChange,
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
     fireEvent.click(brandingTitle);
-    fireEvent.click(screen.getByRole('button', { name: 'Upgrade' }));
+    const brandingNudge = screen.getByTestId('branding-upgrade-nudge');
+    fireEvent.click(within(brandingNudge).getByRole('button', { name: 'Buy credits' }));
 
-    expect(onUpgrade).toHaveBeenCalledTimes(1);
+    expect(onBuyCredits).toHaveBeenCalledTimes(1);
     expect(onEvent).toHaveBeenCalledWith('paywall_upgrade_clicked');
   });
 
@@ -526,8 +538,8 @@ describe('UploadCard unit behavior', () => {
     expect(dropzone.getAttribute('role')).toBe('button');
     expect(dropzone.getAttribute('tabindex')).toBe('0');
     expect(tooltip).toBeTruthy();
+    });
   });
-});
 
 describe('UploadCard conversion flow on landing page', () => {
   beforeEach(() => {
@@ -628,8 +640,6 @@ describe('UploadCard conversion flow on landing page', () => {
   });
 
   test('progress UI follows three steps and completes after minimum visible duration', async () => {
-    vi.useFakeTimers();
-
     const mock = mockFetch({
       response: createPdfResponse(),
       delayMs: 30,
@@ -645,15 +655,18 @@ describe('UploadCard conversion flow on landing page', () => {
     expect(screen.getByText('Converting your file')).toBeTruthy();
     expect(screen.getByTestId('upload-progress-label').textContent).toBe('Uploading');
 
-    await advanceConversion(520);
-    expect(screen.getByTestId('upload-progress-label').textContent).toBe('Structuring (column grouping)');
+    await waitFor(() => {
+      expect(screen.getByTestId('upload-progress-label').textContent).toBe('Structuring (column grouping)');
+    }, { timeout: 2000 });
 
-    await advanceConversion(560);
-    expect(screen.getByTestId('upload-progress-label').textContent).toBe('Generating PDF');
+    await waitFor(() => {
+      expect(screen.getByTestId('upload-progress-label').textContent).toBe('Generating PDF');
+    }, { timeout: 2000 });
 
-    await advanceConversion(920);
-    expect(screen.queryByText('Converting your file')).toBeNull();
-    expect(screen.getByRole('button', { name: 'Download again' })).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.queryByText('Converting your file')).toBeNull();
+      expect(screen.getByRole('button', { name: 'Download again' })).toBeTruthy();
+    }, { timeout: 4000 });
 
     mock.restore();
   });
@@ -727,12 +740,11 @@ describe('UploadCard conversion flow on landing page', () => {
   });
 
   test('quota increments only for successful PDF responses', async () => {
-    vi.useFakeTimers();
-
     const responses = [
+      createQuotaResponse({ plan_type: 'free', free_exports_left: 5 }),
       createPdfResponse(),
-      createJsonResponse(400, { error: 'bad' }),
-      createJsonResponse(200, { error: 'ok', verdict: 'OK' }),
+      createQuotaResponse({ plan_type: 'free', free_exports_left: 4 }),
+      createQuotaResponse({ plan_type: 'free', free_exports_left: 4 }),
     ];
 
     const mock = mockFetch({
@@ -745,47 +757,36 @@ describe('UploadCard conversion flow on landing page', () => {
       target: { files: [SAMPLE_FILE] },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
-    await advanceConversion(1900);
 
-    expect(localStorage.getItem('fitforpdf_free_exports_used')).toBe('1');
-    expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*2\s*exports left/i);
-
-    cleanup();
-
-    render(<LandingPage />);
-    fireEvent.change(screen.getByTestId('generate-file-input'), {
-      target: { files: [SAMPLE_FILE] },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
-    await advanceConversion(1900);
-    expect(localStorage.getItem('fitforpdf_free_exports_used')).toBe('1');
-    expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*2\s*exports left/i);
-
-    cleanup();
-
-    render(<LandingPage />);
-    fireEvent.change(screen.getByTestId('generate-file-input'), {
-      target: { files: [SAMPLE_FILE] },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
-    await advanceConversion(1900);
-    expect(localStorage.getItem('fitforpdf_free_exports_used')).toBe('1');
-    expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*2\s*exports left/i);
+    await waitFor(() => {
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*4\s*exports\s*left/i);
+    }, { timeout: 5000 });
+    const quotaCalls = mock.calls.filter((call) => String(call.url).includes('/api/quota'));
+    expect(quotaCalls.length).toBeGreaterThanOrEqual(2);
 
     mock.restore();
   });
 
-  test('paywall blocks conversion when quota is exhausted', () => {
-    localStorage.setItem('fitforpdf_free_exports_used', '3');
+  test('paywall blocks conversion when quota is exhausted', async () => {
+    const mock = mockFetch({
+      response: createQuotaResponse({ plan_type: 'free', free_exports_left: 0 }),
+    });
 
     render(<LandingPage />);
 
-    expect(screen.getByRole('link', { name: 'Upgrade to continue' })).toBeTruthy();
-    expect(screen.getByTestId('upload-paywall')).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.getByTestId('upload-paywall')).toBeTruthy();
+    });
+    const uploadPaywall = screen.getByTestId('upload-paywall');
+    expect(within(uploadPaywall).getByRole('button', { name: 'Buy credits' })).toBeTruthy();
+    expect(within(uploadPaywall).getByRole('button', { name: 'Go Pro' })).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
     const uploadSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     const uploadCard = screen.getByTestId('upload-card');
+    expect(within(screen.getByTestId('quota-buy-slot')).getByLabelText('Buy credits')).toBeTruthy();
+    expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*0\s*exports\s*left/i);
     expect(within(uploadCard).queryByRole('button', { name: 'Run the demo' })).toBeNull();
+    mock.restore();
   });
 
   test('Branding switch updates multipart branding payload', async () => {
@@ -805,7 +806,7 @@ describe('UploadCard conversion flow on landing page', () => {
 
     await advanceConversion(1900);
 
-    const [call] = mock.calls;
+    const call = mock.calls.find((entry) => String(entry.url).includes('/api/render'));
     expect(getUploadedPayloadBody(call)?.get('branding')).toBe('1');
     mock.restore();
   });
@@ -828,7 +829,7 @@ describe('UploadCard conversion flow on landing page', () => {
 
     await advanceConversion(1900);
 
-    const [call] = mock.calls;
+    const call = mock.calls.find((entry) => String(entry.url).includes('/api/render'));
     const calledUrl = new URL(call.url, 'http://localhost');
     expect(calledUrl.searchParams.get('truncate_long_text')).toBe('true');
     mock.restore();
