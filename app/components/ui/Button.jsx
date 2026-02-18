@@ -5,7 +5,7 @@ const BASE_CLASS =
 
 const VARIANTS = {
   primary:
-    'h-11 bg-[#D92D2A] text-white shadow-sm hover:bg-[#b92524] active:scale-[0.99]',
+    'h-11 bg-accent text-white shadow-sm hover:bg-accent-hover active:scale-[0.99]',
   secondary:
     'h-11 border border-slate-300 bg-white text-slate-900 hover:bg-slate-50',
 };

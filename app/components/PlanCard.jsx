@@ -2,11 +2,9 @@ import React from 'react';
 import { Check, X } from 'lucide-react';
 
 import Card from './Card';
-import Button from './Button';
+import Button from './ui/Button';
 import Badge from './Badge';
-
-const CTA_BASE =
-  'inline-flex h-11 w-full items-center justify-center rounded-full text-sm font-semibold transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
+import { cn } from '../lib/cn.mjs';
 
 function isNegativePoint(point) {
   return (
@@ -47,6 +45,16 @@ function renderAction(plan) {
   );
 }
 
+/**
+ * Splits a price-line like "100 exports · €19" into { label, price }.
+ * Returns null if the line doesn't match.
+ */
+function splitPriceLine(line) {
+  const match = /^(.+?)\s*[·•]\s*([€$£].+)$/.exec(line);
+  if (!match) return null;
+  return { label: match[1].trim(), price: match[2].trim() };
+}
+
 export default function PlanCard({
   plan,
   headingTag = 'h3',
@@ -61,37 +69,36 @@ export default function PlanCard({
     ? plan.priceLines
     : [plan.priceLine];
 
-  const cardClasses = [
-    'relative p-5 transition-all duration-150',
-    isFeatured
-      ? `md:${featuredScaleClass} border-2 border-[#D92D2A]/35 shadow-[0_14px_45px_-34px_rgba(0,0,0,0.45)]`
-      : 'hover:-translate-y-0.5 hover:shadow-md',
-    CTA_BASE.includes('rounded-full') ? 'will-change-transform' : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  // Separate the first line (topline descriptor) from price entries
+  const topline = priceLines[0];
+  const pricePairs = priceLines.slice(1).map(splitPriceLine).filter(Boolean);
 
   return (
     <Card
       as="article"
       data-testid={dataTestId}
       data-featured={isFeatured ? 'true' : 'false'}
-      className={cardClasses}
+      className={cn(
+        'relative flex flex-col overflow-visible p-6 transition-all duration-150',
+        isFeatured
+          ? `md:${featuredScaleClass} border-2 border-accent/30 shadow-lg`
+          : 'hover:-translate-y-0.5 hover:shadow-md',
+      )}
       aria-label={plan.title}
     >
+      {/* Badge — overflow-visible lets it sit on the edge */}
       {isFeatured ? (
-        <span aria-hidden="true" className="sr-only" data-testid="plan-credits" data-highlight="true" />
-      ) : null}
-      {isFeatured ? (
-        <div className="absolute -top-3 right-3">
-          <Badge variant="popular" testId="plan-highlighted" data-highlight="true">
-            {plan.badge || 'Most popular'}
-          </Badge>
-        </div>
+        <>
+          <span aria-hidden="true" className="sr-only" data-testid="plan-credits" data-highlight="true" />
+          <div className="absolute -top-3 right-4 z-10">
+            <Badge variant="popular" testId="plan-highlighted" data-highlight="true">
+              {plan.badge || 'Most popular'}
+            </Badge>
+          </div>
+        </>
       ) : (
         plan.badge ? (
-          <div className="absolute -top-3 right-3">
+          <div className="absolute -top-3 right-4 z-10">
             <Badge testId={includeTestId ? 'pricing-badge' : undefined}>{plan.badge}</Badge>
           </div>
         ) : null
@@ -99,22 +106,40 @@ export default function PlanCard({
 
       {includeTestId ? <span className="sr-only" data-testid={includeTestId} aria-hidden="true" /> : null}
 
-      <HeadingTag className="text-lg font-semibold tracking-tight">{plan.title}</HeadingTag>
+      {/* Title */}
+      <HeadingTag className="text-xl font-semibold tracking-tight">{plan.title}</HeadingTag>
 
-      <div className="mt-3 space-y-2">
-        {priceLines.map((line) => (
-          <p key={line} className="text-sm font-semibold text-slate-900">
-            {line}
+      {/* Price hero — big visible price or topline */}
+      <div className="mt-4">
+        {pricePairs.length > 0 ? (
+          <>
+            <p className="text-sm text-slate-500">{topline}</p>
+            <div className="mt-3 space-y-2">
+              {pricePairs.map(({ label, price }) => (
+                <div key={label} className="flex items-baseline justify-between gap-3">
+                  <span className="text-sm text-slate-600">{label}</span>
+                  <span className="text-xl font-bold tracking-tight text-slate-900">{price}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="text-3xl font-bold tracking-tight text-slate-900">
+            {topline}
           </p>
-        ))}
+        )}
       </div>
 
+      {/* Divider */}
+      <div className="my-5 h-px bg-slate-200/80" />
+
+      {/* Features */}
       {plan.points?.length ? (
-        <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
+        <ul className="flex-1 space-y-2.5 text-sm text-slate-700">
           {plan.points.map((point) => (
-            <li key={point} className="flex items-start gap-2">
+            <li key={point} className="flex items-start gap-2.5">
               {isNegativePoint(point) ? (
-                <X className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
+                <X className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
               ) : (
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
               )}
@@ -124,8 +149,9 @@ export default function PlanCard({
         </ul>
       ) : null}
 
+      {/* CTA */}
       {showAction ? <div className="mt-6">{renderAction(plan)}</div> : null}
-      {plan.ctaNote ? <p className="mt-2 text-xs text-slate-500">{plan.ctaNote}</p> : null}
+      {plan.ctaNote ? <p className="mt-2.5 text-center text-xs text-slate-400">{plan.ctaNote}</p> : null}
     </Card>
   );
 }

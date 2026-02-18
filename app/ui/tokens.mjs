@@ -4,7 +4,8 @@ export const UI_TOKENS = Object.freeze({
     muted: 'rgba(0, 0, 0, 0.55)',
     border: 'rgba(0, 0, 0, 0.10)',
     bg: '#FFFFFF',
-    accentRed: '#D92D2A',
+    accent: '#0071E3',
+    accentHover: '#005BBB',
   },
   spacing: {
     x4: '4px',
@@ -23,11 +24,12 @@ export const UI_TOKENS = Object.freeze({
     input: '10px',
     pill: '999px',
   },
+  fontFamily: "'Satoshi', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif",
   typography: {
     h1: {
       mobile: '44px',
       desktop: '64px',
-      weight: 650,
+      weight: 700,
       lineHeight: 1.05,
     },
     h2: {

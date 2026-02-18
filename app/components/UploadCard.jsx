@@ -2,14 +2,13 @@ import React from 'react';
 import {
   AlertCircle,
   CheckCircle2,
-  CircleHelp,
   ChevronDown,
   Loader2,
   ShieldUser,
   ShoppingCart,
 } from 'lucide-react';
 
-import Button from './Button';
+import Button from './ui/Button';
 import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
 
@@ -20,7 +19,7 @@ const PROGRESS_STEP_STATES = {
     label: 'text-slate-700',
   },
   active: {
-    circle: 'border border-rose-600 bg-rose-600 text-white',
+    circle: 'border border-accent bg-accent text-white',
     label: 'text-slate-900 font-medium',
   },
   pending: {
@@ -64,7 +63,7 @@ function StepIndicator({ activeStepIndex }) {
             className="min-w-0 flex flex-1 items-center gap-2"
           >
             <span
-              className={`grid h-7 w-7 place-items-center rounded-full text-xs font-semibold transition-colors duration-200 ${stateClasses.circle}`}
+              className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-semibold transition-colors duration-200 ${stateClasses.circle}`}
             >
               {index + 1}
             </span>
@@ -82,7 +81,7 @@ function getProgressPercent(progress) {
 }
 
 const EXPORT_BADGE_STYLES = {
-  neutral: 'border-slate-200 bg-slate-100 text-slate-700',
+  neutral: 'border-accent/25 bg-white text-accent-hover',
   warning: 'border-amber-200 bg-amber-400 text-white',
   warningStrong: 'border-amber-300 bg-amber-600 text-white',
   danger: 'border-red-300 bg-red-600 text-white',
@@ -192,29 +191,11 @@ function getVerdictIcon(verdict) {
   return AlertCircle;
 }
 
-function InfoTooltip({ label, text }) {
-  return (
-    <button
-      type="button"
-      aria-label={`${label} info`}
-      className="inline-flex h-4 w-4 items-center justify-center rounded-full text-slate-400 transition hover:text-slate-600"
-      title={text}
-      onClick={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-      }}
-    >
-      <CircleHelp aria-hidden="true" className="h-3.5 w-3.5" />
-    </button>
-  );
-}
-
 function SettingRow({
   title,
   description,
   checked,
   onChange,
-  tooltip,
   disabled,
   rowTestId,
   showBottomBorder = true,
@@ -240,17 +221,7 @@ function SettingRow({
           className="w-full cursor-pointer px-1 py-0.5 text-left transition-colors hover:bg-slate-50"
           onClick={handleTextToggle}
         >
-          <div className="flex items-center gap-2">
-            <div className="text-sm font-semibold text-slate-900">{title}</div>
-            {tooltip ? (
-              <span
-                className="shrink-0"
-                onClick={(event) => event.stopPropagation()}
-              >
-                {tooltip}
-              </span>
-            ) : null}
-          </div>
+          <div className="text-sm font-semibold text-slate-900">{title}</div>
           <div
             className="mt-1 text-sm text-slate-500"
           >
@@ -493,7 +464,7 @@ export default function UploadCard({
 
   return (
     <article
-      className="relative overflow-hidden rounded-[16px] bg-white/20 backdrop-blur-[5px] border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+      className="relative overflow-hidden rounded-xl bg-white/20 backdrop-blur-[5px] border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
       data-testid="upload-card"
     >
       <div
@@ -504,7 +475,7 @@ export default function UploadCard({
       <div
         aria-hidden="true"
         data-testid="uploadcard-glass-highlight"
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-20 rounded-[16px] bg-gradient-to-b from-white/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-20 rounded-xl bg-gradient-to-b from-white/40 to-transparent"
       />
       <div className="relative z-10 p-5">
         <form className="relative space-y-5" onSubmit={onSubmit}>
@@ -573,30 +544,21 @@ export default function UploadCard({
           accept=".csv,.xlsx"
           disabled={isLoading}
         />
-        <div className="space-y-2" data-testid="demo-try-row">
-          <div className="my-1 flex items-center gap-3">
-            <span className="h-px w-full bg-slate-200" />
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-              — or —
-            </span>
-            <span className="h-px w-full bg-slate-200" />
-          </div>
+        <div className="text-center" data-testid="demo-try-row">
           <button
             type="button"
             onClick={onTrySample}
             disabled={isLoading}
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="text-sm text-slate-500 underline underline-offset-2 transition-colors hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
-            <span aria-hidden="true">▶</span>
-            Try with demo file
+            or try with a demo file
           </button>
-          <p className="text-xs text-slate-500">120 rows · 15 columns · invoices</p>
         </div>
 
         {isLoading && conversionProgress ? (
           <div
-            className="space-y-3 rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5"
+            className="space-y-3 rounded-xl glass-subtle p-4"
             data-testid="upload-progress"
           >
             <div className="flex items-center justify-between text-sm">
@@ -605,7 +567,7 @@ export default function UploadCard({
             </div>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
               <div
-                className="h-full rounded-full bg-[#D92D2A] transition-all duration-200 ease-out"
+                className="h-full rounded-full bg-accent transition-all duration-200 ease-out"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -617,7 +579,7 @@ export default function UploadCard({
         ) : null}
 
         <div
-          className="mt-6 rounded-2xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_10px_28px_rgba(2,6,23,0.10)] ring-1 ring-black/5"
+          className="mt-6 rounded-xl glass-subtle"
           data-testid="upload-options-shell"
         >
           <button
@@ -626,7 +588,7 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className="group flex w-full items-center justify-between gap-2 border-b border-slate-200 px-5 py-4 text-left text-sm font-medium text-slate-800 transition"
+            className={`group flex w-full items-center justify-between gap-2 px-5 py-4 text-left text-sm font-medium text-slate-800 transition ${isOptionsExpanded ? 'border-b border-slate-200' : ''}`}
           >
             <span>Options</span>
             <ChevronDown
@@ -644,7 +606,7 @@ export default function UploadCard({
             >
               <div className="min-h-0 divide-y divide-slate-100">
                 {effectiveShowBuyCreditsPanel && isOptionsExpanded ? (
-                  <section className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5" data-testid="credits-purchase-panel">
+                  <section className="rounded-xl glass-subtle p-4" data-testid="credits-purchase-panel">
                     <div className="mb-3 flex items-center justify-between">
                       <p className="text-sm font-semibold text-slate-900">Buy credits</p>
                       <button
@@ -690,14 +652,14 @@ export default function UploadCard({
                         <button
                           type="button"
                           onClick={handleBrandingUpgrade}
-                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-[#D92D2A] bg-[#D92D2A] px-4 hover:bg-[#b92524]"
+                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-accent bg-accent px-4 hover:bg-accent-hover"
                         >
                           Buy credits
                         </button>
                         <button
                           type="button"
                           onClick={handleProUpgrade}
-                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-[#D92D2A] px-4 hover:bg-[#FDECEC]"
+                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-accent px-4 hover:bg-blue-50"
                         >
                           Go Pro
                         </button>
@@ -718,7 +680,6 @@ export default function UploadCard({
                   description="Adds a lightweight brand treatment by default"
                   checked={includeBranding}
                   onChange={handleBrandingChange}
-                  tooltip={<InfoTooltip label="Branding" text="Keep this on to display the FitForPDF styling in exports." />}
                   rowTestId="setting-row-branding"
                   disabled={isLoading}
                 />
@@ -728,7 +689,6 @@ export default function UploadCard({
                   description="Show overview summary page in the export."
                   checked={layout?.overview !== false}
                   onChange={(nextChecked) => handleLayoutChange('overview', nextChecked)}
-                  tooltip={<InfoTooltip label="Keep overview" text="Keep overview content in the generated PDF." />}
                   rowTestId="setting-row-overview"
                   disabled={isLoading}
                 />
@@ -738,7 +698,6 @@ export default function UploadCard({
                   description="Keep repeated headers for multi-page outputs."
                   checked={layout?.headers !== false}
                   onChange={(nextChecked) => handleLayoutChange('headers', nextChecked)}
-                  tooltip={<InfoTooltip label="Keep headers" text="Keep your table headers visible on each page." />}
                   rowTestId="setting-row-headers"
                   disabled={isLoading}
                 />
@@ -748,7 +707,6 @@ export default function UploadCard({
                   description="Keep footer metadata in the exported PDF."
                   checked={layout?.footer !== false}
                   onChange={(nextChecked) => handleLayoutChange('footer', nextChecked)}
-                  tooltip={<InfoTooltip label="Keep footer" text="Keep the footer content in the exported PDF." />}
                   rowTestId="setting-row-footer"
                   disabled={isLoading}
                 />
@@ -758,7 +716,6 @@ export default function UploadCard({
                   description="Auto-crops very long content to keep layout stable"
                   checked={truncateLongText}
                   onChange={onTruncateChange}
-                  tooltip={<InfoTooltip label="Truncate long text" text="Enable this to avoid rows pushing beyond column width." />}
                   rowTestId="setting-row-truncate"
                   disabled={isLoading}
                   showBottomBorder={false}
@@ -769,7 +726,7 @@ export default function UploadCard({
         </div>
 
         {effectiveShowBuyCreditsPanel && !isOptionsExpanded ? (
-          <section className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5" data-testid="credits-purchase-panel">
+          <section className="rounded-xl glass-subtle p-4" data-testid="credits-purchase-panel">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-900">Buy credits</p>
               <button
@@ -802,14 +759,14 @@ export default function UploadCard({
             <Button
               type="submit"
               variant="primary"
-              className="w-full !bg-blue-600 !text-white hover:!bg-blue-700"
+              className="w-full"
               disabled
             >
               Generate PDF
             </Button>
             <section
               data-testid="upload-paywall"
-              className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5"
+              className="rounded-xl glass-subtle p-4"
             >
               <p className="text-xs text-slate-600">{paywallReason || 'You have reached your exports limit for this plan.'}</p>
               <div className="mt-3 flex flex-wrap gap-2" data-testid="quota-upgrade-inline">
@@ -850,7 +807,7 @@ export default function UploadCard({
           <Button
             type="submit"
             variant="primary"
-            className="w-full !bg-blue-600 !text-white hover:!bg-blue-700"
+            className="w-full"
             disabled={isLoading || !file}
           >
             {isLoading ? (
@@ -864,22 +821,13 @@ export default function UploadCard({
           </Button>
         )}
 
-        <div
-          className="space-y-2 rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5 p-3 text-xs text-slate-600"
+        <p
+          className="flex items-center justify-center gap-1.5 text-xs text-slate-400"
           data-testid="upload-privacy-messages"
         >
-          <div className="flex items-center justify-center gap-2">
-            <ShieldUser
-              aria-hidden="true"
-              className="h-14 w-14 shrink-0 text-slate-500"
-            />
-            <div className="space-y-1 text-left">
-              <p data-testid="upload-privacy-message">Files are deleted immediately after conversion.</p>
-              <p data-testid="upload-privacy-message">PDF available for up to 15 minutes.</p>
-              <p data-testid="upload-privacy-message">No file content stored in logs.</p>
-            </div>
-          </div>
-        </div>
+          <ShieldUser aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+          <span data-testid="upload-privacy-message">Files deleted after conversion · No content stored</span>
+        </p>
 
         {downloadedFileName || shouldShowVerdict ? (
           <div className="flex flex-col gap-2 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">

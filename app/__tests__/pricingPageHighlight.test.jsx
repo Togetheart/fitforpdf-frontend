@@ -42,8 +42,10 @@ describe('pricing page highlight', () => {
     const creditsCard = screen.getByTestId('plan-highlighted').closest('[data-testid="plan-card"]');
     const creditsText = creditsCard ? creditsCard.textContent || '' : '';
 
-    expect(creditsText).toContain('100 exports · €19');
-    expect(creditsText).toContain('500 exports · €79');
+    expect(creditsText).toContain('100 exports');
+    expect(creditsText).toContain('€19');
+    expect(creditsText).toContain('500 exports');
+    expect(creditsText).toContain('€79');
   });
 
   test('comparison and faq sections are present', () => {

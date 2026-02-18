@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Satoshi (Variable) ─────────────────────────────── */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('https://cdn.fontshare.com/wf/EKRUOY5NRRLBDHCQHYMXGXV2N4AVMBQW/YYSC4MDBHQAIF5GI37IHXQWMXQ7OD644/RLJJDXBJ6MKZNVQHFSXHCT5HRYXKPJWD.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('https://cdn.fontshare.com/wf/EKRUOY5NRRLBDHCQHYMXGXV2N4AVMBQW/YYSC4MDBHQAIF5GI37IHXQWMXQ7OD644/4SZZJBYXH2GX7K2KYQOIQLQMDR232ZXI.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: italic;
+}
+
+/* ── Design tokens (CSS custom properties) ──────────
+ * Source of truth: app/ui/tokens.mjs
+ * These vars are consumed by Tailwind config and glass system.
+ */
+:root {
+  --color-accent: #0071E3;
+  --color-accent-hover: #005BBB;
+  --color-text: #0A0A0A;
+  --color-muted: rgba(0, 0, 0, 0.55);
+  --color-border: rgba(0, 0, 0, 0.10);
+  --color-bg: #FFFFFF;
+  --radius-base: 12px;
+  --radius-input: 10px;
+  --radius-pill: 999px;
+  --max-width: 960px;
+  --button-height: 48px;
+  --motion-duration: 150ms;
+}
+
 @layer base {
   html,
   body {
@@ -11,15 +47,55 @@
   }
 
   body {
-    background: #ffffff;
-    color: #111827;
-    font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'Satoshi', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   * {
     box-sizing: border-box;
+  }
+}
+
+/* ── Glass system ────────────────────────────────────
+ * 3 tiers: subtle → base → elevated
+ * Each shares ring-1 ring-black/5 for consistent edge definition.
+ * UploadCard root keeps its own bespoke glass (bg-white/20) — not part of this scale.
+ */
+@layer components {
+  .glass-subtle {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.45);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.06);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 4px 14px rgba(2, 6, 23, 0.06);
+  }
+
+  .glass {
+    border: 1px solid rgba(255, 255, 255, 0.40);
+    background: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 8px 24px rgba(2, 6, 23, 0.08);
+  }
+
+  .glass-elevated {
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 12px 32px rgba(2, 6, 23, 0.12);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 12px 32px rgba(2, 6, 23, 0.12);
   }
 }
 

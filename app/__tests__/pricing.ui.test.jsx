@@ -98,9 +98,7 @@ describe('pricing page UI', () => {
     expect((grid.getAttribute('class') || '').includes('md:grid-cols-2')).toBe(true);
     expect(cards).toHaveLength(2);
     cards.forEach((card) => {
-      expect((card.className || '').includes('bg-white/55')).toBe(true);
-      expect((card.className || '').includes('backdrop-blur-[5px]')).toBe(true);
-      expect((card.className || '').includes('border-white/40')).toBe(true);
+      expect((card.className || '').includes('glass')).toBe(true);
     });
     expect(screen.getByRole('heading', { level: 3, name: 'Free' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 3, name: 'Credits' })).toBeTruthy();
@@ -113,16 +111,16 @@ describe('pricing page UI', () => {
     );
 
     expect(creditsCard).toBeTruthy();
-    expect(within(creditsCard).getByText('100 exports · €19')).toBeTruthy();
-    expect(within(creditsCard).getByText('500 exports · €79')).toBeTruthy();
+    expect(within(creditsCard).getByText('100 exports')).toBeTruthy();
+    expect(within(creditsCard).getByText('€19')).toBeTruthy();
+    expect(within(creditsCard).getByText('500 exports')).toBeTruthy();
+    expect(within(creditsCard).getByText('€79')).toBeTruthy();
   });
 
   test('comparison table is present and has comparison test id', () => {
     const compare = screen.getByTestId('pricing-compare');
     expect(compare).toBeTruthy();
-    expect((compare.className || '').includes('bg-white/55')).toBe(true);
-    expect((compare.className || '').includes('backdrop-blur-[5px]')).toBe(true);
-    expect((compare.className || '').includes('border-white/40')).toBe(true);
+    expect((compare.className || '').includes('glass')).toBe(true);
     const compareText = compare.textContent || '';
 
     expect(compareText).toContain('Client-ready PDF output');
@@ -137,10 +135,7 @@ describe('pricing page UI', () => {
 
     featureRows.forEach((row) => {
       const className = row.getAttribute('class') || '';
-      expect(className).toContain('bg-white/55');
-      expect(className).toContain('backdrop-blur-[5px]');
-      expect(className).toContain('ring-1');
-      expect(className).toContain('border-white/45');
+      expect(className).toContain('glass-subtle');
     });
   });
 
@@ -179,8 +174,10 @@ describe('pricing page UI', () => {
   test('contains expected plan pricing values', () => {
     const pageText = document.body.textContent || '';
 
-    expect(pageText.includes('100 exports · €19')).toBe(true);
-    expect(pageText.includes('500 exports · €79')).toBe(true);
+    expect(pageText.includes('100 exports')).toBe(true);
+    expect(pageText.includes('€19')).toBe(true);
+    expect(pageText.includes('500 exports')).toBe(true);
+    expect(pageText.includes('€79')).toBe(true);
     expect(pageText.includes('€29/month')).toBe(false);
     expect(pageText.includes('Coming soon')).toBe(false);
   });

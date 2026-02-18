@@ -68,12 +68,12 @@ describe('Premium sample demo conversion UI', () => {
     cleanup();
   });
 
-  test('shows premium demo micro-copy above upload block', () => {
+  test('shows demo CTA in upload block', () => {
     render(<LandingPage />);
 
-    expect(screen.getByText('120 rows · 15 columns · invoices')).toBeTruthy();
+    expect(screen.queryByText('120 rows · 15 columns · invoices')).toBeNull();
     expect(screen.getByTestId('upload-card')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Try with demo file' })).toBeTruthy();
+    expect(screen.getByTestId('demo-try-button')).toBeTruthy();
   });
 
   test('Run the demo triggers premium CSV fetch then /api/render', async () => {
@@ -84,7 +84,7 @@ describe('Premium sample demo conversion UI', () => {
     });
 
     render(<LandingPage />);
-    fireEvent.click(screen.getByRole('button', { name: 'Try with demo file' }));
+    fireEvent.click(screen.getByTestId('demo-try-button'));
 
     await waitFor(() => {
       expect(mock.calls).toHaveLength(2);

@@ -60,15 +60,11 @@ describe('landing conversion-first structure', () => {
     expect(screen.queryByTestId('section-home-demo')).toBeNull();
   });
 
-  test('hero has exactly one primary CTA and no other hero links', () => {
+  test('hero has no standalone CTA — upload card is the primary action', () => {
     const hero = screen.getByTestId('hero-section');
-    const primary = within(hero).getByTestId('hero-primary-cta');
-    const links = within(hero).getAllByRole('link');
-
-    expect(primary).toBeTruthy();
-    expect(primary.textContent).toBe('Generate PDF');
-    expect(primary.getAttribute('href')).toBe('#generate');
-    expect(links).toHaveLength(1);
+    expect(within(hero).queryByTestId('hero-primary-cta')).toBeNull();
+    const uploadCard = within(hero).getByTestId('upload-card');
+    expect(uploadCard).toBeTruthy();
   });
 
   test('hero has headline/subline/trust line', () => {
@@ -77,25 +73,23 @@ describe('landing conversion-first structure', () => {
     expect(screen.getAllByText(LANDING_COPY.heroTrustLine)).toHaveLength(1);
   });
 
-  test('upload block includes a second Generate PDF button under hero', () => {
+  test('upload block includes a Generate PDF button as the sole CTA', () => {
     const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     const uploadGenerate = within(toolSection).getByRole('button', { name: 'Generate PDF' });
 
     expect(uploadGenerate).toBeTruthy();
-    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-blue-600');
-    expect(screen.getByTestId('hero-primary-cta').getAttribute('class') || '').toContain('bg-blue-600');
+    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-accent');
+    expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
   });
 
-  test('hero includes subtle gradient background and CTA glow utility', () => {
+  test('hero includes subtle gradient background', () => {
     const heroBackdrop = screen.getByTestId('hero-backdrop');
     const heroBg = screen.getByTestId('hero-bg');
     const heroGradients = screen.getByTestId('hero-bg-gradients');
-    const primary = screen.getByTestId('hero-primary-cta');
 
     expect((heroBackdrop.getAttribute('class') || '').includes('hero-backdrop')).toBe(true);
     expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
     expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients')).toBe(true);
-    expect((primary.getAttribute('class') || '').includes('bg-blue-600')).toBe(true);
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
   });
 
@@ -115,23 +109,28 @@ describe('landing conversion-first structure', () => {
     const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const uploadCard = screen.getByTestId('upload-card');
     const proofCard = screen.getByTestId('home-preview-card');
-    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
+    const demoButton = screen.getByTestId('demo-try-button');
 
     expect(proofSection.contains(uploadCard)).toBe(false);
     expect(uploadCard).toBeTruthy();
     expect(proofCard).toBeTruthy();
     expect(demoButton).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Run the demo' })).toBeNull();
-    expect(screen.getAllByRole('button', { name: 'Try with demo file' })).toHaveLength(1);
+    expect(screen.getAllByTestId('demo-try-button')).toHaveLength(1);
   });
 
   test('preview card has desktop float animation class', () => {
     const previewCard = screen.getByTestId('home-preview-card');
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
     expect((previewCard.className || '').includes('max-w-7xl')).toBe(true);
-    expect((within(previewCard).getByRole('img').getAttribute('src') || '')).toContain('/fitforpdf-proof-v8.svg');
-    expect(screen.getByTestId('proof-pdf-image').getAttribute('class') || '').toContain('w-full');
-    expect(within(previewCard).getByText('Structured PDF (v8)')).toBeTruthy();
+    const images = within(previewCard).getAllByRole('img');
+    expect(images[0].getAttribute('src') || '').toContain('/before_csv.webp');
+    const proofWrapper = screen.getByTestId('proof-pdf-image');
+    const proofImg = proofWrapper.querySelector('img');
+    expect((proofImg?.getAttribute('src') || '')).toContain('/after_fitforpdf.webp');
+    expect(proofWrapper.getAttribute('class') || '').toContain('w-full');
+    expect(within(previewCard).getByText('CSV INPUT')).toBeTruthy();
+    expect(within(previewCard).getByText('STRUCTURED PDF')).toBeTruthy();
   });
 
   test('cards in proof and how-it-works sections are glass-styled', () => {
@@ -139,14 +138,10 @@ describe('landing conversion-first structure', () => {
     const howItWorksSection = screen.getByTestId('section-how-it-works');
     const howItWorksCards = Array.from(howItWorksSection.querySelectorAll('[data-testid=\"how-it-works-card\"]'));
 
-    expect((previewCard.className || '').includes('backdrop-blur-[5px]')).toBe(true);
-    expect((previewCard.className || '').includes('bg-white/55')).toBe(true);
-    expect((previewCard.className || '').includes('ring-1')).toBe(true);
+    expect((previewCard.className || '').includes('glass-elevated')).toBe(true);
     expect(howItWorksCards).toHaveLength(3);
     howItWorksCards.forEach((card) => {
-      expect((card.className || '').includes('bg-white/55')).toBe(true);
-      expect((card.className || '').includes('backdrop-blur-[5px]')).toBe(true);
-      expect((card.className || '').includes('ring-1')).toBe(true);
+      expect((card.className || '').includes('glass')).toBe(true);
     });
   });
 

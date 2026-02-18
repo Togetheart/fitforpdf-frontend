@@ -98,7 +98,7 @@ export const PRICING_PAGE_COPY = {
   plansCopy: 'Start free. Keep everything predictable when you need more.',
 
   freeTitle: 'Free',
-  freeSubtitle: 'Free',
+  freeSubtitle: '$0 forever',
   freeFeature: 'Branding enabled',
   freeFeatureAlt: 'No account required',
   freeCtaLabel: 'Start free',

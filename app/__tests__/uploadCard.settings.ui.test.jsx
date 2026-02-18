@@ -50,8 +50,6 @@ describe('UploadCard settings row smoke tests', () => {
 
     const brandingSwitch = screen.getByRole('switch', { name: 'Branding' });
     const truncateSwitch = screen.getByRole('switch', { name: 'Truncate long text' });
-    const brandingTooltip = screen.getByRole('button', { name: 'Branding info' });
-    const truncateTooltip = screen.getByRole('button', { name: 'Truncate long text info' });
 
     expect(screen.getByText('Adds a lightweight brand treatment by default')).toBeTruthy();
     expect(screen.getByText('Auto-crops very long content to keep layout stable')).toBeTruthy();
@@ -61,23 +59,16 @@ describe('UploadCard settings row smoke tests', () => {
     expect(Boolean(brandingSwitch.closest('div.w-12'))).toBe(true);
     expect(Boolean(truncateSwitch.closest('div.w-12'))).toBe(true);
     expect(brandingSwitch.getAttribute('type')).toBe('button');
-
-    expect(brandingTooltip.getAttribute('aria-label')).toBe('Branding info');
-    expect(truncateTooltip.getAttribute('aria-label')).toBe('Truncate long text info');
   });
 
-  test('toggles branding via text row and not via tooltip click', () => {
+  test('toggles branding via text row click', () => {
     const Harness = SettingsHarness({ initialBranding: true, initialTruncate: false });
     render(<Harness />);
 
     const brandingSwitch = screen.getByRole('switch', { name: 'Branding' });
     const brandingRow = screen.getByTestId('setting-row-branding');
     const brandingTitle = within(brandingRow).getByText('Branding');
-    const brandingTooltip = screen.getByRole('button', { name: 'Branding info' });
 
-    expect(brandingSwitch.getAttribute('aria-checked')).toBe('true');
-
-    fireEvent.click(brandingTooltip);
     expect(brandingSwitch.getAttribute('aria-checked')).toBe('true');
 
     fireEvent.click(brandingTitle);

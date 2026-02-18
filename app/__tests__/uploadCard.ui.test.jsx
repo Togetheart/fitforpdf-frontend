@@ -267,7 +267,7 @@ describe('UploadCard unit behavior', () => {
 
     expect(cardClass).toContain('relative');
     expect(cardClass).toContain('overflow-hidden');
-    expect(cardClass).toContain('rounded-[16px]');
+    expect(cardClass).toContain('rounded-xl');
     expect(cardClass).toContain('bg-white/20');
     expect(cardClass).toContain('backdrop-blur-[5px]');
     expect(cardClass).toContain('border-white/30');
@@ -279,7 +279,7 @@ describe('UploadCard unit behavior', () => {
     expect(glassBackdrop.className).toContain('inset-0');
     expect(glassBackdrop.className).toContain('bg-[radial-gradient');
     expect(glassHighlight.className).toContain('bg-gradient-to-b');
-    expect(glassHighlight.className).toContain('rounded-[16px]');
+    expect(glassHighlight.className).toContain('rounded-xl');
     expect(screen.queryByTestId('uploadcard-glass-frame')).toBeNull();
     expect(screen.queryByTestId('uploadcard-glass-inner')).toBeNull();
   });
@@ -322,6 +322,7 @@ describe('UploadCard unit behavior', () => {
   });
 
   test('upload card nested panels use glass styling', () => {
+    cleanup();
     renderUploadCardHarness({
       initialOptionsExpanded: true,
       isLoading: true,
@@ -330,21 +331,14 @@ describe('UploadCard unit behavior', () => {
 
     const optionsShell = screen.getByTestId('upload-options-shell');
     const progressPanel = screen.getByTestId('upload-progress');
-    const privacyPanel = screen.getByTestId('upload-privacy-messages');
+    const privacyMessages = screen.getByTestId('upload-privacy-messages');
 
-    expect(optionsShell.className).toContain('border-white/45');
-    expect(optionsShell.className).toContain('bg-white/55');
-    expect(optionsShell.className).toContain('backdrop-blur-[5px]');
-    expect(optionsShell.className).toContain('shadow-[0_10px_28px_rgba(2,6,23,0.10)]');
+    expect(optionsShell.className).toContain('glass-subtle');
+    expect(progressPanel.className).toContain('glass-subtle');
 
-    expect(progressPanel.className).toContain('border-white/45');
-    expect(progressPanel.className).toContain('bg-white/55');
-    expect(progressPanel.className).toContain('backdrop-blur-[5px]');
-
-    expect(privacyPanel.className).toContain('border-white/45');
-    expect(privacyPanel.className).toContain('bg-white/55');
-    expect(privacyPanel.className).toContain('backdrop-blur-[5px]');
-    expect(privacyPanel.className).toContain('ring-1');
+    // Privacy messages are now a simple inline <p>, no longer a glass panel
+    expect(privacyMessages.tagName).toBe('P');
+    expect(privacyMessages.className).toContain('text-xs');
   });
 
   test('dropzone helper copy has no two-step mention and keeps the new two-line message', () => {
@@ -353,23 +347,20 @@ describe('UploadCard unit behavior', () => {
     expect(screen.getByText('or click to upload')).toBeTruthy();
   });
 
-  test('privacy helper block shows one shield icon and three lines of copy', () => {
+  test('privacy helper block shows one shield icon and a single privacy line', () => {
     const privacyBlock = screen.getByTestId('upload-privacy-messages');
-    const lines = within(privacyBlock).getAllByTestId('upload-privacy-message');
+    const line = within(privacyBlock).getByTestId('upload-privacy-message');
     const icons = privacyBlock.querySelectorAll('svg');
 
-    expect(lines).toHaveLength(3);
-    expect(within(lines[0]).getByText('Files are deleted immediately after conversion.')).toBeTruthy();
-    expect(within(lines[1]).getByText('PDF available for up to 15 minutes.')).toBeTruthy();
-    expect(within(lines[2]).getByText('No file content stored in logs.')).toBeTruthy();
+    expect(line.textContent).toBe('Files deleted after conversion · No content stored');
     expect(icons).toHaveLength(1);
-    expect(icons[0].getAttribute('class') || '').toContain('h-14');
+    expect(icons[0].getAttribute('class') || '').toContain('h-3.5');
   });
 
   test.each([
     {
       freeExportsLeft: 3,
-      expectedClass: 'bg-slate-100',
+      expectedClass: 'bg-white',
       expectedText: '3 exports left',
     },
     {
@@ -625,13 +616,12 @@ describe('UploadCard unit behavior', () => {
     expect(onBrandingChange).toHaveBeenCalledTimes(2);
   });
 
-  test('clicking tooltip inside row does not toggle setting', () => {
+  test('setting rows no longer render info tooltips', () => {
     cleanup();
-    const onBrandingChange = vi.fn();
-    renderUploadCardHarness({ onBrandingChange, initialOptionsExpanded: true });
+    renderUploadCardHarness({ initialOptionsExpanded: true });
 
-    fireEvent.click(screen.getByLabelText('Branding info'));
-    expect(onBrandingChange).toHaveBeenCalledTimes(0);
+    expect(screen.queryByLabelText('Branding info')).toBeNull();
+    expect(screen.queryByLabelText('Truncate long text info')).toBeNull();
   });
 
   test('buy credits slot stays reserved and is displayed to the left of badge', () => {
@@ -688,14 +678,11 @@ describe('UploadCard unit behavior', () => {
     expect(screen.getByRole('button', { name: 'Generate PDF' })).toHaveProperty('disabled', true);
   });
 
-  test('keyboard and tooltip accessibility', () => {
+  test('keyboard accessibility on dropzone', () => {
     const dropzone = screen.getByRole('button', { name: 'Upload CSV or XLSX file' });
-    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
-    const tooltip = screen.getByLabelText('Branding info');
 
     expect(dropzone.getAttribute('role')).toBe('button');
     expect(dropzone.getAttribute('tabindex')).toBe('0');
-    expect(tooltip).toBeTruthy();
     });
   });
 
@@ -721,7 +708,7 @@ describe('UploadCard conversion flow on landing page', () => {
     });
 
     render(<LandingPage />);
-    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
+    const demoButton = screen.getByTestId('demo-try-button');
     fireEvent.click(demoButton);
 
     await waitFor(() => {
@@ -758,7 +745,7 @@ describe('UploadCard conversion flow on landing page', () => {
 
     render(<LandingPage />);
 
-    expect(screen.getAllByRole('button', { name: 'Try with demo file' })).toHaveLength(1);
+    expect(screen.getAllByTestId('demo-try-button')).toHaveLength(1);
 
     mock.restore();
   });
@@ -771,13 +758,11 @@ describe('UploadCard conversion flow on landing page', () => {
 
     render(<LandingPage />);
     const uploadCard = screen.getByTestId('upload-card');
-    const demoButton = within(uploadCard).getByRole('button', { name: 'Try with demo file' });
-    const runDemoCopy = within(uploadCard).getByText('120 rows · 15 columns · invoices');
+    const demoButton = within(uploadCard).getByTestId('demo-try-button');
 
     expect(demoButton).toBeTruthy();
-    expect(runDemoCopy).toBeTruthy();
-    expect(demoButton.className).toContain('rounded-full');
-    expect(demoButton.className).toContain('inline-flex');
+    expect(demoButton.textContent).toContain('try with a demo file');
+    expect(screen.queryByText('120 rows · 15 columns · invoices')).toBeNull();
     expect(screen.getByTestId('demo-try-row')).toBeTruthy();
 
     mock.restore();
@@ -862,7 +847,7 @@ describe('UploadCard conversion flow on landing page', () => {
     const activeCircle = within(steps[1]).getByText('2');
     const activeLabel = within(steps[1]).getByText('Structuring (column grouping)');
 
-    expect(activeCircle.className).toContain('bg-rose-600');
+    expect(activeCircle.className).toContain('bg-accent');
     expect(activeCircle.className).toContain('text-white');
     expect(activeLabel.className).toContain('text-slate-900');
     expect(activeLabel.className).toContain('font-medium');
@@ -954,7 +939,7 @@ describe('UploadCard conversion flow on landing page', () => {
     const uploadCard = screen.getByTestId('upload-card');
     expect(within(screen.getByTestId('quota-buy-slot')).getByLabelText('Buy credits')).toBeTruthy();
     expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*0\s*exports\s*left/i);
-    expect(within(uploadCard).getByRole('button', { name: 'Try with demo file' })).toBeTruthy();
+    expect(within(uploadCard).getByTestId('demo-try-button')).toBeTruthy();
     mock.restore();
   });
 

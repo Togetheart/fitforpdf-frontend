@@ -43,16 +43,14 @@ afterEach(() => {
 });
 
 describe('home conversion-critical UI', () => {
-  test('hero contains exactly one primary CTA and no extra hero buttons', () => {
+  test('hero has no standalone CTA — upload card is the primary action', () => {
     const hero = screen.getByTestId('hero-section');
-    const primary = screen.getByTestId('hero-primary-cta');
-    const links = within(hero).getAllByRole('link');
 
-    expect(primary.getAttribute('href')).toBe('#generate');
-    expect(primary.textContent).toBe('Generate PDF');
-    expect(links).toHaveLength(1);
+    expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
+    expect(within(hero).queryByRole('link', { name: 'Generate PDF' })).toBeNull();
     expect(within(hero).queryByRole('link', { name: 'See pricing' })).toBeNull();
     expect(within(hero).queryByRole('link', { name: 'Try on Telegram' })).toBeNull();
+    expect(within(hero).getByTestId('upload-card')).toBeTruthy();
   });
 
   test('hero is followed by upload module and FAQ is present', () => {
@@ -82,12 +80,11 @@ describe('home conversion-critical UI', () => {
     ).toMatch(/(?:Free$|Free\s*·\s*(?:\d+\s*exports left|1 export left))/i);
   });
 
-  test('hero CTA points to the generate button anchor', () => {
+  test('upload card heading is anchored for scroll targeting', () => {
     const generateTitle = screen.getByRole('heading', { name: 'Generate a client-ready PDF' });
-    expect(screen.getByTestId('hero-primary-cta').getAttribute('href')).toBe('#generate');
     expect(generateTitle.getAttribute('id')).toBe('generate');
     expect(generateTitle.className).toContain('scroll-mt-24');
-    expect(screen.getByTestId('hero-primary-cta').getAttribute('class') || '').toContain('bg-blue-600');
+    expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
   });
 
   test('upload action is not available before file selection and enabled after selecting', () => {
@@ -96,7 +93,7 @@ describe('home conversion-critical UI', () => {
     const ctaClass = cta.getAttribute('class') || '';
 
     expect(cta).toHaveProperty('disabled', true);
-    expect(ctaClass).toContain('bg-blue-600');
+    expect(ctaClass).toContain('bg-accent');
 
     const input = screen.getByTestId('generate-file-input');
     const file = new File(['name,score\na,1'], 'report.csv', { type: 'text/csv' });

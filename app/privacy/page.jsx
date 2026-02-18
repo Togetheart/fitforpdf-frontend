@@ -4,7 +4,7 @@ import React from 'react';
 
 import { PRIVACY_PAGE_COPY } from '../siteCopy.mjs';
 import Card from '../components/Card';
-import Section from '../components/Section';
+import Section from '../components/ui/Section';
 import Accordion from '../components/Accordion';
 import PageHero from '../components/PageHero';
 
@@ -83,9 +83,9 @@ export default function PrivacyPage() {
         <div className="mx-auto flex max-w-4xl">
           <div
             data-testid="privacy-sensitive-callout"
-            className="w-full rounded-2xl border border-white/45 bg-white/55 px-6 py-4 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5"
+            className="w-full rounded-xl glass px-6 py-4"
           >
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#B62622]">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-accent">
               Safety note
             </p>
             <p className="mt-1 text-sm text-slate-800">{PRIVACY_PAGE_COPY.sensitiveDataNote}</p>

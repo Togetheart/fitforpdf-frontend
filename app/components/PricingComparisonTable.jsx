@@ -80,7 +80,7 @@ export default function PricingComparisonTable({
             <div
               key={`${row[0]}-mobile`}
               data-testid="pricing-compare-row"
-              className="rounded-xl border border-white/45 bg-white/55 backdrop-blur-[5px] shadow-[0_8px_20px_rgba(2,6,23,0.08)] ring-1 ring-black/5 p-3"
+              className="rounded-xl glass-subtle p-3"
             >
               <p className="text-sm font-medium text-slate-700">{row[0]}</p>
               <dl className="space-y-1 text-sm">

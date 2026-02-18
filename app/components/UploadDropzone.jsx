@@ -70,21 +70,21 @@ export default function UploadDropzone({
         tabIndex={disabled ? -1 : 0}
         aria-label="Upload CSV or XLSX file"
         onKeyDown={handleLabelKeyDown}
-        className={`rounded-2xl border-2 border-dashed p-1 transition ${
-          isDragActive ? 'border-[#D92D2A] bg-red-50/55' : 'border-slate-200 bg-slate-50'
-        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-[#D92D2A]/60 hover:bg-red-50/30'}`}
+        className={`rounded-xl border-2 border-dashed p-1 transition ${
+          isDragActive ? 'border-accent bg-blue-50/55' : 'border-slate-200 bg-slate-50'
+        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-accent/60 hover:bg-blue-50/30'}`}
       >
         <label
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="block rounded-2xl bg-white/55 px-4 py-7 text-center backdrop-blur-[3px]"
+          className="block rounded-xl bg-white/55 px-4 py-7 text-center backdrop-blur-[3px]"
         >
           {file ? (
             <div className="mx-auto max-w-xl">
               <CheckCircle2
                 aria-hidden="true"
-                className="mx-auto h-8 w-8 text-[#D92D2A]"
+                className="mx-auto h-8 w-8 text-accent"
               />
               <p className="mt-3 text-sm font-semibold text-slate-900">{file.name}</p>
               <p className="mt-1 text-xs text-slate-500">{formatBytes(file.size)}</p>

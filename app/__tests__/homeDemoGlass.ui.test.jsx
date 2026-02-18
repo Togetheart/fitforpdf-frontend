@@ -80,20 +80,20 @@ afterEach(() => {
 });
 
 describe('home demo proof block', () => {
-  test('keeps hero heading and CTA text unchanged', () => {
+  test('keeps hero heading unchanged and no standalone CTA', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
         name: /Your spreadsheet\. Reorganized into readable sections\s*\. Ready to send\./,
       }),
     ).toBeTruthy();
-    expect(screen.getByTestId('hero-primary-cta').textContent?.trim()).toBe(LANDING_COPY.heroPrimaryCta);
+    expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
   });
 
   test('proof block is in dedicated home-demo section', () => {
     const proofSection = screen.getByTestId('section-before-after');
     const previewCard = screen.getByTestId('home-preview-card');
-    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
+    const demoButton = screen.getByTestId('demo-try-button');
 
     expect(screen.queryByTestId('demo-glass-card')).toBeNull();
     expect(screen.queryByTestId('section-home-demo')).toBeNull();
@@ -103,23 +103,22 @@ describe('home demo proof block', () => {
   });
 
   test('Try with demo CTA is unique on landing', () => {
-    const buttons = screen.getAllByRole('button', { name: 'Try with demo file' });
+    const buttons = screen.getAllByTestId('demo-try-button');
     expect(buttons).toHaveLength(1);
   });
 
   test('demo helper content is present', () => {
-    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
+    const demoButton = screen.getByTestId('demo-try-button');
     const uploadCard = screen.getByTestId('upload-card');
-    const helperText = within(uploadCard).getByText('120 rows · 15 columns · invoices');
 
     expect(uploadCard).toBeTruthy();
-    expect(demoButton.className).toContain('rounded-full');
-    expect(helperText).toBeTruthy();
+    expect(demoButton.textContent).toContain('try with a demo file');
+    expect(screen.queryByText('120 rows · 15 columns · invoices')).toBeNull();
   });
 
   test('Try with demo flow loads premium CSV and converts', async () => {
     const fetchMock = mockFetch();
-    const demoButton = screen.getByRole('button', { name: 'Try with demo file' });
+    const demoButton = screen.getByTestId('demo-try-button');
     fireEvent.click(demoButton);
 
     await waitFor(() => {

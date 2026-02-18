@@ -3,14 +3,14 @@
 import React from 'react';
 import { PRICING_CARDS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
 import PricingPlans from '../components/PricingPlans';
-import Section from '../components/Section';
+import Section from '../components/ui/Section';
 import FaqAccordion from '../components/FaqAccordion';
 import FeatureComparison from '../components/FeatureComparison';
 import PageHero from '../components/PageHero';
 
 export default function PricingPage() {
   const badgeClass =
-    'inline-flex items-center rounded-full border border-[#D92D2A]/20 bg-[#D92D2A]/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-[#B62622]';
+    'inline-flex items-center rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-accent-hover';
   const sectionClass = 'mx-auto max-w-6xl';
 
   return (

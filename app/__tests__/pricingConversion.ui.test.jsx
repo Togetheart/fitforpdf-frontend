@@ -45,8 +45,10 @@ describe('pricing conversion UI', () => {
     const body = creditsCard ? creditsCard.textContent : '';
 
     expect(creditsCard).toBeTruthy();
-    expect(body).toContain('100 exports · €19');
-    expect(body).toContain('500 exports · €79');
+    expect(body).toContain('100 exports');
+    expect(body).toContain('€19');
+    expect(body).toContain('500 exports');
+    expect(body).toContain('€79');
   });
 
   test('contains a comparison table and faq', () => {
