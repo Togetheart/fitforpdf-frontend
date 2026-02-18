@@ -262,7 +262,7 @@ describe('UploadCard unit behavior', () => {
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('true');
     const optionsPanel = screen.getByTestId('upload-options');
     expect(optionsPanel.className).toContain('px-5');
-    expect(optionsPanel.className).toContain('py-4');
+    expect(optionsPanel.className).toContain('py-5');
     expect(screen.getByRole('switch', { name: 'Branding' })).toBeTruthy();
 
     fireEvent.click(optionsToggle);

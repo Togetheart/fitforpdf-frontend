@@ -567,19 +567,19 @@ export default function UploadCard({
           </div>
         ) : null}
 
-        <div className="rounded-xl border border-slate-200 bg-white">
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
           <button
             type="button"
             data-testid="options-accordion-toggle"
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className="flex w-full items-center justify-between gap-2 px-5 py-4 text-left"
+            className="flex w-full items-center justify-between gap-2 px-5 py-4 text-left text-sm font-medium text-slate-800 transition hover:bg-slate-50"
           >
-            <span className="text-sm font-semibold text-slate-900">Options</span>
+            <span>Options</span>
             <ChevronDown
               aria-hidden="true"
-              className={`h-4 w-4 text-slate-500 transition-transform duration-150 ${isOptionsExpanded ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 text-slate-500 transition-transform duration-200 ${isOptionsExpanded ? 'rotate-180' : ''}`}
             />
           </button>
 
@@ -587,10 +587,10 @@ export default function UploadCard({
             <div
               id="upload-options"
               data-testid="upload-options"
-              className="px-5 py-4"
+              className="border-t border-slate-100 px-5 py-5 space-y-4"
               aria-live="polite"
             >
-              <div className="min-h-0 divide-y divide-slate-200">
+              <div className="min-h-0 divide-y divide-slate-100">
                 <div
                   data-testid="branding-upgrade-nudge-slot"
                   aria-live="polite"
