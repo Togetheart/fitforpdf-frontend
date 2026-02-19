@@ -200,7 +200,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── What we log + What we don't do — grille 2 colonnes ── */}
-      <Section id="privacy-logs" index={2} bg="bg-white">
+      <Section id="privacy-logs" index={2} bg="bg-white" className="py-16 sm:py-24">
         {/* Enfant unique du Section → grille 2 col avec hauteur égale */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* Bloc 1 : What we log */}
@@ -208,7 +208,7 @@ export default function PrivacyPage() {
             <h2 className="text-xl font-semibold tracking-tight text-slate-900" data-testid="privacy-logs-card">
               {PRIVACY_PAGE_COPY.logs.title}
             </h2>
-            <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6">
+            <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6 py-2">
               <LogItem icon={ICONS.clock} label="Request timestamp" />
               <LogItem icon={ICONS.log} label="File type (CSV or XLSX)" />
               <LogItem icon={ICONS.cpu} label="Row and column counts" />
@@ -222,7 +222,7 @@ export default function PrivacyPage() {
             <h2 className="text-xl font-semibold tracking-tight text-slate-900">
               {PRIVACY_PAGE_COPY.dontDoTitle}
             </h2>
-            <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6">
+            <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6 py-2">
               <DontDoRow icon={ICONS.eye} text={PRIVACY_PAGE_COPY.dontDo[0]} />
               <DontDoRow icon={ICONS.cpu} text={PRIVACY_PAGE_COPY.dontDo[1]} />
               <DontDoRow icon={ICONS.ban} text={PRIVACY_PAGE_COPY.dontDo[2]} />
@@ -253,7 +253,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── User rights ── */}
-      <Section id="privacy-rights" index={4} bg="bg-white">
+      <Section id="privacy-rights" index={4} bg="bg-white" className="py-16 sm:py-24">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* User rights list */}
           <div className="flex flex-col gap-4">
