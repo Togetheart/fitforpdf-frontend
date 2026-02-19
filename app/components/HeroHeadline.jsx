@@ -53,10 +53,10 @@ export default function HeroHeadline() {
       <span className="text-2xl font-semibold tracking-tight text-slate-900">FitForPDF</span>
     </div>
     <h1 className="leading-[1.08] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
-      <span ref={firstLineRef} className="block text-slate-900">
+      <span ref={firstLineRef} className="hero-headline-line block text-slate-900">
         Your spreadsheet.
       </span>
-      <span className="block text-slate-900">
+      <span className="hero-headline-line block text-slate-900">
         Reorganized into readable{' '}
         <span
           ref={sectionWordRef}
@@ -67,7 +67,7 @@ export default function HeroHeadline() {
           sections.
         </span>
       </span>
-      <span className="block text-slate-900">
+      <span className="hero-headline-line block text-slate-900">
         Ready to send.
       </span>
     </h1>
