@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { CheckCircle2, UploadCloud } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import AnimatedCloudIcon from './AnimatedCloudIcon';
 import { useRef } from 'react';
 
 const DROPZONE_HINT = 'or click to upload';
@@ -107,7 +108,7 @@ export default function UploadDropzone({
             </div>
           ) : (
             <div className="mx-auto max-w-xl">
-              <UploadCloud aria-hidden="true" className="mx-auto h-8 w-8 text-slate-500" />
+              <AnimatedCloudIcon size={32} className="mx-auto text-slate-500" />
               <p className="mt-3 text-sm font-semibold text-slate-900">Drop CSV or XLSX here</p>
               <p className="mt-1 text-xs text-slate-500">{DROPZONE_HINT}</p>
             </div>
