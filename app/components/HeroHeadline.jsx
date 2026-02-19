@@ -43,7 +43,7 @@ export default function HeroHeadline() {
 
   return (
     <>
-    <div className="hero-headline-line flex items-center justify-center gap-2 mb-4" style={{ animationDelay: '1s' }}>
+    <div className="flex items-center justify-center gap-2 mb-4">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
         <polyline points="14 2 14 8 20 8" />
@@ -53,13 +53,10 @@ export default function HeroHeadline() {
       <span className="text-2xl font-semibold tracking-tight text-slate-900">FitForPDF</span>
     </div>
     <h1 className="leading-[1.08] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
-      <span ref={firstLineRef} className="hero-headline-line block text-slate-900" style={{ animationDelay: '0ms' }}>
+      <span ref={firstLineRef} className="block text-slate-900">
         Your spreadsheet.
       </span>
-      <span
-        className="hero-headline-line block text-slate-900"
-        style={{ animationDelay: '0ms' }}
-      >
+      <span className="block text-slate-900">
         Reorganized into readable{' '}
         <span
           ref={sectionWordRef}
@@ -70,10 +67,7 @@ export default function HeroHeadline() {
           sections.
         </span>
       </span>
-      <span
-        className="hero-headline-line block text-slate-900"
-        style={{ animationDelay: '0ms' }}
-      >
+      <span className="block text-slate-900">
         Ready to send.
       </span>
     </h1>

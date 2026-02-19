@@ -116,14 +116,12 @@ export default function Page() {
       >
         <div className="space-y-8">
           <p
-            className="hero-headline-line w-full max-w-none text-lg text-slate-500 lg:whitespace-nowrap"
-            style={{ animationDelay: '0ms' }}
+            className="w-full max-w-none text-lg text-slate-500 lg:whitespace-nowrap"
           >
             {LANDING_COPY.heroSubheadline}
           </p>
           <p
-            className="hero-headline-line inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700"
-            style={{ animationDelay: '0ms' }}
+            className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700"
           >
             <span aria-label="European Union flag">🇪🇺</span>
             {LANDING_COPY.heroTrustLine}
