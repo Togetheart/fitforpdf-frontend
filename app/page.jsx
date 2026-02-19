@@ -130,7 +130,6 @@ export default function Page() {
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
             className="hero-headline-line mt-8 relative rounded-xl bg-white"
-            style={{ animationDelay: '0ms' }}
           >
             <UploadCard
               toolTitle={LANDING_COPY.toolTitle}
