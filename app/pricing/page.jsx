@@ -37,8 +37,8 @@ export default function PricingPage() {
       </PageHero>
 
       <Section id="pricing-plans" index={1} bg="bg-gray-50" className="py-16 sm:py-24">
-        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Simple pricing</h2>
-        <p className="max-w-[65ch] text-base text-slate-500">{PRICING_PAGE_COPY.pageSubtitle}</p>
+        <h2 className="text-center text-2xl font-semibold tracking-tight sm:text-3xl sm:text-left">Simple pricing</h2>
+        <p className="text-center text-base text-slate-500 sm:text-left max-w-[65ch]">{PRICING_PAGE_COPY.pageSubtitle}</p>
         <PricingPlans
           plans={plansWithHandlers}
           headingTag="h3"
@@ -49,7 +49,7 @@ export default function PricingPage() {
         {checkout.error ? (
           <p className="text-center text-sm text-red-500">{checkout.error}</p>
         ) : null}
-        <p className="text-sm text-slate-500">
+        <p className="text-center text-sm text-slate-500 sm:text-left">
           Need higher limits, API access, or team plans? <a href="mailto:hello@fitforpdf.com" className="underline hover:text-accent transition-colors">Contact us</a>.
         </p>
       </Section>

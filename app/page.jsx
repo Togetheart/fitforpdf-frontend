@@ -240,10 +240,10 @@ export default function Page() {
       <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-white">
         <div className="space-y-6">
           <div className="space-y-2">
-            <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl sm:text-left">
               {LANDING_COPY.pricingPreviewTitle}
             </h2>
-            <p className="text-base text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
+            <p className="text-center text-base text-slate-500 sm:text-left">{LANDING_COPY.pricingPreviewSubline}</p>
           </div>
           <PricingPlans
             plans={plansWithHandlers}

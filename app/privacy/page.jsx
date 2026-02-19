@@ -205,7 +205,7 @@ export default function PrivacyPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* Bloc 1 : What we log */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900" data-testid="privacy-logs-card">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-slate-900 sm:text-left" data-testid="privacy-logs-card">
               {PRIVACY_PAGE_COPY.logs.title}
             </h2>
             <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6 py-2">
@@ -219,7 +219,7 @@ export default function PrivacyPage() {
 
           {/* Bloc 2 : What we don't do */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-slate-900 sm:text-left">
               {PRIVACY_PAGE_COPY.dontDoTitle}
             </h2>
             <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6 py-2">
@@ -257,7 +257,7 @@ export default function PrivacyPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* User rights list */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-slate-900 sm:text-left">
               {PRIVACY_PAGE_COPY.userRights.title}
             </h2>
             <div className="flex-1 rounded-xl glass-elevated px-6 py-5">
@@ -284,7 +284,7 @@ export default function PrivacyPage() {
 
           {/* Sub-processors */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-slate-900 sm:text-left">
               {PRIVACY_PAGE_COPY.subProcessors.title}
             </h2>
             <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6">
