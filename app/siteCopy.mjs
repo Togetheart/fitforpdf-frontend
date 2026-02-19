@@ -69,6 +69,7 @@ export const LANDING_COPY = {
     'Operations managers',
     'Auditors',
     'Project managers',
+    'Freelancers',
   ],
 
   finalCtaTitle: 'Ready to send professional PDFs?',
