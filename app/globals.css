@@ -304,6 +304,28 @@
     }
   }
 
+  /* ── Social proof ticker ─────────────────────────── */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 25s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+    }
+  }
+
   @keyframes heroMeshA {
     0% {
       transform: translate3d(0, 0, 0) scale(1);

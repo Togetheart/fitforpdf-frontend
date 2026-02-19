@@ -6,7 +6,7 @@ export const LANDING_COPY = {
   heroSubheadline: 'Upload a spreadsheet. Get a structured, readable PDF. Ready to send to your client.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
-  heroTrustLine: 'No account. No tracking. Files deleted after conversion.',
+  heroTrustLine: 'GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
 
   problemTitle: 'Spreadsheet exports fail in real life.',
@@ -62,6 +62,14 @@ export const LANDING_COPY = {
   privacyStripCta: 'Read privacy policy',
 
   socialProofLine: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
+  socialProofTicker: [
+    'Consultants',
+    'Finance teams',
+    'Accountants',
+    'Operations managers',
+    'Auditors',
+    'Project managers',
+  ],
 
   finalCtaTitle: 'Ready to send professional PDFs?',
   finalCtaCopy: 'No signup required. Free exports included.',

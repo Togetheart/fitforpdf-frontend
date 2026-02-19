@@ -118,10 +118,10 @@ export default function Page() {
         className="py-0 w-full"
       >
         <div className="space-y-8">
-          <div className="space-y-2">
-            <p className="max-w-prose text-sm text-slate-500">{LANDING_COPY.heroTrustLine}</p>
-            <p className="max-w-prose text-xs text-slate-400">{LANDING_COPY.socialProofLine}</p>
-          </div>
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700">
+            <span aria-label="European Union flag">🇪🇺</span>
+            {LANDING_COPY.heroTrustLine}
+          </p>
           <div
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
@@ -174,6 +174,17 @@ export default function Page() {
           </div>
         </div>
       </PageHero>
+
+      {/* Social proof ticker */}
+      <div className="overflow-hidden border-y border-slate-100 bg-slate-50/50 py-4" data-testid="social-proof-ticker">
+        <div className="ticker-track">
+          {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
+            <span key={i} className="mx-6 whitespace-nowrap text-sm font-medium tracking-tight text-slate-400 sm:mx-10 sm:text-base">
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
 
       <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-16 sm:py-24">
         <ProofShowcase />
