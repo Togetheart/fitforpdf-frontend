@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
 export default function HeroHeadline() {
-  const firstLineRef = useRef(null);
+  const firstLineRef = useRef(null); // kept for ref, no longer used for GSAP
   const sectionWordRef = useRef(null);
 
   const hasWindow = typeof window !== 'undefined';
@@ -34,26 +34,10 @@ export default function HeroHeadline() {
       duration: 12,
     });
 
-    let introTween = null;
-    if (firstNode) {
-      introTween = gsap.fromTo(
-        firstNode,
-        { opacity: 0.95, y: 8 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          delay: 0.05,
-          ease: 'power2.out',
-        },
-      );
-    }
-
     return () => {
       if (timeline) {
         timeline.kill();
       }
-      if (introTween && typeof introTween.kill === 'function') introTween.kill();
     };
   }, [hasWindow, reducedMotion]);
 
