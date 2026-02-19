@@ -74,7 +74,7 @@ export default function HeroHeadline() {
       </span>
       <span
         className="hero-headline-line block text-slate-900"
-        style={{ animationDelay: '90ms' }}
+        style={{ animationDelay: '0ms' }}
       >
         Reorganized into readable{' '}
         <span
@@ -88,7 +88,7 @@ export default function HeroHeadline() {
       </span>
       <span
         className="hero-headline-line block text-slate-900"
-        style={{ animationDelay: '180ms' }}
+        style={{ animationDelay: '0ms' }}
       >
         Ready to send.
       </span>
