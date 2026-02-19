@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   ChevronDown,
   Loader2,
-  ShieldUser,
   ShoppingCart,
 } from 'lucide-react';
 
@@ -479,59 +478,59 @@ export default function UploadCard({
       />
       <div className="relative z-10 p-5">
         <form className="relative space-y-5" onSubmit={onSubmit}>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2 text-left">
-            <h2
-              id="generate"
-              className="scroll-mt-24 text-2xl font-semibold leading-snug sm:text-3xl"
-            >
-              {toolTitle}
-            </h2>
-            <p className="text-sm text-slate-500 text-left">{toolSubcopy}</p>
-          </div>
-          {showProBanner ? (
-            <p
-              data-testid="pro-top-banner"
-              className="rounded-full bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700"
-            >
-              Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
-            </p>
-          ) : null}
-          <div className="flex items-center gap-2">
-            <span
-              data-testid="quota-buy-slot"
-              className="flex h-9 w-9 shrink-0 items-center justify-center"
-              aria-hidden={showBuyCredits ? 'false' : 'true'}
-            >
-              {showBuyCredits ? (
-                <span className="group relative inline-flex">
-                  <button
-                    type="button"
-                    aria-label="Buy credits"
-                    aria-describedby="buy-credits-tooltip"
-                    title="Buy credits"
-                    onClick={onBuyCredits}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/80"
-                  >
-                    <ShoppingCart aria-hidden="true" className="h-4 w-4" />
-                  </button>
-                  <span
-                    id="buy-credits-tooltip"
-                    role="tooltip"
-                    className="pointer-events-none absolute right-0 top-full mt-1 translate-y-0.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 group-focus:opacity-100"
-                  >
-                    {buyCreditsButtonText}
-                  </span>
-                </span>
+        <div className="flex flex-col gap-1">
+          <h2
+            id="generate"
+            className="scroll-mt-24 text-center text-2xl font-semibold leading-snug sm:text-3xl"
+          >
+            {toolTitle}
+          </h2>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm text-slate-500">{toolSubcopy}</p>
+            <div className="flex shrink-0 items-center gap-2">
+              {showProBanner ? (
+                <p
+                  data-testid="pro-top-banner"
+                  className="rounded-full bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700"
+                >
+                  Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
+                </p>
               ) : null}
-            </span>
-            <span
-              data-testid="quota-pill"
-              className={`inline-flex h-9 min-w-0 items-center rounded-full border px-4 text-xs font-medium shadow-sm ${freeExportsBadgeClass}`}
-              aria-label="remaining exports"
-            >
-              {quotaText}
-            </span>
+              <span
+                data-testid="quota-buy-slot"
+                className="flex h-9 w-9 shrink-0 items-center justify-center"
+                aria-hidden={showBuyCredits ? 'false' : 'true'}
+              >
+                {showBuyCredits ? (
+                  <span className="group relative inline-flex">
+                    <button
+                      type="button"
+                      aria-label="Buy credits"
+                      aria-describedby="buy-credits-tooltip"
+                      title="Buy credits"
+                      onClick={onBuyCredits}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/80"
+                    >
+                      <ShoppingCart aria-hidden="true" className="h-4 w-4" />
+                    </button>
+                    <span
+                      id="buy-credits-tooltip"
+                      role="tooltip"
+                      className="pointer-events-none absolute right-0 top-full mt-1 translate-y-0.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 group-focus:opacity-100"
+                    >
+                      {buyCreditsButtonText}
+                    </span>
+                  </span>
+                ) : null}
+              </span>
+              <span
+                data-testid="quota-pill"
+                className={`inline-flex h-9 min-w-0 items-center rounded-full border px-4 text-xs font-medium shadow-sm ${freeExportsBadgeClass}`}
+                aria-label="remaining exports"
+              >
+                {quotaText}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -549,10 +548,11 @@ export default function UploadCard({
             type="button"
             onClick={onTrySample}
             disabled={isLoading}
-            className="text-sm text-blue-500 underline underline-offset-2 transition-colors hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
-            or try with a demo file
+            <span aria-hidden="true">▶</span>
+            Try with a demo file
           </button>
         </div>
 
@@ -588,9 +588,9 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className={`group flex w-full items-center justify-between gap-2 px-5 py-4 text-left text-sm font-medium text-slate-800 transition ${isOptionsExpanded ? 'border-b border-slate-200' : ''}`}
+            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-medium text-slate-500 transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-slate-200' : ''}`}
           >
-            <span>Options</span>
+            <span>Advanced options</span>
             <ChevronDown
               aria-hidden="true"
               className={`h-4 w-4 text-slate-500 transition-transform duration-200 ${isOptionsExpanded ? 'rotate-180' : ''}`}
@@ -820,14 +820,6 @@ export default function UploadCard({
             )}
           </Button>
         )}
-
-        <p
-          className="flex items-center justify-center gap-1.5 text-xs text-slate-400"
-          data-testid="upload-privacy-messages"
-        >
-          <ShieldUser aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
-          <span data-testid="upload-privacy-message">Files deleted after conversion · No content stored</span>
-        </p>
 
         {downloadedFileName || shouldShowVerdict ? (
           <div className="flex flex-col gap-2 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">

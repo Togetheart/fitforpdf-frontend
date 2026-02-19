@@ -143,10 +143,12 @@ export default function Page() {
               toolTitle={LANDING_COPY.toolTitle}
               toolSubcopy={(() => {
                 if (quota.planType !== 'free') return LANDING_COPY.toolSubcopy;
-                if (Number.isFinite(quota.freeExportsLimit)) {
-                  return `${quota.freeExportsLimit} free exports. No account required.`;
-                }
-                return 'Free exports. No account required.';
+                const count = Number.isFinite(quota.freeExportsLeft)
+                  ? quota.freeExportsLeft
+                  : Number.isFinite(quota.freeExportsLimit)
+                    ? quota.freeExportsLimit
+                    : 3;
+                return `${count} free export${count === 1 ? '' : 's'}. No account required.`;
               })()}
               file={conversion.file}
               freeExportsLeft={quota.freeExportsLeft}
