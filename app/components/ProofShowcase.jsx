@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ImageLightbox from './ImageLightbox';
 
 const CSV_TABS = [
@@ -104,12 +104,30 @@ const FORMAT_CONFIGS = {
 
 const FORMATS = ['xlsx', 'csv'];
 
+const TAB_COLORS = [
+  '#ffffff', // white      — Overview
+  '#4f46e5', // indigo-600 — Section A
+  '#0ea5e9', // sky-500    — Section B
+  '#22c55e', // green-500  — Section C
+  '#f59e0b', // amber-500  — Section D
+  '#ef4444', // red-500    — Section E
+];
+
 export default function ProofShowcase() {
   const [activeFormat, setActiveFormat] = useState('xlsx');
   const [activeTab, setActiveTab] = useState(0);
+  const tabRefs = useRef([]);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
   const config = FORMAT_CONFIGS[activeFormat];
   const currentTab = config.tabs[activeTab];
+
+  useEffect(() => {
+    const el = tabRefs.current[activeTab];
+    if (el) {
+      setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
+    }
+  }, [activeTab, activeFormat, config.tabs.length]);
 
   function handleFormatChange(formatId) {
     setActiveFormat(formatId);
@@ -166,18 +184,19 @@ export default function ProofShowcase() {
       {/* Glass card */}
       <div
         data-testid="home-preview-card"
-        className="home-preview-float mx-auto max-w-7xl rounded-xl glass-elevated p-4 md:p-8"
+        className="home-preview-float mx-auto max-w-7xl rounded-2xl p-4 md:p-8"
+        style={{ backgroundColor: '#1c1c1e' }}
       >
         <div className="grid gap-6 sm:grid-cols-[3fr_7fr]">
           {/* Left: Input (30%) */}
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
               {config.inputLabel}
             </p>
             <ImageLightbox
               src={config.beforeImage}
               alt={config.beforeAlt}
-              className="mt-3 block w-full overflow-hidden rounded-lg border border-slate-200"
+              className="mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
             >
               <img
                 src={config.beforeImage}
@@ -185,19 +204,37 @@ export default function ProofShowcase() {
                 className="h-auto w-full rounded-lg object-cover"
               />
             </ImageLightbox>
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-white/60">
               {config.inputDescription}
             </p>
           </div>
 
           {/* Right: Tabbed PDF Output (70%) */}
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
               {config.outputLabel}
             </p>
 
-            {/* Tab buttons */}
-            <div role="tablist" className="mt-3 flex gap-1.5">
+            {/* Tab buttons — Apple pill style */}
+            <div
+              role="tablist"
+              style={{ backgroundColor: '#3a3a3c' }}
+              className="relative mt-3 flex w-full items-center rounded-full p-1"
+            >
+              {/* Sliding indicator — colored pill */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute rounded-full"
+                style={{
+                  left: indicator.left,
+                  width: indicator.width,
+                  top: '4px',
+                  bottom: '4px',
+                  backgroundColor: TAB_COLORS[activeTab] ?? TAB_COLORS[0],
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+                  transition: 'left 300ms cubic-bezier(0.25,0.1,0.25,1), width 300ms cubic-bezier(0.25,0.1,0.25,1), background-color 200ms ease',
+                }}
+              />
               {config.tabs.map((tab, i) => (
                 <button
                   key={tab.id}
@@ -205,12 +242,14 @@ export default function ProofShowcase() {
                   role="tab"
                   type="button"
                   aria-selected={i === activeTab}
+                  ref={el => tabRefs.current[i] = el}
                   onClick={() => setActiveTab(i)}
-                  className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
-                    i === activeTab
-                      ? 'bg-accent text-white shadow-sm'
-                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
-                  }`}
+                  className="relative z-10 flex-1 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors duration-200"
+                  style={{
+                    color: i === activeTab
+                      ? (TAB_COLORS[i] === '#ffffff' ? '#000000' : '#ffffff')
+                      : 'rgba(235,235,245,0.6)',
+                  }}
                 >
                   {tab.label}
                 </button>
@@ -225,9 +264,10 @@ export default function ProofShowcase() {
               <ImageLightbox
                 src={currentTab.src}
                 alt={currentTab.alt}
-                className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-slate-200"
+                className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
                 data-testid="proof-pdf-image"
-                key={`${activeFormat}-${activeTab}`}
+                images={config.tabs.map((t) => ({ src: t.src, alt: t.alt, label: t.label }))}
+                imageIndex={activeTab}
               >
                 <img
                   src={currentTab.src}
@@ -238,7 +278,7 @@ export default function ProofShowcase() {
             </div>
 
             {/* Stat line */}
-            <p className="mt-3 text-xs text-slate-400">
+            <p className="mt-3 text-xs text-white/60">
               {config.statLine}
             </p>
           </div>
