@@ -110,21 +110,29 @@ export default function Page() {
         align="center"
         height="min-h-0 sm:min-h-screen"
         title={<HeroHeadline />}
-        subtitle={LANDING_COPY.heroSubheadline}
-        subtitleClassName="w-full max-w-none text-lg text-slate-500 lg:whitespace-nowrap"
         contentClassName="items-center gap-10 text-center"
         contentMaxWidthClassName="max-w-[960px]"
         className="py-0 w-full"
       >
         <div className="space-y-8">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700">
+          <p
+            className="hero-headline-line w-full max-w-none text-lg text-slate-500 lg:whitespace-nowrap"
+            style={{ animationDelay: '280ms' }}
+          >
+            {LANDING_COPY.heroSubheadline}
+          </p>
+          <p
+            className="hero-headline-line inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700"
+            style={{ animationDelay: '400ms' }}
+          >
             <span aria-label="European Union flag">🇪🇺</span>
             {LANDING_COPY.heroTrustLine}
           </p>
           <div
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
-            className="mt-8 relative rounded-xl bg-white"
+            className="hero-headline-line mt-8 relative rounded-xl bg-white"
+            style={{ animationDelay: '520ms' }}
           >
             <UploadCard
               toolTitle={LANDING_COPY.toolTitle}
