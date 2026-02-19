@@ -78,6 +78,10 @@ export const LANDING_COPY = {
   finalCtaLabel: 'Try it now',
 
   footerTagline: 'Transform spreadsheets into professional PDFs.',
+  footerMakerName: 'Sébastien',
+  footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
+
+  socialProofCount: 'Trusted by 200+ consultants & finance teams',
 };
 
 export const LANDING_COPY_KEYS = {
@@ -142,8 +146,8 @@ export const PRICING_PAGE_COPY = {
   creditsFeature3: 'Client-ready layout',
   creditsFeature4: 'Structured sections',
   creditsCtaLabel: 'Buy credits',
-  creditsCtaHref: '#',
-  creditsCtaTooltip: 'Payments coming soon. Contact us.',
+  creditsCtaHref: '/#tool',
+  creditsCtaTooltip: null,
   creditsBadge: 'Most popular',
   proApiTitle: 'Team/API',
   proApiCtaLabel: 'Contact us',
@@ -215,13 +219,13 @@ export const PRICING_CARDS = [
       `${PRICING_PAGE_COPY.creditsFeature4}`,
     ],
     actionLabel: PRICING_PAGE_COPY.creditsCtaLabel,
-    actionType: 'button',
-    actionHref: '#',
-    disabled: true,
-    tooltip: PRICING_PAGE_COPY.creditsCtaTooltip,
+    actionType: 'link',
+    actionHref: PRICING_PAGE_COPY.creditsCtaHref,
+    disabled: false,
+    tooltip: null,
     recommended: true,
     badge: PRICING_PAGE_COPY.creditsBadge,
-    ctaNote: PRICING_PAGE_COPY.creditsCtaTooltip,
+    ctaNote: null,
   },
 ];
 
@@ -329,8 +333,35 @@ export const PRIVACY_PAGE_COPY = {
     'No long-term storage of user files.',
   ],
 
-  sensitiveDataNote: 'Do not upload sensitive data.',
-  legalFooter: 'For legal terms, see Terms of Service.',
+  legalBasis: {
+    title: 'Legal basis',
+    text: 'Processing is based on legitimate interest (Article 6(1)(f) GDPR): providing the file conversion service you requested. We collect only the minimum data necessary.',
+  },
+  dataLocation: {
+    title: 'Where your data lives',
+    text: 'All files are processed exclusively on OVH servers located in France (EU). No data is transferred outside the European Union.',
+  },
+  userRights: {
+    title: 'Your GDPR rights',
+    intro: 'As a data subject under GDPR, you have the right to:',
+    rights: [
+      'Access the data we hold about you',
+      'Request correction of inaccurate data',
+      'Request deletion of your data',
+      'Request portability of your data',
+    ],
+    contact: 'To exercise these rights, contact:',
+  },
+  subProcessors: {
+    title: 'Sub-processors',
+    list: [
+      { name: 'OVH', role: 'Cloud infrastructure & hosting', location: 'France (EU)' },
+      { name: 'Stripe', role: 'Payment processing', location: 'EU data residency' },
+    ],
+  },
+
+  sensitiveDataNote: 'Do not upload files containing personal data, health records, or other sensitive information. FitForPDF is not designed for regulated data.',
+  legalFooter: 'This page constitutes the Privacy Policy of FitForPDF, in accordance with GDPR (EU) 2016/679.',
   contactEmail: 'support@fitforpdf.com',
   contactLabel: 'support@fitforpdf.com',
   security: [
@@ -341,17 +372,27 @@ export const PRIVACY_PAGE_COPY = {
     {
       id: 'retention',
       q: 'How long do you keep files?',
-      a: 'Files are deleted immediately after conversion. The generated PDF is available for up to 15 minutes.',
+      a: 'Input files are deleted immediately after conversion. The generated PDF is available for 15 minutes, then automatically deleted.',
     },
     {
       id: 'logs',
-      q: 'Do you store file contents in logs?',
-      a: 'No. We do not store file contents in logs.',
+      q: 'What data do you log?',
+      a: 'We log: request timestamp, file type (CSV/XLSX), row and column counts, and processing verdict. File contents are never stored in logs.',
+    },
+    {
+      id: 'gdpr',
+      q: 'Are you GDPR compliant?',
+      a: 'Yes. Processing is based on legitimate interest (Art. 6(1)(f) GDPR). Data stays on OVH servers in France. No transfers outside the EU.',
+    },
+    {
+      id: 'rights',
+      q: 'How do I exercise my GDPR rights?',
+      a: 'Email support@fitforpdf.com to request access, correction, deletion, or portability of your data.',
     },
     {
       id: 'sensitive',
       q: 'Can I upload sensitive data?',
-      a: 'Please do not. FitForPDF is built for convenience, not for handling sensitive or regulated data.',
+      a: 'Please do not. FitForPDF is not designed for sensitive or regulated data (health records, financial PII, etc.).',
     },
   ],
 };

@@ -7,8 +7,18 @@ import Section from '../components/ui/Section';
 import FaqAccordion from '../components/FaqAccordion';
 import FeatureComparison from '../components/FeatureComparison';
 import PageHero from '../components/PageHero';
+import { useCheckout } from '../hooks/useCheckout.mjs';
 
 export default function PricingPage() {
+  const checkout = useCheckout();
+
+  // Inject checkout handler into the credits card
+  const plansWithHandlers = PRICING_CARDS.map((plan) =>
+    plan.id === 'credits'
+      ? { ...plan, onAction: () => checkout.openCreditsPack('credits_100') }
+      : plan,
+  );
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <PageHero
@@ -30,12 +40,15 @@ export default function PricingPage() {
         <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Simple pricing</h2>
         <p className="max-w-[65ch] text-base text-slate-500">{PRICING_PAGE_COPY.pageSubtitle}</p>
         <PricingPlans
-          plans={PRICING_CARDS}
+          plans={plansWithHandlers}
           headingTag="h3"
           featuredScaleClass="scale-105"
           gridTestId="pricing-grid"
           variant="pricing"
         />
+        {checkout.error ? (
+          <p className="text-center text-sm text-red-500">{checkout.error}</p>
+        ) : null}
         <p className="text-sm text-slate-500">
           Need higher limits, API access, or team plans? <a href="mailto:hello@fitforpdf.com" className="underline hover:text-accent transition-colors">Contact us</a>.
         </p>

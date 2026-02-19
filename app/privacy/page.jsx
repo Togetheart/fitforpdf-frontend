@@ -59,6 +59,43 @@ const ICONS = {
       <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
     </svg>
   ),
+  scale: (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 3H8" />
+      <path d="M12 3v7" />
+      <path d="M3 9l3 6H0L3 9z" />
+      <path d="M21 9l3 6h-6L21 9z" />
+      <path d="M12 20v-4" />
+      <path d="M8 20h8" />
+    </svg>
+  ),
+  mapPin: (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  ),
+  check: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  ),
+  users: (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  ),
+  server: (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+      <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+      <line x1="6" y1="6" x2="6.01" y2="6" />
+      <line x1="6" y1="18" x2="6.01" y2="18" />
+    </svg>
+  ),
   shield: (
     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -194,8 +231,80 @@ export default function PrivacyPage() {
         </div>
       </Section>
 
+      {/* ── Legal basis + Data location ── */}
+      <Section id="privacy-gdpr" index={3} bg="bg-gray-50" className="py-16 sm:py-24">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            GDPR compliance
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+          <PrivacyFeatureCard
+            icon={ICONS.scale}
+            title={PRIVACY_PAGE_COPY.legalBasis.title}
+            description={PRIVACY_PAGE_COPY.legalBasis.text}
+          />
+          <PrivacyFeatureCard
+            icon={ICONS.mapPin}
+            title={PRIVACY_PAGE_COPY.dataLocation.title}
+            description={PRIVACY_PAGE_COPY.dataLocation.text}
+          />
+        </div>
+      </Section>
+
+      {/* ── User rights ── */}
+      <Section id="privacy-rights" index={4} bg="bg-white" maxWidth="max-w-4xl">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+          {/* User rights list */}
+          <div className="flex flex-col gap-4">
+            <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+              {PRIVACY_PAGE_COPY.userRights.title}
+            </h2>
+            <div className="flex-1 rounded-xl glass-elevated px-6 py-5">
+              <p className="mb-4 text-sm text-slate-600">{PRIVACY_PAGE_COPY.userRights.intro}</p>
+              <ul className="space-y-3">
+                {PRIVACY_PAGE_COPY.userRights.rights.map((right) => (
+                  <li key={right} className="flex items-start gap-3">
+                    <span className="mt-0.5 text-emerald-600" aria-hidden="true">{ICONS.check}</span>
+                    <span className="text-sm leading-relaxed text-slate-700">{right}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-5 border-t border-slate-100 pt-4">
+                <p className="mb-1 text-sm text-slate-500">{PRIVACY_PAGE_COPY.userRights.contact}</p>
+                <a
+                  href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
+                  className="text-sm font-medium text-slate-700 underline underline-offset-4 transition-colors hover:text-accent"
+                >
+                  {PRIVACY_PAGE_COPY.contactEmail}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Sub-processors */}
+          <div className="flex flex-col gap-4">
+            <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+              {PRIVACY_PAGE_COPY.subProcessors.title}
+            </h2>
+            <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6">
+              {PRIVACY_PAGE_COPY.subProcessors.list.map((sp) => (
+                <div key={sp.name} className="flex items-start gap-4 py-4 first:pt-5 last:pb-5">
+                  <span className="mt-0.5 text-slate-400" aria-hidden="true">{ICONS.server}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">{sp.name}</p>
+                    <p className="text-[13px] leading-relaxed text-slate-500">{sp.role}</p>
+                    <p className="text-[12px] text-slate-400">{sp.location}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* ── Sensitive note + legal ── */}
-      <Section id="privacy-sensitive" index={3} bg="bg-gray-50">
+      <Section id="privacy-sensitive" index={5} bg="bg-gray-50">
         <div
           data-testid="privacy-sensitive-callout"
           className="rounded-xl glass px-6 py-5"
@@ -219,7 +328,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── FAQ — même pattern exact que landing ── */}
-      <Section id="privacy-faq" index={4} bg="bg-white" className="py-16 sm:py-24">
+      <Section id="privacy-faq" index={6} bg="bg-white" className="py-16 sm:py-24">
         <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
           Frequently asked questions
         </h2>

@@ -118,9 +118,27 @@ export default function ProofShowcase() {
   const [activeTab, setActiveTab] = useState(0);
   const tabRefs = useRef([]);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const cardRef = useRef(null);
 
   const config = FORMAT_CONFIGS[activeFormat];
   const currentTab = config.tabs[activeTab];
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasAnimated]);
 
   useEffect(() => {
     const el = tabRefs.current[activeTab];
@@ -136,6 +154,11 @@ export default function ProofShowcase() {
 
   return (
     <div className="space-y-8">
+      {/* Section heading */}
+      <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+        From raw data to structured document.
+      </h2>
+
       {/* Format selector */}
       <div
         data-testid="format-selector"
@@ -176,13 +199,9 @@ export default function ProofShowcase() {
         })}
       </div>
 
-      {/* Section heading */}
-      <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-        From raw data to structured document.
-      </h2>
-
       {/* Glass card */}
       <div
+        ref={cardRef}
         data-testid="home-preview-card"
         className="home-preview-float mx-auto max-w-7xl rounded-2xl p-4 md:p-8"
         style={{ backgroundColor: '#1c1c1e' }}
@@ -193,17 +212,25 @@ export default function ProofShowcase() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
               {config.inputLabel}
             </p>
-            <ImageLightbox
-              src={config.beforeImage}
-              alt={config.beforeAlt}
-              className="mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
+            <div
+              style={{
+                transform: hasAnimated ? 'translateX(0)' : 'translateX(-60px)',
+                opacity: hasAnimated ? 1 : 0,
+                transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1), opacity 600ms ease',
+              }}
             >
-              <img
+              <ImageLightbox
                 src={config.beforeImage}
                 alt={config.beforeAlt}
-                className="h-auto w-full rounded-lg object-cover"
-              />
-            </ImageLightbox>
+                className="mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
+              >
+                <img
+                  src={config.beforeImage}
+                  alt={config.beforeAlt}
+                  className="h-auto w-full rounded-lg object-cover"
+                />
+              </ImageLightbox>
+            </div>
             <p className="mt-2 text-xs text-white/60">
               {config.inputDescription}
             </p>
@@ -261,20 +288,28 @@ export default function ProofShowcase() {
               role="tabpanel"
               aria-labelledby={`proof-tab-${currentTab.id}`}
             >
-              <ImageLightbox
-                src={currentTab.src}
-                alt={currentTab.alt}
-                className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
-                data-testid="proof-pdf-image"
-                images={config.tabs.map((t) => ({ src: t.src, alt: t.alt, label: t.label }))}
-                imageIndex={activeTab}
+              <div
+                style={{
+                  transform: hasAnimated ? 'translateX(0)' : 'translateX(60px)',
+                  opacity: hasAnimated ? 1 : 0,
+                  transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1) 100ms, opacity 600ms ease 100ms',
+                }}
               >
-                <img
+                <ImageLightbox
                   src={currentTab.src}
                   alt={currentTab.alt}
-                  className="h-auto w-full rounded-lg object-cover"
-                />
-              </ImageLightbox>
+                  className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
+                  data-testid="proof-pdf-image"
+                  images={config.tabs.map((t) => ({ src: t.src, alt: t.alt, label: t.label }))}
+                  imageIndex={activeTab}
+                >
+                  <img
+                    src={currentTab.src}
+                    alt={currentTab.alt}
+                    className="h-auto w-full rounded-lg object-cover"
+                  />
+                </ImageLightbox>
+              </div>
             </div>
 
             {/* Stat line */}

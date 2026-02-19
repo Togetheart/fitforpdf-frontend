@@ -8,6 +8,7 @@ import {
   recommendationLabel,
 } from '../pageUiLogic.mjs';
 import { QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
+import { useCheckout } from './useCheckout.mjs';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
@@ -171,6 +172,7 @@ function getFilenameFromContentDisposition(contentDisposition, fallback) {
 // ── Hook ──────────────────────────────────────────────────
 
 export default function useConversion({ quota }) {
+  const checkout = useCheckout();
   const {
     isQuotaLocked,
     syncQuotaState,
@@ -447,40 +449,18 @@ export default function useConversion({ quota }) {
     });
   }
 
-  async function postCheckout(url, payload = {}) {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const data = await response.json().catch(() => ({}));
-    if (response.status === 501) {
-      quota.closeBuyCreditsPanel();
-      setPurchaseMessage(CHECKOUT_COMING_SOON_MESSAGE);
-      return { ok: false, response, data, shouldStop: true };
-    }
-    if (!response.ok) {
-      setNotice(data?.error || 'Checkout request failed.');
-      return { ok: false, response, data, shouldStop: true };
-    }
-    const checkoutUrl = data?.url;
-    if (typeof checkoutUrl === 'string' && checkoutUrl) {
-      if (typeof window !== 'undefined') window.location.assign(checkoutUrl);
-      return { ok: true, response, data, shouldStop: true };
-    }
-    return { ok: true, response, data, shouldStop: true };
-  }
-
   async function handleBuyCreditsPack(pack) {
     setPurchaseMessage('');
     if (!pack) return;
-    await postCheckout('/api/credits/purchase/checkout', { pack });
+    const result = await checkout.openCreditsPack(pack);
+    if (result?.error) setPurchaseMessage(result.error);
   }
 
   async function handleGoProCheckout() {
     setPaywallReason('');
     setPurchaseMessage('');
-    await postCheckout('/api/plan/pro/checkout', {});
+    const result = await checkout.openProCheckout();
+    if (result?.error) setPurchaseMessage(result.error);
   }
 
   const verdict = confidence?.verdict;

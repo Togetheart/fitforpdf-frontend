@@ -8,6 +8,8 @@ const VARIANTS = {
     'h-11 bg-accent text-white shadow-sm hover:bg-accent-hover active:scale-[0.99]',
   secondary:
     'h-11 border border-slate-300 bg-white text-slate-900 hover:bg-slate-50',
+  outline:
+    'h-11 border border-accent text-accent bg-white hover:bg-accent/5 active:scale-[0.99]',
 };
 
 export default function Button({

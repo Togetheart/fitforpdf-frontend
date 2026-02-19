@@ -9,6 +9,7 @@ import {
 } from './siteCopy.mjs';
 import useQuota from './hooks/useQuota.mjs';
 import useConversion from './hooks/useConversion.mjs';
+import { useCheckout } from './hooks/useCheckout.mjs';
 import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
@@ -84,6 +85,13 @@ function FeatureIcon({ name }) {
 export default function Page() {
   const quota = useQuota();
   const conversion = useConversion({ quota });
+  const checkout = useCheckout();
+
+  const plansWithHandlers = PRICING_CARDS.map((plan) =>
+    plan.id === 'credits'
+      ? { ...plan, onAction: () => checkout.openCreditsPack('credits_100') }
+      : plan,
+  );
 
   function handleHeroGenerateClick(event) {
     if (!event) return;
@@ -179,14 +187,23 @@ export default function Page() {
         </div>
       </PageHero>
 
-      {/* Social proof ticker */}
-      <div className="overflow-hidden border-y border-slate-100 bg-slate-50/50 py-4" data-testid="social-proof-ticker">
-        <div className="ticker-track">
-          {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
-            <span key={i} className="mx-6 whitespace-nowrap text-sm font-medium tracking-tight text-slate-400 sm:mx-10 sm:text-base">
-              {item}
-            </span>
-          ))}
+      {/* Social proof — Arcade style */}
+      <div className="border-y border-slate-100 bg-white py-8" data-testid="social-proof-ticker">
+        <p className="mb-5 text-center text-sm text-slate-500">
+          More than{' '}
+          <span className="inline-flex items-center rounded-md border border-slate-200 px-2 py-0.5 text-sm font-semibold text-slate-700">
+            200+ professionals
+          </span>
+          {' '}use FitForPDF every week
+        </p>
+        <div className="overflow-hidden">
+          <div className="ticker-track">
+            {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
+              <span key={i} className="mx-8 whitespace-nowrap text-sm font-semibold tracking-wide text-slate-400 sm:mx-12 sm:text-base">
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -227,8 +244,8 @@ export default function Page() {
             <p className="text-base text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
           </div>
           <PricingPlans
-            plans={PRICING_CARDS}
-            variant="home"
+            plans={plansWithHandlers}
+            variant="pricing"
             gridTestId="pricing-grid"
             cardTestId="pricing-preview-card"
           />

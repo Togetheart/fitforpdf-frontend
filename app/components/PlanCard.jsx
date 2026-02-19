@@ -20,7 +20,7 @@ function renderAction(plan) {
     return (
       <Button
         type="button"
-        variant={plan.recommended ? 'primary' : 'secondary'}
+        variant={plan.recommended ? 'primary' : 'outline'}
         disabled
         title={plan.tooltip}
         className={plan.recommended ? 'opacity-85' : ''}
@@ -30,16 +30,28 @@ function renderAction(plan) {
     );
   }
 
+  if (typeof plan.onAction === 'function') {
+    return (
+      <Button
+        type="button"
+        variant={plan.recommended ? 'primary' : 'outline'}
+        onClick={plan.onAction}
+      >
+        {plan.actionLabel}
+      </Button>
+    );
+  }
+
   if (plan.actionType === 'link') {
     return (
-      <Button variant={plan.recommended ? 'primary' : 'secondary'} href={plan.actionHref}>
+      <Button variant={plan.recommended ? 'primary' : 'outline'} href={plan.actionHref}>
         {plan.actionLabel}
       </Button>
     );
   }
 
   return (
-    <Button type="button" variant={plan.recommended ? 'primary' : 'secondary'} href={plan.actionHref}>
+    <Button type="button" variant={plan.recommended ? 'primary' : 'outline'} href={plan.actionHref}>
       {plan.actionLabel}
     </Button>
   );

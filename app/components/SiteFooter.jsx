@@ -1,4 +1,5 @@
 import React from 'react';
+import { LANDING_COPY } from '../siteCopy.mjs';
 
 export default function SiteFooter() {
   return (
@@ -7,6 +8,17 @@ export default function SiteFooter() {
         <div className="space-y-1">
           <p className="text-sm font-semibold text-black/70">FitForPDF</p>
           <p className="text-xs text-black/40">Transform spreadsheets into professional PDFs.</p>
+          <p className="text-xs text-black/40">
+            Made by{' '}
+            <a
+              href={LANDING_COPY.footerMakerHref}
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-black/70"
+            >
+              {LANDING_COPY.footerMakerName}
+            </a>
+          </p>
         </div>
         <nav className="flex items-center gap-4 text-sm text-black/70 sm:gap-6">
           <a className="transition hover:text-black" href="/#tool">
