@@ -18,7 +18,7 @@ import HeroHeadline from './components/HeroHeadline';
 import Button from './components/ui/Button';
 import ProofShowcase from './components/ProofShowcase';
 
-const CTA_SECONDARY = 'inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150 border-slate-300 bg-white text-slate-900 hover:bg-slate-50';
+const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-accent/30 bg-white text-accent hover:border-accent/60 hover:bg-accent/5';
 
 const FEATURE_ICONS = {
   overview: (
@@ -62,9 +62,18 @@ const FEATURE_ICONS = {
   ),
 };
 
+const FEATURE_ICON_COLORS = {
+  overview:   'text-sky-500',
+  columns:    'text-indigo-600',
+  pin:        'text-teal-500',
+  pagination: 'text-green-500',
+  wand:       'text-amber-500',
+  link:       'text-red-500',
+};
+
 function FeatureIcon({ name }) {
   return (
-    <span className="text-accent" aria-hidden="true">
+    <span className={FEATURE_ICON_COLORS[name] ?? 'text-accent'} aria-hidden="true">
       {FEATURE_ICONS[name] || null}
     </span>
   );
@@ -73,8 +82,8 @@ function FeatureIcon({ name }) {
 /* Shield icon for privacy section */
 function ShieldIcon() {
   return (
-    <span className="privacy-shield inline-flex items-center justify-center rounded-2xl bg-emerald-50 p-4" aria-hidden="true">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+    <span className="privacy-shield inline-flex items-center justify-center text-emerald-500" aria-hidden="true">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         <path d="m9 12 2 2 4-4" />
       </svg>
@@ -114,7 +123,7 @@ export default function Page() {
         subtitle={LANDING_COPY.heroSubheadline}
         subtitleClassName="w-full max-w-none text-lg text-slate-500 lg:whitespace-nowrap"
         contentClassName="items-center gap-10 text-center"
-        contentMaxWidthClassName="max-w-7xl"
+        contentMaxWidthClassName="max-w-[960px]"
         className="py-0 w-full"
       >
         <div className="space-y-8">
@@ -192,7 +201,7 @@ export default function Page() {
 
       <Section id="client-ready" index={2} className="py-16 sm:py-20" bg="bg-gray-50">
         <div className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             {LANDING_COPY.clientReadyTitle}
           </h2>
         </div>
@@ -217,7 +226,7 @@ export default function Page() {
       <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-white">
         <div className="space-y-6">
           <div className="space-y-2">
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
               {LANDING_COPY.pricingPreviewTitle}
             </h2>
             <p className="text-base text-slate-500">{LANDING_COPY.pricingPreviewSubline}</p>
@@ -233,6 +242,9 @@ export default function Page() {
           </p>
           <a href="/pricing" className={CTA_SECONDARY}>
             {LANDING_COPY.pricingPreviewCta}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </a>
         </div>
       </Section>
@@ -246,8 +258,11 @@ export default function Page() {
         maxWidth="max-w-3xl"
       >
         <div className="flex flex-col items-center text-center">
-          <ShieldIcon />
-          <h2 className="mt-6 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+          <div className="flex items-center gap-2">
+            <ShieldIcon />
+            <span className="text-2xl font-semibold tracking-tight text-slate-900">Privacy</span>
+          </div>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             Your data. Not our business.
           </h2>
           <div className="mt-6 space-y-3 text-base leading-relaxed text-slate-500">
@@ -255,6 +270,15 @@ export default function Page() {
             <p>The generated PDF is available for up to 15 minutes.</p>
             <p>No file content is stored in logs.</p>
           </div>
+          <a
+            href="/privacy"
+            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-accent/30 bg-white text-accent hover:border-accent/60 hover:bg-accent/5"
+          >
+            {LANDING_COPY.privacyStripCta}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </Section>
 
@@ -266,7 +290,7 @@ export default function Page() {
         testId="faq-section"
       >
         <div className="space-y-6">
-          <h2 className="text-center text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             Frequently asked questions
           </h2>
           <div className="divide-y divide-slate-200 rounded-xl glass-elevated">
@@ -287,7 +311,7 @@ export default function Page() {
         testId="final-cta-section"
       >
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             {LANDING_COPY.finalCtaTitle}
           </h2>
           <p className="mt-4 text-lg text-slate-500">{LANDING_COPY.finalCtaCopy}</p>

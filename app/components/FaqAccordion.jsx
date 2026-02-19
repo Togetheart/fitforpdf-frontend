@@ -47,7 +47,7 @@ export default function FaqAccordion({
 
   return (
     <div className="mx-auto w-full">
-      {title ? <h2 className="text-2xl font-semibold leading-tight">{title}</h2> : null}
+      {title ? <h2 className="text-2xl font-semibold tracking-tight leading-tight sm:text-3xl">{title}</h2> : null}
       <div
         className={`space-y-0 divide-y divide-black/10 ${listClassName || ''}`}
         data-testid={testId ?? 'faq-accordion'}

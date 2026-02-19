@@ -159,7 +159,7 @@ export default function ProofShowcase() {
       </div>
 
       {/* Section heading */}
-      <h2 className="text-center text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+      <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
         From raw data to structured document.
       </h2>
 

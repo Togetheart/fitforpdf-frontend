@@ -58,7 +58,17 @@ export default function HeroHeadline() {
   }, [hasWindow, reducedMotion]);
 
   return (
-    <h1 className="leading-[1.08] tracking-tight text-4xl font-semibold sm:text-6xl lg:text-7xl">
+    <>
+    <div className="flex items-center justify-center gap-2 mb-4">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="8" y1="13" x2="16" y2="13" />
+        <line x1="8" y1="17" x2="16" y2="17" />
+      </svg>
+      <span className="text-2xl font-semibold tracking-tight text-slate-900">FitForPDF</span>
+    </div>
+    <h1 className="leading-[1.08] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
       <span ref={firstLineRef} className="hero-headline-line block text-slate-900">
         Your spreadsheet.
       </span>
@@ -81,5 +91,6 @@ export default function HeroHeadline() {
         Ready to send.
       </span>
     </h1>
+    </>
   );
 }
