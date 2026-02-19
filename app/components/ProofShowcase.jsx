@@ -105,7 +105,7 @@ const FORMAT_CONFIGS = {
 const FORMATS = ['xlsx', 'csv'];
 
 export default function ProofShowcase() {
-  const [activeFormat, setActiveFormat] = useState('csv');
+  const [activeFormat, setActiveFormat] = useState('xlsx');
   const [activeTab, setActiveTab] = useState(0);
 
   const config = FORMAT_CONFIGS[activeFormat];
