@@ -579,7 +579,7 @@ export default function UploadCard({
         ) : null}
 
         <div
-          className="mt-6 rounded-xl glass-subtle"
+          className="mt-6 rounded-xl border border-slate-200 bg-white"
           data-testid="upload-options-shell"
         >
           <button

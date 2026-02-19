@@ -117,7 +117,7 @@ export default function ProofShowcase() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       {/* Format selector */}
       <div
         data-testid="format-selector"
@@ -135,7 +135,7 @@ export default function ProofShowcase() {
               role="radio"
               aria-checked={isActive}
               onClick={() => handleFormatChange(formatId)}
-              className={`group flex flex-col items-center gap-1.5 rounded-lg px-5 py-2.5 transition-all duration-150 ${
+              className={`group flex flex-col items-center gap-1.5 rounded-lg px-5 py-2.5 transition-all duration-200 ${
                 isActive
                   ? 'scale-105 opacity-100'
                   : 'opacity-35 hover:opacity-60'
@@ -147,7 +147,7 @@ export default function ProofShowcase() {
                 className="h-10 w-10 object-contain"
               />
               <span
-                className={`text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors duration-150 ${
+                className={`text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 ${
                   isActive ? 'text-accent' : 'text-slate-400'
                 }`}
               >
@@ -159,7 +159,7 @@ export default function ProofShowcase() {
       </div>
 
       {/* Section heading */}
-      <h2 className="text-center text-2xl font-semibold leading-snug sm:text-3xl">
+      <h2 className="text-center text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
         From raw data to structured document.
       </h2>
 
@@ -177,7 +177,7 @@ export default function ProofShowcase() {
             <ImageLightbox
               src={config.beforeImage}
               alt={config.beforeAlt}
-              className="mt-2 block w-full overflow-hidden rounded-lg border border-slate-200"
+              className="mt-3 block w-full overflow-hidden rounded-lg border border-slate-200"
             >
               <img
                 src={config.beforeImage}
@@ -197,7 +197,7 @@ export default function ProofShowcase() {
             </p>
 
             {/* Tab buttons */}
-            <div role="tablist" className="mt-2 flex gap-1">
+            <div role="tablist" className="mt-3 flex gap-1.5">
               {config.tabs.map((tab, i) => (
                 <button
                   key={tab.id}
@@ -206,9 +206,9 @@ export default function ProofShowcase() {
                   type="button"
                   aria-selected={i === activeTab}
                   onClick={() => setActiveTab(i)}
-                  className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors duration-150 ${
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
                     i === activeTab
-                      ? 'bg-accent text-white'
+                      ? 'bg-accent text-white shadow-sm'
                       : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
                   }`}
                 >
@@ -225,8 +225,9 @@ export default function ProofShowcase() {
               <ImageLightbox
                 src={currentTab.src}
                 alt={currentTab.alt}
-                className="mt-2 block w-full overflow-hidden rounded-lg border border-slate-200"
+                className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-slate-200"
                 data-testid="proof-pdf-image"
+                key={`${activeFormat}-${activeTab}`}
               >
                 <img
                   src={currentTab.src}
@@ -237,7 +238,7 @@ export default function ProofShowcase() {
             </div>
 
             {/* Stat line */}
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-3 text-xs text-slate-400">
               {config.statLine}
             </p>
           </div>

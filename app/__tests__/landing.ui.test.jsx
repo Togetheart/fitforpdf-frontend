@@ -153,9 +153,9 @@ describe('landing conversion-first structure', () => {
     const faq = screen.getByTestId('faq-section');
 
     expect((proof.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((clientReady.getAttribute('class') || '').includes('py-10')).toBe(true);
+    expect((clientReady.getAttribute('class') || '').includes('py-16')).toBe(true);
     expect((pricing.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((privacy.getAttribute('class') || '').includes('py-10')).toBe(true);
+    expect((privacy.getAttribute('class') || '').includes('py-16')).toBe(true);
     expect((faq.getAttribute('class') || '').includes('py-16')).toBe(true);
   });
 

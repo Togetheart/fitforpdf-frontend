@@ -58,7 +58,7 @@ export default function HeroHeadline() {
   }, [hasWindow, reducedMotion]);
 
   return (
-    <h1 className="leading-tight tracking-tight text-4xl font-semibold sm:text-6xl">
+    <h1 className="leading-[1.08] tracking-tight text-4xl font-semibold sm:text-6xl lg:text-7xl">
       <span ref={firstLineRef} className="hero-headline-line block text-slate-900">
         Your spreadsheet.
       </span>

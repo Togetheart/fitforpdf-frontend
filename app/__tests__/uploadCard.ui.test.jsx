@@ -333,7 +333,7 @@ describe('UploadCard unit behavior', () => {
     const progressPanel = screen.getByTestId('upload-progress');
     const privacyMessages = screen.getByTestId('upload-privacy-messages');
 
-    expect(optionsShell.className).toContain('glass-subtle');
+    expect(optionsShell.className).toContain('bg-white');
     expect(progressPanel.className).toContain('glass-subtle');
 
     // Privacy messages are now a simple inline <p>, no longer a glass panel

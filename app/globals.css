@@ -255,6 +255,55 @@
     }
   }
 
+  /* ── Proof tab image crossfade ──────────────────────── */
+  .proof-tab-image {
+    animation: proofFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes proofFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* ── Feature card hover lift ────────────────────────── */
+  .feature-card-hover {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .feature-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
+  }
+
+  /* ── Privacy shield pulse ───────────────────────────── */
+  @keyframes shieldPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: scale(1.04);
+      opacity: 1;
+    }
+  }
+
+  .privacy-shield {
+    animation: shieldPulse 4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .privacy-shield {
+      animation: none;
+    }
+  }
+
   @keyframes heroMeshA {
     0% {
       transform: translate3d(0, 0, 0) scale(1);

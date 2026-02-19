@@ -66,7 +66,7 @@ export default function Section({
     >
       <div
         ref={innerRef}
-        className={`mx-auto flex w-full flex-col gap-6 ${maxWidth} px-4 py-10 sm:px-6 sm:py-12`}
+        className={`mx-auto flex w-full flex-col gap-8 ${maxWidth} px-4 py-10 sm:px-6 sm:py-12`}
       >
         {children}
       </div>
