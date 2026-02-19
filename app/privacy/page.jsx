@@ -97,7 +97,7 @@ const ICONS = {
     </svg>
   ),
   shield: (
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       <path d="m9 12 2 2 4-4" />
     </svg>
@@ -200,7 +200,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── What we log + What we don't do — grille 2 colonnes ── */}
-      <Section id="privacy-logs" index={2} bg="bg-white" maxWidth="max-w-4xl">
+      <Section id="privacy-logs" index={2} bg="bg-white">
         {/* Enfant unique du Section → grille 2 col avec hauteur égale */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* Bloc 1 : What we log */}
@@ -253,7 +253,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── User rights ── */}
-      <Section id="privacy-rights" index={4} bg="bg-white" maxWidth="max-w-4xl">
+      <Section id="privacy-rights" index={4} bg="bg-white">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* User rights list */}
           <div className="flex flex-col gap-4">
