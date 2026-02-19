@@ -14,15 +14,8 @@ export default function AnimatedCloudIcon({ size = 32, className = 'text-slate-5
     return () => clearTimeout(t);
   }, []);
 
-  // Approximate total stroke length for each path at viewBox 24×24
-  // Cloud arc: ~55, vertical line: ~8, chevron: ~11
+  // Cloud arc stroke length at viewBox 24×24
   const cloudLength = 55;
-  const lineLength = 8;
-  const chevronLength = 11;
-
-  const transition = drawn
-    ? 'stroke-dashoffset 0.55s cubic-bezier(0.4,0,0.2,1)'
-    : 'none';
 
   return (
     <svg
@@ -37,27 +30,18 @@ export default function AnimatedCloudIcon({ size = 32, className = 'text-slate-5
       aria-hidden="true"
       className={className}
     >
-      {/* Cloud outline */}
+      {/* Cloud outline — animated draw-on */}
       <path
         d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"
         strokeDasharray={cloudLength}
         strokeDashoffset={drawn ? 0 : cloudLength}
-        style={{ transition, transitionDelay: drawn ? '0s' : '0s' }}
+        style={{
+          transition: drawn ? 'stroke-dashoffset 0.55s cubic-bezier(0.4,0,0.2,1)' : 'none',
+        }}
       />
-      {/* Vertical arrow line */}
-      <path
-        d="M12 13v8"
-        strokeDasharray={lineLength}
-        strokeDashoffset={drawn ? 0 : lineLength}
-        style={{ transition, transitionDelay: drawn ? '0.15s' : '0s' }}
-      />
-      {/* Arrow chevron */}
-      <path
-        d="m8 17 4-4 4 4"
-        strokeDasharray={chevronLength}
-        strokeDashoffset={drawn ? 0 : chevronLength}
-        style={{ transition, transitionDelay: drawn ? '0.25s' : '0s' }}
-      />
+      {/* Arrow — static, always visible */}
+      <path d="M12 13v8" />
+      <path d="m8 17 4-4 4 4" />
     </svg>
   );
 }
