@@ -10,7 +10,7 @@ export default function AnimatedCloudIcon({ size = 32, className = 'text-slate-5
   const [drawn, setDrawn] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setDrawn(true), 80);
+    const t = setTimeout(() => setDrawn(true), 2500);
     return () => clearTimeout(t);
   }, []);
 
