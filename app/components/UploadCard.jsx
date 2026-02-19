@@ -549,7 +549,7 @@ export default function UploadCard({
             type="button"
             onClick={onTrySample}
             disabled={isLoading}
-            className="text-sm text-slate-500 underline underline-offset-2 transition-colors hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="text-sm text-blue-500 underline underline-offset-2 transition-colors hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
             or try with a demo file
