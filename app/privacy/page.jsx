@@ -223,8 +223,8 @@ export default function PrivacyPage() {
               {PRIVACY_PAGE_COPY.dontDoTitle}
             </h2>
             <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6 py-2">
-              <DontDoRow icon={ICONS.eye} text={PRIVACY_PAGE_COPY.dontDo[0]} />
-              <DontDoRow icon={ICONS.cpu} text={PRIVACY_PAGE_COPY.dontDo[1]} />
+              <DontDoRow icon={ICONS.cpu} text={PRIVACY_PAGE_COPY.dontDo[0]} />
+              <DontDoRow icon={ICONS.eye} text={PRIVACY_PAGE_COPY.dontDo[1]} />
               <DontDoRow icon={ICONS.ban} text={PRIVACY_PAGE_COPY.dontDo[2]} />
             </div>
           </div>

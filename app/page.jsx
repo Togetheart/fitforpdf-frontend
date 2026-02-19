@@ -52,8 +52,8 @@ const FEATURE_ICONS = {
   ),
   wand: (
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m15 4-1 1 4 4 1-1a2.83 2.83 0 1 0-4-4Z" />
-      <path d="m14 5-9.7 9.7a1 1 0 0 0 0 1.4l2.6 2.6a1 1 0 0 0 1.4 0L18 9" />
+      <path d="M12 15V3m0 0-4 4m4-4 4 4" />
+      <path d="M8 7H5.5A3.5 3.5 0 0 0 2 10.5v.5A4 4 0 0 0 6 15h12a4 4 0 0 0 4-4v-.5A3.5 3.5 0 0 0 18.5 7H16" />
     </svg>
   ),
   link: (
@@ -192,11 +192,10 @@ export default function Page() {
       {/* Social proof — Arcade style */}
       <div className="border-y border-slate-100 bg-white py-8" data-testid="social-proof-ticker">
         <p className="mb-5 text-center text-sm text-slate-500">
-          More than{' '}
           <span className="inline-flex items-center rounded-md border border-slate-200 px-2 py-0.5 text-sm font-semibold text-slate-700">
-            200+ professionals
+            1,000+
           </span>
-          {' '}use FitForPDF every week
+          {' '}professionals use FitForPDF every week
         </p>
         <div className="overflow-hidden">
           <div className="ticker-track">

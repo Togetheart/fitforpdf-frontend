@@ -63,14 +63,14 @@ export const LANDING_COPY = {
 
   socialProofLine: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
   socialProofTicker: [
-    'Consultants',
-    'Finance teams',
-    'Accountants',
-    'Operations managers',
-    'Auditors',
-    'Project managers',
-    'Freelancers',
-    'Students',
+    'Auditors sending 300-page reports',
+    'Consultants sharing data with clients',
+    'Finance teams exporting monthly KPIs',
+    'Accountants closing end-of-quarter files',
+    'Ops managers summarizing pipeline data',
+    'Project managers reporting to stakeholders',
+    'Freelancers delivering polished deliverables',
+    'Students presenting structured datasets',
   ],
 
   finalCtaTitle: 'Ready to send professional PDFs?',
@@ -81,7 +81,7 @@ export const LANDING_COPY = {
   footerMakerName: 'Sébastien',
   footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
 
-  socialProofCount: 'Trusted by 200+ consultants & finance teams',
+  socialProofCount: '1,000+ professionals use FitForPDF every week',
 };
 
 export const LANDING_COPY_KEYS = {
@@ -130,7 +130,7 @@ export const PRICING_PAGE_COPY = {
 
   freeTitle: 'Free',
   freeSubtitle: '$0 forever',
-  freeFeature: 'No watermark removal',
+  freeFeature: 'FitForPDF branding included',
   freeFeatureAlt: 'Account-free',
   freeCtaLabel: 'Start free',
   freeCtaHref: '/#upload',
@@ -142,7 +142,7 @@ export const PRICING_PAGE_COPY = {
   credits500Title: '500 exports',
   credits500Price: '€79',
   creditsFeature: 'One-time purchase',
-  creditsFeature2: 'Remove watermark',
+  creditsFeature2: 'No FitForPDF branding',
   creditsFeature3: 'Client-ready layout',
   creditsFeature4: 'Structured sections',
   creditsCtaLabel: 'Buy credits',
@@ -159,7 +159,7 @@ export const PRICING_PAGE_COPY = {
   comparisonTitle: 'Compare features',
   comparison: [
     ['Client-ready PDF output', '✓', '✓'],
-    ['Branding removable', '✗', '✓'],
+    ['FitForPDF attribution', '✓ included', '✗ removed'],
     ['Batch export', '✗', '✗'],
     ['API access', '✗', 'Contact us'],
   ],
@@ -319,10 +319,10 @@ export const PRIVACY_PAGE_COPY = {
     ],
   },
 
-  dontDoTitle: 'What we don’t do',
+  dontDoTitle: "What we don't do",
   dontDo: [
+    'No AI processing. No model training.',
     'We do not read your documents.',
-    'We do not train models on your files.',
     'We do not resell your data.',
   ],
 
