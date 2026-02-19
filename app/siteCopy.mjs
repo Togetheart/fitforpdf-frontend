@@ -124,8 +124,8 @@ export const PRICING_PAGE_COPY = {
 
   freeTitle: 'Free',
   freeSubtitle: '$0 forever',
-  freeFeature: 'Branding enabled',
-  freeFeatureAlt: 'No account required',
+  freeFeature: 'No watermark removal',
+  freeFeatureAlt: 'Account-free',
   freeCtaLabel: 'Start free',
   freeCtaHref: '/#upload',
 
@@ -135,8 +135,8 @@ export const PRICING_PAGE_COPY = {
   credits100Price: '€19',
   credits500Title: '500 exports',
   credits500Price: '€79',
-  creditsFeature: 'No subscription',
-  creditsFeature2: 'Branding optional',
+  creditsFeature: 'One-time purchase',
+  creditsFeature2: 'Remove watermark',
   creditsFeature3: 'Client-ready layout',
   creditsFeature4: 'Structured sections',
   creditsCtaLabel: 'Buy credits',

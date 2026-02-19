@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, CircleHelp } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 function normalizeId(value) {
   return String(value || '').replace(/^#/, '').trim();
@@ -67,8 +67,7 @@ export default function FaqAccordion({
                 onClick={() => setOpenId((current) => (current === item.id ? null : item.id))}
                 className="group flex w-full items-start justify-between gap-4 rounded-xl px-2 py-2 text-left text-sm leading-relaxed font-medium text-slate-900 transition hover:bg-black/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/70 focus-visible:ring-offset-2"
               >
-                <span className="flex min-h-6 items-center gap-2">
-                  <CircleHelp className="h-4 w-4 shrink-0 text-slate-400 transition-colors duration-200 group-hover:text-slate-600" />
+                <span className="flex min-h-6 items-center">
                   {item.q}
                 </span>
                 <ChevronDown

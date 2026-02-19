@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Check, X } from 'lucide-react';
-import Card from './Card';
 
 function compareValue(value) {
   const normalized = String(value || '').trim();
@@ -45,7 +44,7 @@ export default function FeatureComparison({
         {title}
       </h2>
 
-      <Card className="mt-6 overflow-hidden">
+      <div className="mt-6 overflow-hidden rounded-xl border border-slate-100">
         <div className="hidden overflow-x-auto md:block">
           <table className="min-w-full text-sm">
             <thead>
@@ -83,7 +82,7 @@ export default function FeatureComparison({
             <div
               key={row[0]}
               data-testid="feature-compare-row"
-              className="rounded-xl glass-subtle p-3"
+              className="rounded-xl border border-slate-100 bg-slate-50/60 p-3"
             >
               <p className="text-sm font-medium text-slate-800">{row[0]}</p>
               <dl className="mt-2 space-y-1 text-sm">
@@ -97,7 +96,7 @@ export default function FeatureComparison({
             </div>
           ))}
         </div>
-      </Card>
+      </div>
     </section>
   );
 }

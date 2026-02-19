@@ -6,6 +6,7 @@ import { PRIVACY_PAGE_COPY, LANDING_COPY } from '../siteCopy.mjs';
 import Section from '../components/ui/Section';
 import Accordion from '../components/Accordion';
 import PageHero from '../components/PageHero';
+import AnimatedShieldIcon from '../components/AnimatedShieldIcon';
 
 /* ─── SVG icons — même style que landing (stroke, no fill) ─ */
 const ICONS = {
@@ -79,17 +80,6 @@ function PrivacyFeatureCard({ icon, title, description }) {
   );
 }
 
-/* ─── Shield — même style que landing page ─────────────── */
-function ShieldIcon() {
-  return (
-    <span className="privacy-shield inline-flex items-center justify-center text-emerald-500" aria-hidden="true">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <path d="m9 12 2 2 4-4" />
-      </svg>
-    </span>
-  );
-}
 
 /* ─── Trust pill — même style exact que landing ────────── */
 function TrustPill() {
@@ -134,7 +124,7 @@ export default function PrivacyPage() {
         contentClassName="items-center space-y-5 text-center"
       >
         <div className="flex items-center gap-2">
-          <ShieldIcon />
+          <AnimatedShieldIcon animateOnMount={true} />
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900" data-testid="privacy-h1">
             Privacy
           </h1>

@@ -17,6 +17,7 @@ import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
 import Button from './components/ui/Button';
 import ProofShowcase from './components/ProofShowcase';
+import AnimatedShieldIcon from './components/AnimatedShieldIcon';
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-accent/30 bg-white text-accent hover:border-accent/60 hover:bg-accent/5';
 
@@ -79,17 +80,6 @@ function FeatureIcon({ name }) {
   );
 }
 
-/* Shield icon for privacy section */
-function ShieldIcon() {
-  return (
-    <span className="privacy-shield inline-flex items-center justify-center text-emerald-500" aria-hidden="true">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <path d="m9 12 2 2 4-4" />
-      </svg>
-    </span>
-  );
-}
 
 export default function Page() {
   const quota = useQuota();
@@ -259,7 +249,7 @@ export default function Page() {
       >
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center gap-2">
-            <ShieldIcon />
+            <AnimatedShieldIcon animateOnMount={false} />
             <span className="text-2xl font-semibold tracking-tight text-slate-900">Privacy</span>
           </div>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
