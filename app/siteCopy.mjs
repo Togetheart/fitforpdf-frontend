@@ -21,12 +21,21 @@ export const LANDING_COPY = {
   afterLabel: 'Structured PDF summary',
 
   clientReadyTitle: 'Client-ready means',
+  clientReadyFeatures: [
+    { key: 'overview', title: 'Document overview page', description: 'A summary page with all sections and columns at a glance.', icon: 'overview' },
+    { key: 'columns', title: 'Smart column sections', description: 'Wide tables automatically grouped into readable column blocks.', icon: 'columns' },
+    { key: 'pinned', title: 'Fixed reference columns', description: 'Key columns like ID and Name repeated in every section.', icon: 'pin' },
+    { key: 'pagination', title: 'Rows X\u2013Y and Page i/n', description: 'Clear row ranges and page numbers on every page.', icon: 'pagination' },
+    { key: 'auto', title: 'No manual layout', description: 'Zero configuration \u2014 upload and get a structured PDF.', icon: 'wand' },
+    { key: 'toc', title: 'Clickable TOC links', description: 'Jump to any section directly from the overview page.', icon: 'link' },
+  ],
   clientReadyBullets: [
     'Document overview page',
     'Smart column sections',
-    'Fixed reference columns repeated',
-    'Rows X–Y and Page i/n',
+    'Fixed reference columns',
+    'Rows X\u2013Y and Page i/n',
     'No manual layout',
+    'Clickable TOC links',
   ],
 
   toolTitle: 'Generate a client-ready PDF',

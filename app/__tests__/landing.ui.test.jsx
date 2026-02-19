@@ -130,7 +130,7 @@ describe('landing conversion-first structure', () => {
     expect(images[0].getAttribute('src') || '').toContain('/before_csv.webp');
     const proofWrapper = screen.getByTestId('proof-pdf-image');
     const proofImg = proofWrapper.querySelector('img');
-    expect((proofImg?.getAttribute('src') || '')).toContain('/after_fitforpdf.webp');
+    expect((proofImg?.getAttribute('src') || '')).toContain('/CSV/enterprise-invoices-demo-overview.webp');
     expect(proofWrapper.getAttribute('class') || '').toContain('w-full');
     expect(within(previewCard).getByText('CSV INPUT')).toBeTruthy();
     expect(within(previewCard).getByText('STRUCTURED PDF')).toBeTruthy();
@@ -185,5 +185,18 @@ describe('landing conversion-first structure', () => {
 
     expect(screen.getAllByRole('heading', { name: 'Frequently asked questions' })).toHaveLength(1);
     expect(screen.getAllByTestId('home-faq')).toHaveLength(1);
+  });
+
+  test('format selector defaults to CSV and offers both format options', () => {
+    const selector = screen.getByTestId('format-selector');
+    const radios = within(selector).getAllByRole('radio');
+    expect(radios).toHaveLength(2);
+
+    const csvRadio = radios.find((r) => r.textContent.includes('CSV'));
+    const xlsxRadio = radios.find((r) => r.textContent.includes('XLSX'));
+    expect(csvRadio).toBeTruthy();
+    expect(xlsxRadio).toBeTruthy();
+    expect(csvRadio.getAttribute('aria-checked')).toBe('true');
+    expect(xlsxRadio.getAttribute('aria-checked')).toBe('false');
   });
 });

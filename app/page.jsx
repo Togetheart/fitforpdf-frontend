@@ -16,9 +16,59 @@ import PricingPlans from './components/PricingPlans';
 import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
 import Button from './components/ui/Button';
-import ImageLightbox from './components/ImageLightbox';
+import ProofShowcase from './components/ProofShowcase';
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-semibold transition duration-150 border-slate-300 bg-white text-slate-900 hover:bg-slate-50';
+
+const FEATURE_ICONS = {
+  overview: (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <line x1="3" y1="9" x2="21" y2="9" />
+      <line x1="9" y1="9" x2="9" y2="21" />
+    </svg>
+  ),
+  columns: (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="18" rx="1.5" />
+      <rect x="14" y="3" width="7" height="18" rx="1.5" />
+    </svg>
+  ),
+  pin: (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="17" x2="12" y2="21" />
+      <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" />
+    </svg>
+  ),
+  pagination: (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" y1="9" x2="20" y2="9" />
+      <line x1="4" y1="15" x2="20" y2="15" />
+      <line x1="10" y1="3" x2="8" y2="21" />
+      <line x1="16" y1="3" x2="14" y2="21" />
+    </svg>
+  ),
+  wand: (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m15 4-1 1 4 4 1-1a2.83 2.83 0 1 0-4-4Z" />
+      <path d="m14 5-9.7 9.7a1 1 0 0 0 0 1.4l2.6 2.6a1 1 0 0 0 1.4 0L18 9" />
+    </svg>
+  ),
+  link: (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  ),
+};
+
+function FeatureIcon({ name }) {
+  return (
+    <span className="text-accent" aria-hidden="true">
+      {FEATURE_ICONS[name] || null}
+    </span>
+  );
+}
 
 export default function Page() {
   const quota = useQuota();
@@ -114,72 +164,28 @@ export default function Page() {
       </PageHero>
 
       <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-16 sm:py-20">
-        <div className="space-y-6">
-          <h2 className="text-center text-2xl font-semibold leading-snug sm:text-3xl">
-            From raw data to structured document.
-          </h2>
-          <div
-            data-testid="home-preview-card"
-            className="home-preview-float mx-auto max-w-7xl rounded-xl glass-elevated p-4 md:p-8"
-          >
-            <div className="grid gap-6 sm:grid-cols-[1fr_1.3fr]">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  CSV INPUT
-                </p>
-                <ImageLightbox
-                  src="/before_csv.webp"
-                  alt="CSV input preview"
-                  className="mt-2 block w-full overflow-hidden rounded-lg border border-slate-200"
-                >
-                  <img
-                    src="/before_csv.webp"
-                    alt="CSV input preview"
-                    className="h-auto w-full rounded-lg object-cover"
-                  />
-                </ImageLightbox>
-                <p className="mt-2 text-xs text-slate-400">Raw spreadsheet data — columns overflow, no structure.</p>
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  STRUCTURED PDF
-                </p>
-                <ImageLightbox
-                  src="/after_fitforpdf.webp"
-                  alt="FitForPDF structured document preview with overview and grouped columns"
-                  className="mt-2 block w-full overflow-hidden rounded-lg border border-slate-200"
-                  data-testid="proof-pdf-image"
-                >
-                  <img
-                    src="/after_fitforpdf.webp"
-                    alt="FitForPDF structured document preview with overview and grouped columns"
-                    className="h-auto w-full rounded-lg object-cover"
-                  />
-                </ImageLightbox>
-                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-400">
-                  <span>Overview page</span>
-                  <span aria-hidden="true" className="text-slate-300">·</span>
-                  <span>Grouped columns</span>
-                  <span aria-hidden="true" className="text-slate-300">·</span>
-                  <span>Page i/n</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProofShowcase />
       </Section>
 
       <Section id="client-ready" index={2} className="py-10" bg="bg-gray-50">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl font-semibold leading-snug sm:text-3xl">{LANDING_COPY.clientReadyTitle}</h2>
-          <ul className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-slate-600">
-            {LANDING_COPY.clientReadyBullets.map((point) => (
-              <li key={point} className="flex items-center gap-1.5">
-                <svg className="h-4 w-4 flex-shrink-0 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                {point}
-              </li>
-            ))}
-          </ul>
+        <h2 className="text-center text-2xl font-semibold leading-snug sm:text-3xl">
+          {LANDING_COPY.clientReadyTitle}
+        </h2>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5">
+          {LANDING_COPY.clientReadyFeatures.map((feature) => (
+            <div
+              key={feature.key}
+              className="flex flex-col items-start gap-2.5 rounded-xl p-5 glass-subtle"
+            >
+              <FeatureIcon name={feature.icon} />
+              <h3 className="text-sm font-semibold leading-tight text-slate-900">
+                {feature.title}
+              </h3>
+              <p className="text-xs leading-relaxed text-slate-500">
+                {feature.description}
+              </p>
+            </div>
+          ))}
         </div>
       </Section>
 
