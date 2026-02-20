@@ -13,7 +13,7 @@ const FEATURES = [
         <line x1="9" y1="9" x2="9" y2="21" />
       </svg>
     ),
-    color: '#38bdf8',
+    color: '#818cf8',
   },
   {
     title: 'Smart column sections',
@@ -23,7 +23,7 @@ const FEATURES = [
         <rect x="14" y="3" width="7" height="18" rx="1.5" />
       </svg>
     ),
-    color: '#818cf8',
+    color: '#38bdf8',
   },
   {
     title: 'Fixed reference columns',
@@ -149,6 +149,8 @@ const FORMAT_CONFIGS = {
     inputDescription: 'Raw spreadsheet data — columns overflow, no structure.',
     beforeImage: '/before_csv.webp',
     beforeAlt: 'CSV input preview',
+    sourceLink: '/CSV/enterprise-invoices-demo.csv',
+    sourceLinkLabel: 'Download source CSV ↗',
     tabs: CSV_TABS,
     outputLabel: 'STRUCTURED PDF',
     statLine: '16 columns. Automatically split into 4 readable sections.',
@@ -161,6 +163,8 @@ const FORMAT_CONFIGS = {
     inputDescription: 'Excel exported to PDF — unreadable column overflow.',
     beforeImage: '/Excel/xlxs.webp',
     beforeAlt: 'Excel file exported as PDF — unreadable overflow',
+    sourceLink: null,
+    sourceLinkLabel: null,
     tabs: XLSX_TABS,
     outputLabel: 'STRUCTURED PDF',
     statLine: '11 columns. Automatically split into 5 readable sections.',
@@ -185,6 +189,8 @@ export default function ProofShowcase() {
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const [hasAnimated, setHasAnimated] = useState(false);
   const cardRef = useRef(null);
+  const leftLightboxRef = useRef(null);
+  const rightLightboxRef = useRef(null);
 
   const config = FORMAT_CONFIGS[activeFormat];
   const currentTab = config.tabs[activeTab];
@@ -221,7 +227,7 @@ export default function ProofShowcase() {
     <div className="space-y-8">
       {/* Section heading */}
       <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-        From raw data to structured document.
+        This is what your client receives.
       </h2>
 
       {/* Format selector */}
@@ -285,6 +291,7 @@ export default function ProofShowcase() {
               }}
             >
               <ImageLightbox
+                ref={leftLightboxRef}
                 src={config.beforeImage}
                 alt={config.beforeAlt}
                 className="mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
@@ -299,6 +306,15 @@ export default function ProofShowcase() {
             <p className="mt-2 text-xs text-white/60">
               {config.inputDescription}
             </p>
+            {config.sourceLink ? (
+              <button
+                type="button"
+                onClick={() => leftLightboxRef.current?.open()}
+                className="mt-2 inline-flex items-center gap-1 text-[11px] text-white/40 transition hover:text-white/70"
+              >
+                {config.sourceLinkLabel}
+              </button>
+            ) : null}
           </div>
 
           {/* Right: Tabbed PDF Output (70%) */}
@@ -361,6 +377,7 @@ export default function ProofShowcase() {
                 }}
               >
                 <ImageLightbox
+                  ref={rightLightboxRef}
                   src={currentTab.src}
                   alt={currentTab.alt}
                   className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
@@ -377,10 +394,17 @@ export default function ProofShowcase() {
               </div>
             </div>
 
-            {/* Stat line */}
-            <p className="mt-3 text-xs text-white/60">
-              {config.statLine}
-            </p>
+            {/* Stat line + view link */}
+            <div className="mt-3 flex items-center justify-between">
+              <p className="text-xs text-white/60">{config.statLine}</p>
+              <button
+                type="button"
+                onClick={() => rightLightboxRef.current?.open()}
+                className="text-[11px] text-white/40 transition hover:text-white/70"
+              >
+                View full document ↗
+              </button>
+            </div>
           </div>
         </div>
 

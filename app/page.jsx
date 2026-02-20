@@ -213,6 +213,13 @@ export default function Page() {
             </h2>
             <p className="text-center text-base text-slate-500 sm:text-left">{LANDING_COPY.pricingPreviewSubline}</p>
           </div>
+          <p className="inline-flex items-center justify-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700 w-full">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            Saves <span className="font-semibold">30–45 min</span> of manual formatting per export.
+          </p>
           <PricingPlans
             plans={plansWithHandlers}
             variant="pricing"

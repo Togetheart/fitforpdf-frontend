@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 /**
@@ -10,8 +10,10 @@ import { createPortal } from 'react-dom';
  *
  * Optional gallery mode: pass `images` (array of {src, alt}) and `imageIndex`
  * to enable prev/next navigation with arrow keys and buttons.
+ *
+ * Exposes { open } via ref (forwardRef + useImperativeHandle).
  */
-export default function ImageLightbox({ src, alt, className, children, images, imageIndex, ...rest }) {
+const ImageLightbox = forwardRef(function ImageLightbox({ src, alt, className, children, images, imageIndex, ...rest }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [current, setCurrent] = useState(imageIndex ?? 0);
 
@@ -21,6 +23,8 @@ export default function ImageLightbox({ src, alt, className, children, images, i
     setCurrent(imageIndex ?? 0);
     setIsOpen(true);
   }, [imageIndex]);
+
+  useImperativeHandle(ref, () => ({ open }), [open]);
 
   const close = useCallback(() => setIsOpen(false), []);
 
@@ -168,4 +172,6 @@ export default function ImageLightbox({ src, alt, className, children, images, i
         : null}
     </>
   );
-}
+});
+
+export default ImageLightbox;

@@ -43,6 +43,18 @@ export function useCheckout() {
     }
   }
 
+  /** For credits_100 / credits_500 packs (pricing page Starter & Pro) */
+  async function openCheckout(pack) {
+    if (!pack) return { ok: false, error: null };
+    setIsLoading(true);
+    setError(null);
+    try {
+      return await _post('/api/checkout', { pack });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   async function openProCheckout() {
     setIsLoading(true);
     setError(null);
@@ -53,5 +65,5 @@ export function useCheckout() {
     }
   }
 
-  return { openCreditsPack, openProCheckout, isLoading, error };
+  return { openCreditsPack, openCheckout, openProCheckout, isLoading, error };
 }

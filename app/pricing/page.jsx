@@ -12,12 +12,12 @@ import { useCheckout } from '../hooks/useCheckout.mjs';
 export default function PricingPage() {
   const checkout = useCheckout();
 
-  // Inject checkout handler into the credits card
-  const plansWithHandlers = PRICING_CARDS.map((plan) =>
-    plan.id === 'credits'
-      ? { ...plan, onAction: () => checkout.openCreditsPack('credits_100') }
-      : plan,
-  );
+  // Inject checkout handlers
+  const plansWithHandlers = PRICING_CARDS.map((plan) => {
+    if (plan.id === 'starter') return { ...plan, onAction: () => checkout.openCheckout('credits_100') };
+    if (plan.id === 'pro') return { ...plan, onAction: () => checkout.openCheckout('credits_500') };
+    return plan;
+  });
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -57,7 +57,7 @@ export default function PricingPage() {
       <Section id="pricing-comparison" index={2} className="py-16 sm:py-24">
         <FeatureComparison
           title={PRICING_PAGE_COPY.comparisonTitle}
-          columns={['Free', 'Credits']}
+          columns={['Free', 'Starter', 'Pro']}
           rows={PRICING_PAGE_COPY.comparison}
         />
       </Section>

@@ -99,12 +99,19 @@ function emitRenderMetrics({
   }));
 }
 
-function buildUpstreamUrl(reqUrl, upstream) {
+function buildUpstreamUrl(reqUrl, upstream, clientLocale = null) {
   const source = new URL(reqUrl);
   const base = upstream.replace(/\/$/, '');
   const target = new URL(`${base}/render`);
   for (const [key, value] of source.searchParams.entries()) {
     target.searchParams.set(key, value);
+  }
+  if (!target.searchParams.has('locale')) {
+    if (clientLocale) {
+      target.searchParams.set('locale', clientLocale);
+    } else {
+      target.searchParams.set('locale', 'en');
+    }
   }
   target.searchParams.set('columnMap', 'force');
   return target;
@@ -154,7 +161,8 @@ export async function POST(req) {
   }
 
   const sourceFilename = req.headers.get('x-fitforpdf-source-filename') || '';
-  const targetUrl = buildUpstreamUrl(req.url, upstream);
+  const clientLocale = req.headers.get('x-locale');
+  const targetUrl = buildUpstreamUrl(req.url, upstream, clientLocale);
 
   const contentType = req.headers.get('content-type') || '';
   if (!contentType.toLowerCase().includes('multipart/form-data')) {

@@ -134,6 +134,9 @@ export default function PlanCard({
                 </div>
               ))}
             </div>
+            {plan.perExport ? (
+              <p className="mt-1.5 text-right text-xs text-slate-400">{plan.perExport}</p>
+            ) : null}
           </>
         ) : (
           <p className="text-3xl font-bold tracking-tight text-slate-900">
