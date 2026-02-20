@@ -197,9 +197,17 @@ export const PRICING_PAGE_COPY = {
   freeSafetyCtaLabel: 'Upload a file for free →',
   freeSafetyCtaHref: '/#generate',
 
-  proApiTitle: 'Team/API',
+  proApiTitle: 'Team / API',
+  proApiTagline: 'Need higher volume, API access, or team seats?',
   proApiCtaLabel: 'Contact us',
   proApiCtaHref: 'mailto:hello@fitforpdf.com',
+  proApiFeatures: [
+    'Unlimited exports',
+    'REST API access',
+    'Team seats & shared billing',
+    'White-label output',
+    'Custom SLA & priority support',
+  ],
 
   backToApp: 'Back to app',
   backToAppHref: '/',

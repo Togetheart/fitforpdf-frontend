@@ -39,8 +39,8 @@ test('privacy policy contains logs claim', () => {
 });
 
 test('privacy policy contains infrastructure and legal trust lines', () => {
-  assert.equal(privacyText().includes('what we don’t do'), true);
-  assert.equal(privacyText().includes('for legal terms, see terms of service'), true);
+  assert.equal(privacyText().includes("what we don't do"), true);
+  assert.equal(privacyText().includes('gdpr'), true);
 });
 
 test('privacy policy includes contact', () => {

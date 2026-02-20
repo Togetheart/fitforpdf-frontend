@@ -4,16 +4,14 @@ import React from 'react';
 import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
-  PRICING_CARDS,
   HOME_FAQ,
 } from './siteCopy.mjs';
 import useQuota from './hooks/useQuota.mjs';
 import useConversion from './hooks/useConversion.mjs';
-import { useCheckout } from './hooks/useCheckout.mjs';
 import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
-import PricingPlans from './components/PricingPlans';
+import PricingToggleSection from './components/PricingToggleSection';
 import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
 import Button from './components/ui/Button';
@@ -84,13 +82,6 @@ function FeatureIcon({ name }) {
 export default function Page() {
   const quota = useQuota();
   const conversion = useConversion({ quota });
-  const checkout = useCheckout();
-
-  const plansWithHandlers = PRICING_CARDS.map((plan) =>
-    plan.id === 'credits'
-      ? { ...plan, onAction: () => checkout.openCreditsPack('credits_100') }
-      : plan,
-  );
 
   function handleHeroGenerateClick(event) {
     if (!event) return;
@@ -215,30 +206,9 @@ export default function Page() {
         <ProofShowcase />
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-white">
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl sm:text-left">
-              {LANDING_COPY.pricingPreviewTitle}
-            </h2>
-            <p className="text-center text-base text-slate-500 sm:text-left">{LANDING_COPY.pricingPreviewSubline}</p>
-          </div>
-          <p className="inline-flex items-center justify-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700 w-full">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-            Saves <span className="font-semibold">30–45 min</span> of manual formatting per export.
-          </p>
-          <PricingPlans
-            plans={plansWithHandlers}
-            variant="pricing"
-            gridTestId="pricing-grid"
-            cardTestId="pricing-preview-card"
-          />
-          <p className="text-sm text-slate-500">
-            Need higher limits, API access or team plans? <a href="mailto:hello@fitforpdf.com" className="underline hover:text-accent transition-colors">Contact us</a>.
-          </p>
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-14 sm:py-20" bg="bg-[#f5f5f7]">
+        <PricingToggleSection showFreeTier />
+        <div className="flex justify-center">
           <a href="/pricing" className={CTA_SECONDARY}>
             {LANDING_COPY.pricingPreviewCta}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
