@@ -26,7 +26,7 @@ export const LANDING_COPY = {
     { key: 'columns', title: 'Smart column sections', description: 'Wide tables automatically grouped into readable column blocks.', icon: 'columns' },
     { key: 'pinned', title: 'Fixed reference columns', description: 'Key columns like ID and Name repeated in every section.', icon: 'pin' },
     { key: 'pagination', title: 'Rows X\u2013Y and Page i/n', description: 'Clear row ranges and page numbers on every page.', icon: 'pagination' },
-    { key: 'auto', title: 'No manual layout', description: 'Zero configuration \u2014 upload and get a structured PDF.', icon: 'wand' },
+    { key: 'auto', title: 'Auto-structured', description: 'Zero configuration \u2014 upload and get a structured PDF.', icon: 'wand' },
     { key: 'toc', title: 'Clickable TOC links', description: 'Jump to any section directly from the overview page.', icon: 'link' },
   ],
   clientReadyBullets: [

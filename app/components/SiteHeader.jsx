@@ -59,8 +59,8 @@ export default function SiteHeader() {
             <a className="transition hover:text-black" href="/pricing">
               Pricing
             </a>
-            <Button variant="primary" href="/#tool" className="px-4 text-xs h-9">
-              Generate PDF
+            <Button variant="primary" href="/#generate" className="px-4 text-xs h-9">
+              Try it now
             </Button>
           </nav>
 
@@ -116,11 +116,11 @@ export default function SiteHeader() {
           <div className="mt-3 pt-3 border-t border-black/5">
             <Button
               variant="primary"
-              href="/#tool"
+              href="/#generate"
               className="w-full"
               onClick={closeMenu}
             >
-              Generate PDF
+              Try it now
             </Button>
           </div>
         </nav>

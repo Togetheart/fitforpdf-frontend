@@ -479,13 +479,7 @@ export default function UploadCard({
       <div className="relative z-10 p-5">
         <form className="relative space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-1">
-          <h2
-            id="generate"
-            className="scroll-mt-24 text-center text-2xl font-semibold leading-snug sm:text-3xl"
-          >
-            {toolTitle}
-          </h2>
-          <div className="flex items-center justify-between gap-2">
+          <div id="generate" className="scroll-mt-24 flex items-center justify-between gap-2">
             <p className="text-sm text-slate-500">{toolSubcopy}</p>
             <div className="flex shrink-0 items-center gap-2">
               {showProBanner ? (
@@ -548,7 +542,7 @@ export default function UploadCard({
             type="button"
             onClick={onTrySample}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-white px-4 py-1.5 text-xs font-medium text-accent transition hover:border-accent/60 hover:bg-accent/5 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
             <span aria-hidden="true">▶</span>
@@ -756,39 +750,47 @@ export default function UploadCard({
 
         {isQuotaLocked ? (
           <>
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-full"
-              disabled
-            >
-              Generate PDF
-            </Button>
             <section
               data-testid="upload-paywall"
-              className="rounded-xl glass-subtle p-4"
+              className="rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-4"
             >
-              <p className="text-xs text-slate-600">{paywallReason || 'You have reached your exports limit for this plan.'}</p>
-              <div className="mt-3 flex flex-wrap gap-2" data-testid="quota-upgrade-inline">
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={onBuyCredits}
-                  className="min-w-0"
-                >
-                  Buy credits
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={onGoPro}
-                  className="min-w-0"
-                >
-                  Go Pro
-                </Button>
+              {/* Header */}
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-slate-900">
+                  You've used your free exports.
+                </p>
+                <p className="text-xs text-slate-500">
+                  {paywallReason || 'Pick a credit pack — one-time purchase, no subscription.'}
+                </p>
               </div>
-              <p className="mt-3 text-xs text-slate-600">
-                <a href="mailto:hello@fitforpdf.com" className="underline">Contact us for Team/API</a>
+
+              {/* Credit packs */}
+              <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
+                <button
+                  type="button"
+                  onClick={() => onBuyCreditsPack('credits_50')}
+                  className="group flex flex-col items-start gap-0.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
+                >
+                  <span className="text-xs font-medium text-slate-500">50 exports</span>
+                  <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors">€9</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onBuyCreditsPack('credits_200')}
+                  className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]"
+                >
+                  <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
+                  <span className="text-xs font-medium text-slate-500">200 exports</span>
+                  <span className="text-lg font-bold tracking-tight text-accent">€29</span>
+                </button>
+              </div>
+
+              {/* Footer */}
+              <p className="text-center text-xs text-slate-400">
+                Need more?{' '}
+                <a href="mailto:hello@fitforpdf.com" className="text-slate-500 underline underline-offset-2 hover:text-slate-700 transition-colors">
+                  Contact us for Team/API
+                </a>
               </p>
             </section>
           </>
@@ -804,6 +806,11 @@ export default function UploadCard({
             Download again
           </Button>
         ) : (
+          <>
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700 w-full justify-center">
+            <span aria-label="European Union flag">🇪🇺</span>
+            GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored
+          </p>
           <Button
             type="submit"
             variant="primary"
@@ -819,6 +826,7 @@ export default function UploadCard({
               'Generate PDF'
             )}
           </Button>
+          </>
         )}
 
         {downloadedFileName || shouldShowVerdict ? (

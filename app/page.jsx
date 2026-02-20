@@ -52,8 +52,7 @@ const FEATURE_ICONS = {
   ),
   wand: (
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 15V3m0 0-4 4m4-4 4 4" />
-      <path d="M8 7H5.5A3.5 3.5 0 0 0 2 10.5v.5A4 4 0 0 0 6 15h12a4 4 0 0 0 4-4v-.5A3.5 3.5 0 0 0 18.5 7H16" />
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
     </svg>
   ),
   link: (
@@ -127,12 +126,6 @@ export default function Page() {
             className="hero-headline-line w-full max-w-none text-lg text-slate-500 lg:whitespace-nowrap"
           >
             {LANDING_COPY.heroSubheadline}
-          </p>
-          <p
-            className="hero-headline-line inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700"
-          >
-            <span aria-label="European Union flag">🇪🇺</span>
-            {LANDING_COPY.heroTrustLine}
           </p>
           <div
             id={LANDING_COPY_KEYS.upload}
@@ -210,30 +203,6 @@ export default function Page() {
 
       <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-16 sm:py-24">
         <ProofShowcase />
-      </Section>
-
-      <Section id="client-ready" index={2} className="py-16 sm:py-20" bg="bg-gray-50">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-            {LANDING_COPY.clientReadyTitle}
-          </h2>
-        </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
-          {LANDING_COPY.clientReadyFeatures.map((feature) => (
-            <div
-              key={feature.key}
-              className="feature-card-hover flex flex-col items-start gap-3 rounded-xl p-6 glass-subtle"
-            >
-              <FeatureIcon name={feature.icon} />
-              <h3 className="text-sm font-semibold leading-tight text-slate-900">
-                {feature.title}
-              </h3>
-              <p className="text-[13px] leading-relaxed text-slate-500">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
       </Section>
 
       <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-white">
