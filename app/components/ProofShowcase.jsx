@@ -327,7 +327,7 @@ export default function ProofShowcase() {
             <div
               role="tablist"
               style={{ backgroundColor: '#3a3a3c' }}
-              className="relative mt-3 flex w-full items-center rounded-full p-1"
+              className="relative mt-3 flex w-full items-center rounded-full p-1 overflow-x-auto scrollbar-none"
             >
               {/* Sliding indicator — colored pill */}
               <div
@@ -352,7 +352,7 @@ export default function ProofShowcase() {
                   aria-selected={i === activeTab}
                   ref={el => tabRefs.current[i] = el}
                   onClick={() => setActiveTab(i)}
-                  className="relative z-10 flex-1 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors duration-200"
+                  className="relative z-10 flex-1 rounded-full px-2 py-1.5 sm:px-3.5 text-xs font-semibold transition-colors duration-200 whitespace-nowrap"
                   style={{
                     color: i === activeTab
                       ? (TAB_COLORS[i] === '#ffffff' ? '#000000' : '#ffffff')
