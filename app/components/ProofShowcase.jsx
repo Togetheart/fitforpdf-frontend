@@ -325,43 +325,48 @@ export default function ProofShowcase() {
 
             {/* Tab buttons — Apple pill style */}
             <div
-              role="tablist"
+              className="mt-3 overflow-x-auto scrollbar-none rounded-full"
               style={{ backgroundColor: '#3a3a3c' }}
-              className="relative mt-3 flex w-full items-center rounded-full p-1 overflow-x-auto scrollbar-none"
             >
-              {/* Sliding indicator — colored pill */}
               <div
-                aria-hidden="true"
-                className="pointer-events-none absolute rounded-full"
-                style={{
-                  left: indicator.left,
-                  width: indicator.width,
-                  top: '4px',
-                  bottom: '4px',
-                  backgroundColor: TAB_COLORS[activeTab] ?? TAB_COLORS[0],
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
-                  transition: 'left 300ms cubic-bezier(0.25,0.1,0.25,1), width 300ms cubic-bezier(0.25,0.1,0.25,1), background-color 200ms ease',
-                }}
-              />
-              {config.tabs.map((tab, i) => (
-                <button
-                  key={tab.id}
-                  id={`proof-tab-${tab.id}`}
-                  role="tab"
-                  type="button"
-                  aria-selected={i === activeTab}
-                  ref={el => tabRefs.current[i] = el}
-                  onClick={() => setActiveTab(i)}
-                  className="relative z-10 flex-1 rounded-full px-2 py-1.5 sm:px-3.5 text-xs font-semibold transition-colors duration-200 whitespace-nowrap"
+                role="tablist"
+                className="relative flex items-center rounded-full p-1"
+                style={{ width: 'max-content', minWidth: '100%' }}
+              >
+                {/* Sliding indicator — colored pill */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute rounded-full"
                   style={{
-                    color: i === activeTab
-                      ? (TAB_COLORS[i] === '#ffffff' ? '#000000' : '#ffffff')
-                      : 'rgba(235,235,245,0.6)',
+                    left: indicator.left,
+                    width: indicator.width,
+                    top: '4px',
+                    bottom: '4px',
+                    backgroundColor: TAB_COLORS[activeTab] ?? TAB_COLORS[0],
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+                    transition: 'left 300ms cubic-bezier(0.25,0.1,0.25,1), width 300ms cubic-bezier(0.25,0.1,0.25,1), background-color 200ms ease',
                   }}
-                >
-                  {tab.label}
-                </button>
-              ))}
+                />
+                {config.tabs.map((tab, i) => (
+                  <button
+                    key={tab.id}
+                    id={`proof-tab-${tab.id}`}
+                    role="tab"
+                    type="button"
+                    aria-selected={i === activeTab}
+                    ref={el => tabRefs.current[i] = el}
+                    onClick={() => setActiveTab(i)}
+                    className="relative z-10 shrink-0 rounded-full px-2 py-1.5 sm:px-3.5 text-xs font-semibold transition-colors duration-200 whitespace-nowrap"
+                    style={{
+                      color: i === activeTab
+                        ? (TAB_COLORS[i] === '#ffffff' ? '#000000' : '#ffffff')
+                        : 'rgba(235,235,245,0.6)',
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Active tab image */}
