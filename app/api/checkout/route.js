@@ -47,7 +47,12 @@ export async function POST(req) {
   try {
     checkoutResponse = await fetch(backendCheckoutUrl, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        ...(process.env.NEATEXPORT_API_KEY
+          ? { 'X-NEATEXPORT-KEY': process.env.NEATEXPORT_API_KEY }
+          : {}),
+      },
       body: JSON.stringify({
         pack,
         success_url: SUCCESS_URL,
