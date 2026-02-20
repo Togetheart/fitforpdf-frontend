@@ -141,6 +141,71 @@ test('POST /api/render forces columnMap=force and derives PDF filename from X-Fi
   restoreEnv();
 });
 
+test('POST /api/render appends locale=en when not provided', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-cleansheet-score': '88',
+      'content-disposition': 'inline; filename="server.pdf"',
+    },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody('customers-100.csv'),
+  });
+  const res = await POST(req);
+
+  assert.equal(res.status, 200);
+
+  const { calls } = fetchMock;
+  assert.equal(calls.length, 1);
+  const called = new URL(calls[0].url);
+  assert.equal(called.searchParams.get('locale'), 'en');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render forwards x-locale header as locale query param', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-cleansheet-score': '88',
+      'content-disposition': 'inline; filename="server.pdf"',
+    },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody('customers-100.csv'),
+    headers: {
+      'x-locale': 'fr',
+    },
+  });
+  const res = await POST(req);
+
+  assert.equal(res.status, 200);
+
+  const { calls } = fetchMock;
+  assert.equal(calls.length, 1);
+  const called = new URL(calls[0].url);
+  assert.equal(called.searchParams.get('locale'), 'fr');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
 test('POST /api/render exposes render and score timing headers', async () => {
   const restoreEnv = setupEnv({
     CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',

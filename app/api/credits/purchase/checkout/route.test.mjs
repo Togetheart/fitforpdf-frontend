@@ -40,7 +40,7 @@ test('POST /api/credits/purchase/checkout forwards to backend checkout and retur
     assert.equal(options.method, 'POST');
     assert.equal(options.headers['content-type'], 'application/json');
     const parsed = JSON.parse(options.body);
-    assert.equal(parsed.pack, 'credits_50');
+    assert.equal(parsed.pack, 'credits_100');
     return new Response(JSON.stringify({ url: 'https://checkout.test/credits-50' }), {
       status: 200,
       headers: { 'content-type': 'application/json' },
@@ -50,7 +50,7 @@ test('POST /api/credits/purchase/checkout forwards to backend checkout and retur
   const req = new Request('https://www.fitforpdf.com/api/credits/purchase/checkout', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ pack: 'credits_50' }),
+    body: JSON.stringify({ pack: 'credits_100' }),
   });
   const res = await POST(req);
   const json = await res.json();
