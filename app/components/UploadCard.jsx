@@ -528,6 +528,35 @@ export default function UploadCard({
           </div>
         </div>
 
+        {effectiveShowBuyCreditsPanel && !isOptionsExpanded ? (
+          <section className="rounded-xl glass-subtle p-4" data-testid="credits-purchase-panel">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-semibold text-slate-900">Buy credits</p>
+              <button
+                type="button"
+                onClick={handleBuyCreditsPanelClose}
+                className="text-xs font-semibold text-slate-600 underline"
+              >
+                Close
+              </button>
+            </div>
+            {CREDIT_PACKS.map((pack) => (
+              <button
+                type="button"
+                key={pack.pack}
+                onClick={() => onBuyCreditsPack(pack.pack)}
+                className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
+              >
+                <span>{pack.exportsLabel}</span>
+                <span>{pack.price}</span>
+              </button>
+            ))}
+            {purchaseMessage ? (
+              <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
+            ) : null}
+          </section>
+        ) : null}
+
         <UploadDropzone
           inputId="fitforpdf-file-input"
           file={file}
@@ -718,35 +747,6 @@ export default function UploadCard({
             </div>
           ) : null}
         </div>
-
-        {effectiveShowBuyCreditsPanel && !isOptionsExpanded ? (
-          <section className="rounded-xl glass-subtle p-4" data-testid="credits-purchase-panel">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-semibold text-slate-900">Buy credits</p>
-              <button
-                type="button"
-                onClick={handleBuyCreditsPanelClose}
-                className="text-xs font-semibold text-slate-600 underline"
-              >
-                Close
-              </button>
-            </div>
-            {CREDIT_PACKS.map((pack) => (
-              <button
-                type="button"
-                key={pack.pack}
-                onClick={() => onBuyCreditsPack(pack.pack)}
-                className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
-              >
-                <span>{pack.exportsLabel}</span>
-                <span>{pack.price}</span>
-              </button>
-            ))}
-            {purchaseMessage ? (
-              <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
-            ) : null}
-          </section>
-        ) : null}
 
         {isQuotaLocked ? (
           <>
