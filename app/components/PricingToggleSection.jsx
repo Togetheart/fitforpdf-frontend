@@ -190,7 +190,7 @@ export function PaygCard({ pack, onBuy }) {
 }
 
 /* ── Pro subscription card ─────────────────────────────── */
-export function ProSubscriptionCard({ billing }) {
+export function ProSubscriptionCard({ billing, onSubscribe }) {
   const isYearly = billing === 'yearly';
   const price = isYearly ? PRICING_PAGE_COPY.proYearlyPrice : PRICING_PAGE_COPY.proMonthlyPrice;
   const period = isYearly ? PRICING_PAGE_COPY.proYearlyPeriod : PRICING_PAGE_COPY.proMonthlyPeriod;
@@ -206,13 +206,6 @@ export function ProSubscriptionCard({ billing }) {
         className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-[0.035]"
         style={{ background: 'radial-gradient(circle at 50% 0%, var(--color-accent) 0%, transparent 70%)' }}
       />
-
-      {/* Coming soon badge */}
-      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-        <span className="inline-flex items-center whitespace-nowrap rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm">
-          Coming soon
-        </span>
-      </div>
 
       {/* Title */}
       <div>
@@ -254,18 +247,11 @@ export function ProSubscriptionCard({ billing }) {
       <div className="mt-8">
         <button
           type="button"
-          disabled
-          className="w-full rounded-full py-2.5 text-sm font-semibold bg-accent/15 text-accent/55 cursor-not-allowed tracking-tight"
+          onClick={onSubscribe}
+          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,113,227,0.3)]"
         >
           {PRICING_PAGE_COPY.proCtaLabel}
         </button>
-        <p className="mt-3 text-center text-xs text-slate-400">
-          Interested?{' '}
-          <a href="mailto:hello@fitforpdf.com" className="underline decoration-dotted hover:text-accent transition-colors">
-            Contact us
-          </a>{' '}
-          to be notified first.
-        </p>
       </div>
     </Card>
   );
@@ -362,9 +348,9 @@ export default function PricingToggleSection({ showFreeTier = true }) {
   ];
 
   function handlePackBuy(pack) {
-    if (pack.id === 'volume') {
-      checkout.openCheckout('credits_100');
-    }
+    if (pack.id === 'single') checkout.openCheckout('credits_1');
+    else if (pack.id === 'payg-starter') checkout.openCheckout('credits_10');
+    else if (pack.id === 'volume') checkout.openCheckout('credits_100');
   }
 
   return (
@@ -435,7 +421,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
 
           {/* Pro + API cards */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch max-w-3xl mx-auto">
-            <ProSubscriptionCard billing={billing} />
+            <ProSubscriptionCard billing={billing} onSubscribe={() => checkout.openProCheckout(billing)} />
             <ProApiCard />
           </div>
 

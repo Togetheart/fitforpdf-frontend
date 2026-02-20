@@ -55,11 +55,11 @@ export function useCheckout() {
     }
   }
 
-  async function openProCheckout() {
+  async function openProCheckout(billing = 'monthly') {
     setIsLoading(true);
     setError(null);
     try {
-      return await _post('/api/plan/pro/checkout', {});
+      return await _post('/api/plan/pro/checkout', { billing });
     } finally {
       setIsLoading(false);
     }

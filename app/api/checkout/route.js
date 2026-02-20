@@ -1,7 +1,7 @@
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const ALLOWED_PACKS = new Set(['credits_100', 'credits_500']);
+const ALLOWED_PACKS = new Set(['credits_1', 'credits_10', 'credits_100', 'credits_500']);
 const SUCCESS_URL = 'https://www.fitforpdf.com/success';
 const CANCEL_URL = 'https://www.fitforpdf.com/';
 
