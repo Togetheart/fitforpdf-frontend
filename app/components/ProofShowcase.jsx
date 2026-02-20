@@ -274,7 +274,7 @@ export default function ProofShowcase() {
       <div
         ref={cardRef}
         data-testid="home-preview-card"
-        className="home-preview-float mx-auto max-w-7xl rounded-2xl p-4 md:p-8"
+        className="home-preview-float w-full rounded-2xl p-4 md:p-8"
         style={{ backgroundColor: '#1c1c1e' }}
       >
         <div className="grid gap-6 sm:grid-cols-[1fr_4fr]">
