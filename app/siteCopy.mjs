@@ -81,7 +81,7 @@ export const LANDING_COPY = {
   footerMakerName: 'Sébastien',
   footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
 
-  socialProofCount: '1,100+ professionals use FitForPDF every week',
+  socialProofCount: '1,187 professionals use FitForPDF every week',
 };
 
 export const LANDING_COPY_KEYS = {
