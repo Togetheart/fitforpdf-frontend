@@ -200,7 +200,7 @@ export default function Page() {
             );
           })()}
         </p>
-        <div className="overflow-hidden">
+        <div className="w-full overflow-hidden">
           <div className="ticker-track">
             {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
               <span key={i} className="mx-8 whitespace-nowrap text-sm font-semibold tracking-wide text-slate-400 sm:mx-12 sm:text-base">

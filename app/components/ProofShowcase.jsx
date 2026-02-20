@@ -224,7 +224,7 @@ export default function ProofShowcase() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="w-full overflow-hidden space-y-8">
       {/* Section heading */}
       <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
         This is what your client receives.
@@ -279,7 +279,7 @@ export default function ProofShowcase() {
       >
         <div className="grid gap-6 sm:grid-cols-[1fr_4fr]">
           {/* Left: Input (20%) */}
-          <div>
+          <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
               {config.inputLabel}
             </p>
@@ -318,14 +318,14 @@ export default function ProofShowcase() {
           </div>
 
           {/* Right: Tabbed PDF Output (70%) */}
-          <div>
+          <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
               {config.outputLabel}
             </p>
 
             {/* Tab buttons — Apple pill style */}
             <div
-              className="mt-3 overflow-x-auto scrollbar-none rounded-full"
+              className="mt-3 w-full overflow-x-auto scrollbar-none rounded-full"
               style={{ backgroundColor: '#3a3a3c' }}
             >
               <div
