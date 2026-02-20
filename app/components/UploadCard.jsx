@@ -28,8 +28,8 @@ const PROGRESS_STEP_STATES = {
 };
 
 const CREDIT_PACKS = [
-  { pack: 'credits_50', exportsLabel: '50 exports', price: '€9' },
-  { pack: 'credits_200', exportsLabel: '200 exports', price: '€29' },
+  { pack: 'credits_100', exportsLabel: '100 exports', price: '$19' },
+  { pack: 'credits_500', exportsLabel: '500 exports', price: '$69', badge: 'Best value' },
 ];
 
 function getProgressStepLabel(progress, stepIndex) {
@@ -782,20 +782,20 @@ export default function UploadCard({
               <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
                 <button
                   type="button"
-                  onClick={() => onBuyCreditsPack('credits_50')}
+                  onClick={() => onBuyCreditsPack('credits_100')}
                   className="group flex flex-col items-start gap-0.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
                 >
-                  <span className="text-xs font-medium text-slate-500">50 exports</span>
-                  <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors">€9</span>
+                  <span className="text-xs font-medium text-slate-500">100 exports</span>
+                  <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors">$19</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => onBuyCreditsPack('credits_200')}
+                  onClick={() => onBuyCreditsPack('credits_500')}
                   className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]"
                 >
                   <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
-                  <span className="text-xs font-medium text-slate-500">200 exports</span>
-                  <span className="text-lg font-bold tracking-tight text-accent">€29</span>
+                  <span className="text-xs font-medium text-slate-500">500 exports</span>
+                  <span className="text-lg font-bold tracking-tight text-accent">$69</span>
                 </button>
               </div>
 
