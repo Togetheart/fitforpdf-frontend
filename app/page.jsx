@@ -185,10 +185,20 @@ export default function Page() {
       {/* Social proof — Arcade style */}
       <div className="border-y border-slate-100 bg-white py-8" data-testid="social-proof-ticker">
         <p className="mb-5 text-center text-sm text-slate-500">
-          <span className="inline-flex items-center rounded-md border border-slate-200 px-2 py-0.5 text-sm font-semibold text-slate-700">
-            1,000+
-          </span>
-          {' '}professionals use FitForPDF every week
+          {(() => {
+            const full = LANDING_COPY.socialProofCount || '';
+            const spaceIdx = full.indexOf(' ');
+            const count = spaceIdx > -1 ? full.slice(0, spaceIdx) : full;
+            const rest = spaceIdx > -1 ? full.slice(spaceIdx) : '';
+            return (
+              <>
+                <span className="inline-flex items-center rounded-md border border-slate-200 px-2 py-0.5 text-sm font-semibold text-slate-700">
+                  {count}
+                </span>
+                {rest}
+              </>
+            );
+          })()}
         </p>
         <div className="overflow-hidden">
           <div className="ticker-track">
