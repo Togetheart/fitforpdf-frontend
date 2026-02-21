@@ -24,12 +24,18 @@
  * These vars are consumed by Tailwind config and glass system.
  */
 :root {
-  --color-accent: #0071E3;
-  --color-accent-hover: #005BBB;
-  --color-text: #0A0A0A;
-  --color-muted: rgba(0, 0, 0, 0.55);
+  --color-accent: #DC2626;
+  --color-accent-hover: #B91C1C;
+  --color-text: #1A1A1A;
+  --color-muted: #6B6B6B;
   --color-border: rgba(0, 0, 0, 0.10);
   --color-bg: #FFFFFF;
+  --color-bg-hero: #FAF8F5;
+  --color-cta-bg: #1A1A1A;
+  --color-cta-text: #FFFFFF;
+  --color-cta-hover: #374151;
+  --color-badge-free: #F3F4F6;
+  --color-badge-hot: #FEF3C7;
   --radius-base: 12px;
   --radius-input: 10px;
   --radius-pill: 999px;
@@ -106,8 +112,7 @@
     overflow: hidden;
     border-radius: inherit;
     pointer-events: none;
-    background:
-      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 58%, rgba(244, 246, 251, 1) 72%, rgba(241, 244, 248, 1) 100%);
+    background: var(--color-bg-hero);
   }
 
   .hero-backdrop {
@@ -168,10 +173,10 @@
     transform: translateZ(0);
     background-image: linear-gradient(
       90deg,
-      rgba(71, 85, 105, 0.95) 0%,
-      rgba(30, 41, 59, 0.95) 28%,
-      rgba(59, 130, 246, 0.95) 55%,
-      rgba(71, 85, 105, 0.95) 100%
+      rgba(26, 26, 26, 0.95) 0%,
+      rgba(55, 65, 81, 0.95) 28%,
+      rgba(26, 26, 26, 0.95) 55%,
+      rgba(55, 65, 81, 0.95) 100%
     );
     background-size: 220% 100%;
     background-position: 0% 50%;

@@ -5,9 +5,11 @@ const BASE_CLASS =
 
 const VARIANTS = {
   primary:
+    'h-11 bg-cta text-cta-text shadow-sm hover:bg-cta-hover active:scale-[0.99]',
+  accent:
     'h-11 bg-accent text-white shadow-sm hover:bg-accent-hover active:scale-[0.99]',
   secondary:
-    'h-11 border border-slate-300 bg-white text-slate-900 hover:bg-slate-50',
+    'h-11 border border-slate-300 bg-white text-[#1A1A1A] hover:bg-slate-50',
   outline:
     'h-11 border border-accent text-accent bg-white hover:bg-accent/5 active:scale-[0.99]',
 };

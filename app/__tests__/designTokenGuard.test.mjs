@@ -12,7 +12,7 @@ const PAGES = [
 ];
 
 // Hex colors that should never appear — brand accent must use Tailwind tokens
-const BANNED_HEX = /#(?:D92D2A|d92d2a|B92524|b92524|B62622|b62622|0071E3|0071e3|005BBB|005bbb)\b/g;
+const BANNED_HEX = /#(?:D92D2A|d92d2a|B92524|b92524|B62622|b62622|DC2626|dc2626|B91C1C|b91c1c|0071E3|0071e3|005BBB|005bbb)\b/g;
 
 // Tailwind !important overrides are a code smell — tokens should be used instead
 const BANNED_IMPORTANT = /!(bg|text|border)-/g;
