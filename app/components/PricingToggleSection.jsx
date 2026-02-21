@@ -72,21 +72,13 @@ export function PaygCard({ pack, onBuy }) {
           ? 'md:scale-[1.04] bg-white p-7'
           : 'hover:-translate-y-1 p-6',
       )}
-      style={isFeatured ? { boxShadow: 'none', border: '2px solid rgba(220,38,38,0.4)' } : { boxShadow: 'none' }}
+      style={isFeatured ? { boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.10)' } : { boxShadow: 'none' }}
     >
-      {/* Featured glow backdrop */}
-      {isFeatured ? (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-[0.04]"
-          style={{ background: 'radial-gradient(circle at 50% 0%, var(--color-accent) 0%, transparent 70%)' }}
-        />
-      ) : null}
 
       {/* Badge — centered above */}
       {pack.badge ? (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm whitespace-nowrap">
+          <span className="inline-flex items-center rounded-full bg-[#1A1A1A] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm whitespace-nowrap">
             {pack.badge}
           </span>
         </div>
@@ -134,7 +126,7 @@ export function PaygCard({ pack, onBuy }) {
       </p>
 
       {/* Divider */}
-      <div className={cn('my-5 h-px', isFeatured ? 'bg-accent/10' : 'bg-slate-200/70')} />
+      <div className="my-5 h-px bg-slate-200/70" />
 
       {/* Features */}
       <ul className="flex-1 space-y-2 text-sm">
@@ -142,10 +134,10 @@ export function PaygCard({ pack, onBuy }) {
           <li key={point} className="flex items-center gap-2.5">
             <span className={cn(
               'flex h-4 w-4 shrink-0 items-center justify-center rounded-full',
-              isFeatured ? 'bg-accent/10' : 'bg-[#F3F4F6]',
+              'bg-[#F3F4F6]',
             )}>
               <Check
-                className={cn('h-2.5 w-2.5', isFeatured ? 'text-accent' : 'text-[#1A1A1A]')}
+                className="h-2.5 w-2.5 text-[#1A1A1A]"
                 strokeWidth={3}
               />
             </span>
@@ -200,14 +192,8 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
     <Card
       as="article"
       className="relative flex w-full flex-col overflow-visible p-8 bg-white"
-      style={{ boxShadow: 'none', border: '2px solid rgba(220,38,38,0.4)' }}
+      style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.10)' }}
     >
-      {/* Subtle glow */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-[0.035]"
-        style={{ background: 'radial-gradient(circle at 50% 0%, var(--color-accent) 0%, transparent 70%)' }}
-      />
 
       {/* Title */}
       <div>
@@ -231,14 +217,14 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
       </div>
 
       {/* Divider */}
-      <div className="my-6 h-px bg-accent/10" />
+      <div className="my-6 h-px bg-slate-200/70" />
 
       {/* Features */}
       <ul className="flex-1 space-y-2.5 text-sm">
         {PRICING_PAGE_COPY.proFeatures.map((feat) => (
           <li key={feat} className="flex items-center gap-2.5">
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent/10">
-              <Check className="h-2.5 w-2.5 text-accent" strokeWidth={3} />
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#F3F4F6]">
+              <Check className="h-2.5 w-2.5 text-[#1A1A1A]" strokeWidth={3} />
             </span>
             <span className="text-slate-700 font-medium">{feat}</span>
           </li>
