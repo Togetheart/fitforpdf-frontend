@@ -7,9 +7,9 @@ module.exports = {
     extend: {
       colors: {
         accent: {
-          DEFAULT: '#DC2626',
-          hover: '#B91C1C',
-          light: 'rgba(220, 38, 38, 0.10)',
+          DEFAULT: '#1A1A1A',
+          hover: '#374151',
+          light: 'rgba(26, 26, 26, 0.10)',
         },
         cta: {
           DEFAULT: '#1A1A1A',

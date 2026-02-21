@@ -15,15 +15,6 @@ export default function PricingPage() {
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-hero pt-20 pb-6 sm:pt-28 sm:pb-8">
         {/* Subtle warm top glow */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 70% 50% at 50% -10%, rgba(220,38,38,0.05) 0%, transparent 70%),' +
-              'radial-gradient(ellipse 40% 30% at 80% 60%, rgba(220,38,38,0.02) 0%, transparent 60%)',
-          }}
-        />
         <div className="relative mx-auto flex max-w-[960px] flex-col items-center gap-4 px-4 text-center sm:px-6">
           {/* Page label */}
           <p className="text-2xl font-semibold tracking-tight text-[#1A1A1A]">Pricing</p>
