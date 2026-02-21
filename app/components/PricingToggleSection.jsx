@@ -170,7 +170,7 @@ export function PaygCard({ pack, onBuy }) {
             className={cn(
               'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
               isFeatured
-                ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(220,38,38,0.3)]'
+                ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]'
                 : 'border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50',
             )}
           >
@@ -236,7 +236,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
         <button
           type="button"
           onClick={onSubscribe}
-          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(220,38,38,0.3)]"
+          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
         >
           {PRICING_PAGE_COPY.proCtaLabel}
         </button>
