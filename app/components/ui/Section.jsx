@@ -17,7 +17,7 @@ export default function Section({
   bg,
   maxWidth = 'max-w-[960px]',
 }) {
-  const resolvedBg = bg ?? (index % 2 === 0 ? 'bg-white' : 'bg-gray-50');
+  const resolvedBg = bg ?? 'bg-white';
   const testIdValue = testId ?? `section-${id}`;
   const innerRef = useRef(null);
 

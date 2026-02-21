@@ -18,7 +18,7 @@ import Button from './components/ui/Button';
 import ProofShowcase from './components/ProofShowcase';
 import AnimatedShieldIcon from './components/AnimatedShieldIcon';
 
-const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-accent/30 bg-white text-accent hover:border-accent/60 hover:bg-accent/5';
+const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#1A1A1A]/20 bg-white text-[#1A1A1A] hover:border-[#1A1A1A]/40 hover:bg-[#1A1A1A]/5';
 
 const FEATURE_ICONS = {
   overview: (
@@ -114,7 +114,7 @@ export default function Page() {
       >
         <div className="space-y-8">
           <p
-            className="hero-headline-line w-full max-w-none text-lg text-slate-500 lg:whitespace-nowrap"
+            className="hero-headline-line w-full max-w-none text-lg text-slate-900 lg:whitespace-nowrap"
           >
             {LANDING_COPY.heroSubheadline}
           </p>
@@ -206,7 +206,7 @@ export default function Page() {
         <ProofShowcase />
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-14 sm:py-20" bg="bg-[#f5f5f7]">
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-14 sm:py-20" bg="bg-hero">
         <PricingToggleSection showFreeTier />
         <div className="flex justify-center">
           <a href="/pricing" className={CTA_SECONDARY}>
@@ -221,7 +221,7 @@ export default function Page() {
       <Section
         id={LANDING_COPY_KEYS.privacyStrip}
         index={4}
-        bg="bg-slate-50"
+        bg="bg-hero"
         className="py-16 sm:py-24"
         testId="privacy-section"
         maxWidth="max-w-3xl"
@@ -241,7 +241,7 @@ export default function Page() {
           </div>
           <a
             href="/privacy"
-            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-accent/30 bg-white text-accent hover:border-accent/60 hover:bg-accent/5"
+            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#1A1A1A]/20 bg-white text-[#1A1A1A] hover:border-[#1A1A1A]/40 hover:bg-[#1A1A1A]/5"
           >
             {LANDING_COPY.privacyStripCta}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -275,7 +275,7 @@ export default function Page() {
       <Section
         id="final-cta"
         index={6}
-        bg="bg-gray-50"
+        bg="bg-hero"
         className="py-20 sm:py-28"
         testId="final-cta-section"
       >

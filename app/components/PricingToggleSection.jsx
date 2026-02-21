@@ -46,7 +46,7 @@ export function PillToggle({ options, value, onChange, size = 'md' }) {
             {opt.sub ? (
               <span className={cn(
                 'text-[10px] font-medium leading-tight mt-0.5',
-                isActive ? 'text-emerald-400' : 'text-emerald-500',
+                isActive ? 'text-amber-400' : 'text-amber-500',
               )}>
                 {opt.sub}
               </span>
@@ -69,9 +69,10 @@ export function PaygCard({ pack, onBuy }) {
       className={cn(
         'relative flex flex-col overflow-visible transition-all duration-200',
         isFeatured
-          ? 'md:scale-[1.04] border-2 border-accent/40 shadow-[0_8px_40px_rgba(0,113,227,0.14)] bg-white p-7'
-          : 'hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(2,6,23,0.09)] p-6',
+          ? 'md:scale-[1.04] bg-white p-7'
+          : 'hover:-translate-y-1 p-6',
       )}
+      style={isFeatured ? { boxShadow: 'none', border: '2px solid rgba(220,38,38,0.4)' } : { boxShadow: 'none' }}
     >
       {/* Featured glow backdrop */}
       {isFeatured ? (
@@ -116,7 +117,7 @@ export function PaygCard({ pack, onBuy }) {
           <span className="text-sm font-medium text-slate-400">{pack.exportsLabel}</span>
         </div>
         {pack.perExport ? (
-          <p className="mt-1.5 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-600">
+          <p className="mt-1.5 inline-block rounded-full bg-[#FEF3C7] px-2 py-0.5 text-xs font-semibold text-amber-700">
             {pack.perExport}
           </p>
         ) : (
@@ -141,10 +142,10 @@ export function PaygCard({ pack, onBuy }) {
           <li key={point} className="flex items-center gap-2.5">
             <span className={cn(
               'flex h-4 w-4 shrink-0 items-center justify-center rounded-full',
-              isFeatured ? 'bg-accent/10' : 'bg-emerald-50',
+              isFeatured ? 'bg-accent/10' : 'bg-[#F3F4F6]',
             )}>
               <Check
-                className={cn('h-2.5 w-2.5', isFeatured ? 'text-accent' : 'text-emerald-500')}
+                className={cn('h-2.5 w-2.5', isFeatured ? 'text-accent' : 'text-[#1A1A1A]')}
                 strokeWidth={3}
               />
             </span>
@@ -177,7 +178,7 @@ export function PaygCard({ pack, onBuy }) {
             className={cn(
               'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
               isFeatured
-                ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,113,227,0.3)]'
+                ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(220,38,38,0.3)]'
                 : 'border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50',
             )}
           >
@@ -198,7 +199,8 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
   return (
     <Card
       as="article"
-      className="relative flex w-full flex-col overflow-visible p-8 border-2 border-accent/35 shadow-[0_8px_40px_rgba(0,113,227,0.12)] bg-white"
+      className="relative flex w-full flex-col overflow-visible p-8 bg-white"
+      style={{ boxShadow: 'none', border: '2px solid rgba(220,38,38,0.4)' }}
     >
       {/* Subtle glow */}
       <div
@@ -222,7 +224,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
         <span className="text-4xl font-bold tracking-tight leading-none text-slate-900 tabular-nums">{price}</span>
         <span className="text-base font-medium text-slate-400">{period}</span>
         {isYearly ? (
-          <span className="ml-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+          <span className="ml-1 rounded-full border border-amber-200 bg-[#FEF3C7] px-2.5 py-0.5 text-xs font-semibold text-amber-700">
             {PRICING_PAGE_COPY.proYearlySaving}
           </span>
         ) : null}
@@ -248,7 +250,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
         <button
           type="button"
           onClick={onSubscribe}
-          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,113,227,0.3)]"
+          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(220,38,38,0.3)]"
         >
           {PRICING_PAGE_COPY.proCtaLabel}
         </button>
@@ -289,8 +291,8 @@ export function ProApiCard() {
       <ul className="flex-1 space-y-2.5 text-sm">
         {PRICING_PAGE_COPY.proApiFeatures.map((feat) => (
           <li key={feat} className="flex items-center gap-2.5">
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-50">
-              <Check className="h-2.5 w-2.5 text-emerald-500" strokeWidth={3} />
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#F3F4F6]">
+              <Check className="h-2.5 w-2.5 text-[#1A1A1A]" strokeWidth={3} />
             </span>
             <span className="text-slate-600">{feat}</span>
           </li>
@@ -358,7 +360,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
       {/* Main toggle + social proof pill */}
       <div className="flex flex-col items-center gap-3">
         <PillToggle options={modeOptions} value={mode} onChange={setMode} />
-        <p className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/60 px-4 py-1.5 text-xs font-medium text-emerald-700">
+        <p className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />

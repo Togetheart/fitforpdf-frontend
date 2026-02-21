@@ -1,11 +1,17 @@
 export const UI_TOKENS = Object.freeze({
   colors: {
-    text: '#0A0A0A',
-    muted: 'rgba(0, 0, 0, 0.55)',
+    text: '#1A1A1A',
+    muted: '#6B6B6B',
     border: 'rgba(0, 0, 0, 0.10)',
     bg: '#FFFFFF',
-    accent: '#0071E3',
-    accentHover: '#005BBB',
+    bgHero: '#FAF8F5',
+    accent: '#DC2626',
+    accentHover: '#B91C1C',
+    ctaBg: '#1A1A1A',
+    ctaText: '#FFFFFF',
+    ctaHover: '#374151',
+    badgeFree: '#F3F4F6',
+    badgeHot: '#FEF3C7',
   },
   spacing: {
     x4: '4px',
