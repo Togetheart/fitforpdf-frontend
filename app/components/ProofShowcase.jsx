@@ -289,18 +289,20 @@ export default function ProofShowcase() {
                 transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1), opacity 600ms ease',
               }}
             >
-              <ImageLightbox
-                ref={leftLightboxRef}
-                src={config.beforeImage}
-                alt={config.beforeAlt}
-                className="mt-3 block w-full overflow-hidden rounded-lg border border-black/10"
-              >
-                <img
+              <div className="mt-3 overflow-hidden rounded-lg border border-black/10">
+                <ImageLightbox
+                  ref={leftLightboxRef}
                   src={config.beforeImage}
                   alt={config.beforeAlt}
-                  className="h-auto w-full rounded-lg object-cover"
-                />
-              </ImageLightbox>
+                  className="block w-full"
+                >
+                  <img
+                    src={config.beforeImage}
+                    alt={config.beforeAlt}
+                    className="h-auto w-full rounded-lg object-cover"
+                  />
+                </ImageLightbox>
+              </div>
             </div>
             <p className="mt-2 text-xs text-muted">
               {config.inputDescription}
@@ -380,21 +382,23 @@ export default function ProofShowcase() {
                   transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1) 100ms, opacity 600ms ease 100ms',
                 }}
               >
-                <ImageLightbox
-                  ref={rightLightboxRef}
-                  src={currentTab.src}
-                  alt={currentTab.alt}
-                  className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-black/10"
-                  data-testid="proof-pdf-image"
-                  images={config.tabs.map((t) => ({ src: t.src, alt: t.alt, label: t.label }))}
-                  imageIndex={activeTab}
-                >
-                  <img
+                <div className="proof-tab-image mt-3 overflow-hidden rounded-lg border border-black/10">
+                  <ImageLightbox
+                    ref={rightLightboxRef}
                     src={currentTab.src}
                     alt={currentTab.alt}
-                    className="h-auto w-full rounded-lg object-cover"
-                  />
-                </ImageLightbox>
+                    className="block w-full"
+                    data-testid="proof-pdf-image"
+                    images={config.tabs.map((t) => ({ src: t.src, alt: t.alt, label: t.label }))}
+                    imageIndex={activeTab}
+                  >
+                    <img
+                      src={currentTab.src}
+                      alt={currentTab.alt}
+                      className="h-auto w-full rounded-lg object-cover"
+                    />
+                  </ImageLightbox>
+                </div>
               </div>
             </div>
 
