@@ -74,7 +74,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, alt, className, c
         {children || (
           <img src={src} alt={alt} className="h-auto w-full rounded-lg object-cover" />
         )}
-        <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg bg-black/0 transition-colors duration-200 group-hover:bg-black/5">
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg bg-transparent transition-colors duration-200 group-hover:bg-hero/50">
           <span className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-700 opacity-0 shadow-sm backdrop-blur transition-opacity duration-200 group-hover:opacity-100">
             Click to enlarge
           </span>
