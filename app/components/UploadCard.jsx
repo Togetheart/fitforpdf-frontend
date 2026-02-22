@@ -82,7 +82,7 @@ function getProgressPercent(progress) {
 const EXPORT_BADGE_STYLES = {
   neutral: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
   warning: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
-  warningStrong: 'border-amber-300 bg-amber-600 text-white',
+  warningStrong: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
   danger: 'border-red-300 bg-red-600 text-white',
 };
 
