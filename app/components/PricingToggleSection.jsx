@@ -304,7 +304,7 @@ export function ProApiCard() {
 /* ── Free tier safety net ──────────────────────────────── */
 export function FreeTierCTA() {
   return (
-    <div className="rounded-xl border border-dashed border-slate-200 bg-white/50 px-6 py-5 text-center">
+    <div className="rounded-xl border border-dashed border-black/10 bg-white/50 px-6 py-5 text-center">
       <p className="text-sm font-semibold text-slate-600">
         {PRICING_PAGE_COPY.freeSafetyTitle}
       </p>

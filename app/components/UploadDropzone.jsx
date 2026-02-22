@@ -72,7 +72,7 @@ export default function UploadDropzone({
         aria-label="Upload CSV or XLSX file"
         onKeyDown={handleLabelKeyDown}
         className={`rounded-xl border-2 border-dashed p-1 transition ${
-          isDragActive ? 'border-accent bg-hero' : 'border-slate-200 bg-hero'
+          isDragActive ? 'border-accent bg-hero' : 'border-black/10 bg-hero'
         } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-accent/60'}`}
       >
         <label

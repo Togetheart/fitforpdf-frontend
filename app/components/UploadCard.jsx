@@ -609,7 +609,7 @@ export default function UploadCard({
         ) : null}
 
         <div
-          className="mt-6 rounded-xl border border-slate-200 bg-white"
+          className="mt-6 rounded-xl border border-black/10 bg-white"
           data-testid="upload-options-shell"
         >
           <button
@@ -618,7 +618,7 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-medium text-slate-500 transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-slate-200' : ''}`}
+            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-medium text-slate-500 transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
           >
             <span>Advanced options</span>
             <ChevronDown
