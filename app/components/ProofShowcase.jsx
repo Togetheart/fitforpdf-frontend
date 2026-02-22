@@ -174,7 +174,7 @@ const FORMAT_CONFIGS = {
 const FORMATS = ['xlsx', 'csv'];
 
 const TAB_COLORS = [
-  '#ffffff', // white      — Overview
+  '#1A1A1A', // dark       — Overview
   '#4f46e5', // indigo-600 — Section A
   '#0ea5e9', // sky-500    — Section B
   '#22c55e', // green-500  — Section C
@@ -274,13 +274,12 @@ export default function ProofShowcase() {
       <div
         ref={cardRef}
         data-testid="home-preview-card"
-        className="home-preview-float w-full rounded-2xl p-4 md:p-8"
-        style={{ backgroundColor: '#1c1c1e' }}
+        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8"
       >
         <div className="grid gap-6 sm:grid-cols-[1fr_4fr]">
           {/* Left: Input (20%) */}
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
               {config.inputLabel}
             </p>
             <div
@@ -294,7 +293,7 @@ export default function ProofShowcase() {
                 ref={leftLightboxRef}
                 src={config.beforeImage}
                 alt={config.beforeAlt}
-                className="mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
+                className="mt-3 block w-full overflow-hidden rounded-lg border border-black/10"
               >
                 <img
                   src={config.beforeImage}
@@ -303,14 +302,14 @@ export default function ProofShowcase() {
                 />
               </ImageLightbox>
             </div>
-            <p className="mt-2 text-xs text-white/60">
+            <p className="mt-2 text-xs text-muted">
               {config.inputDescription}
             </p>
             {config.sourceLink ? (
               <button
                 type="button"
                 onClick={() => leftLightboxRef.current?.open()}
-                className="mt-2 inline-flex items-center gap-1 text-[11px] text-white/40 transition hover:text-white/70"
+                className="mt-2 inline-flex items-center gap-1 text-[11px] text-muted/70 transition hover:text-black"
               >
                 {config.sourceLinkLabel}
               </button>
@@ -319,14 +318,14 @@ export default function ProofShowcase() {
 
           {/* Right: Tabbed PDF Output (70%) */}
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
               {config.outputLabel}
             </p>
 
             {/* Tab buttons — Apple pill style */}
             <div
               className="mt-3 w-full overflow-x-auto scrollbar-none rounded-full"
-              style={{ backgroundColor: '#3a3a3c' }}
+              style={{ backgroundColor: 'rgba(0,0,0,0.06)' }}
             >
               <div
                 role="tablist"
@@ -359,8 +358,8 @@ export default function ProofShowcase() {
                     className="relative z-10 flex-1 text-center rounded-full px-2 py-2.5 sm:px-3 text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
                     style={{
                       color: i === activeTab
-                        ? (TAB_COLORS[i] === '#ffffff' ? '#000000' : '#ffffff')
-                        : 'rgba(235,235,245,0.6)',
+                        ? '#ffffff'
+                        : 'rgba(0,0,0,0.50)',
                     }}
                   >
                     {tab.label}
@@ -385,7 +384,7 @@ export default function ProofShowcase() {
                   ref={rightLightboxRef}
                   src={currentTab.src}
                   alt={currentTab.alt}
-                  className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-white/10"
+                  className="proof-tab-image mt-3 block w-full overflow-hidden rounded-lg border border-black/10"
                   data-testid="proof-pdf-image"
                   images={config.tabs.map((t) => ({ src: t.src, alt: t.alt, label: t.label }))}
                   imageIndex={activeTab}
@@ -401,11 +400,11 @@ export default function ProofShowcase() {
 
             {/* Stat line + view link */}
             <div className="mt-3 flex items-center justify-between">
-              <p className="text-xs text-white/60">{config.statLine}</p>
+              <p className="text-xs text-muted">{config.statLine}</p>
               <button
                 type="button"
                 onClick={() => rightLightboxRef.current?.open()}
-                className="text-[11px] text-white/40 transition hover:text-white/70"
+                className="text-[11px] text-muted/70 transition hover:text-black"
               >
                 View full document ↗
               </button>
@@ -416,16 +415,16 @@ export default function ProofShowcase() {
         {/* Feature strip — Apple style */}
         <div
           className="mt-6 grid grid-cols-3 gap-px overflow-hidden rounded-xl sm:grid-cols-6"
-          style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.06)' }}
         >
           {FEATURES.map((f) => (
             <div
               key={f.title}
               className="flex flex-col items-center gap-2 px-3 py-4 text-center"
-              style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
+              style={{ backgroundColor: '#ffffff' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>
-              <span className="text-[11px] font-medium leading-tight text-white/70">
+              <span className="text-[11px] font-medium leading-tight text-muted">
                 {f.title}
               </span>
             </div>
