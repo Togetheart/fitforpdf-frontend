@@ -271,8 +271,8 @@
   }
 
   .feature-card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 48px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+    box-shadow: 0 2px 40px rgba(0, 0, 0, 0.11);
   }
 
   /* ── Privacy shield pulse ───────────────────────────── */

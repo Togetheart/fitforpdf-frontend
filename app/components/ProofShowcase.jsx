@@ -224,7 +224,7 @@ export default function ProofShowcase() {
   }
 
   return (
-    <div className="w-full overflow-hidden space-y-8">
+    <div className="w-full space-y-8">
       {/* Section heading */}
       <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
         This is what your client receives.
@@ -274,7 +274,7 @@ export default function ProofShowcase() {
       <div
         ref={cardRef}
         data-testid="home-preview-card"
-        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8 cursor-pointer transition-shadow duration-300 hover:shadow-[0_4px_48px_rgba(0,0,0,0.12)]"
+        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8 cursor-pointer transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
       >
         <div className="grid gap-6 sm:grid-cols-[1fr_4fr]">
           {/* Left: Input (20%) */}
