@@ -67,10 +67,10 @@ export function PaygCard({ pack, onBuy }) {
       as="article"
       data-testid="payg-plan-card"
       className={cn(
-        'relative flex flex-col overflow-visible transition-all duration-200',
+        'feature-card-hover relative flex flex-col overflow-visible',
         isFeatured
           ? 'md:scale-[1.04] bg-white p-7'
-          : 'hover:-translate-y-1 p-6',
+          : 'p-6',
       )}
       style={isFeatured ? { border: '1px solid rgba(0,0,0,0.10)' } : {}}
     >
