@@ -175,7 +175,7 @@ export default function Page() {
 
       {/* Social proof — Arcade style */}
       <div className="border-y border-slate-100 bg-white py-8" data-testid="social-proof-ticker">
-        <p className="mb-5 text-center text-sm text-muted">
+        <p className="mb-5 text-center text-sm text-black">
           {(() => {
             const full = LANDING_COPY.socialProofCount || '';
             const spaceIdx = full.indexOf(' ');

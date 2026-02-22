@@ -174,7 +174,7 @@ const FORMAT_CONFIGS = {
 const FORMATS = ['xlsx', 'csv'];
 
 const TAB_COLORS = [
-  '#1A1A1A', // dark       — Overview
+  '#ffffff', // white      — Overview
   '#4f46e5', // indigo-600 — Section A
   '#0ea5e9', // sky-500    — Section B
   '#22c55e', // green-500  — Section C
@@ -360,7 +360,7 @@ export default function ProofShowcase() {
                     className="relative z-10 flex-1 text-center rounded-full px-2 py-2.5 sm:px-3 text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
                     style={{
                       color: i === activeTab
-                        ? '#ffffff'
+                        ? (i === 0 ? '#1A1A1A' : '#ffffff')
                         : 'rgba(235,235,245,0.55)',
                     }}
                   >
