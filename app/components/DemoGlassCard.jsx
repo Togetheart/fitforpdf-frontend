@@ -15,7 +15,7 @@ export default function DemoGlassCard({
   return (
     <section
       data-testid="demo-glass-card"
-      className="relative mx-auto mt-6 flex w-full max-w-5xl flex-col gap-3 overflow-hidden rounded-3xl border border-black/10 bg-white/55 bg-gradient-to-b from-white/60 to-white/30 p-4 backdrop-blur-xl sm:p-6"
+      className="feature-card-hover relative mx-auto mt-6 flex w-full max-w-5xl flex-col gap-3 overflow-hidden rounded-3xl border border-black/10 bg-white/55 bg-gradient-to-b from-white/60 to-white/30 p-4 backdrop-blur-xl sm:p-6"
     >
       <div
         data-testid="demo-glass-highlight"

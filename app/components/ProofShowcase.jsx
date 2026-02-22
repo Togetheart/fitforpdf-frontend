@@ -274,7 +274,7 @@ export default function ProofShowcase() {
       <div
         ref={cardRef}
         data-testid="home-preview-card"
-        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8"
+        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8 cursor-pointer transition-shadow duration-300 hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)]"
       >
         <div className="grid gap-6 sm:grid-cols-[1fr_4fr]">
           {/* Left: Input (20%) */}
@@ -424,7 +424,7 @@ export default function ProofShowcase() {
           {FEATURES.map((f) => (
             <div
               key={f.title}
-              className="feature-card-hover flex flex-col items-center gap-2 px-3 py-4 text-center"
+              className="flex flex-col items-center gap-2 px-3 py-4 text-center"
               style={{ backgroundColor: '#FAF8F5' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>
