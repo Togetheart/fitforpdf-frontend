@@ -202,7 +202,7 @@ export default function Page() {
         </div>
       </div>
 
-      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-16 sm:py-24">
+      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-16 sm:py-24" bg="bg-hero">
         <ProofShowcase />
       </Section>
 
@@ -254,7 +254,7 @@ export default function Page() {
       <Section
         id="home-faq"
         index={5}
-        bg="bg-white"
+        bg="bg-hero"
         className="py-16 sm:py-24"
         testId="faq-section"
       >
