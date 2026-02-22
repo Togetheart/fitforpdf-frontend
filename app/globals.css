@@ -272,7 +272,7 @@
 
   .feature-card-hover:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 4px 48px rgba(0, 0, 0, 0.12);
   }
 
   /* ── Privacy shield pulse ───────────────────────────── */
