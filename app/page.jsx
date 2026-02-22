@@ -183,7 +183,7 @@ export default function Page() {
             const rest = spaceIdx > -1 ? full.slice(spaceIdx) : '';
             return (
               <>
-                <span className="inline-flex items-center rounded-md border border-slate-200 px-2 py-0.5 text-sm font-semibold text-slate-700">
+                <span className="inline-flex items-center rounded-md border border-black/10 px-2 py-0.5 text-sm font-semibold text-black">
                   {count}
                 </span>
                 {rest}

@@ -618,7 +618,7 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-semibold text-muted transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
+            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-semibold text-muted transition hover:text-black ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
           >
             <span>Advanced options</span>
             <ChevronDown
@@ -802,7 +802,7 @@ export default function UploadCard({
               {/* Footer */}
               <p className="text-center text-xs text-muted/70">
                 Need more?{' '}
-                <a href="mailto:hello@fitforpdf.com" className="text-muted underline underline-offset-2 hover:text-slate-700 transition-colors">
+                <a href="mailto:hello@fitforpdf.com" className="text-muted underline underline-offset-2 hover:text-black transition-colors">
                   Contact us for Team/API
                 </a>
               </p>
