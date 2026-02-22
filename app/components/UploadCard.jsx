@@ -578,7 +578,7 @@ export default function UploadCard({
             type="button"
             onClick={onTrySample}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-white px-4 py-1.5 text-xs font-medium text-accent transition hover:border-accent/60 hover:bg-accent/5 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-white px-4 py-1.5 text-xs font-semibold text-accent transition hover:border-accent/60 hover:bg-accent/5 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
             <span aria-hidden="true">▶</span>
@@ -618,7 +618,7 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-medium text-muted transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
+            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-semibold text-muted transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
           >
             <span>Advanced options</span>
             <ChevronDown
