@@ -7,7 +7,7 @@ const FEATURES = [
   {
     title: 'Document overview page',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <line x1="3" y1="9" x2="21" y2="9" />
         <line x1="9" y1="9" x2="9" y2="21" />
@@ -18,7 +18,7 @@ const FEATURES = [
   {
     title: 'Smart column sections',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="7" height="18" rx="1.5" />
         <rect x="14" y="3" width="7" height="18" rx="1.5" />
       </svg>
@@ -28,7 +28,7 @@ const FEATURES = [
   {
     title: 'Fixed reference columns',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="12" y1="17" x2="12" y2="21" />
         <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" />
       </svg>
@@ -38,7 +38,7 @@ const FEATURES = [
   {
     title: 'Rows X–Y and Page i/n',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="4" y1="9" x2="20" y2="9" />
         <line x1="4" y1="15" x2="20" y2="15" />
         <line x1="10" y1="3" x2="8" y2="21" />
@@ -50,7 +50,7 @@ const FEATURES = [
   {
     title: 'Auto-structured',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
       </svg>
     ),
@@ -59,7 +59,7 @@ const FEATURES = [
   {
     title: 'Clickable TOC links',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
       </svg>
@@ -226,7 +226,7 @@ export default function ProofShowcase() {
   return (
     <div className="w-full space-y-8">
       {/* Section heading */}
-      <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+      <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
         This is what your client receives.
       </h2>
 
@@ -424,11 +424,11 @@ export default function ProofShowcase() {
           {FEATURES.map((f) => (
             <div
               key={f.title}
-              className="flex flex-col items-center gap-2 px-3 py-4 text-center"
+              className="flex flex-col items-center gap-3 px-4 py-5 text-center"
               style={{ backgroundColor: '#FAF8F5' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>
-              <span className="text-[11px] font-medium leading-tight text-muted">
+              <span className="text-xs font-medium leading-tight text-muted">
                 {f.title}
               </span>
             </div>

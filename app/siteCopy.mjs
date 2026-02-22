@@ -81,7 +81,7 @@ export const LANDING_COPY = {
   footerMakerName: 'Sébastien',
   footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
 
-  socialProofCount: '1,187 professionals use FitForPDF this week',
+  socialProofCount: '1,187',
 };
 
 export const LANDING_COPY_KEYS = {
@@ -118,7 +118,8 @@ export const HOME_FAQ = [
 ];
 
 export const PRICING_PAGE_COPY = {
-  pageTitle: "Simple pricing. Built for professionals.",
+  pageTitle: "Simple pricing.",
+  pageTitleAccent: "Built for professionals.",
   pageSubtitle: 'Transform your spreadsheets into client-ready PDFs. Choose exactly how you want to pay.',
   pageTagline: 'No subscriptions. No lock-in.',
   pageMicro: 'No subscriptions. No lock-in.',

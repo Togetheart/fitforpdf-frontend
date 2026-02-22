@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 function normalizeId(value) {
   return String(value || '').replace(/^#/, '').trim();
@@ -58,22 +58,22 @@ export default function FaqAccordion({
           const panelId = `faq-a-${item.id}`;
 
           return (
-            <section key={item.id} className={`py-4 ${itemClassName || ''}`} data-faq-id={item.id}>
+            <section key={item.id} className={`py-6 ${itemClassName || ''}`} data-faq-id={item.id}>
               <button
                 type="button"
                 id={buttonId}
                 aria-controls={panelId}
                 aria-expanded={isOpen}
                 onClick={() => setOpenId((current) => (current === item.id ? null : item.id))}
-                className="group flex w-full items-start justify-between gap-4 rounded-xl px-2 py-2 text-left text-sm leading-relaxed font-medium text-slate-900 transition hover:bg-black/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/70 focus-visible:ring-offset-2"
+                className="group flex w-full items-center justify-between gap-4 py-1 text-left text-[0.9375rem] leading-relaxed font-medium text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2"
               >
                 <span className="flex min-h-6 items-center">
                   {item.q}
                 </span>
-                <ChevronDown
+                <Plus
                   aria-hidden="true"
                   data-testid="faq-chevron"
-                  className={`h-4 w-4 shrink-0 text-muted transition-all duration-[250ms] ${isOpen ? 'rotate-180' : ''}`}
+                  className={`h-4 w-4 shrink-0 text-muted/60 transition-transform duration-[250ms] ${isOpen ? 'rotate-45' : ''}`}
                 />
               </button>
               <div

@@ -766,11 +766,11 @@ export default function UploadCard({
           <>
             <section
               data-testid="upload-paywall"
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-4"
+              className="rounded-2xl border border-black/10 bg-hero p-5 space-y-4"
             >
               {/* Header */}
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-slate-900">
+                <p className="text-sm font-semibold text-black">
                   You've used your free exports.
                 </p>
                 <p className="text-xs text-muted">
@@ -783,10 +783,10 @@ export default function UploadCard({
                 <button
                   type="button"
                   onClick={() => onBuyCreditsPack('credits_100')}
-                  className="group flex flex-col items-start gap-0.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
+                  className="group flex flex-col items-start gap-0.5 rounded-xl border border-black/10 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
                 >
                   <span className="text-xs font-medium text-muted">100 exports</span>
-                  <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors">$19</span>
+                  <span className="text-lg font-bold tracking-tight text-black group-hover:text-accent transition-colors">$19</span>
                 </button>
                 <button
                   type="button"

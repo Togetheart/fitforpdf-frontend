@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
@@ -79,6 +79,101 @@ function FeatureIcon({ name }) {
 }
 
 
+function SocialProofStrip() {
+  // Start docked (SSR-safe). On client mount, switch to fixed if user is near top.
+  const [docked, setDocked] = useState(true);
+  const anchorRef = useRef(null);
+
+  useEffect(() => {
+    const el = anchorRef.current;
+    if (!el) return;
+
+    // Only use sticky behavior on sm+ viewports (hero is full-height there)
+    if (window.innerWidth >= 640 && window.scrollY < 100) {
+      setDocked(false);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setDocked(true);
+        } else if (entry.boundingClientRect.top > 0) {
+          // Anchor is below viewport → user scrolled back up → go sticky
+          if (window.innerWidth >= 640) setDocked(false);
+        }
+      },
+      { threshold: 0.01 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const count = LANDING_COPY.socialProofCount;
+
+  const innerContent = (
+    <>
+      <p className="mb-5 text-center text-sm text-black">
+        Trusted by{' '}
+        <span className="inline-flex items-center rounded-md border border-black/10 px-2 py-0.5 text-sm font-semibold text-black">
+          {count}
+        </span>
+        {' '}professionals this week
+      </p>
+      <div className="relative w-full overflow-hidden">
+        {/* Left fade */}
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-white to-transparent sm:w-32"
+          aria-hidden="true"
+        />
+        {/* Right fade */}
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white to-transparent sm:w-32"
+          aria-hidden="true"
+        />
+        <div className="ticker-track">
+          {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
+            <span
+              key={i}
+              className="mx-8 whitespace-nowrap text-sm font-semibold tracking-wide text-muted/70 sm:mx-12 sm:text-base"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+
+  return (
+    <div ref={anchorRef} data-testid="social-proof-ticker">
+      {docked ? (
+        /* In-flow: normal document position */
+        <div className="border-y border-black/10 bg-white py-8">
+          {innerContent}
+        </div>
+      ) : (
+        <>
+          {/* Invisible placeholder keeps layout space while strip is fixed */}
+          <div
+            className="border-y border-black/10 bg-white py-8 invisible pointer-events-none select-none"
+            aria-hidden="true"
+          >
+            {innerContent}
+          </div>
+          {/* Fixed strip slides in from bottom */}
+          <div
+            className="proof-slide-up fixed bottom-0 inset-x-0 z-40 border-t border-black/10 bg-white py-8"
+            style={{ boxShadow: '0 -6px 24px rgba(0,0,0,0.06)' }}
+          >
+            {innerContent}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function Page() {
   const quota = useQuota();
   const conversion = useConversion({ quota });
@@ -108,11 +203,11 @@ export default function Page() {
         align="center"
         height="min-h-0 sm:min-h-screen"
         title={<HeroHeadline />}
-        contentClassName="items-center gap-10 text-center"
+        contentClassName="items-center gap-14 text-center"
         contentMaxWidthClassName="max-w-[960px]"
         className="py-0 w-full"
       >
-        <div className="space-y-8">
+        <div className="space-y-10">
           <p
             className="hero-headline-line w-full max-w-none text-lg text-slate-900 lg:whitespace-nowrap"
           >
@@ -121,7 +216,7 @@ export default function Page() {
           <div
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
-            className="hero-headline-line feature-card-hover mt-8 relative rounded-xl bg-white"
+            className="hero-headline-line feature-card-hover relative rounded-xl bg-white"
           >
             <UploadCard
               toolTitle={LANDING_COPY.toolTitle}
@@ -173,40 +268,14 @@ export default function Page() {
         </div>
       </PageHero>
 
-      {/* Social proof — Arcade style */}
-      <div className="border-y border-slate-100 bg-white py-8" data-testid="social-proof-ticker">
-        <p className="mb-5 text-center text-sm text-black">
-          {(() => {
-            const full = LANDING_COPY.socialProofCount || '';
-            const spaceIdx = full.indexOf(' ');
-            const count = spaceIdx > -1 ? full.slice(0, spaceIdx) : full;
-            const rest = spaceIdx > -1 ? full.slice(spaceIdx) : '';
-            return (
-              <>
-                <span className="inline-flex items-center rounded-md border border-black/10 px-2 py-0.5 text-sm font-semibold text-black">
-                  {count}
-                </span>
-                {rest}
-              </>
-            );
-          })()}
-        </p>
-        <div className="w-full overflow-hidden">
-          <div className="ticker-track">
-            {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
-              <span key={i} className="mx-8 whitespace-nowrap text-sm font-semibold tracking-wide text-muted/70 sm:mx-12 sm:text-base">
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* Social proof — sticky on load, docks on scroll */}
+      <SocialProofStrip />
 
-      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-16 sm:py-24" bg="bg-hero">
+      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-20 sm:py-28" bg="bg-hero">
         <ProofShowcase />
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-14 sm:py-20" bg="bg-hero">
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-hero">
         <PricingToggleSection showFreeTier />
         <div className="flex justify-center">
           <a href="/pricing" className={CTA_SECONDARY}>
@@ -222,19 +291,19 @@ export default function Page() {
         id={LANDING_COPY_KEYS.privacyStrip}
         index={4}
         bg="bg-hero"
-        className="py-16 sm:py-24"
+        className="py-20 sm:py-28"
         testId="privacy-section"
         maxWidth="max-w-3xl"
       >
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center gap-2">
             <AnimatedShieldIcon animateOnMount={false} />
-            <span className="text-2xl font-semibold tracking-tight text-slate-900">Privacy</span>
+            <span className="text-2xl font-[650] tracking-tight text-black">Privacy</span>
           </div>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+          <h2 className="mt-4 text-[2rem] sm:text-[2.5rem] font-[650] tracking-tight text-black leading-[1.1]">
             Your data. Not our business.
           </h2>
-          <div className="mt-6 space-y-3 text-base leading-relaxed text-muted">
+          <div className="mt-8 space-y-4 text-base leading-relaxed text-muted">
             <p>Files are deleted immediately after conversion.</p>
             <p>The generated PDF is available for up to 15 minutes.</p>
             <p>No file content is stored in logs.</p>
@@ -255,18 +324,17 @@ export default function Page() {
         id="home-faq"
         index={5}
         bg="bg-hero"
-        className="py-16 sm:py-24"
+        className="py-20 sm:py-28"
         testId="faq-section"
       >
-        <div className="space-y-6">
-          <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+        <div className="space-y-10">
+          <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
             Frequently asked questions
           </h2>
-          <div className="divide-y divide-slate-200 rounded-xl glass-elevated">
+          <div className="divide-y divide-black/10">
             <Accordion
               items={HOME_FAQ}
               testId="home-faq"
-              itemClassName="py-3"
             />
           </div>
         </div>
@@ -276,11 +344,11 @@ export default function Page() {
         id="final-cta"
         index={6}
         bg="bg-hero"
-        className="py-20 sm:py-28"
+        className="py-24 sm:py-32"
         testId="final-cta-section"
       >
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+          <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
             {LANDING_COPY.finalCtaTitle}
           </h2>
           <p className="mt-4 text-lg text-muted">{LANDING_COPY.finalCtaCopy}</p>

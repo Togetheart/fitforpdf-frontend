@@ -37,7 +37,7 @@ export function PillToggle({ options, value, onChange, size = 'md' }) {
               size === 'sm'
                 ? 'px-5 py-2'
                 : 'px-6 py-2.5 sm:px-8',
-              isActive ? 'text-slate-900' : 'text-slate-300 hover:text-white',
+              isActive ? 'text-black' : 'text-white/55 hover:text-white',
             )}
           >
             <span className="text-sm font-semibold leading-tight">
@@ -91,7 +91,7 @@ export function PaygCard({ pack, onBuy }) {
         </p>
         <h3 className={cn(
           'mt-1 font-bold tracking-tight',
-          isFeatured ? 'text-2xl text-slate-900' : 'text-xl text-slate-800',
+          isFeatured ? 'text-2xl text-black' : 'text-xl text-black',
         )}>
           {pack.title}
         </h3>
@@ -102,7 +102,7 @@ export function PaygCard({ pack, onBuy }) {
         <div className="flex items-baseline gap-1.5">
           <span className={cn(
             'font-bold tracking-tight leading-none tabular-nums',
-            isFeatured ? 'text-4xl text-slate-900' : 'text-[2.2rem] text-slate-800',
+            isFeatured ? 'text-4xl text-black' : 'text-[2.2rem] text-black',
           )}>
             {pack.priceDisplay}
           </span>
@@ -126,7 +126,7 @@ export function PaygCard({ pack, onBuy }) {
       </p>
 
       {/* Divider */}
-      <div className="my-5 h-px bg-slate-200/70" />
+      <div className="my-5 h-px bg-black/10" />
 
       {/* Features */}
       <ul className="flex-1 space-y-2 text-sm">
@@ -141,7 +141,7 @@ export function PaygCard({ pack, onBuy }) {
                 strokeWidth={3}
               />
             </span>
-            <span className={isFeatured ? 'text-slate-700 font-medium' : 'text-muted'}>
+            <span className={isFeatured ? 'text-black font-medium' : 'text-muted'}>
               {point}
             </span>
           </li>
@@ -158,7 +158,7 @@ export function PaygCard({ pack, onBuy }) {
               'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight cursor-not-allowed',
               isFeatured
                 ? 'bg-accent/15 text-accent/55'
-                : 'border border-slate-200 bg-slate-50 text-muted/70',
+                : 'border border-black/10 bg-white text-muted/70',
             )}
           >
             {pack.actionLabel}
@@ -171,7 +171,7 @@ export function PaygCard({ pack, onBuy }) {
               'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
               isFeatured
                 ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]'
-                : 'border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50',
+                : 'border border-black/20 text-black hover:border-black/30 hover:bg-white',
             )}
           >
             {pack.actionLabel}
@@ -200,14 +200,14 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
         <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           Pro Subscription
         </p>
-        <h3 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+        <h3 className="mt-1 text-2xl font-bold tracking-tight text-black">
           {PRICING_PAGE_COPY.proSubscriptionTitle}
         </h3>
       </div>
 
       {/* Price */}
       <div className="mt-5 flex items-baseline gap-1.5">
-        <span className="text-4xl font-bold tracking-tight leading-none text-slate-900 tabular-nums">{price}</span>
+        <span className="text-4xl font-bold tracking-tight leading-none text-black tabular-nums">{price}</span>
         <span className="text-base font-medium text-muted/70">{period}</span>
         {isYearly ? (
           <span className="ml-1 rounded-full border border-amber-200 bg-[#FEF3C7] px-2.5 py-0.5 text-xs font-semibold text-amber-700">
@@ -217,7 +217,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
       </div>
 
       {/* Divider */}
-      <div className="my-6 h-px bg-slate-200/70" />
+      <div className="my-6 h-px bg-black/10" />
 
       {/* Features */}
       <ul className="flex-1 space-y-2.5 text-sm">
@@ -226,7 +226,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
             <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#F3F4F6]">
               <Check className="h-2.5 w-2.5 text-[#1A1A1A]" strokeWidth={3} />
             </span>
-            <span className="text-slate-700 font-medium">{feat}</span>
+            <span className="text-black font-medium">{feat}</span>
           </li>
         ))}
       </ul>
@@ -250,14 +250,14 @@ export function ProApiCard() {
   return (
     <Card
       as="article"
-      className="relative flex w-full flex-col overflow-visible p-8 border border-slate-200/80 bg-white/70"
+      className="relative flex w-full flex-col overflow-visible p-8 border border-black/10 bg-white/70"
     >
       {/* Title */}
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           Enterprise
         </p>
-        <h3 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+        <h3 className="mt-1 text-2xl font-bold tracking-tight text-black">
           {PRICING_PAGE_COPY.proApiTitle}
         </h3>
       </div>
@@ -267,11 +267,11 @@ export function ProApiCard() {
 
       {/* Price placeholder */}
       <div className="mt-5">
-        <span className="text-4xl font-bold tracking-tight leading-none text-slate-800">Custom</span>
+        <span className="text-4xl font-bold tracking-tight leading-none text-black">Custom</span>
       </div>
 
       {/* Divider */}
-      <div className="my-6 h-px bg-slate-200/70" />
+      <div className="my-6 h-px bg-black/10" />
 
       {/* Features */}
       <ul className="flex-1 space-y-2.5 text-sm">
@@ -289,7 +289,7 @@ export function ProApiCard() {
       <div className="mt-8">
         <a
           href={PRICING_PAGE_COPY.proApiCtaHref}
-          className="flex w-full items-center justify-center rounded-full border border-slate-300 py-2.5 text-sm font-semibold text-slate-700 hover:border-slate-400 hover:bg-slate-50 transition-all duration-150 active:scale-[0.98]"
+          className="flex w-full items-center justify-center rounded-full border border-black/20 py-2.5 text-sm font-semibold text-black hover:border-black/30 hover:bg-white transition-all duration-150 active:scale-[0.98]"
         >
           {PRICING_PAGE_COPY.proApiCtaLabel}
         </a>
@@ -360,11 +360,11 @@ export default function PricingToggleSection({ showFreeTier = true }) {
         <div className="space-y-8">
           {/* PAYG tagline — rule divider style */}
           <div className="flex items-center justify-center gap-3">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-slate-200 max-w-[80px]" />
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-black/10 max-w-[80px]" />
             <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
               {PRICING_PAGE_COPY.paygTagline}
             </p>
-            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-slate-200 max-w-[80px]" />
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-black/10 max-w-[80px]" />
           </div>
 
           {/* 3 cards */}
@@ -398,7 +398,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
         <div className="space-y-8">
           {/* Taglines */}
           <div className="text-center space-y-1">
-            <p className="text-base font-semibold text-slate-900">{PRICING_PAGE_COPY.proTagline}</p>
+            <p className="text-base font-semibold text-black">{PRICING_PAGE_COPY.proTagline}</p>
             <p className="text-sm text-muted/70">{PRICING_PAGE_COPY.proSubTagline}</p>
           </div>
 

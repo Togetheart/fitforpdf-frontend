@@ -319,6 +319,29 @@
     }
   }
 
+  /* ── Social proof strip slide-in (fixed → docked) ─── */
+  @keyframes proofSlideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .proof-slide-up {
+    animation: proofSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.6s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .proof-slide-up {
+      animation: none;
+    }
+  }
+
   @keyframes heroMeshA {
     0% {
       transform: translate3d(0, 0, 0) scale(1);
