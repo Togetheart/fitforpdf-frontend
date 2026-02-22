@@ -72,14 +72,14 @@ export default function UploadDropzone({
         aria-label="Upload CSV or XLSX file"
         onKeyDown={handleLabelKeyDown}
         className={`rounded-xl border-2 border-dashed p-1 transition ${
-          isDragActive ? 'border-accent bg-blue-50/55' : 'border-slate-200 bg-slate-50'
-        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-accent/60 hover:bg-blue-50/30'}`}
+          isDragActive ? 'border-accent bg-hero' : 'border-slate-200 bg-hero'
+        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-accent/60'}`}
       >
         <label
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="block rounded-xl bg-white/55 px-4 py-7 text-center backdrop-blur-[3px]"
+          className="block rounded-xl bg-transparent px-4 py-7 text-center"
         >
           {file ? (
             <div className="mx-auto max-w-xl">
