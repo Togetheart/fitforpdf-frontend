@@ -72,14 +72,14 @@ export default function UploadDropzone({
         aria-label="Upload CSV or XLSX file"
         onKeyDown={handleLabelKeyDown}
         className={`rounded-xl border-2 border-dashed p-1 transition ${
-          isDragActive ? 'border-accent bg-blue-50/55' : 'border-slate-200 bg-slate-50'
-        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-accent/60 hover:bg-blue-50/30'}`}
+          isDragActive ? 'border-accent bg-hero' : 'border-black/10 bg-hero'
+        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-accent/60'}`}
       >
         <label
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="block rounded-xl bg-white/55 px-4 py-7 text-center backdrop-blur-[3px]"
+          className="block rounded-xl bg-transparent px-4 py-7 text-center"
         >
           {file ? (
             <div className="mx-auto max-w-xl">
@@ -88,7 +88,7 @@ export default function UploadDropzone({
                 className="mx-auto h-8 w-8 text-accent"
               />
               <p className="mt-3 text-sm font-semibold text-slate-900">{file.name}</p>
-              <p className="mt-1 text-xs text-slate-500">{formatBytes(file.size)}</p>
+              <p className="mt-1 text-xs text-muted">{formatBytes(file.size)}</p>
               <div className="mt-4">
                 <button
                   type="button"
@@ -108,9 +108,9 @@ export default function UploadDropzone({
             </div>
           ) : (
             <div className="mx-auto max-w-xl">
-              <AnimatedCloudIcon size={32} className="mx-auto text-slate-500" />
+              <AnimatedCloudIcon size={32} className="mx-auto text-muted" />
               <p className="mt-3 text-sm font-semibold text-slate-900">Drop CSV or XLSX here</p>
-              <p className="mt-1 text-xs text-slate-500">{DROPZONE_HINT}</p>
+              <p className="mt-1 text-xs text-muted">{DROPZONE_HINT}</p>
             </div>
           )}
         </label>

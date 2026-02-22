@@ -27,7 +27,7 @@
   --color-accent: #1A1A1A;
   --color-accent-hover: #374151;
   --color-text: #1A1A1A;
-  --color-muted: #6B6B6B;
+  --color-muted: #7D6B58;
   --color-border: rgba(0, 0, 0, 0.10);
   --color-bg: #FFFFFF;
   --color-bg-hero: #FAF8F5;
@@ -72,36 +72,24 @@
  */
 @layer components {
   .glass-subtle {
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(0, 0, 0, 0.10);
     background: rgba(255, 255, 255, 0.45);
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.06);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 4px 14px rgba(2, 6, 23, 0.06);
   }
 
   .glass {
-    border: 1px solid rgba(255, 255, 255, 0.40);
+    border: 1px solid rgba(0, 0, 0, 0.10);
     background: rgba(255, 255, 255, 0.55);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 8px 24px rgba(2, 6, 23, 0.08);
   }
 
   .glass-elevated {
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(0, 0, 0, 0.10);
     background: rgba(255, 255, 255, 0.55);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    box-shadow: 0 12px 32px rgba(2, 6, 23, 0.12);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 12px 32px rgba(2, 6, 23, 0.12);
   }
 }
 
@@ -277,13 +265,14 @@
 
   /* ── Feature card hover lift ────────────────────────── */
   .feature-card-hover {
+    cursor: pointer;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .feature-card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 2px 40px rgba(0, 0, 0, 0.11);
   }
 
   /* ── Privacy shield pulse ───────────────────────────── */
@@ -326,6 +315,29 @@
 
   @media (prefers-reduced-motion: reduce) {
     .ticker-track {
+      animation: none;
+    }
+  }
+
+  /* ── Social proof strip slide-in (fixed → docked) ─── */
+  @keyframes proofSlideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .proof-slide-up {
+    animation: proofSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.6s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .proof-slide-up {
       animation: none;
     }
   }

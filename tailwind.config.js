@@ -17,6 +17,7 @@ module.exports = {
           text: '#FFFFFF',
         },
         hero: '#FAF8F5',
+        muted: '#7D6B58',
       },
       fontFamily: {
         sans: ['Satoshi', '-apple-system', 'SF Pro Display', 'Segoe UI', 'sans-serif'],
