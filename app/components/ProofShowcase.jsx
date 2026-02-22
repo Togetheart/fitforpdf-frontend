@@ -327,7 +327,7 @@ export default function ProofShowcase() {
             {/* Tab buttons — Apple pill style */}
             <div
               className="mt-3 w-full overflow-x-auto scrollbar-none rounded-full"
-              style={{ backgroundColor: '#ffffff' }}
+              style={{ backgroundColor: '#3a3a3c' }}
             >
               <div
                 role="tablist"
@@ -361,7 +361,7 @@ export default function ProofShowcase() {
                     style={{
                       color: i === activeTab
                         ? '#ffffff'
-                        : 'rgba(0,0,0,0.50)',
+                        : 'rgba(235,235,245,0.55)',
                     }}
                   >
                     {tab.label}
@@ -419,16 +419,16 @@ export default function ProofShowcase() {
         {/* Feature strip — Apple style */}
         <div
           className="mt-6 grid grid-cols-3 gap-px overflow-hidden rounded-xl sm:grid-cols-6"
-          style={{ backgroundColor: 'rgba(0,0,0,0.06)' }}
+          style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
         >
           {FEATURES.map((f) => (
             <div
               key={f.title}
               className="flex flex-col items-center gap-2 px-3 py-4 text-center"
-              style={{ backgroundColor: '#ffffff' }}
+              style={{ backgroundColor: '#3a3a3c' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>
-              <span className="text-[11px] font-medium leading-tight text-muted">
+              <span className="text-[11px] font-medium leading-tight text-white/60">
                 {f.title}
               </span>
             </div>
