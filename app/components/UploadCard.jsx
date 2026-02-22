@@ -519,7 +519,7 @@ export default function UploadCard({
               </span>
               <span
                 data-testid="quota-pill"
-                className={`inline-flex h-9 min-w-0 items-center rounded-full border px-4 text-xs font-medium shadow-sm ${freeExportsBadgeClass}`}
+                className={`inline-flex h-9 min-w-0 items-center rounded-full border px-4 text-xs font-semibold shadow-sm ${freeExportsBadgeClass}`}
                 aria-label="remaining exports"
               >
                 {quotaText}
