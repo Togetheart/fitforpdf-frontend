@@ -80,8 +80,8 @@ function getProgressPercent(progress) {
 }
 
 const EXPORT_BADGE_STYLES = {
-  neutral: 'border-accent/25 bg-white text-accent-hover',
-  warning: 'border-amber-200 bg-amber-400 text-white',
+  neutral: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
+  warning: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
   warningStrong: 'border-amber-300 bg-amber-600 text-white',
   danger: 'border-red-300 bg-red-600 text-white',
 };
@@ -540,7 +540,7 @@ export default function UploadCard({
                 Close
               </button>
             </div>
-            <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700">
+            <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
@@ -647,7 +647,7 @@ export default function UploadCard({
                         Close
                       </button>
                     </div>
-                    <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700">
+                    <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
@@ -821,7 +821,7 @@ export default function UploadCard({
           </Button>
         ) : (
           <>
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-4 py-1.5 text-xs font-medium text-emerald-700 w-full justify-center">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700 w-full justify-center">
             <span aria-label="European Union flag">🇪🇺</span>
             GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored
           </p>
