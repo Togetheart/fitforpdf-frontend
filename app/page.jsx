@@ -175,7 +175,7 @@ export default function Page() {
 
       {/* Social proof — Arcade style */}
       <div className="border-y border-slate-100 bg-white py-8" data-testid="social-proof-ticker">
-        <p className="mb-5 text-center text-sm text-slate-500">
+        <p className="mb-5 text-center text-sm text-muted">
           {(() => {
             const full = LANDING_COPY.socialProofCount || '';
             const spaceIdx = full.indexOf(' ');
@@ -194,7 +194,7 @@ export default function Page() {
         <div className="w-full overflow-hidden">
           <div className="ticker-track">
             {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
-              <span key={i} className="mx-8 whitespace-nowrap text-sm font-semibold tracking-wide text-slate-400 sm:mx-12 sm:text-base">
+              <span key={i} className="mx-8 whitespace-nowrap text-sm font-semibold tracking-wide text-muted/70 sm:mx-12 sm:text-base">
                 {item}
               </span>
             ))}
@@ -234,7 +234,7 @@ export default function Page() {
           <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             Your data. Not our business.
           </h2>
-          <div className="mt-6 space-y-3 text-base leading-relaxed text-slate-500">
+          <div className="mt-6 space-y-3 text-base leading-relaxed text-muted">
             <p>Files are deleted immediately after conversion.</p>
             <p>The generated PDF is available for up to 15 minutes.</p>
             <p>No file content is stored in logs.</p>
@@ -283,7 +283,7 @@ export default function Page() {
           <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             {LANDING_COPY.finalCtaTitle}
           </h2>
-          <p className="mt-4 text-lg text-slate-500">{LANDING_COPY.finalCtaCopy}</p>
+          <p className="mt-4 text-lg text-muted">{LANDING_COPY.finalCtaCopy}</p>
           <Button
             variant="primary"
             href="#generate"

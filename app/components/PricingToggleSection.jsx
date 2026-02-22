@@ -86,7 +86,7 @@ export function PaygCard({ pack, onBuy }) {
 
       {/* Header */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           {pack.priceLine}
         </p>
         <h3 className={cn(
@@ -106,7 +106,7 @@ export function PaygCard({ pack, onBuy }) {
           )}>
             {pack.priceDisplay}
           </span>
-          <span className="text-sm font-medium text-slate-400">{pack.exportsLabel}</span>
+          <span className="text-sm font-medium text-muted/70">{pack.exportsLabel}</span>
         </div>
         {pack.perExport ? (
           <p className="mt-1.5 inline-block rounded-full bg-[#FEF3C7] px-2 py-0.5 text-xs font-semibold text-amber-700">
@@ -120,7 +120,7 @@ export function PaygCard({ pack, onBuy }) {
       {/* Description */}
       <p className={cn(
         'mt-3 text-sm leading-relaxed',
-        isFeatured ? 'text-slate-600' : 'text-slate-500',
+        isFeatured ? 'text-muted' : 'text-muted',
       )}>
         {pack.description}
       </p>
@@ -141,7 +141,7 @@ export function PaygCard({ pack, onBuy }) {
                 strokeWidth={3}
               />
             </span>
-            <span className={isFeatured ? 'text-slate-700 font-medium' : 'text-slate-600'}>
+            <span className={isFeatured ? 'text-slate-700 font-medium' : 'text-muted'}>
               {point}
             </span>
           </li>
@@ -158,7 +158,7 @@ export function PaygCard({ pack, onBuy }) {
               'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight cursor-not-allowed',
               isFeatured
                 ? 'bg-accent/15 text-accent/55'
-                : 'border border-slate-200 bg-slate-50 text-slate-400',
+                : 'border border-slate-200 bg-slate-50 text-muted/70',
             )}
           >
             {pack.actionLabel}
@@ -197,7 +197,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
 
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           Pro Subscription
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
@@ -208,7 +208,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
       {/* Price */}
       <div className="mt-5 flex items-baseline gap-1.5">
         <span className="text-4xl font-bold tracking-tight leading-none text-slate-900 tabular-nums">{price}</span>
-        <span className="text-base font-medium text-slate-400">{period}</span>
+        <span className="text-base font-medium text-muted/70">{period}</span>
         {isYearly ? (
           <span className="ml-1 rounded-full border border-amber-200 bg-[#FEF3C7] px-2.5 py-0.5 text-xs font-semibold text-amber-700">
             {PRICING_PAGE_COPY.proYearlySaving}
@@ -254,7 +254,7 @@ export function ProApiCard() {
     >
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           Enterprise
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
@@ -263,7 +263,7 @@ export function ProApiCard() {
       </div>
 
       {/* Tagline */}
-      <p className="mt-2 text-sm text-slate-500 leading-relaxed">{PRICING_PAGE_COPY.proApiTagline}</p>
+      <p className="mt-2 text-sm text-muted leading-relaxed">{PRICING_PAGE_COPY.proApiTagline}</p>
 
       {/* Price placeholder */}
       <div className="mt-5">
@@ -280,7 +280,7 @@ export function ProApiCard() {
             <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#F3F4F6]">
               <Check className="h-2.5 w-2.5 text-[#1A1A1A]" strokeWidth={3} />
             </span>
-            <span className="text-slate-600">{feat}</span>
+            <span className="text-muted">{feat}</span>
           </li>
         ))}
       </ul>
@@ -293,7 +293,7 @@ export function ProApiCard() {
         >
           {PRICING_PAGE_COPY.proApiCtaLabel}
         </a>
-        <p className="mt-3 text-center text-xs text-slate-400">
+        <p className="mt-3 text-center text-xs text-muted/70">
           We'll get back to you within 24 hours.
         </p>
       </div>
@@ -305,10 +305,10 @@ export function ProApiCard() {
 export function FreeTierCTA() {
   return (
     <div className="rounded-xl border border-dashed border-black/10 bg-white/50 px-6 py-5 text-center">
-      <p className="text-sm font-semibold text-slate-600">
+      <p className="text-sm font-semibold text-muted">
         {PRICING_PAGE_COPY.freeSafetyTitle}
       </p>
-      <p className="mt-1 text-xs text-slate-400">{PRICING_PAGE_COPY.freeSafetyDesc}</p>
+      <p className="mt-1 text-xs text-muted/70">{PRICING_PAGE_COPY.freeSafetyDesc}</p>
       <a
         href={PRICING_PAGE_COPY.freeSafetyCtaHref}
         className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline transition-colors"
@@ -361,7 +361,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           {/* PAYG tagline — rule divider style */}
           <div className="flex items-center justify-center gap-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-slate-200 max-w-[80px]" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
               {PRICING_PAGE_COPY.paygTagline}
             </p>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-slate-200 max-w-[80px]" />
@@ -382,9 +382,9 @@ export default function PricingToggleSection({ showFreeTier = true }) {
             <p className="text-center text-sm text-red-500">{checkout.error}</p>
           ) : null}
 
-          <p className="text-center text-sm text-slate-400">
+          <p className="text-center text-sm text-muted/70">
             Need higher volume, API access, or team plans?{' '}
-            <a href="mailto:hello@fitforpdf.com" className="text-slate-600 underline decoration-dotted hover:text-accent transition-colors">
+            <a href="mailto:hello@fitforpdf.com" className="text-muted underline decoration-dotted hover:text-accent transition-colors">
               Contact us
             </a>.
           </p>
@@ -399,7 +399,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           {/* Taglines */}
           <div className="text-center space-y-1">
             <p className="text-base font-semibold text-slate-900">{PRICING_PAGE_COPY.proTagline}</p>
-            <p className="text-sm text-slate-400">{PRICING_PAGE_COPY.proSubTagline}</p>
+            <p className="text-sm text-muted/70">{PRICING_PAGE_COPY.proSubTagline}</p>
           </div>
 
           {/* Billing toggle — dark pill variant */}

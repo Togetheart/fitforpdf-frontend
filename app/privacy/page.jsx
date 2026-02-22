@@ -111,7 +111,7 @@ function PrivacyFeatureCard({ icon, title, description }) {
       <span className="text-emerald-600" aria-hidden="true">{icon}</span>
       <div className="space-y-1.5">
         <h3 className="text-sm font-semibold leading-tight text-slate-900">{title}</h3>
-        <p className="text-[13px] leading-relaxed text-slate-500">{description}</p>
+        <p className="text-[13px] leading-relaxed text-muted">{description}</p>
       </div>
     </div>
   );
@@ -133,7 +133,7 @@ function LogItem({ icon, label, muted = false }) {
   return (
     <div className="flex items-center gap-4 py-3.5 first:pt-0 last:pb-0">
       <span className={muted ? 'text-slate-300' : 'text-emerald-600'} aria-hidden="true">{icon}</span>
-      <span className={`text-sm leading-relaxed ${muted ? 'italic text-slate-400' : 'text-slate-700'}`}>{label}</span>
+      <span className={`text-sm leading-relaxed ${muted ? 'italic text-muted/70' : 'text-slate-700'}`}>{label}</span>
     </div>
   );
 }
@@ -142,7 +142,7 @@ function LogItem({ icon, label, muted = false }) {
 function DontDoRow({ icon, text }) {
   return (
     <div className="flex items-start gap-4 py-4 first:pt-0 last:pb-0">
-      <span className="mt-0.5 text-slate-400" aria-hidden="true">{icon}</span>
+      <span className="mt-0.5 text-muted/70" aria-hidden="true">{icon}</span>
       <p className="text-sm leading-relaxed text-slate-700">{text}</p>
     </div>
   );
@@ -261,7 +261,7 @@ export default function PrivacyPage() {
               {PRIVACY_PAGE_COPY.userRights.title}
             </h2>
             <div className="flex-1 rounded-xl glass-elevated px-6 py-5">
-              <p className="mb-4 text-sm text-slate-600">{PRIVACY_PAGE_COPY.userRights.intro}</p>
+              <p className="mb-4 text-sm text-muted">{PRIVACY_PAGE_COPY.userRights.intro}</p>
               <ul className="space-y-3">
                 {PRIVACY_PAGE_COPY.userRights.rights.map((right) => (
                   <li key={right} className="flex items-start gap-3">
@@ -271,7 +271,7 @@ export default function PrivacyPage() {
                 ))}
               </ul>
               <div className="mt-5 border-t border-slate-100 pt-4">
-                <p className="mb-1 text-sm text-slate-500">{PRIVACY_PAGE_COPY.userRights.contact}</p>
+                <p className="mb-1 text-sm text-muted">{PRIVACY_PAGE_COPY.userRights.contact}</p>
                 <a
                   href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
                   className="text-sm font-medium text-slate-700 underline underline-offset-4 transition-colors hover:text-accent"
@@ -290,11 +290,11 @@ export default function PrivacyPage() {
             <div className="flex-1 rounded-xl glass-elevated divide-y divide-slate-100/80 px-6">
               {PRIVACY_PAGE_COPY.subProcessors.list.map((sp) => (
                 <div key={sp.name} className="flex items-start gap-4 py-4 first:pt-5 last:pb-5">
-                  <span className="mt-0.5 text-slate-400" aria-hidden="true">{ICONS.server}</span>
+                  <span className="mt-0.5 text-muted/70" aria-hidden="true">{ICONS.server}</span>
                   <div>
                     <p className="text-sm font-semibold text-slate-800">{sp.name}</p>
-                    <p className="text-[13px] leading-relaxed text-slate-500">{sp.role}</p>
-                    <p className="text-[12px] text-slate-400">{sp.location}</p>
+                    <p className="text-[13px] leading-relaxed text-muted">{sp.role}</p>
+                    <p className="text-[12px] text-muted/70">{sp.location}</p>
                   </div>
                 </div>
               ))}
@@ -316,7 +316,7 @@ export default function PrivacyPage() {
             {PRIVACY_PAGE_COPY.sensitiveDataNote}
           </p>
         </div>
-        <div className="flex flex-col items-center gap-2 text-center text-sm text-slate-500">
+        <div className="flex flex-col items-center gap-2 text-center text-sm text-muted">
           <p>{PRIVACY_PAGE_COPY.legalFooter}</p>
           <a
             className="w-fit text-sm font-medium text-slate-700 underline underline-offset-4 transition-colors hover:text-accent"

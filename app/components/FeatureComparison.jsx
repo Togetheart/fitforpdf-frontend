@@ -48,7 +48,7 @@ export default function FeatureComparison({
         <div className="hidden overflow-x-auto md:block">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-[0.06em] text-slate-500">
+              <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-[0.06em] text-muted">
                 <th className="px-4 py-3">Feature</th>
                 {featureColumns.map((column) => (
                   <th key={column} className="px-4 py-3">
@@ -88,7 +88,7 @@ export default function FeatureComparison({
               <dl className="mt-2 space-y-1 text-sm">
                 {featureColumns.map((column, index) => (
                   <div key={`${row[0]}-${column}`} className="grid grid-cols-2 gap-2">
-                    <dt className="text-slate-500">{column}</dt>
+                    <dt className="text-muted">{column}</dt>
                     <dd>{compareValue(row[index + 1])}</dd>
                   </div>
                 ))}

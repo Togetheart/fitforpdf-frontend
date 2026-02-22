@@ -1,7 +1,7 @@
 export const UI_TOKENS = Object.freeze({
   colors: {
     text: '#1A1A1A',
-    muted: '#6B6B6B',
+    muted: '#7D6B58',
     border: 'rgba(0, 0, 0, 0.10)',
     bg: '#FFFFFF',
     bgHero: '#FAF8F5',

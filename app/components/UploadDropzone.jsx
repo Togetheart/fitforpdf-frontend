@@ -88,7 +88,7 @@ export default function UploadDropzone({
                 className="mx-auto h-8 w-8 text-accent"
               />
               <p className="mt-3 text-sm font-semibold text-slate-900">{file.name}</p>
-              <p className="mt-1 text-xs text-slate-500">{formatBytes(file.size)}</p>
+              <p className="mt-1 text-xs text-muted">{formatBytes(file.size)}</p>
               <div className="mt-4">
                 <button
                   type="button"
@@ -108,9 +108,9 @@ export default function UploadDropzone({
             </div>
           ) : (
             <div className="mx-auto max-w-xl">
-              <AnimatedCloudIcon size={32} className="mx-auto text-slate-500" />
+              <AnimatedCloudIcon size={32} className="mx-auto text-muted" />
               <p className="mt-3 text-sm font-semibold text-slate-900">Drop CSV or XLSX here</p>
-              <p className="mt-1 text-xs text-slate-500">{DROPZONE_HINT}</p>
+              <p className="mt-1 text-xs text-muted">{DROPZONE_HINT}</p>
             </div>
           )}
         </label>

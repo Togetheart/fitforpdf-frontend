@@ -61,7 +61,7 @@ export default function PageHero({
             {subtitle ? (
               <p className={`text-base text-slate-700 ${subtitleClassName}`}>{subtitle}</p>
             ) : null}
-            {trustLine ? <p className="max-w-prose text-sm text-slate-500">{trustLine}</p> : null}
+            {trustLine ? <p className="max-w-prose text-sm text-muted">{trustLine}</p> : null}
             {children}
           </>
         ) : null}

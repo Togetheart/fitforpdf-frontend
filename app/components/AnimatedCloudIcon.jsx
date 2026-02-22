@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
  * Cloud-upload icon with animated draw-on effect on mount.
  * Matches the lucide-react CloudUpload / UploadCloud paths exactly.
  */
-export default function AnimatedCloudIcon({ size = 32, className = 'text-slate-500' }) {
+export default function AnimatedCloudIcon({ size = 32, className = 'text-muted' }) {
   const [drawn, setDrawn] = useState(false);
 
   useEffect(() => {

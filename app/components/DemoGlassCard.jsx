@@ -22,7 +22,7 @@ export default function DemoGlassCard({
         className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-b from-white/50 to-transparent"
       />
       <div className="relative">
-        <header className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+        <header className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.14em] text-muted">
           <span>{label}</span>
           {hint ? <span>{hint}</span> : null}
         </header>

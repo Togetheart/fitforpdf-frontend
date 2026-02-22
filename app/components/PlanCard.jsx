@@ -125,17 +125,17 @@ export default function PlanCard({
       <div className="mt-4">
         {pricePairs.length > 0 ? (
           <>
-            <p className="text-sm text-slate-500">{topline}</p>
+            <p className="text-sm text-muted">{topline}</p>
             <div className="mt-3 space-y-2">
               {pricePairs.map(({ label, price }) => (
                 <div key={label} className="flex items-baseline justify-between gap-3">
-                  <span className="text-sm text-slate-600">{label}</span>
+                  <span className="text-sm text-muted">{label}</span>
                   <span className="text-xl font-bold tracking-tight text-slate-900">{price}</span>
                 </div>
               ))}
             </div>
             {plan.perExport ? (
-              <p className="mt-1.5 text-right text-xs text-slate-400">{plan.perExport}</p>
+              <p className="mt-1.5 text-right text-xs text-muted/70">{plan.perExport}</p>
             ) : null}
           </>
         ) : (
@@ -154,7 +154,7 @@ export default function PlanCard({
           {plan.points.map((point) => (
             <li key={point} className="flex items-start gap-2.5">
               {isNegativePoint(point) ? (
-                <X className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                <X className="mt-0.5 h-4 w-4 shrink-0 text-muted/70" />
               ) : (
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
               )}
@@ -166,7 +166,7 @@ export default function PlanCard({
 
       {/* CTA */}
       {showAction ? <div className="mt-6">{renderAction(plan)}</div> : null}
-      {plan.ctaNote ? <p className="mt-2.5 text-center text-xs text-slate-400">{plan.ctaNote}</p> : null}
+      {plan.ctaNote ? <p className="mt-2.5 text-center text-xs text-muted/70">{plan.ctaNote}</p> : null}
     </Card>
   );
 }

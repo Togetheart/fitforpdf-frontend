@@ -22,8 +22,8 @@ const PROGRESS_STEP_STATES = {
     label: 'text-slate-900 font-medium',
   },
   pending: {
-    circle: 'border border-slate-200 bg-slate-100 text-slate-400',
-    label: 'text-slate-400',
+    circle: 'border border-slate-200 bg-slate-100 text-muted/70',
+    label: 'text-muted/70',
   },
 };
 
@@ -222,7 +222,7 @@ function SettingRow({
         >
           <div className="text-sm font-semibold text-slate-900">{title}</div>
           <div
-            className="mt-1 text-sm text-slate-500"
+            className="mt-1 text-sm text-muted"
           >
             {description}
           </div>
@@ -480,7 +480,7 @@ export default function UploadCard({
         <form className="relative space-y-5" onSubmit={onSubmit}>
         <div className="flex flex-col gap-1">
           <div id="generate" className="scroll-mt-24 flex items-center justify-between gap-2">
-            <p className="text-sm text-slate-500">{toolSubcopy}</p>
+            <p className="text-sm text-muted">{toolSubcopy}</p>
             <div className="flex shrink-0 items-center gap-2">
               {showProBanner ? (
                 <p
@@ -503,7 +503,7 @@ export default function UploadCard({
                       aria-describedby="buy-credits-tooltip"
                       title="Buy credits"
                       onClick={onBuyCredits}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/80"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-muted transition hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/80"
                     >
                       <ShoppingCart aria-hidden="true" className="h-4 w-4" />
                     </button>
@@ -535,7 +535,7 @@ export default function UploadCard({
               <button
                 type="button"
                 onClick={handleBuyCreditsPanelClose}
-                className="text-xs font-semibold text-slate-600 underline"
+                className="text-xs font-semibold text-muted underline"
               >
                 Close
               </button>
@@ -593,7 +593,7 @@ export default function UploadCard({
           >
             <div className="flex items-center justify-between text-sm">
               <p className="font-medium text-slate-800">Converting your file</p>
-              <p className="font-semibold text-slate-600">{progressPercent}%</p>
+              <p className="font-semibold text-muted">{progressPercent}%</p>
             </div>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
               <div
@@ -601,7 +601,7 @@ export default function UploadCard({
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
-            <p data-testid="upload-progress-label" className="text-xs font-medium text-slate-600">
+            <p data-testid="upload-progress-label" className="text-xs font-medium text-muted">
               {progressStepLabel}
             </p>
             <StepIndicator activeStepIndex={progressStepIndex} />
@@ -618,12 +618,12 @@ export default function UploadCard({
             aria-expanded={isOptionsExpanded}
             aria-controls="upload-options"
             onClick={() => setIsOptionsExpanded((current) => !current)}
-            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-medium text-slate-500 transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
+            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-medium text-muted transition hover:text-slate-700 ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
           >
             <span>Advanced options</span>
             <ChevronDown
               aria-hidden="true"
-              className={`h-4 w-4 text-slate-500 transition-transform duration-200 ${isOptionsExpanded ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 text-muted transition-transform duration-200 ${isOptionsExpanded ? 'rotate-180' : ''}`}
             />
           </button>
 
@@ -642,7 +642,7 @@ export default function UploadCard({
                       <button
                         type="button"
                         onClick={handleBuyCreditsPanelClose}
-                        className="text-xs font-semibold text-slate-600 underline"
+                        className="text-xs font-semibold text-muted underline"
                       >
                         Close
                       </button>
@@ -682,7 +682,7 @@ export default function UploadCard({
                       <p className="text-sm font-semibold text-slate-900">
                         {nudgeData?.title || 'Upgrade to unlock this feature'}
                       </p>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <p className="mt-1 text-sm text-muted">
                         {nudgeData?.description || 'Upgrade to unlock this feature.'}
                       </p>
                       <div className="mt-3 flex items-center gap-2">
@@ -773,7 +773,7 @@ export default function UploadCard({
                 <p className="text-sm font-semibold text-slate-900">
                   You've used your free exports.
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted">
                   {paywallReason || 'Pick a credit pack — one-time purchase, no subscription.'}
                 </p>
               </div>
@@ -785,7 +785,7 @@ export default function UploadCard({
                   onClick={() => onBuyCreditsPack('credits_100')}
                   className="group flex flex-col items-start gap-0.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
                 >
-                  <span className="text-xs font-medium text-slate-500">100 exports</span>
+                  <span className="text-xs font-medium text-muted">100 exports</span>
                   <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors">$19</span>
                 </button>
                 <button
@@ -794,15 +794,15 @@ export default function UploadCard({
                   className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]"
                 >
                   <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
-                  <span className="text-xs font-medium text-slate-500">500 exports</span>
+                  <span className="text-xs font-medium text-muted">500 exports</span>
                   <span className="text-lg font-bold tracking-tight text-accent">$69</span>
                 </button>
               </div>
 
               {/* Footer */}
-              <p className="text-center text-xs text-slate-400">
+              <p className="text-center text-xs text-muted/70">
                 Need more?{' '}
-                <a href="mailto:hello@fitforpdf.com" className="text-slate-500 underline underline-offset-2 hover:text-slate-700 transition-colors">
+                <a href="mailto:hello@fitforpdf.com" className="text-muted underline underline-offset-2 hover:text-slate-700 transition-colors">
                   Contact us for Team/API
                 </a>
               </p>
@@ -844,7 +844,7 @@ export default function UploadCard({
         )}
 
         {downloadedFileName || shouldShowVerdict ? (
-          <div className="flex flex-col gap-2 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
             {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
             {shouldShowVerdict ? (
               <span

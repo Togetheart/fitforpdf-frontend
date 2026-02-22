@@ -73,7 +73,7 @@ export default function FaqAccordion({
                 <ChevronDown
                   aria-hidden="true"
                   data-testid="faq-chevron"
-                  className={`h-4 w-4 shrink-0 text-slate-500 transition-all duration-[250ms] ${isOpen ? 'rotate-180' : ''}`}
+                  className={`h-4 w-4 shrink-0 text-muted transition-all duration-[250ms] ${isOpen ? 'rotate-180' : ''}`}
                 />
               </button>
               <div
@@ -82,7 +82,7 @@ export default function FaqAccordion({
                 aria-labelledby={buttonId}
                 className={`overflow-hidden transition-[max-height,opacity] duration-[250ms] ease-out ${isOpen ? 'max-h-[20rem] opacity-100' : 'max-h-0 opacity-0'}`}
               >
-                <p className="min-h-0 overflow-hidden px-1 pb-1 pt-3 text-sm leading-relaxed text-slate-600">
+                <p className="min-h-0 overflow-hidden px-1 pb-1 pt-3 text-sm leading-relaxed text-muted">
                   {item.a}
                 </p>
               </div>

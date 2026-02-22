@@ -16,7 +16,7 @@ function valueNode(value) {
   }
 
   if (!normalized) {
-    return <span className="text-slate-500">—</span>;
+    return <span className="text-muted">—</span>;
   }
 
   return (
@@ -48,7 +48,7 @@ export default function PricingComparisonTable({
         <div className="overflow-x-auto hidden md:block">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-[0.06em] text-slate-500">
+              <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase tracking-[0.06em] text-muted">
                 <th className="px-4 py-3">Feature</th>
                 {featureColumns.map((col) => (
                   <th key={col} className="px-4 py-3">
@@ -85,15 +85,15 @@ export default function PricingComparisonTable({
               <p className="text-sm font-medium text-slate-700">{row[0]}</p>
               <dl className="space-y-1 text-sm">
                 <div className="grid grid-cols-2 gap-2">
-                  <dt className="text-slate-500">{featureColumns[0]}</dt>
+                  <dt className="text-muted">{featureColumns[0]}</dt>
                   <dd className="text-slate-700">{valueNode(row[1])}</dd>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <dt className="text-slate-500">{featureColumns[1]}</dt>
+                  <dt className="text-muted">{featureColumns[1]}</dt>
                   <dd className="text-slate-700">{valueNode(row[2])}</dd>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <dt className="text-slate-500">{featureColumns[2]}</dt>
+                  <dt className="text-muted">{featureColumns[2]}</dt>
                   <dd className="text-slate-700">{valueNode(row[3])}</dd>
                 </div>
               </dl>

@@ -260,7 +260,7 @@ export default function ProofShowcase() {
               />
               <span
                 className={`text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 ${
-                  isActive ? 'text-accent' : 'text-slate-400'
+                  isActive ? 'text-accent' : 'text-muted/70'
                 }`}
               >
                 {fmt.label}
