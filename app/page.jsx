@@ -121,7 +121,7 @@ export default function Page() {
           <div
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
-            className="hero-headline-line mt-8 relative rounded-xl bg-white"
+            className="hero-headline-line feature-card-hover mt-8 relative rounded-xl bg-white"
           >
             <UploadCard
               toolTitle={LANDING_COPY.toolTitle}
