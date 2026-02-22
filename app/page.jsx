@@ -112,58 +112,62 @@ function SocialProofStrip() {
   const count = LANDING_COPY.socialProofCount;
 
   const innerContent = (
-    <>
-      <p className="mb-5 text-center text-sm text-black">
+    <div className="flex items-center gap-4 px-4 sm:gap-6 sm:px-6">
+      {/* Static label — left */}
+      <p className="flex-shrink-0 whitespace-nowrap text-sm text-muted">
         Trusted by{' '}
-        <span className="inline-flex items-center rounded-md border border-black/10 px-2 py-0.5 text-sm font-semibold text-black">
+        <span className="inline-flex items-center rounded-md border border-black/10 px-2 py-0.5 text-xs font-semibold text-black">
           {count}
         </span>
         {' '}professionals this week
       </p>
-      <div className="relative w-full overflow-hidden">
+      {/* Vertical separator */}
+      <div className="h-4 w-px flex-shrink-0 bg-black/10" aria-hidden="true" />
+      {/* Scrolling ticker — fills remaining width */}
+      <div className="relative min-w-0 flex-1 overflow-hidden">
         {/* Left fade */}
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-white to-transparent sm:w-32"
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent sm:w-20"
           aria-hidden="true"
         />
         {/* Right fade */}
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white to-transparent sm:w-32"
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent sm:w-20"
           aria-hidden="true"
         />
         <div className="ticker-track">
           {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
             <span
               key={i}
-              className="mx-8 whitespace-nowrap text-sm font-semibold tracking-wide text-muted/70 sm:mx-12 sm:text-base"
+              className="mr-8 whitespace-nowrap text-sm font-medium text-muted/60 sm:mr-12"
             >
               {item}
             </span>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 
   return (
     <div ref={anchorRef} data-testid="social-proof-ticker">
       {docked ? (
         /* In-flow: normal document position */
-        <div className="border-y border-black/10 bg-white py-8">
+        <div className="border-y border-black/10 bg-white py-4">
           {innerContent}
         </div>
       ) : (
         <>
           {/* Invisible placeholder keeps layout space while strip is fixed */}
           <div
-            className="border-y border-black/10 bg-white py-8 invisible pointer-events-none select-none"
+            className="border-y border-black/10 bg-white py-4 invisible pointer-events-none select-none"
             aria-hidden="true"
           >
             {innerContent}
           </div>
           {/* Fixed strip slides in from bottom */}
           <div
-            className="proof-slide-up fixed bottom-0 inset-x-0 z-40 border-t border-black/10 bg-white py-8"
+            className="proof-slide-up fixed bottom-0 inset-x-0 z-40 border-t border-black/10 bg-white py-4"
             style={{ boxShadow: '0 -6px 24px rgba(0,0,0,0.06)' }}
           >
             {innerContent}
