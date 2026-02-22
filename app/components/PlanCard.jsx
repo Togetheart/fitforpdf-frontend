@@ -93,8 +93,8 @@ export default function PlanCard({
       className={cn(
         'relative flex flex-col overflow-visible p-6 transition-all duration-150',
         isFeatured
-          ? `md:${featuredScaleClass} border-2 border-black/10`
-          : 'hover:-translate-y-0.5',
+          ? `md:${featuredScaleClass} border-2 border-black/10 feature-card-hover`
+          : 'feature-card-hover',
       )}
       aria-label={plan.title}
     >

@@ -424,7 +424,7 @@ export default function ProofShowcase() {
           {FEATURES.map((f) => (
             <div
               key={f.title}
-              className="flex flex-col items-center gap-2 px-3 py-4 text-center"
+              className="feature-card-hover flex flex-col items-center gap-2 px-3 py-4 text-center"
               style={{ backgroundColor: '#FAF8F5' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>

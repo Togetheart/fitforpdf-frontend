@@ -265,12 +265,14 @@
 
   /* ── Feature card hover lift ────────────────────────── */
   .feature-card-hover {
+    cursor: pointer;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .feature-card-hover:hover {
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
   }
 
   /* ── Privacy shield pulse ───────────────────────────── */
