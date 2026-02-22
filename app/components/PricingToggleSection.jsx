@@ -72,7 +72,7 @@ export function PaygCard({ pack, onBuy }) {
           ? 'md:scale-[1.04] bg-white p-7'
           : 'hover:-translate-y-1 p-6',
       )}
-      style={isFeatured ? { boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.10)' } : { boxShadow: 'none' }}
+      style={isFeatured ? { border: '1px solid rgba(0,0,0,0.10)' } : {}}
     >
 
       {/* Badge — centered above */}
@@ -192,7 +192,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
     <Card
       as="article"
       className="relative flex w-full flex-col overflow-visible p-8 bg-white"
-      style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.10)' }}
+      style={{ border: '1px solid rgba(0,0,0,0.10)' }}
     >
 
       {/* Title */}

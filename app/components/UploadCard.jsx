@@ -463,7 +463,7 @@ export default function UploadCard({
 
   return (
     <article
-      className="relative overflow-hidden rounded-xl bg-white/20 backdrop-blur-[5px] border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+      className="relative overflow-hidden rounded-xl bg-white/20 backdrop-blur-[5px] border border-black/10"
       data-testid="upload-card"
     >
       <div

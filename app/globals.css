@@ -72,36 +72,24 @@
  */
 @layer components {
   .glass-subtle {
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(0, 0, 0, 0.10);
     background: rgba(255, 255, 255, 0.45);
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.06);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 4px 14px rgba(2, 6, 23, 0.06);
   }
 
   .glass {
-    border: 1px solid rgba(255, 255, 255, 0.40);
+    border: 1px solid rgba(0, 0, 0, 0.10);
     background: rgba(255, 255, 255, 0.55);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 8px 24px rgba(2, 6, 23, 0.08);
   }
 
   .glass-elevated {
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(0, 0, 0, 0.10);
     background: rgba(255, 255, 255, 0.55);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    box-shadow: 0 12px 32px rgba(2, 6, 23, 0.12);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 12px 32px rgba(2, 6, 23, 0.12);
   }
 }
 
@@ -283,7 +271,6 @@
 
   .feature-card-hover:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
   }
 
   /* ── Privacy shield pulse ───────────────────────────── */
