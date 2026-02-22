@@ -327,7 +327,7 @@ export default function ProofShowcase() {
             {/* Tab buttons — Apple pill style */}
             <div
               className="mt-3 w-full overflow-x-auto scrollbar-none rounded-full"
-              style={{ backgroundColor: '#FAF8F5' }}
+              style={{ backgroundColor: '#ffffff' }}
             >
               <div
                 role="tablist"
@@ -425,7 +425,7 @@ export default function ProofShowcase() {
             <div
               key={f.title}
               className="flex flex-col items-center gap-2 px-3 py-4 text-center"
-              style={{ backgroundColor: '#FAF8F5' }}
+              style={{ backgroundColor: '#ffffff' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>
               <span className="text-[11px] font-medium leading-tight text-muted">
