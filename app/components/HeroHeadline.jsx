@@ -53,7 +53,7 @@ export default function HeroHeadline() {
           ref={sectionWordRef}
           data-testid="hero-headline-accent"
           data-anim={reducedMotion ? 'off' : 'on'}
-          className="hero-accent hero-accent--sections inline-block tracking-[0.18em]"
+          className="hero-accent hero-accent--sections inline-block"
         >
           sections.
         </span>
