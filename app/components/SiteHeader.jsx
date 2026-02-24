@@ -47,7 +47,7 @@ export default function SiteHeader() {
               alt="FitForPDF"
               className={cn(
                 'w-auto object-contain transition-all duration-300',
-                scrolled ? 'h-9' : 'h-10',
+                scrolled ? 'h-7' : 'h-8',
               )}
             />
           </a>
