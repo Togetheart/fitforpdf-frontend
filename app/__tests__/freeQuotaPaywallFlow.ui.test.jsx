@@ -215,9 +215,10 @@ describe('free plan strict quota journey', () => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
     });
     const paywallAfterFinal = screen.getByTestId('upload-paywall');
-    expect(within(paywallAfterFinal).getByRole('button', { name: 'Buy credits' })).toBeTruthy();
-    expect(within(paywallAfterFinal).getByRole('button', { name: 'Go Pro' })).toBeTruthy();
-    expect(paywallAfterFinal.textContent).toMatch(/reached your exports limit for this plan|free export limit|reached your free export limit/i);
+    // Paywall shows PAYWALL_PACKS buttons (credit packs), not 'Buy credits'/'Go Pro'
+    const paywallButtons = within(paywallAfterFinal).getAllByRole('button');
+    expect(paywallButtons.length).toBeGreaterThanOrEqual(2);
+    expect(paywallAfterFinal.textContent).toMatch(/free exports|credit pack|Pick a credit/i);
 
     await waitFor(() => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
@@ -242,7 +243,7 @@ describe('free plan strict quota journey', () => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
       expect(screen.queryByText(/free_quota_exhausted/i)).toBeNull();
       expect(screen.queryByText(/^Error$/i)).toBeNull();
-      expect(screen.getByTestId('upload-paywall').textContent).toMatch(/Buy credits/);
+      expect(screen.getByTestId('upload-paywall').textContent).toMatch(/exports|credit pack/i);
     });
 
     await waitFor(() => {

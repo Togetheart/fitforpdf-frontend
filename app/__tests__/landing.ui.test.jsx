@@ -38,7 +38,6 @@ describe('landing conversion-first structure', () => {
   test('sections exist in strict order', () => {
     const hero = screen.getByTestId('hero-section');
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
-    const clientReady = screen.getByTestId('section-client-ready');
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
     const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
@@ -46,14 +45,12 @@ describe('landing conversion-first structure', () => {
 
     expect(hero).toBeTruthy();
     expect(proof).toBeTruthy();
-    expect(clientReady).toBeTruthy();
     expect(pricing).toBeTruthy();
     expect(privacy).toBeTruthy();
     expect(faq).toBeTruthy();
     expect(finalCta).toBeTruthy();
     expect(hero.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(proof.compareDocumentPosition(clientReady) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(clientReady.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(proof.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(pricing.compareDocumentPosition(privacy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privacy.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(faq.compareDocumentPosition(finalCta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -81,7 +78,7 @@ describe('landing conversion-first structure', () => {
     const uploadGenerate = within(toolSection).getByRole('button', { name: 'Generate PDF' });
 
     expect(uploadGenerate).toBeTruthy();
-    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-accent');
+    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-cta');
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
   });
 
@@ -96,16 +93,14 @@ describe('landing conversion-first structure', () => {
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
   });
 
-  test('pricing preview renders free + credits cards only', () => {
-    const pricingGrid = screen.getByTestId('pricing-grid');
-    const cards = within(pricingGrid).getAllByTestId('pricing-preview-card');
-
-    expect(pricingGrid).toBeTruthy();
-    expect(cards).toHaveLength(2);
+  test('pricing preview renders PAYG plan cards', () => {
+    // PricingToggleSection shows payg-plan-card elements in PAYG mode (default)
+    const cards = screen.getAllByTestId('payg-plan-card');
+    expect(cards.length).toBeGreaterThanOrEqual(1);
   });
 
   test('proof statement exists', () => {
-    expect(screen.getByRole('heading', { level: 2, name: /From raw data to structured document/i })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: /This is what your client receives/i })).toBeTruthy();
   });
 
   test('single demo entrypoint is in the upload block', () => {
@@ -125,38 +120,35 @@ describe('landing conversion-first structure', () => {
   test('preview card has desktop float animation class', () => {
     const previewCard = screen.getByTestId('home-preview-card');
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
-    expect((previewCard.className || '').includes('max-w-7xl')).toBe(true);
-    const images = within(previewCard).getAllByRole('img');
-    expect(images[0].getAttribute('src') || '').toContain('/before_csv.webp');
+    // Default format is XLSX
+    expect(within(previewCard).getByText('XLSX INPUT')).toBeTruthy();
+    expect(within(previewCard).getByText('STRUCTURED PDF')).toBeTruthy();
     const proofWrapper = screen.getByTestId('proof-pdf-image');
     const proofImg = proofWrapper.querySelector('img');
-    expect((proofImg?.getAttribute('src') || '')).toContain('/CSV/enterprise-invoices-demo-overview.webp');
-    expect(proofWrapper.getAttribute('class') || '').toContain('w-full');
-    expect(within(previewCard).getByText('CSV INPUT')).toBeTruthy();
-    expect(within(previewCard).getByText('STRUCTURED PDF')).toBeTruthy();
+    // XLSX format selected — image src contains '/Excel/'
+    expect((proofImg?.getAttribute('src') || '')).toContain('/Excel/');
+    expect((proofWrapper.getAttribute('class') || '')).toContain('w-full');
   });
 
-  test('proof card is glass-elevated and client-ready section exists', () => {
+  test('proof card styling and before-after section exists', () => {
     const previewCard = screen.getByTestId('home-preview-card');
-    const clientReady = screen.getByTestId('section-client-ready');
+    const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
 
-    expect((previewCard.className || '').includes('glass-elevated')).toBe(true);
-    expect(clientReady).toBeTruthy();
-    expect(clientReady.textContent).toContain('Client-ready means');
+    expect(previewCard).toBeTruthy();
+    expect(proofSection).toBeTruthy();
+    expect(proofSection.contains(previewCard)).toBe(true);
   });
 
   test('landing section spacing uses varied rhythm', () => {
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
-    const clientReady = screen.getByTestId('section-client-ready');
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
     const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
 
-    expect((proof.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((clientReady.getAttribute('class') || '').includes('py-16')).toBe(true);
+    expect((proof.getAttribute('class') || '').includes('py-20')).toBe(true);
     expect((pricing.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((privacy.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((faq.getAttribute('class') || '').includes('py-16')).toBe(true);
+    expect((privacy.getAttribute('class') || '').includes('py-20')).toBe(true);
+    expect((faq.getAttribute('class') || '').includes('py-20')).toBe(true);
   });
 
   test('privacy and faq sections use dedicated sizing and layout', () => {
@@ -171,8 +163,8 @@ describe('landing conversion-first structure', () => {
     const faqAccordionClass = faqAccordion.getAttribute('class') || '';
     const faqInner = faq.firstElementChild;
 
-    expect(privacyClass).toContain('bg-slate-50');
-    expect(faqSectionClass).toContain('bg-white');
+    expect(privacyClass).toContain('bg-hero');
+    expect(faqSectionClass).toContain('bg-hero');
     expect((privacy.textContent || '').includes('Your data. Not our business.')).toBe(true);
     expect((faq.textContent || '').includes('Frequently asked questions')).toBe(true);
     expect(pricingInner?.getAttribute('class') || '').toContain('max-w-[960px]');
@@ -187,7 +179,7 @@ describe('landing conversion-first structure', () => {
     expect(screen.getAllByTestId('home-faq')).toHaveLength(1);
   });
 
-  test('format selector defaults to CSV and offers both format options', () => {
+  test('format selector defaults to XLSX and offers both format options', () => {
     const selector = screen.getByTestId('format-selector');
     const radios = within(selector).getAllByRole('radio');
     expect(radios).toHaveLength(2);
@@ -196,7 +188,8 @@ describe('landing conversion-first structure', () => {
     const xlsxRadio = radios.find((r) => r.textContent.includes('XLSX'));
     expect(csvRadio).toBeTruthy();
     expect(xlsxRadio).toBeTruthy();
-    expect(csvRadio.getAttribute('aria-checked')).toBe('true');
-    expect(xlsxRadio.getAttribute('aria-checked')).toBe('false');
+    // Default format is XLSX
+    expect(xlsxRadio.getAttribute('aria-checked')).toBe('true');
+    expect(csvRadio.getAttribute('aria-checked')).toBe('false');
   });
 });

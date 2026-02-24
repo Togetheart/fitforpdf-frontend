@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import React from 'react';
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 
 import PricingPage from '../pricing/page.jsx';
 
@@ -13,39 +13,31 @@ afterEach(() => {
 });
 
 describe('pricing page highlight', () => {
-  test('pricing page renders exactly two plan cards', () => {
-    const cards = screen.getAllByTestId('plan-card');
-    const grid = screen.getByTestId('pricing-grid');
+  test('pricing page renders exactly three PAYG plan cards', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(grid).toBeTruthy();
-    expect(cards).toHaveLength(2);
+    expect(cards).toHaveLength(3);
+    expect(screen.queryByTestId('plan-card')).toBeNull();
+    expect(screen.queryByTestId('pricing-grid')).toBeNull();
+    expect(screen.queryByTestId('plan-highlighted')).toBeNull();
   });
 
-  test('only credits card is highlighted and has Most popular', () => {
-    const highlighted = screen.getAllByTestId('plan-highlighted');
-    const cards = screen.getAllByTestId('plan-card');
+  test('starter pack card is the only recommended card', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
+    const recommendedCards = cards.filter((card) =>
+      (card.textContent || '').includes('Most popular'),
+    );
 
-    expect(highlighted).toHaveLength(1);
-    expect(highlighted[0]).toBeTruthy();
-    expect(highlighted[0].textContent).toContain('Most popular');
-
-    const highlightedCard = highlighted[0].closest('[data-testid="plan-card"]');
-    expect(highlightedCard).toBeTruthy();
-    expect(highlightedCard?.getAttribute('data-featured')).toBe('true');
-
-    cards
-      .filter((card) => card !== highlightedCard)
-      .forEach((card) => expect(card.getAttribute('data-featured')).toBe('false'));
+    expect(recommendedCards).toHaveLength(1);
   });
 
-  test('credits card includes both pack rows', () => {
-    const creditsCard = screen.getByTestId('plan-highlighted').closest('[data-testid="plan-card"]');
-    const creditsText = creditsCard ? creditsCard.textContent || '' : '';
+  test('plan cards include correct pricing values', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
+    const allText = cards.map((c) => c.textContent || '').join(' ');
 
-    expect(creditsText).toContain('100 exports');
-    expect(creditsText).toContain('€19');
-    expect(creditsText).toContain('500 exports');
-    expect(creditsText).toContain('€79');
+    expect(allText).toContain('$2.90');
+    expect(allText).toContain('$15');
+    expect(allText).toContain('$49');
   });
 
   test('comparison and faq sections are present', () => {

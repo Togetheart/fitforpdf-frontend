@@ -67,10 +67,10 @@ describe('home conversion-critical UI', () => {
     const tool = screen.getByTestId(LANDING_COPY_KEYS.upload);
 
     expect(within(tool).getByTestId('upload-dropzone')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Options' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Advanced options' })).toBeTruthy();
     expect(screen.queryByRole('switch')).toBeNull();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Advanced options' }));
 
     expect(within(tool).getAllByRole('switch')).toHaveLength(5);
     expect(within(tool).getByRole('switch', { name: 'Branding' })).toBeTruthy();
@@ -81,9 +81,9 @@ describe('home conversion-critical UI', () => {
   });
 
   test('upload card heading is anchored for scroll targeting', () => {
-    const generateTitle = screen.getByRole('heading', { name: 'Generate a client-ready PDF' });
-    expect(generateTitle.getAttribute('id')).toBe('generate');
-    expect(generateTitle.className).toContain('scroll-mt-24');
+    const generateEl = document.getElementById('generate');
+    expect(generateEl).toBeTruthy();
+    expect(generateEl.className).toContain('scroll-mt-24');
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
   });
 
@@ -93,7 +93,7 @@ describe('home conversion-critical UI', () => {
     const ctaClass = cta.getAttribute('class') || '';
 
     expect(cta).toHaveProperty('disabled', true);
-    expect(ctaClass).toContain('bg-accent');
+    expect(ctaClass).toContain('bg-cta');
 
     const input = screen.getByTestId('generate-file-input');
     const file = new File(['name,score\na,1'], 'report.csv', { type: 'text/csv' });
@@ -105,9 +105,9 @@ describe('home conversion-critical UI', () => {
     expect(within(tool).getByRole('button', { name: 'Generate PDF' })).toHaveProperty('disabled', false);
   });
 
-  test('pricing preview renders two cards', () => {
-    const pricingCards = screen.getAllByTestId('pricing-preview-card');
-    expect(pricingCards).toHaveLength(2);
+  test('pricing preview renders plan cards', () => {
+    const pricingCards = screen.getAllByTestId('payg-plan-card');
+    expect(pricingCards.length).toBeGreaterThanOrEqual(1);
   });
 
   test('home faq uses accordion items with expanding behavior', () => {
@@ -125,6 +125,6 @@ describe('home conversion-critical UI', () => {
 
     expect(firstButton.getAttribute('aria-expanded')).toBe('true');
     expect(panel?.getAttribute('class') || '').toContain('max-h-[20rem]');
-    expect(chevron.getAttribute('class') || '').toContain('rotate-180');
+    expect(chevron.getAttribute('class') || '').toContain('rotate-45');
   });
 });

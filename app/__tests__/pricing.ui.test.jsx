@@ -43,35 +43,6 @@ afterEach(() => {
 });
 
 describe('pricing page UI', () => {
-  test('has page hero shell and backdrop', () => {
-    const hero = screen.getByTestId('page-hero');
-    expect(hero).toBeTruthy();
-
-    const backdrop = hero.querySelector('[data-testid="hero-backdrop"]');
-    const heroBg = hero.querySelector('[data-testid="hero-bg"]');
-    const heroGradients = hero.querySelector('[data-testid="hero-bg-gradients"]');
-
-    expect(backdrop).toBeTruthy();
-    expect(backdrop?.getAttribute('aria-hidden')).toBe('true');
-    expect(heroBg).toBeTruthy();
-    expect(heroGradients).toBeTruthy();
-  });
-
-  test('hero backdrop animation disabled in reduced-motion mode', () => {
-    cleanup();
-    configureMatchMedia({ mobile: false, reduceMotion: true });
-    render(
-      <>
-        <SiteHeader />
-        <PricingPage />
-        <SiteFooter />
-      </>,
-    );
-
-    const gradients = screen.getByTestId('hero-bg-gradients');
-    expect(gradients).toBeTruthy();
-  });
-
   test('pricing page exports a React component', () => {
     expect(typeof PricingPageDefaultExport).toBe('function');
     expect(PricingPage).toBe(PricingPageDefaultExport);
@@ -83,59 +54,47 @@ describe('pricing page UI', () => {
   });
 
   test('renders the pricing hero heading', () => {
-    expect(screen.getByRole('heading', { level: 1, name: 'Pay only when it’s worth sending.' })).toBeTruthy();
-    expect(screen.getAllByText('No subscriptions. No lock-in.').length).toBeGreaterThanOrEqual(1);
-    expect(screen.queryByRole('heading', { level: 1, name: 'Pay only for what you export.' })).toBeNull();
-    expect(screen.queryByText('Start free. Upgrade only when your PDFs are worth sending.')).toBeNull();
+    const h1 = screen.getByRole('heading', { level: 1 });
+    expect(h1).toBeTruthy();
+    expect(h1.textContent).toContain('Simple pricing.');
+    expect(h1.textContent).toContain('Built for professionals.');
   });
 
-  test('renders exactly 2 plan cards with correct grid behavior', () => {
-    const grid = screen.getByTestId('pricing-grid');
-    const cards = screen.getAllByTestId('plan-card');
+  test('renders exactly 3 PAYG plan cards', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(grid).toBeTruthy();
-    expect((grid.getAttribute('class') || '').includes('grid-cols-1')).toBe(true);
-    expect((grid.getAttribute('class') || '').includes('md:grid-cols-2')).toBe(true);
-    expect(cards).toHaveLength(2);
-    cards.forEach((card) => {
-      expect((card.className || '').includes('glass')).toBe(true);
-    });
-    expect(screen.getByRole('heading', { level: 3, name: 'Free' })).toBeTruthy();
-    expect(screen.getByRole('heading', { level: 3, name: 'Credits' })).toBeTruthy();
+    expect(cards).toHaveLength(3);
+    expect(screen.queryByTestId('pricing-grid')).toBeNull();
+    expect(screen.queryByTestId('plan-card')).toBeNull();
   });
 
-  test('credits card lists both packs and prices', () => {
-    const cards = screen.getAllByTestId('plan-card');
-    const creditsCard = cards.find((card) =>
-      /Credits/i.test(within(card).queryByRole('heading', { level: 3 })?.textContent || ''),
-    );
+  test('plan cards show correct prices', () => {
+    const pageText = document.body.textContent || '';
 
-    expect(creditsCard).toBeTruthy();
-    expect(within(creditsCard).getByText('100 exports')).toBeTruthy();
-    expect(within(creditsCard).getByText('€19')).toBeTruthy();
-    expect(within(creditsCard).getByText('500 exports')).toBeTruthy();
-    expect(within(creditsCard).getByText('€79')).toBeTruthy();
+    expect(pageText.includes('$2.90')).toBe(true);
+    expect(pageText.includes('$15')).toBe(true);
+    expect(pageText.includes('$49')).toBe(true);
   });
 
   test('comparison table is present and has comparison test id', () => {
     const compare = screen.getByTestId('pricing-compare');
     expect(compare).toBeTruthy();
-    expect((compare.className || '').includes('glass')).toBe(true);
     const compareText = compare.textContent || '';
 
     expect(compareText).toContain('Client-ready PDF output');
-    expect(compareText).toContain('Branding removable');
+    expect(compareText).toContain('FitForPDF attribution');
     expect(compareText).toContain('Batch export');
     expect(compareText).toContain('API access');
+    expect(compareText).not.toContain('Branding removable');
   });
 
-  test('pricing comparison mobile cards are glass-styled', () => {
+  test('pricing comparison mobile cards have bg-hero class', () => {
     const featureRows = screen.getAllByTestId('feature-compare-row');
     expect(featureRows.length).toBeGreaterThan(0);
 
     featureRows.forEach((row) => {
       const className = row.getAttribute('class') || '';
-      expect(className).toContain('glass-subtle');
+      expect(className).toContain('bg-hero');
     });
   });
 
@@ -147,44 +106,36 @@ describe('pricing page UI', () => {
     expect(within(faq).getByRole('button', { name: firstQuestion })).toBeTruthy();
   });
 
-  test('clicking first FAQ question expands answer and rotates icon', () => {
+  test('clicking first FAQ question expands answer and rotates icon to rotate-45', () => {
     const firstQuestion = PRICING_PAGE_COPY.faq[0].q;
     const firstButton = screen.getByRole('button', { name: firstQuestion });
     const panelId = firstButton.getAttribute('aria-controls');
     const panel = document.getElementById(panelId || '');
-    const icon = firstButton.querySelector('[data-testid="faq-chevron"]') || firstButton.querySelector('svg:last-child');
-    const iconClass = icon ? icon.getAttribute('class') || '' : '';
+    const icon = firstButton.querySelector('[data-testid="faq-chevron"]');
 
     expect(firstButton.getAttribute('aria-expanded')).toBe('false');
     expect(panel).toBeTruthy();
     expect(panel.getAttribute('class') || '').toContain('max-h-0');
     expect(panel.getAttribute('class') || '').toContain('opacity-0');
-    expect(iconClass.includes('rotate-180')).toBe(false);
+    expect(icon).toBeTruthy();
+    expect((icon?.getAttribute('class') || '').includes('rotate-45')).toBe(false);
 
     fireEvent.click(firstButton);
 
     expect(firstButton.getAttribute('aria-expanded')).toBe('true');
     expect(panel.getAttribute('class') || '').toContain('max-h-[20rem]');
     expect(panel.getAttribute('class') || '').toContain('opacity-100');
-    const updatedIcon = firstButton.querySelector('[data-testid="faq-chevron"]') || firstButton.querySelector('svg:last-child');
-    const updatedIconClass = updatedIcon ? updatedIcon.getAttribute('class') || '' : '';
-    expect(updatedIconClass.includes('rotate-180')).toBe(true);
+    const updatedIcon = firstButton.querySelector('[data-testid="faq-chevron"]');
+    expect((updatedIcon?.getAttribute('class') || '').includes('rotate-45')).toBe(true);
   });
 
   test('contains expected plan pricing values', () => {
     const pageText = document.body.textContent || '';
 
-    expect(pageText.includes('100 exports')).toBe(true);
-    expect(pageText.includes('€19')).toBe(true);
-    expect(pageText.includes('500 exports')).toBe(true);
-    expect(pageText.includes('€79')).toBe(true);
+    expect(pageText.includes('$2.90')).toBe(true);
+    expect(pageText.includes('$15')).toBe(true);
+    expect(pageText.includes('$49')).toBe(true);
     expect(pageText.includes('€29/month')).toBe(false);
     expect(pageText.includes('Coming soon')).toBe(false);
-  });
-
-  test('pricing CTA items are intentional for no-Stripe state', () => {
-    const creditsButton = screen.getByRole('button', { name: PRICING_PAGE_COPY.creditsCtaLabel });
-    expect(creditsButton).toBeTruthy();
-    expect(creditsButton.getAttribute('disabled')).toBe('');
   });
 });

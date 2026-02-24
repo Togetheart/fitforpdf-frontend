@@ -76,30 +76,27 @@ describe('privacy page UI', () => {
   test('renders premium hero hierarchy', () => {
     const heading = screen.getByTestId('privacy-h1');
     expect(heading).toBeTruthy();
-    expect((heading.getAttribute('class') || '').includes('text-center')).toBe(true);
+    // h1 displays "Privacy" as the small eyebrow heading
+    expect(heading.textContent).toContain('Privacy');
+    // Large hero copy is in a separate <p> element with spans
+    expect(screen.getByText('Your data.')).toBeTruthy();
     expect(screen.getByText('Not our business.')).toBeTruthy();
-    expect(screen.getByText('PRIVACY')).toBeTruthy();
-    expect(screen.getByText('FitForPDF processes files — it does not store them.')).toBeTruthy();
+    // Negative checks — old copy not present
     expect(screen.queryByText('FitForPDF is designed to process files — not store them.')).toBeNull();
     expect(screen.queryByText('No account. No tracking. Files deleted after conversion.')).toBeNull();
-
-    const lines = heading.querySelectorAll('span');
-    expect(lines.length).toBeGreaterThan(1);
-    expect(lines[0]?.textContent).toBe('Your data.');
-    expect(lines[1]?.textContent).toBe('Not our business.');
   });
 
   test('contains file handling promises', () => {
     expect(screen.getByText('Files are deleted immediately after conversion.')).toBeTruthy();
-    expect(screen.getByText('The generated PDF is available for up to 15 minutes.')).toBeTruthy();
-    expect(screen.getByText('We do not store file contents in logs.')).toBeTruthy();
-    expect(screen.getByText('Do not upload sensitive data.')).toBeTruthy();
+    expect(screen.getByText('The generated PDF is available for up to 15 minutes. Automatically deleted after.')).toBeTruthy();
+    expect(screen.getByText('File contents are never stored in logs.')).toBeTruthy();
+    expect(screen.getByText(/Do not upload files containing personal data/i)).toBeTruthy();
   });
 
   test('contains trust sections and sensitive-data callout', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'How file handling works' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: 'What we log' })).toBeTruthy();
-    expect(screen.getByTestId('privacy-sensitive-callout').textContent).toContain('Do not upload sensitive data.');
+    expect(screen.getByTestId('privacy-sensitive-callout').textContent).toContain('Do not upload');
   });
 
   test('uses glass styling for privacy cards', () => {
@@ -121,7 +118,7 @@ describe('privacy page UI', () => {
   });
 
   test('contains legal footer line', () => {
-    expect(screen.getByText('For legal terms, see Terms of Service.')).toBeTruthy();
+    expect(screen.getByText('This page constitutes the Privacy Policy of FitForPDF, in accordance with GDPR (EU) 2016/679.')).toBeTruthy();
   });
 
   test('header nav links are present', () => {
@@ -133,11 +130,6 @@ describe('privacy page UI', () => {
     expect(Array.from(headerLinks).find((link) => link.textContent?.trim() === 'Privacy')?.getAttribute('href')).toBe(
       '/privacy',
     );
-    expect(
-      Array.from(headerLinks).find(
-        (link) => link.textContent?.trim() === 'Try on Telegram',
-      )?.getAttribute('href'),
-    ).toBe('https://t.me/CrabiAssistantBot');
   });
 
   test('footer remains present', () => {

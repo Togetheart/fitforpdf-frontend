@@ -28,17 +28,30 @@ afterEach(() => {
   cleanup();
 });
 
-describe('pricing hero background', () => {
-  test('pricing hero has shared hero background wrapper and layers', () => {
+describe('pricing page hero section', () => {
+  test('pricing page renders without errors', () => {
+    render(<PricingPage />);
+    expect(document.body).toBeTruthy();
+  });
+
+  test('pricing page has a simple hero section with h1 heading', () => {
     render(<PricingPage />);
 
-    const heroBg = screen.getByTestId('hero-bg');
-    const heroGradients = screen.getByTestId('hero-bg-gradients');
+    const h1 = screen.getByRole('heading', { level: 1 });
+    expect(h1).toBeTruthy();
+    expect(h1.textContent).toContain('Simple pricing.');
+    expect(h1.textContent).toContain('Built for professionals.');
+    expect(screen.queryByTestId('hero-bg')).toBeNull();
+    expect(screen.queryByTestId('hero-bg-gradients')).toBeNull();
+    expect(screen.queryByTestId('page-hero')).toBeNull();
+  });
 
-    expect(heroBg).toBeTruthy();
-    expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
-    expect((heroBg.getAttribute('class') || '').includes('pointer-events-none')).toBe(true);
-    expect(heroGradients).toBeTruthy();
-    expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients--pricing')).toBe(true);
+  test('pricing page renders PAYG cards, comparison, and FAQ', () => {
+    render(<PricingPage />);
+
+    const cards = screen.getAllByTestId('payg-plan-card');
+    expect(cards).toHaveLength(3);
+    expect(screen.getByTestId('pricing-compare')).toBeTruthy();
+    expect(screen.getByTestId('pricing-faq')).toBeTruthy();
   });
 });

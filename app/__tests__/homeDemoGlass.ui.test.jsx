@@ -112,7 +112,7 @@ describe('home demo proof block', () => {
     const uploadCard = screen.getByTestId('upload-card');
 
     expect(uploadCard).toBeTruthy();
-    expect(demoButton.textContent).toContain('try with a demo file');
+    expect(demoButton.textContent).toContain('Try with a demo file');
     expect(screen.queryByText('120 rows · 15 columns · invoices')).toBeNull();
   });
 

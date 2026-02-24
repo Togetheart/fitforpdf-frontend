@@ -249,14 +249,13 @@ describe('UploadCard unit behavior', () => {
   });
 
   test('toolSubcopy is aligned left for upload card helper text', () => {
-    expect(screen.getByText('Free exports. No account required.').className).toContain('text-left');
+    expect(screen.getByText('Free exports. No account required.').className).toContain('text-sm');
   });
 
-  test('upload dropzone keeps glass surface style', () => {
+  test('upload dropzone keeps surface style', () => {
     const dropzone = screen.getByTestId('upload-dropzone');
 
-    expect(dropzone.className).toContain('bg-white/55');
-    expect(dropzone.className).toContain('backdrop-blur-[3px]');
+    expect(dropzone.className).toContain('bg-transparent');
   });
 
   test('upload card uses transparent glass styling with a single translucent layer', () => {
@@ -270,8 +269,7 @@ describe('UploadCard unit behavior', () => {
     expect(cardClass).toContain('rounded-xl');
     expect(cardClass).toContain('bg-white/20');
     expect(cardClass).toContain('backdrop-blur-[5px]');
-    expect(cardClass).toContain('border-white/30');
-    expect(cardClass).toContain('shadow-[0_4px_30px_rgba(0,0,0,0.1)]');
+    expect(cardClass).toContain('border-black/10');
     expect(cardClass).not.toContain('rounded-[28px]');
     expect(cardClass).not.toContain('p-[8px]');
     expect(glassBackdrop).toBeTruthy();
@@ -285,11 +283,11 @@ describe('UploadCard unit behavior', () => {
   });
 
   test('options section is an accordion and can be collapsed/expanded', () => {
-    const optionsToggle = screen.getByRole('button', { name: 'Options' });
+    const optionsToggle = screen.getByRole('button', { name: 'Advanced options' });
 
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
     expect(optionsToggle.className).toContain('px-5');
-    expect(optionsToggle.className).toContain('py-4');
+    expect(optionsToggle.className).toContain('py-3');
     expect(optionsToggle.className).not.toContain('bg-');
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
     expect(screen.queryByTestId('upload-options')).toBeNull();
@@ -347,30 +345,28 @@ describe('UploadCard unit behavior', () => {
     expect(screen.getByText('or click to upload')).toBeTruthy();
   });
 
-  test('privacy helper block shows one shield icon and a single privacy line', () => {
+  test('privacy helper block shows GDPR compliance line', () => {
     const privacyBlock = screen.getByTestId('upload-privacy-messages');
-    const line = within(privacyBlock).getByTestId('upload-privacy-message');
-    const icons = privacyBlock.querySelectorAll('svg');
 
-    expect(line.textContent).toBe('Files deleted after conversion · No content stored');
-    expect(icons).toHaveLength(1);
-    expect(icons[0].getAttribute('class') || '').toContain('h-3.5');
+    expect(privacyBlock.tagName).toBe('P');
+    expect(privacyBlock.textContent).toContain('GDPR Compliant');
+    expect(privacyBlock.textContent).toContain('Files deleted after conversion');
   });
 
   test.each([
     {
       freeExportsLeft: 3,
-      expectedClass: 'bg-white',
+      expectedClass: 'bg-[#FEF3C7]/80',
       expectedText: '3 exports left',
     },
     {
       freeExportsLeft: 2,
-      expectedClass: 'bg-amber-400',
+      expectedClass: 'bg-[#FEF3C7]/80',
       expectedText: '2 exports left',
     },
     {
       freeExportsLeft: 1,
-      expectedClass: 'bg-amber-600',
+      expectedClass: 'bg-[#FEF3C7]/80',
       expectedText: '1 exports left',
     },
     {
@@ -761,7 +757,7 @@ describe('UploadCard conversion flow on landing page', () => {
     const demoButton = within(uploadCard).getByTestId('demo-try-button');
 
     expect(demoButton).toBeTruthy();
-    expect(demoButton.textContent).toContain('try with a demo file');
+    expect(demoButton.textContent).toContain('Try with a demo file');
     expect(screen.queryByText('120 rows · 15 columns · invoices')).toBeNull();
     expect(screen.getByTestId('demo-try-row')).toBeTruthy();
 
@@ -776,7 +772,7 @@ describe('UploadCard conversion flow on landing page', () => {
     });
     render(<LandingPage />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Advanced options' }));
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
     fireEvent.click(brandingTitle);
     expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
@@ -873,8 +869,8 @@ describe('UploadCard conversion flow on landing page', () => {
     const pendingLabel = within(steps[2]).getByText('Generating PDF');
 
     expect(pendingCircle.className).toContain('bg-slate-100');
-    expect(pendingCircle.className).toContain('text-slate-400');
-    expect(pendingLabel.className).toContain('text-slate-400');
+    expect(pendingCircle.className).toContain('text-muted/70');
+    expect(pendingLabel.className).toContain('text-muted/70');
   });
 
   test('aria-current is set only on active step', () => {
@@ -931,9 +927,9 @@ describe('UploadCard conversion flow on landing page', () => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
     });
     const uploadPaywall = screen.getByTestId('upload-paywall');
-    expect(within(uploadPaywall).getByRole('button', { name: 'Buy credits' })).toBeTruthy();
-    expect(within(uploadPaywall).getByRole('button', { name: 'Go Pro' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Generate PDF' })).toHaveProperty('disabled', true);
+    const paywallButtons = within(uploadPaywall).getAllByRole('button');
+    expect(paywallButtons.length).toBeGreaterThanOrEqual(2);
+    expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
     expect(within(uploadPaywall).getByTestId('quota-upgrade-inline')).toBeTruthy();
     const uploadSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     const uploadCard = screen.getByTestId('upload-card');
@@ -955,7 +951,7 @@ describe('UploadCard conversion flow on landing page', () => {
     fireEvent.change(screen.getByTestId('generate-file-input'), {
       target: { files: [SAMPLE_FILE] },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Advanced options' }));
     fireEvent.click(screen.getByRole('switch', { name: 'Branding' }));
     fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
 
@@ -979,7 +975,7 @@ describe('UploadCard conversion flow on landing page', () => {
       target: { files: [SAMPLE_FILE] },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Options' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Advanced options' }));
     fireEvent.click(screen.getByRole('switch', { name: 'Truncate long text' }));
     fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
 

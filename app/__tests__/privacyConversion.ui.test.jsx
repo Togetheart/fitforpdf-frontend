@@ -21,17 +21,21 @@ afterEach(() => {
 });
 
 describe('privacy conversion UI', () => {
-  test('uses pricing-style eyebrow and centered hero heading', () => {
-    expect(screen.getByText('PRIVACY')).toBeTruthy();
-    expect(screen.getByTestId('privacy-h1')).toBeTruthy();
-    expect((screen.getByTestId('privacy-h1').className || '').includes('text-center')).toBe(true);
+  test('uses privacy-style eyebrow and hero heading', () => {
+    // The h1 with data-testid="privacy-h1" is the small "Privacy" heading
+    const heading = screen.getByTestId('privacy-h1');
+    expect(heading).toBeTruthy();
+    expect(heading.textContent).toContain('Privacy');
+    // Large hero copy spans
+    expect(screen.getByText('Your data.')).toBeTruthy();
+    expect(screen.getByText('Not our business.')).toBeTruthy();
   });
 
   test('renders required retention and safety claims', () => {
     expect(screen.getByText('Files are deleted immediately after conversion.')).toBeTruthy();
-    expect(screen.getByText('The generated PDF is available for up to 15 minutes.')).toBeTruthy();
-    expect(screen.getByText('We do not store file contents in logs.')).toBeTruthy();
-    expect(screen.getByText('Do not upload sensitive data.')).toBeTruthy();
+    expect(screen.getByText('The generated PDF is available for up to 15 minutes. Automatically deleted after.')).toBeTruthy();
+    expect(screen.getByText('File contents are never stored in logs.')).toBeTruthy();
+    expect(screen.getByText(/Do not upload files containing personal data/i)).toBeTruthy();
   });
 
   test('renders what we log section and shared header/footer', () => {
