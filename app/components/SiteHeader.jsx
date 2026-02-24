@@ -41,14 +41,15 @@ export default function SiteHeader() {
         )}
       >
         <div className="mx-auto flex w-full max-w-[960px] items-center justify-between px-4 sm:px-6">
-          <a
-            href="/"
-            className={cn(
-              'font-semibold tracking-wide text-black transition-all duration-300',
-              scrolled ? 'text-base' : 'text-lg',
-            )}
-          >
-            FITFORPDF
+          <a href="/" className="flex items-center" aria-label="FitForPDF — accueil">
+            <img
+              src="/fitforpdf@2x.webp"
+              alt="FitForPDF"
+              className={cn(
+                'w-auto object-contain transition-all duration-300',
+                scrolled ? 'h-7' : 'h-8',
+              )}
+            />
           </a>
 
           {/* Desktop nav — hidden on mobile */}
