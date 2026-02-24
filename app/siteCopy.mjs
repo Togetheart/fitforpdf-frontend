@@ -267,6 +267,7 @@ export const PAYG_PACKS = [
     disabled: false,
     recommended: false,
     ctaNote: null,
+    stripePackId: 'credits_1',
   },
   {
     id: 'payg-starter',
@@ -283,6 +284,7 @@ export const PAYG_PACKS = [
     recommended: true,
     badge: PRICING_PAGE_COPY.paygStarterBadge,
     ctaNote: null,
+    stripePackId: 'credits_10',
   },
   {
     id: 'volume',
@@ -298,6 +300,7 @@ export const PAYG_PACKS = [
     disabled: false,
     recommended: false,
     ctaNote: null,
+    stripePackId: 'credits_100',
   },
 ];
 

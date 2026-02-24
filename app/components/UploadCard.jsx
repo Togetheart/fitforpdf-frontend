@@ -10,6 +10,7 @@ import {
 import Button from './ui/Button';
 import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
+import { PAYG_PACKS } from '../siteCopy.mjs';
 
 const PROGRESS_STEPS = ['Uploading', 'Structuring (column grouping)', 'Generating PDF'];
 const PROGRESS_STEP_STATES = {
@@ -27,10 +28,13 @@ const PROGRESS_STEP_STATES = {
   },
 };
 
-const CREDIT_PACKS = [
-  { pack: 'credits_100', exportsLabel: '100 exports', price: '$19' },
-  { pack: 'credits_500', exportsLabel: '500 exports', price: '$69', badge: 'Best value' },
-];
+const CREDIT_PACKS = PAYG_PACKS.map((p) => ({
+  pack: p.stripePackId,
+  exportsLabel: p.exportsLabel,
+  price: p.priceDisplay,
+}));
+
+const PAYWALL_PACKS = PAYG_PACKS.filter((p) => p.id !== 'single');
 
 function getProgressStepLabel(progress, stepIndex) {
   if (progress?.label) return progress.label;
@@ -780,23 +784,30 @@ export default function UploadCard({
 
               {/* Credit packs */}
               <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
-                <button
-                  type="button"
-                  onClick={() => onBuyCreditsPack('credits_100')}
-                  className="group flex flex-col items-start gap-0.5 rounded-xl border border-black/10 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
-                >
-                  <span className="text-xs font-medium text-muted">100 exports</span>
-                  <span className="text-lg font-bold tracking-tight text-black group-hover:text-accent transition-colors">$19</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onBuyCreditsPack('credits_500')}
-                  className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]"
-                >
-                  <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
-                  <span className="text-xs font-medium text-muted">500 exports</span>
-                  <span className="text-lg font-bold tracking-tight text-accent">$69</span>
-                </button>
+                {PAYWALL_PACKS.map((p, i) => (
+                  i === 0 ? (
+                    <button
+                      key={p.stripePackId}
+                      type="button"
+                      onClick={() => onBuyCreditsPack(p.stripePackId)}
+                      className="group flex flex-col items-start gap-0.5 rounded-xl border border-black/10 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
+                    >
+                      <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
+                      <span className="text-lg font-bold tracking-tight text-black group-hover:text-accent transition-colors">{p.priceDisplay}</span>
+                    </button>
+                  ) : (
+                    <button
+                      key={p.stripePackId}
+                      type="button"
+                      onClick={() => onBuyCreditsPack(p.stripePackId)}
+                      className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]"
+                    >
+                      <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
+                      <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
+                      <span className="text-lg font-bold tracking-tight text-accent">{p.priceDisplay}</span>
+                    </button>
+                  )
+                ))}
               </div>
 
               {/* Footer */}
