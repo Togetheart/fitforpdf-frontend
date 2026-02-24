@@ -22,33 +22,27 @@ afterEach(() => {
 
 describe('pricing conversion UI', () => {
   test('renders main pricing title', () => {
-    expect(screen.getByRole('heading', { level: 1, name: 'Pay only when it’s worth sending.' })).toBeTruthy();
-    expect(screen.queryByRole('heading', { level: 1, name: 'Pay only for what you export.' })).toBeNull();
-    expect(screen.queryByText('Start free. Upgrade only when your PDFs are worth sending.')).toBeNull();
+    const h1 = screen.getByRole('heading', { level: 1 });
+    expect(h1).toBeTruthy();
+    expect(h1.textContent).toContain('Simple pricing.');
+    expect(h1.textContent).toContain('Built for professionals.');
   });
 
-  test('renders two plan cards and credits card is highlighted', () => {
-    const cards = screen.getAllByTestId('plan-card');
-    const titles = cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent);
-    const highlighted = screen.getAllByTestId('plan-highlighted');
+  test('renders three PAYG plan cards', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(cards).toHaveLength(2);
-    expect(titles).toContain('Free');
-    expect(titles).toContain('Credits');
-    expect(highlighted).toHaveLength(1);
-    expect(String(highlighted[0].textContent || '')).toContain('Most popular');
-    expect(screen.getByTestId('plan-highlighted')).toBeTruthy();
+    expect(cards).toHaveLength(3);
+    expect(screen.queryByTestId('plan-highlighted')).toBeNull();
+    expect(screen.queryByTestId('plan-card')).toBeNull();
   });
 
-  test('credits card lists both pack variants', () => {
-    const creditsCard = screen.getByTestId('plan-credits')?.closest('[data-testid="plan-card"]') || null;
-    const body = creditsCard ? creditsCard.textContent : '';
+  test('plan cards list correct prices', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
+    const allText = cards.map((c) => c.textContent || '').join(' ');
 
-    expect(creditsCard).toBeTruthy();
-    expect(body).toContain('100 exports');
-    expect(body).toContain('€19');
-    expect(body).toContain('500 exports');
-    expect(body).toContain('€79');
+    expect(allText).toContain('$2.90');
+    expect(allText).toContain('$15');
+    expect(allText).toContain('$49');
   });
 
   test('contains a comparison table and faq', () => {
@@ -59,16 +53,16 @@ describe('pricing conversion UI', () => {
     expect(compare).toBeTruthy();
     expect(faq).toBeTruthy();
     expect(text).toContain('Client-ready PDF output');
-    expect(text).toContain('Branding removable');
+    expect(text).toContain('FitForPDF attribution');
     expect(text).toContain('Batch export');
     expect(text).toContain('API access');
-    expect(screen.getByTestId('plan-highlighted')).toBeTruthy();
+    expect(screen.queryByTestId('plan-highlighted')).toBeNull();
   });
 
-  test('faq opens one item at a time and icon rotates', () => {
+  test('faq opens one item at a time and icon rotates to rotate-45', () => {
     const faq = screen.getByTestId('pricing-faq');
     const buttons = within(faq).getAllByRole('button');
-    expect(buttons.length).toBe(4);
+    expect(buttons.length).toBe(5);
 
     const first = buttons[0];
     const second = buttons[1];
@@ -86,12 +80,12 @@ describe('pricing conversion UI', () => {
 
     fireEvent.click(first);
     expect(first.getAttribute('aria-expanded')).toBe('true');
-    expect(firstChevron?.getAttribute('class') || '').toContain('rotate-180');
+    expect(firstChevron?.getAttribute('class') || '').toContain('rotate-45');
     expect(second.getAttribute('aria-expanded')).toBe('false');
 
     fireEvent.click(second);
     expect(second.getAttribute('aria-expanded')).toBe('true');
-    expect(secondChevron?.getAttribute('class') || '').toContain('rotate-180');
+    expect(secondChevron?.getAttribute('class') || '').toContain('rotate-45');
     expect(first.getAttribute('aria-expanded')).toBe('false');
   });
 });

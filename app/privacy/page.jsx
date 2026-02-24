@@ -105,9 +105,9 @@ const ICONS = {
 };
 
 /* ─── Feature card — même pattern que landing ──────────── */
-function PrivacyFeatureCard({ icon, title, description }) {
+function PrivacyFeatureCard({ icon, title, description, testId }) {
   return (
-    <div className="feature-card-hover flex flex-col items-start gap-4 rounded-xl p-6 glass-subtle">
+    <div data-testid={testId} className="feature-card-hover flex flex-col items-start gap-4 rounded-xl p-6 glass-subtle">
       <span className="text-emerald-600" aria-hidden="true">{icon}</span>
       <div className="space-y-1.5">
         <h3 className="text-sm font-semibold leading-tight text-black">{title}</h3>
@@ -185,11 +185,13 @@ export default function PrivacyPage() {
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
           <PrivacyFeatureCard
+            testId="privacy-handling-card"
             icon={ICONS.delete}
             title={PRIVACY_PAGE_COPY.files.title}
             description={PRIVACY_PAGE_COPY.files.bullets[0]}
           />
           <PrivacyFeatureCard
+            testId="privacy-handling-card"
             icon={ICONS.clock}
             title={PRIVACY_PAGE_COPY.generatedPdf.title}
             description={[
@@ -206,10 +208,10 @@ export default function PrivacyPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* Bloc 1 : What we log */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-center text-xl font-[650] tracking-tight text-black sm:text-left" data-testid="privacy-logs-card">
+            <h2 className="text-center text-xl font-[650] tracking-tight text-black sm:text-left">
               {PRIVACY_PAGE_COPY.logs.title}
             </h2>
-            <div className="feature-card-hover flex-1 rounded-xl glass-elevated divide-y divide-black/10 px-6 py-2">
+            <div data-testid="privacy-logs-card" className="feature-card-hover flex-1 rounded-xl glass-elevated divide-y divide-black/10 px-6 py-2">
               <LogItem icon={ICONS.clock} label="Request timestamp" />
               <LogItem icon={ICONS.log} label="File type (CSV or XLSX)" />
               <LogItem icon={ICONS.cpu} label="Row and column counts" />

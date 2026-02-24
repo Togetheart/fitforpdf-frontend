@@ -832,7 +832,7 @@ export default function UploadCard({
           </Button>
         ) : (
           <>
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700 w-full justify-center">
+          <p data-testid="upload-privacy-messages" className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700 w-full justify-center">
             <span aria-label="European Union flag">🇪🇺</span>
             GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored
           </p>

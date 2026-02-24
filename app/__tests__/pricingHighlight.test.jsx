@@ -35,43 +35,36 @@ afterEach(() => {
 });
 
 describe('pricing highlight on home', () => {
-  test('home pricing preview renders exactly two cards', () => {
-    const pricingGrid = screen.getByTestId('pricing-grid');
-    const cards = within(pricingGrid).getAllByTestId('plan-card');
+  test('home pricing preview renders exactly three PAYG cards', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(cards).toHaveLength(2);
+    expect(cards).toHaveLength(3);
+    expect(screen.queryByTestId('plan-card')).toBeNull();
+    expect(screen.queryByTestId('pricing-grid')).toBeNull();
   });
 
-  test('credits is the only highlighted plan card', () => {
-    const highlightedCards = screen.getAllByTestId('plan-highlighted');
-    const allCards = screen.getAllByTestId('plan-card');
+  test('PAYG cards show correct prices', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
+    const allText = cards.map((c) => c.textContent || '').join(' ');
 
-    expect(highlightedCards).toHaveLength(1);
-    expect(allCards).toHaveLength(2);
-
-    const creditsCard = screen.getByTestId('plan-highlighted').closest('[data-testid="plan-card"]');
-    expect(creditsCard).toBeTruthy();
-    expect(creditsCard.querySelector('h3')?.textContent).toBe('Credits');
+    expect(allText).toContain('$2.90');
+    expect(allText).toContain('$15');
+    expect(allText).toContain('$49');
   });
 
-  test('highlighted credits card contains both pack rows', () => {
-    const creditsCard = screen.getByTestId('plan-highlighted').closest('[data-testid="plan-card"]');
-    const cardText = creditsCard ? creditsCard.textContent : '';
+  test('starter pack is marked as recommended (Most popular)', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
+    const popularTexts = cards.filter((c) => (c.textContent || '').includes('Most popular'));
 
-    expect(cardText).toContain('100 exports');
-    expect(cardText).toContain('€19');
-    expect(cardText).toContain('500 exports');
-    expect(cardText).toContain('€79');
+    expect(popularTexts).toHaveLength(1);
   });
 
-  test('free card and credits card contain required pricing text', () => {
-    const cards = screen.getAllByTestId('plan-card');
-    const freeCard = cards.find((card) => /Free/i.test(card.querySelector('h3')?.textContent || ''));
-    const creditsCard = cards.find((card) => /Credits/i.test(card.querySelector('h3')?.textContent || ''));
+  test('plan cards contain required pricing text', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
+    const allText = cards.map((c) => c.textContent || '').join(' ');
 
-    expect(freeCard).toBeTruthy();
-    expect(creditsCard).toBeTruthy();
-    expect(freeCard?.textContent || '').toContain('Free');
-    expect(creditsCard?.textContent || '').toContain('€19');
+    expect(allText).toContain('$2.90');
+    expect(allText).toContain('$15');
+    expect(allText).toContain('$49');
   });
 });

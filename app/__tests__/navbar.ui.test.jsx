@@ -63,7 +63,7 @@ describe('site navbar style and behavior', () => {
     expect(document.activeElement).toBe(pricingLink);
   });
 
-  test('logo link uses black text color', () => {
+  test('logo link contains the FitForPDF logo image', () => {
     render(
       <SiteShell>
         <main data-testid="page-content">content</main>
@@ -74,7 +74,7 @@ describe('site navbar style and behavior', () => {
     const logoLink = header.querySelector('a[href="/"]');
 
     expect(logoLink).not.toBeNull();
-    expect(hasClass(logoLink, 'text-black')).toBe(true);
-    expect(logoLink.textContent).toBe('FITFORPDF');
+    const logoImg = logoLink.querySelector('img[alt="FitForPDF"]');
+    expect(logoImg).not.toBeNull();
   });
 });

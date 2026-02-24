@@ -20,3 +20,20 @@ if (typeof window !== 'undefined' && !window.matchMedia) {
     }),
   });
 }
+
+// JSDOM does not implement IntersectionObserver. Provide a no-op stub so
+// components using it (SiteHeader scroll detection, SocialProofStrip dock
+// logic, etc.) can mount without crashing during tests.
+if (typeof window !== 'undefined' && !window.IntersectionObserver) {
+  class IntersectionObserverStub {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  Object.defineProperty(window, 'IntersectionObserver', {
+    writable: true,
+    configurable: true,
+    value: IntersectionObserverStub,
+  });
+}

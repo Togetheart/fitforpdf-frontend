@@ -484,6 +484,7 @@ export const PRIVACY_PAGE_COPY = {
     list: [
       { name: 'OVH', role: 'Cloud infrastructure & hosting', location: 'France (EU)' },
       { name: 'Stripe', role: 'Payment processing', location: 'EU data residency' },
+      { name: 'Microsoft Clarity', role: 'Behavioral analytics (anonymized sessions)', location: 'Microsoft (EU)' },
     ],
   },
 
