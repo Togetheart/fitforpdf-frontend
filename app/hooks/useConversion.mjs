@@ -201,6 +201,7 @@ export default function useConversion({ quota }) {
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [layout, setLayout] = useState({ overview: true, headers: true, footer: true });
+  const [renderId, setRenderId] = useState(null);
 
   const progressTimersRef = useRef([]);
   const [conversionProgress, setConversionProgress] = useState({
@@ -309,6 +310,7 @@ export default function useConversion({ quota }) {
         if (pageBurdenDetected) {
           setConfidence(failureConfidence || { verdict: 'FAIL', score: null, reasons: ['page_burden_high'], metrics: null });
           setPdfBlob(null);
+          setRenderId(null);
           setLastRequestMode(mode);
           setShowDetails(false);
           setFailureRecommendations(normalizePageBurdenRecommendations(data.recommendations));
@@ -340,6 +342,7 @@ export default function useConversion({ quota }) {
       if (!isPdfResponse) { setError('PDF response is missing.'); return; }
 
       setPdfBlob(blob);
+      setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
       setRenderVerdict(confidenceData?.verdict ?? null);
@@ -495,6 +498,7 @@ export default function useConversion({ quota }) {
     handleDownloadAnyway,
     // result
     pdfBlob,
+    renderId,
     confidence,
     renderVerdict,
     resolvedPdfFilename,
