@@ -342,6 +342,37 @@
     }
   }
 
+  @keyframes feedbackSlideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .feedback-bar-enter {
+    animation: feedbackSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes feedbackFadeOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+
+  .feedback-bar-exit {
+    animation: feedbackFadeOut 0.2s ease-in forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feedback-bar-enter,
+    .feedback-bar-exit {
+      animation: none;
+    }
+  }
+
   @keyframes heroMeshA {
     0% {
       transform: translate3d(0, 0, 0) scale(1);
