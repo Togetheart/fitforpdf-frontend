@@ -11,7 +11,6 @@ import Button from './ui/Button';
 import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
 import { PAYG_PACKS } from '../siteCopy.mjs';
-import FeedbackBar from './FeedbackBar.jsx';
 
 const PROGRESS_STEPS = ['Uploading', 'Structuring (column grouping)', 'Generating PDF'];
 const PROGRESS_STEP_STATES = {
@@ -355,7 +354,6 @@ export default function UploadCard({
   purchaseMessage = '',
   onGoPro = onUpgrade,
   initialOptionsExpanded = false,
-  renderId = null,
 }) {
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
   const showProBanner = getPlanTypeLabel(planType) === 'pro' || isPro;
@@ -874,7 +872,6 @@ export default function UploadCard({
         {error && <p className="text-sm text-rose-700">{error}</p>}
             </form>
           </div>
-        <FeedbackBar renderId={renderId} visible={hasResultBlob} />
     </article>
   );
 }

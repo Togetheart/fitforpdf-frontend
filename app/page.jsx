@@ -9,6 +9,7 @@ import {
 import useQuota from './hooks/useQuota.mjs';
 import useConversion from './hooks/useConversion.mjs';
 import UploadCard from './components/UploadCard';
+import FeedbackBar from './components/FeedbackBar.jsx';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
 import PricingToggleSection from './components/PricingToggleSection';
@@ -241,7 +242,6 @@ export default function Page() {
               notice={conversion.notice}
               error={conversion.error}
               hasResultBlob={Boolean(conversion.pdfBlob)}
-              renderId={conversion.renderId}
               onFileSelect={(nextFile) => conversion.handleFileSelect(nextFile)}
               onRemoveFile={conversion.handleRemoveFile}
               onBrandingChange={conversion.setIncludeBranding}
@@ -408,6 +408,7 @@ export default function Page() {
         </div>
       </Section>
 
+      <FeedbackBar renderId={conversion.renderId} visible={Boolean(conversion.pdfBlob)} />
     </div>
   );
 }

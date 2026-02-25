@@ -26,7 +26,7 @@ export default function FeedbackBar({ renderId, visible }) {
     return () => clearTimeout(showTimer.current);
   }, [visible, renderId]);
 
-  // Auto-hide 60s after appearing in idle — hide immediately (no animation needed)
+  // Auto-hide 60s after appearing in idle
   useEffect(() => {
     if (!shown || phase !== 'idle') return;
     autoHide.current = setTimeout(() => {
@@ -86,24 +86,24 @@ export default function FeedbackBar({ renderId, visible }) {
     <div
       role="region"
       aria-label="Feedback sur le PDF"
-      className={`fixed bottom-4 left-1/2 z-[200] w-[calc(100%-2rem)] max-w-[480px] -translate-x-1/2 rounded-2xl bg-[#1a1a2e] px-5 py-4 shadow-2xl backdrop-blur-[8px] ${
+      className={`fixed bottom-5 left-1/2 z-[200] w-[calc(100%-2rem)] max-w-[480px] -translate-x-1/2 rounded-2xl border border-black/10 bg-white px-5 py-3.5 shadow-lg ${
         exiting ? 'feedback-bar-exit' : 'feedback-bar-enter'
       }`}
       onAnimationEnd={handleExitEnd}
     >
       {phase === 'idle' && (
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-white/80">Ce PDF vous convient ?</p>
+          <p className="text-sm font-medium text-[#1A1A1A]">Ce PDF vous convient ?</p>
           <div className="flex gap-2">
             <button
               onClick={() => submit('up')}
-              className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white transition hover:scale-105 hover:bg-white/20"
+              className="rounded-full bg-[#1A1A1A] px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-[#374151]"
             >
               👍 OK
             </button>
             <button
               onClick={() => setPhase('reasons')}
-              className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white transition hover:scale-105 hover:bg-white/20"
+              className="rounded-full border border-black/20 px-4 py-1.5 text-sm font-semibold text-[#1A1A1A] transition hover:bg-black/5"
             >
               👎 Problème
             </button>
@@ -112,14 +112,14 @@ export default function FeedbackBar({ renderId, visible }) {
       )}
 
       {phase === 'reasons' && (
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-white/80">Quel problème ?</p>
+        <div className="space-y-2.5">
+          <p className="text-sm font-medium text-[#1A1A1A]">Quel problème ?</p>
           <div className="flex flex-wrap gap-2">
             {REASONS.map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => key === 'other' ? setPhase('comment') : submit('down', key)}
-                className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white transition hover:scale-105 hover:bg-white/20"
+                className="rounded-full border border-black/15 px-3 py-1 text-xs font-medium text-[#1A1A1A] transition hover:bg-black/5"
               >
                 {label}
               </button>
@@ -129,26 +129,26 @@ export default function FeedbackBar({ renderId, visible }) {
       )}
 
       {phase === 'comment' && (
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-white/80">Dites-nous en plus :</p>
+        <div className="space-y-2.5">
+          <p className="text-sm font-medium text-[#1A1A1A]">Dites-nous en plus :</p>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value.slice(0, 140))}
             placeholder="Max 140 caractères"
             rows={2}
-            className="w-full resize-none rounded-xl bg-white/10 px-3 py-2 text-sm text-white placeholder-white/40 outline-none"
+            className="w-full resize-none rounded-xl border border-black/10 bg-black/[0.03] px-3 py-2 text-sm text-[#1A1A1A] placeholder-black/30 outline-none focus:border-black/20"
           />
           <div className="flex justify-end gap-2">
             <button
               onClick={() => setPhase('reasons')}
-              className="rounded-full px-3 py-1 text-xs text-white/50 hover:text-white/80"
+              className="rounded-full px-3 py-1 text-xs text-[#7D6B58] hover:text-[#1A1A1A]"
             >
               Retour
             </button>
             <button
               disabled={!comment.trim()}
               onClick={() => submit('down', 'other', comment.trim())}
-              className="rounded-full bg-white/20 px-4 py-1 text-xs font-semibold text-white disabled:opacity-40 hover:bg-white/30"
+              className="rounded-full bg-[#1A1A1A] px-4 py-1 text-xs font-semibold text-white disabled:opacity-30 hover:bg-[#374151]"
             >
               Envoyer
             </button>
@@ -157,15 +157,15 @@ export default function FeedbackBar({ renderId, visible }) {
       )}
 
       {phase === 'submitting' && (
-        <p className="text-center text-sm text-white/60">Envoi…</p>
+        <p className="text-center text-sm text-[#7D6B58]">Envoi…</p>
       )}
 
       {phase === 'thanks' && (
-        <p className="text-center text-sm font-semibold text-white">Merci ! 🙏</p>
+        <p className="text-center text-sm font-semibold text-[#1A1A1A]">Merci ! 🙏</p>
       )}
 
       {phase === 'already_sent' && (
-        <p className="text-center text-sm text-white/70">Déjà envoyé ✓</p>
+        <p className="text-center text-sm text-[#7D6B58]">Déjà envoyé ✓</p>
       )}
     </div>
   );
