@@ -27,7 +27,7 @@ export const LANDING_COPY = {
     { key: 'pinned', title: 'Fixed reference columns', description: 'Key columns like ID and Name repeated in every section.', icon: 'pin' },
     { key: 'pagination', title: 'Rows X\u2013Y and Page i/n', description: 'Clear row ranges and page numbers on every page.', icon: 'pagination' },
     { key: 'auto', title: 'Auto-structured', description: 'Zero configuration \u2014 upload and get a structured PDF.', icon: 'wand' },
-    { key: 'toc', title: 'Clickable TOC links', description: 'Jump to any section directly from the overview page.', icon: 'link' },
+    { key: 'toc', title: 'Clickable table of contents', description: 'Jump to any section directly from the overview page.', icon: 'link' },
   ],
   clientReadyBullets: [
     'Document overview page',
@@ -35,7 +35,7 @@ export const LANDING_COPY = {
     'Fixed reference columns',
     'Rows X\u2013Y and Page i/n',
     'No manual layout',
-    'Clickable TOC links',
+    'Clickable table of contents',
   ],
 
   toolTitle: 'Generate a client-ready PDF',
@@ -81,7 +81,7 @@ export const LANDING_COPY = {
   footerMakerName: 'Sébastien',
   footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
 
-  socialProofCount: '1,187',
+  socialProofCount: '1,098',
 };
 
 export const LANDING_COPY_KEYS = {
@@ -96,24 +96,29 @@ export const LANDING_COPY_KEYS = {
 
 export const HOME_FAQ = [
   {
-    id: 'what-counts',
+    id: 'expire',
+    q: 'Do my "Pay as you go" credits expire?',
+    a: 'No. If you buy a pack of 10 or 100 exports, they remain in your account forever until you use them.',
+  },
+  {
+    id: 'subscription',
+    q: 'Is the Starter pack a subscription?',
+    a: 'Absolutely not. The Pay as you go options are strictly one-time payments. We will never auto-charge your card. If you want a recurring plan, check out our Pro Subscription.',
+  },
+  {
+    id: 'branding',
+    q: 'Will my clients see the FitForPDF logo?',
+    a: 'Not if you use a paid export. All paid options (whether one-time credits or the Pro subscription) completely remove our branding so you can send professional, white-label documents.',
+  },
+  {
+    id: 'counts',
     q: 'What counts as an export?',
     a: 'A successful PDF generation (HTTP 200 with a PDF response).',
   },
   {
-    id: 'do-you-store',
+    id: 'files',
     q: 'Do you store my files?',
     a: 'No. Files are deleted immediately after conversion. The generated PDF is available for up to 15 minutes.',
-  },
-  {
-    id: 'client-work',
-    q: 'Is this suitable for client work?',
-    a: 'Yes. FitForPDF produces a predictable, client-ready layout: overview page, column sections, repeated reference columns, and clear pagination.',
-  },
-  {
-    id: 'api',
-    q: 'Do you offer an API?',
-    a: 'Contact us for Team/API access and dedicated onboarding.',
   },
 ];
 
@@ -523,4 +528,41 @@ export const PRIVACY_PAGE_COPY = {
       a: 'Please do not. FitForPDF is not designed for sensitive or regulated data (health records, financial PII, etc.).',
     },
   ],
+};
+
+export const SEO = {
+  siteUrl: 'https://www.fitforpdf.com',
+  ogImage: 'https://www.fitforpdf.com/og-image.png',
+  home: {
+    title: 'FitForPDF — Convert Excel & CSV to Structured PDF',
+    description: 'Upload any spreadsheet and instantly get a structured, client-ready PDF with sections, pagination, and column groupings. 3 free exports. No account required.',
+  },
+  pricing: {
+    title: 'Pricing — Simple & Transparent',
+    description: 'Free exports, pay-as-you-go credits from $2.90, and Pro subscription for unlimited exports. No subscription required.',
+  },
+  privacy: {
+    title: 'Privacy Policy — Your Data, Not Our Business',
+    description: 'FitForPDF deletes all files immediately after processing. No content stored in logs. GDPR compliant. Data processed in France.',
+  },
+  excelCutoff: {
+    title: 'Fix Cut-Off Columns in Excel PDF Export',
+    description: 'Learn why Excel cuts off columns when exporting to PDF and how to fix it — with manual tips and structured PDF export via FitForPDF.',
+    slug: 'excel-to-pdf-columns-cut-off',
+  },
+  fitOnePage: {
+    title: 'How to Fit a Large Excel Sheet on One PDF Page',
+    description: 'Step-by-step guide to fit a large Excel sheet on one PDF page — manual scaling tips plus smarter structured export with FitForPDF.',
+    slug: 'fit-excel-sheet-on-one-page-pdf',
+  },
+  csvPdf: {
+    title: 'Convert CSV to Structured, Readable PDF',
+    description: 'Learn how to convert wide CSV files into structured, readable PDFs with automatic sectioning and pagination via FitForPDF.',
+    slug: 'csv-to-structured-pdf',
+  },
+  auditPdf: {
+    title: 'Export Audit Excel Sheets to PDF — Best Practices',
+    description: 'Best practices for exporting audit Excel reports to PDF that clients can read — including tools like FitForPDF for structured output.',
+    slug: 'audit-report-excel-to-pdf-tips',
+  },
 };

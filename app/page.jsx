@@ -291,9 +291,49 @@ export default function Page() {
         </div>
       </Section>
 
+      <Section id="comparison" index={4} bg="bg-hero" className="py-20 sm:py-28">
+        <div className="space-y-10">
+          <div className="text-center">
+            <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
+              Excel PDF Export vs FitForPDF
+            </h2>
+            <p className="mt-3 text-base text-muted max-w-xl mx-auto">
+              Stop fighting print settings. Get a client-ready structured PDF in seconds.
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-2xl border border-black/10">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-black/10 bg-black/[0.025]">
+                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-6">Feature</th>
+                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-6">Excel PDF Export</th>
+                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] sm:px-6">FitForPDF</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/[0.05]">
+                {[
+                  ['Wide columns', 'Cut off or unreadable', '✓ Grouped into sections'],
+                  ['Layout', 'Manual tweaking required', '✓ Zero configuration'],
+                  ['Page breaks', 'Unpredictable splits', '✓ Automatic pagination'],
+                  ['Reference columns', 'Lost after page 1', '✓ Repeated on every section'],
+                  ['Overview', 'None', '✓ Document overview page'],
+                  ['Result', 'Raw spreadsheet feel', '✓ Client-ready document'],
+                ].map(([feature, excel, fitforpdf], i) => (
+                  <tr key={feature} className={i % 2 === 1 ? 'bg-black/[0.015]' : ''}>
+                    <td className="px-4 py-3 font-[500] text-[#1A1A1A] sm:px-6">{feature}</td>
+                    <td className="px-4 py-3 text-black/40 sm:px-6">{excel}</td>
+                    <td className="px-4 py-3 font-[500] text-[#1A1A1A] sm:px-6">{fitforpdf}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Section>
+
       <Section
         id={LANDING_COPY_KEYS.privacyStrip}
-        index={4}
+        index={5}
         bg="bg-hero"
         className="py-20 sm:py-28"
         testId="privacy-section"
@@ -326,7 +366,7 @@ export default function Page() {
 
       <Section
         id="home-faq"
-        index={5}
+        index={6}
         bg="bg-hero"
         className="py-20 sm:py-28"
         testId="faq-section"
@@ -346,7 +386,7 @@ export default function Page() {
 
       <Section
         id="final-cta"
-        index={6}
+        index={7}
         bg="bg-hero"
         className="py-24 sm:py-32"
         testId="final-cta-section"
