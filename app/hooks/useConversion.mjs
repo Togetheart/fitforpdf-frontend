@@ -259,6 +259,7 @@ export default function useConversion({ quota }) {
     setError(null);
     if (!preserveNotice) setNotice(null);
     setRenderVerdict(null);
+    setRenderId(null);
     setFailureRecommendations([]);
     setColumnMapDebug(null);
     setIsLoading(true);
@@ -397,6 +398,7 @@ export default function useConversion({ quota }) {
 
   function handleFileSelect(nextFile) {
     setRenderVerdict(null);
+    setRenderId(null);
     setFile(nextFile);
     if (nextFile) { setError(null); setNotice(null); }
     setPdfBlob(null);
@@ -421,6 +423,7 @@ export default function useConversion({ quota }) {
     setFile(null);
     setPdfBlob(null);
     setRenderVerdict(null);
+    setRenderId(null);
     setError(null);
     setNotice(null);
   }
