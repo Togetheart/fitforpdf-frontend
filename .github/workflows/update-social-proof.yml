@@ -1,0 +1,29 @@
+name: Update weekly social proof count
+
+on:
+  schedule:
+    - cron: '1 0 * * 1'  # Monday 00:01 UTC = dimanche 23:01 PDT / lundi 01:01 Paris
+  workflow_dispatch:       # allow manual trigger from GitHub UI
+
+jobs:
+  update-count:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Compute and apply weekly count
+        run: node scripts/update-social-proof.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet || (git add app/siteCopy.mjs && git commit -m "chore: update weekly social proof count")
+          git push
