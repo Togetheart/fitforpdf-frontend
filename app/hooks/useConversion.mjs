@@ -201,6 +201,7 @@ export default function useConversion({ quota }) {
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [layout, setLayout] = useState({ overview: true, headers: true, footer: true });
+  const [renderId, setRenderId] = useState(null);
 
   const progressTimersRef = useRef([]);
   const [conversionProgress, setConversionProgress] = useState({
@@ -258,6 +259,7 @@ export default function useConversion({ quota }) {
     setError(null);
     if (!preserveNotice) setNotice(null);
     setRenderVerdict(null);
+    setRenderId(null);
     setFailureRecommendations([]);
     setColumnMapDebug(null);
     setIsLoading(true);
@@ -309,6 +311,7 @@ export default function useConversion({ quota }) {
         if (pageBurdenDetected) {
           setConfidence(failureConfidence || { verdict: 'FAIL', score: null, reasons: ['page_burden_high'], metrics: null });
           setPdfBlob(null);
+          setRenderId(null);
           setLastRequestMode(mode);
           setShowDetails(false);
           setFailureRecommendations(normalizePageBurdenRecommendations(data.recommendations));
@@ -340,6 +343,8 @@ export default function useConversion({ quota }) {
       if (!isPdfResponse) { setError('PDF response is missing.'); return; }
 
       setPdfBlob(blob);
+      console.log('[FeedbackBar debug] x-render-id:', res.headers.get('x-render-id'));
+      setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
       setRenderVerdict(confidenceData?.verdict ?? null);
@@ -394,6 +399,7 @@ export default function useConversion({ quota }) {
 
   function handleFileSelect(nextFile) {
     setRenderVerdict(null);
+    setRenderId(null);
     setFile(nextFile);
     if (nextFile) { setError(null); setNotice(null); }
     setPdfBlob(null);
@@ -418,6 +424,7 @@ export default function useConversion({ quota }) {
     setFile(null);
     setPdfBlob(null);
     setRenderVerdict(null);
+    setRenderId(null);
     setError(null);
     setNotice(null);
   }
@@ -495,6 +502,7 @@ export default function useConversion({ quota }) {
     handleDownloadAnyway,
     // result
     pdfBlob,
+    renderId,
     confidence,
     renderVerdict,
     resolvedPdfFilename,

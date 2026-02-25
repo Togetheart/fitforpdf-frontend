@@ -241,6 +241,7 @@ export default function Page() {
               notice={conversion.notice}
               error={conversion.error}
               hasResultBlob={Boolean(conversion.pdfBlob)}
+              renderId={conversion.renderId}
               onFileSelect={(nextFile) => conversion.handleFileSelect(nextFile)}
               onRemoveFile={conversion.handleRemoveFile}
               onBrandingChange={conversion.setIncludeBranding}
