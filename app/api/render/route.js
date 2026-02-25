@@ -141,6 +141,7 @@ function copyPassThroughHeaders(from) {
     'x-cleansheet-column-map-mode',
     'x-cleansheet-column-map-rendered',
     'x-cleansheet-column-map-entries',
+    'x-render-id',
   ];
   for (const header of passHeaders) {
     const value = from.get(header);
