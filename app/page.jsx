@@ -232,7 +232,7 @@ export default function Page() {
                   return `${count} purchased export${count === 1 ? '' : 's'} remaining.`;
                 }
                 if (quota.planType === 'pro') {
-                  return 'Pro plan. Unlimited exports.';
+                  return 'Pro plan. 500 exports/month.';
                 }
                 const count = Number.isFinite(quota.freeExportsLeft)
                   ? quota.freeExportsLeft
