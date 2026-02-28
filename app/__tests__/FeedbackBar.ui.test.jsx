@@ -35,10 +35,10 @@ describe('FeedbackBar', () => {
     render(<FeedbackBar renderId="abc" visible={true} />);
     await act(async () => { vi.advanceTimersByTime(2001); });
     expect(screen.getByRole('button', { name: /ok/i })).toBeTruthy();
-    expect(screen.getByRole('button', { name: /probl/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /issue/i })).toBeTruthy();
   });
 
-  test('thumbs-up submits vote=up and shows "Merci !"', async () => {
+  test('thumbs-up submits vote=up and shows "Thank you!"', async () => {
     render(<FeedbackBar renderId="abc" visible={true} />);
     await act(async () => { vi.advanceTimersByTime(2001); });
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: /ok/i })); });
@@ -49,22 +49,22 @@ describe('FeedbackBar', () => {
         body: expect.stringContaining('"vote":"up"'),
       }),
     );
-    expect(screen.getByText(/merci/i)).toBeTruthy();
+    expect(screen.getByText(/thank you/i)).toBeTruthy();
   });
 
   test('thumbs-down shows reason pills', async () => {
     render(<FeedbackBar renderId="abc" visible={true} />);
     await act(async () => { vi.advanceTimersByTime(2001); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /probl/i })); });
-    expect(screen.getByRole('button', { name: /mise en page/i })).toBeTruthy();
-    expect(screen.getByRole('button', { name: /autre/i })).toBeTruthy();
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /issue/i })); });
+    expect(screen.getByRole('button', { name: /layout/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /other/i })).toBeTruthy();
   });
 
-  test('clicking a reason (non-Autre) submits vote=down with reason', async () => {
+  test('clicking a reason (non-Other) submits vote=down with reason', async () => {
     render(<FeedbackBar renderId="abc" visible={true} />);
     await act(async () => { vi.advanceTimersByTime(2001); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /probl/i })); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /mise en page/i })); });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /issue/i })); });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /layout/i })); });
     expect(global.fetch).toHaveBeenCalledWith(
       '/api/render/feedback',
       expect.objectContaining({
@@ -79,35 +79,35 @@ describe('FeedbackBar', () => {
     );
   });
 
-  test('clicking Autre shows textarea', async () => {
+  test('clicking Other shows textarea', async () => {
     render(<FeedbackBar renderId="abc" visible={true} />);
     await act(async () => { vi.advanceTimersByTime(2001); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /probl/i })); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /autre/i })); });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /issue/i })); });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /other/i })); });
     expect(screen.getByRole('textbox')).toBeTruthy();
   });
 
-  test('Autre textarea submit sends comment', async () => {
+  test('Other textarea submit sends comment', async () => {
     render(<FeedbackBar renderId="abc" visible={true} />);
     await act(async () => { vi.advanceTimersByTime(2001); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /probl/i })); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /autre/i })); });
-    await act(async () => { fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Mon commentaire' } }); });
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /envoyer/i })); });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /issue/i })); });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /other/i })); });
+    await act(async () => { fireEvent.change(screen.getByRole('textbox'), { target: { value: 'My comment' } }); });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /send/i })); });
     expect(global.fetch).toHaveBeenCalledWith(
       '/api/render/feedback',
       expect.objectContaining({
-        body: expect.stringContaining('"comment":"Mon commentaire"'),
+        body: expect.stringContaining('"comment":"My comment"'),
       }),
     );
   });
 
-  test('409 response shows "Déjà envoyé"', async () => {
+  test('409 response shows "Already sent"', async () => {
     global.fetch = vi.fn().mockResolvedValue({ status: 409 });
     render(<FeedbackBar renderId="abc" visible={true} />);
     await act(async () => { vi.advanceTimersByTime(2001); });
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: /ok/i })); });
-    expect(screen.getByText(/d.j. envoy/i)).toBeTruthy();
+    expect(screen.getByText(/already sent/i)).toBeTruthy();
   });
 
   test('auto-hides after 60s without interaction', async () => {

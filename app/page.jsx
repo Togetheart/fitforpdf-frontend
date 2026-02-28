@@ -226,7 +226,14 @@ export default function Page() {
             <UploadCard
               toolTitle={LANDING_COPY.toolTitle}
               toolSubcopy={(() => {
-                if (quota.planType !== 'free') return LANDING_COPY.toolSubcopy;
+                if (quota.planType === 'credits') {
+                  const count = Number.isFinite(quota.freeExportsLeft) ? quota.freeExportsLeft : 0;
+                  if (count <= 0) return 'No exports left. Get more to continue.';
+                  return `${count} purchased export${count === 1 ? '' : 's'} remaining.`;
+                }
+                if (quota.planType === 'pro') {
+                  return 'Pro plan. Unlimited exports.';
+                }
                 const count = Number.isFinite(quota.freeExportsLeft)
                   ? quota.freeExportsLeft
                   : Number.isFinite(quota.freeExportsLimit)
