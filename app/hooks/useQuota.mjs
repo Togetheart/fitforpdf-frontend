@@ -43,10 +43,15 @@ function getQuotaExhaustedMessage(planType, rawCode) {
 function normalizeQuotaState(raw = {}) {
   const planType = normalizePlanType(raw.plan_type || raw.planType || raw.plan || 'free');
   const freePayload = raw && typeof raw.free === 'object' && !Array.isArray(raw.free) ? raw.free : null;
+  const creditsPayload = raw && typeof raw.credits === 'object' && !Array.isArray(raw.credits) ? raw.credits : null;
   const freeScalar = raw && (typeof raw.free === 'number' || typeof raw.free === 'string')
     ? raw.free
     : null;
   const freeExportsLeft = (() => {
+    if (planType === 'credits') {
+      const creditsRemaining = toFiniteInt(creditsPayload?.remaining);
+      if (Number.isFinite(creditsRemaining)) return Math.max(0, creditsRemaining);
+    }
     const value = pickFirstDefined(
       freePayload?.remaining,
       raw.free_exports_left,

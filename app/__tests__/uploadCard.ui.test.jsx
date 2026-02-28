@@ -986,4 +986,114 @@ describe('UploadCard conversion flow on landing page', () => {
     expect(calledUrl.searchParams.get('truncate_long_text')).toBe('true');
     mock.restore();
   });
+
+  test('toolSubcopy shows purchased exports text for credits plan', async () => {
+    const mock = mockFetch({
+      response: createQuotaResponse({
+        plan: 'credits',
+        free: { limit: 3, used: 3, remaining: 0 },
+        credits: { remaining: 5 },
+      }),
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('5 purchased exports remaining.')).toBeTruthy();
+    });
+
+    mock.restore();
+  });
+
+  test('toolSubcopy shows singular form for 1 purchased export', async () => {
+    const mock = mockFetch({
+      response: createQuotaResponse({
+        plan: 'credits',
+        free: { limit: 3, used: 3, remaining: 0 },
+        credits: { remaining: 1 },
+      }),
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('1 purchased export remaining.')).toBeTruthy();
+    });
+
+    mock.restore();
+  });
+
+  test('toolSubcopy shows exhausted text when credits plan has 0 remaining', async () => {
+    const mock = mockFetch({
+      response: createQuotaResponse({
+        plan: 'credits',
+        free: { limit: 3, used: 3, remaining: 0 },
+        credits: { remaining: 0 },
+      }),
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('No exports left. Get more to continue.')).toBeTruthy();
+    });
+
+    mock.restore();
+  });
+
+  test('badge shows Credits plan label with correct remaining for credits plan', async () => {
+    const mock = mockFetch({
+      response: createQuotaResponse({
+        plan: 'credits',
+        free: { limit: 3, used: 3, remaining: 0 },
+        credits: { remaining: 5 },
+      }),
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Credits\s*·\s*5\s*exports?\s*left/i);
+    });
+
+    mock.restore();
+  });
+
+  test('credits user can export PDF and badge decrements', async () => {
+    const responses = [
+      createQuotaResponse({
+        plan: 'credits',
+        free: { limit: 3, used: 3, remaining: 0 },
+        credits: { remaining: 5 },
+      }),
+      createPdfResponse(),
+      createQuotaResponse({
+        plan: 'credits',
+        free: { limit: 3, used: 3, remaining: 0 },
+        credits: { remaining: 4 },
+      }),
+    ];
+
+    const mock = mockFetch({
+      responseFactory: () => responses.shift() || responses[responses.length - 1],
+      delayMs: 30,
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Credits\s*·\s*5\s*exports?\s*left/i);
+    });
+
+    fireEvent.change(screen.getByTestId('generate-file-input'), {
+      target: { files: [SAMPLE_FILE] },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Credits\s*·\s*4\s*exports?\s*left/i);
+    }, { timeout: 5000 });
+
+    mock.restore();
+  });
 });
