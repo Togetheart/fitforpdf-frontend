@@ -1096,4 +1096,135 @@ describe('UploadCard conversion flow on landing page', () => {
 
     mock.restore();
   });
+
+  test('E2E: free user buys credits → checkout redirects → returns with credits → exports PDF', async () => {
+    const STRIPE_CHECKOUT_URL = 'https://checkout.stripe.com/c/pay/cs_test_abc123';
+    const originalAssign = window.location.assign;
+    const assignSpy = vi.fn();
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: { ...window.location, assign: assignSpy },
+    });
+
+    // Phase 1: Free user with 1 export left
+    let phase = 'free';
+    const mock = mockFetch({
+      responseFactory: (url, options) => {
+        const urlStr = String(url);
+
+        // Quota endpoint — return state based on current phase
+        if (urlStr.includes('/api/quota')) {
+          if (phase === 'free') {
+            return createQuotaResponse({ plan_type: 'free', free_exports_left: 1 });
+          }
+          if (phase === 'post-purchase') {
+            return createQuotaResponse({
+              plan: 'credits',
+              free: { limit: 3, used: 3, remaining: 0 },
+              credits: { remaining: 10 },
+            });
+          }
+          // After PDF export, credits decremented
+          return createQuotaResponse({
+            plan: 'credits',
+            free: { limit: 3, used: 3, remaining: 0 },
+            credits: { remaining: 9 },
+          });
+        }
+
+        // Checkout endpoint — return Stripe URL
+        if (urlStr.includes('/api/credits/purchase/checkout')) {
+          return new Response(
+            JSON.stringify({ url: STRIPE_CHECKOUT_URL }),
+            { status: 200, headers: { 'content-type': 'application/json' } },
+          );
+        }
+
+        // Render endpoint — return PDF
+        if (urlStr.includes('/api/render')) {
+          return createPdfResponse();
+        }
+
+        return createJsonResponse(404, { error: 'Not found' });
+      },
+      delayMs: 20,
+    });
+
+    render(<LandingPage />);
+
+    // Step 1: Badge shows "Free · 1 exports left"
+    await waitFor(() => {
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free\s*·\s*1\s*exports?\s*left/i);
+    });
+    expect(screen.getByText(/1 free export\b/)).toBeTruthy();
+
+    // Step 2: Click "Buy credits" button → panel opens
+    const buyCreditsButton = screen.getByRole('button', { name: 'Buy credits' });
+    fireEvent.click(buyCreditsButton);
+    await waitFor(() => {
+      expect(screen.getByTestId('credits-purchase-panel')).toBeTruthy();
+    });
+
+    // Step 3: Click first credit pack → POST /api/credits/purchase/checkout
+    const panel = screen.getByTestId('credits-purchase-panel');
+    const packButtons = within(panel).getAllByRole('button').filter(
+      (btn) => btn.textContent !== 'Close',
+    );
+    expect(packButtons.length).toBeGreaterThanOrEqual(1);
+    fireEvent.click(packButtons[0]);
+
+    // Step 4: Verify checkout POST was called and redirect happened
+    await waitFor(() => {
+      const checkoutCall = mock.calls.find(
+        (c) => String(c.url).includes('/api/credits/purchase/checkout'),
+      );
+      expect(checkoutCall).toBeTruthy();
+      expect(checkoutCall.options.method).toBe('POST');
+      const body = JSON.parse(checkoutCall.options.body);
+      expect(body.pack).toBeTruthy();
+    });
+
+    await waitFor(() => {
+      expect(assignSpy).toHaveBeenCalledWith(STRIPE_CHECKOUT_URL);
+    });
+
+    // Step 5: Simulate return from Stripe — user comes back, app re-mounts
+    phase = 'post-purchase';
+    cleanup();
+    render(<LandingPage />);
+
+    // Step 6: Badge now shows "Credits · 10 exports left"
+    await waitFor(() => {
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Credits\s*·\s*10\s*exports?\s*left/i);
+    });
+    expect(screen.getByText('10 purchased exports remaining.')).toBeTruthy();
+
+    // Step 7: No paywall — Generate PDF button is available
+    expect(screen.queryByTestId('upload-paywall')).toBeNull();
+
+    // Step 8: Upload file and export PDF
+    phase = 'post-export';
+    fireEvent.change(screen.getByTestId('generate-file-input'), {
+      target: { files: [SAMPLE_FILE] },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
+
+    // Step 9: After export, badge shows "Credits · 9 exports left"
+    await waitFor(() => {
+      expect(screen.getByTestId('quota-pill').textContent).toMatch(/Credits\s*·\s*9\s*exports?\s*left/i);
+    }, { timeout: 5000 });
+
+    // Step 10: Verify render call was made
+    const renderCall = mock.calls.find(
+      (c) => String(c.url).includes('/api/render'),
+    );
+    expect(renderCall).toBeTruthy();
+    expect(renderCall.options.method).toBe('POST');
+
+    mock.restore();
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: { ...window.location, assign: originalAssign },
+    });
+  });
 });
