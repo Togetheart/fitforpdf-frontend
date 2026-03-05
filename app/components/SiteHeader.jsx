@@ -60,6 +60,9 @@ export default function SiteHeader() {
             <a className="transition hover:text-black" href="/pricing">
               Pricing
             </a>
+            <a className="transition hover:text-black" href="/developers">
+              API
+            </a>
             <Button variant="primary" href="/#generate" className="px-4 text-xs h-9">
               Try it now
             </Button>
@@ -113,6 +116,13 @@ export default function SiteHeader() {
             className="rounded-lg px-3 py-3 text-sm font-medium text-black/70 transition hover:bg-black/5 hover:text-black"
           >
             Pricing
+          </a>
+          <a
+            href="/developers"
+            onClick={closeMenu}
+            className="rounded-lg px-3 py-3 text-sm font-medium text-black/70 transition hover:bg-black/5 hover:text-black"
+          >
+            API
           </a>
           <div className="mt-3 pt-3 border-t border-black/5">
             <Button
