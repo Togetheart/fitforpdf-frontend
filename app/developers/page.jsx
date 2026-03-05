@@ -141,6 +141,142 @@ function EndpointCard({ endpoint }) {
   );
 }
 
+function RequestAccessForm() {
+  const [form, setForm] = useState({ name: '', email: '', useCase: '' });
+  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [errorMsg, setErrorMsg] = useState('');
+
+  function handleChange(e) {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setStatus('submitting');
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/request-access', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        const msg = data?.error?.message || data?.message || 'Something went wrong. Please try again.';
+        setErrorMsg(msg);
+        setStatus('error');
+        return;
+      }
+
+      setStatus('success');
+    } catch {
+      setErrorMsg('Network error. Please try again.');
+      setStatus('error');
+    }
+  }
+
+  if (status === 'success') {
+    return (
+      <section id="request-access" className="rounded-2xl bg-[#F5F3EE] px-6 py-10 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
+          <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </div>
+        <h2 className="mt-4 text-lg font-[650] text-[#1A1A1A]">Request received</h2>
+        <p className="mt-2 text-sm text-[#4B4B4B]">
+          We&apos;ll review your request and send your API key to{' '}
+          <strong className="font-[600] text-[#1A1A1A]">{form.email}</strong>{' '}
+          within 24 hours.
+        </p>
+        <a
+          href="/"
+          className="mt-6 inline-block rounded-xl border border-black/10 bg-white px-6 py-3 text-sm font-[600] text-[#1A1A1A] transition hover:bg-[#FAFAF8]"
+        >
+          Try the web app
+        </a>
+      </section>
+    );
+  }
+
+  return (
+    <section id="request-access" className="rounded-2xl bg-[#F5F3EE] px-6 py-8">
+      <div className="text-center">
+        <h2 className="text-lg font-[650] text-[#1A1A1A]">Request API access</h2>
+        <p className="mt-2 text-sm text-[#4B4B4B]">
+          Get your API key and start generating PDFs in minutes.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mx-auto mt-6 max-w-[400px] space-y-3">
+        <div>
+          <label htmlFor="ra-name" className="block text-xs font-[600] text-[#4B4B4B]">
+            Name
+          </label>
+          <input
+            id="ra-name"
+            name="name"
+            type="text"
+            required
+            minLength={2}
+            value={form.name}
+            onChange={handleChange}
+            placeholder="Jane Smith"
+            className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+          />
+        </div>
+        <div>
+          <label htmlFor="ra-email" className="block text-xs font-[600] text-[#4B4B4B]">
+            Email
+          </label>
+          <input
+            id="ra-email"
+            name="email"
+            type="email"
+            required
+            value={form.email}
+            onChange={handleChange}
+            placeholder="jane@company.com"
+            className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+          />
+        </div>
+        <div>
+          <label htmlFor="ra-usecase" className="block text-xs font-[600] text-[#4B4B4B]">
+            Use case <span className="font-[400] text-black/30">(optional)</span>
+          </label>
+          <textarea
+            id="ra-usecase"
+            name="useCase"
+            rows={3}
+            value={form.useCase}
+            onChange={handleChange}
+            placeholder="e.g. Generating client reports from a CRM export"
+            className="mt-1 w-full resize-none rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+          />
+        </div>
+
+        {errorMsg && (
+          <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{errorMsg}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={status === 'submitting'}
+          className="w-full rounded-xl bg-[#1A1A1A] px-6 py-3 text-sm font-[600] text-white transition hover:bg-[#374151] disabled:opacity-50"
+        >
+          {status === 'submitting' ? 'Submitting\u2026' : 'Request an API key'}
+        </button>
+      </form>
+
+      <p className="mt-4 text-center text-xs text-black/30">
+        We review requests manually and typically respond within 24 hours.
+      </p>
+    </section>
+  );
+}
+
 export default function DevelopersPage() {
   return (
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
@@ -187,10 +323,10 @@ export default function DevelopersPage() {
         <CodeBlock>{`curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
   ${BASE_URL}/quota`}</CodeBlock>
         <p className="mt-3 text-xs text-[#7D6B58]">
-          To request an API key, contact us via{' '}
-          <a href="https://t.me/CrabiAssistantBot" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-[#1A1A1A]">
-            Telegram
-          </a>.
+          <a href="#request-access" className="underline underline-offset-2 hover:text-[#1A1A1A]">
+            Request an API key
+          </a>{' '}
+          to get started.
         </p>
       </section>
 
@@ -305,29 +441,8 @@ export default function DevelopersPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="rounded-2xl bg-[#F5F3EE] px-6 py-8 text-center">
-        <h2 className="text-lg font-[650] text-[#1A1A1A]">Ready to integrate?</h2>
-        <p className="mt-2 text-sm text-[#4B4B4B]">
-          Get your API key and start generating PDFs in minutes.
-        </p>
-        <div className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <a
-            href="https://t.me/CrabiAssistantBot"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-block rounded-xl bg-[#1A1A1A] px-6 py-3 text-sm font-[600] text-white transition hover:bg-[#374151]"
-          >
-            Request an API key
-          </a>
-          <a
-            href="/"
-            className="inline-block rounded-xl border border-black/10 bg-white px-6 py-3 text-sm font-[600] text-[#1A1A1A] transition hover:bg-[#FAFAF8]"
-          >
-            Try the web app
-          </a>
-        </div>
-      </section>
+      {/* Request access */}
+      <RequestAccessForm />
     </main>
   );
 }

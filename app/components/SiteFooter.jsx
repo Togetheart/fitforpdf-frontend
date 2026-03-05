@@ -52,14 +52,6 @@ export default function SiteFooter() {
           <a className="transition hover:text-black" href="/developers">
             API
           </a>
-          <a
-            className="transition hover:text-black"
-            href="https://t.me/CrabiAssistantBot"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Telegram
-          </a>
         </nav>
       </div>
     </footer>
