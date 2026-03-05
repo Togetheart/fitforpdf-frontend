@@ -185,94 +185,121 @@ function RequestAccessForm() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
-        <h2 className="mt-4 text-lg font-[650] text-[#1A1A1A]">Request received</h2>
+        <h2 className="mt-4 text-lg font-[650] text-[#1A1A1A]">You&apos;re on the list</h2>
         <p className="mt-2 text-sm text-[#4B4B4B]">
-          We&apos;ll review your request and send your API key to{' '}
+          We&apos;ll send your API key to{' '}
           <strong className="font-[600] text-[#1A1A1A]">{form.email}</strong>{' '}
-          within 24 hours.
+          once your access is approved.
+          Early users get <strong className="font-[600] text-[#1A1A1A]">50 free exports</strong> to start.
         </p>
         <a
           href="/"
           className="mt-6 inline-block rounded-xl border border-black/10 bg-white px-6 py-3 text-sm font-[600] text-[#1A1A1A] transition hover:bg-[#FAFAF8]"
         >
-          Try the web app
+          Try the web app while you wait
         </a>
       </section>
     );
   }
 
   return (
-    <section id="request-access" className="rounded-2xl bg-[#F5F3EE] px-6 py-8">
-      <div className="text-center">
-        <h2 className="text-lg font-[650] text-[#1A1A1A]">Request API access</h2>
-        <p className="mt-2 text-sm text-[#4B4B4B]">
-          Get your API key and start generating PDFs in minutes.
-        </p>
+    <section id="request-access" className="overflow-hidden rounded-2xl bg-[#F5F3EE]">
+      <div className="flex flex-col md:flex-row">
+        {/* Left — value props */}
+        <div className="flex-1 px-6 py-8 md:px-8 md:py-10">
+          <p className="text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+            Early access
+          </p>
+          <h2 className="mt-2 text-xl font-[700] leading-tight text-[#1A1A1A]">
+            Get your API key
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-[#4B4B4B]">
+            We&apos;re onboarding developers in small batches to ensure
+            quality and support. Early users get:
+          </p>
+          <ul className="mt-4 space-y-2.5">
+            {[
+              '50 free exports to test your integration',
+              'Direct access to the engineering team',
+              'Priority feature requests',
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2 text-sm text-[#4B4B4B]">
+                <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Right — form */}
+        <div className="flex-1 border-t border-black/5 bg-white/50 px-6 py-8 md:border-l md:border-t-0 md:px-8 md:py-10">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <label htmlFor="ra-name" className="block text-xs font-[600] text-[#4B4B4B]">
+                Name
+              </label>
+              <input
+                id="ra-name"
+                name="name"
+                type="text"
+                required
+                minLength={2}
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Jane Smith"
+                className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+              />
+            </div>
+            <div>
+              <label htmlFor="ra-email" className="block text-xs font-[600] text-[#4B4B4B]">
+                Work email
+              </label>
+              <input
+                id="ra-email"
+                name="email"
+                type="email"
+                required
+                value={form.email}
+                onChange={handleChange}
+                placeholder="jane@company.com"
+                className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+              />
+            </div>
+            <div>
+              <label htmlFor="ra-usecase" className="block text-xs font-[600] text-[#4B4B4B]">
+                What are you building? <span className="font-[400] text-black/30">(optional)</span>
+              </label>
+              <textarea
+                id="ra-usecase"
+                name="useCase"
+                rows={2}
+                value={form.useCase}
+                onChange={handleChange}
+                placeholder="e.g. Auto-generating client reports from our CRM"
+                className="mt-1 w-full resize-none rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+              />
+            </div>
+
+            {errorMsg && (
+              <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{errorMsg}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === 'submitting'}
+              className="w-full rounded-xl bg-[#1A1A1A] px-6 py-3 text-sm font-[600] text-white transition hover:bg-[#374151] disabled:opacity-50"
+            >
+              {status === 'submitting' ? 'Submitting\u2026' : 'Request early access'}
+            </button>
+
+            <p className="text-center text-[11px] text-black/30">
+              Most requests approved within a few hours.
+            </p>
+          </form>
+        </div>
       </div>
-
-      <form onSubmit={handleSubmit} className="mx-auto mt-6 max-w-[400px] space-y-3">
-        <div>
-          <label htmlFor="ra-name" className="block text-xs font-[600] text-[#4B4B4B]">
-            Name
-          </label>
-          <input
-            id="ra-name"
-            name="name"
-            type="text"
-            required
-            minLength={2}
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Jane Smith"
-            className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
-          />
-        </div>
-        <div>
-          <label htmlFor="ra-email" className="block text-xs font-[600] text-[#4B4B4B]">
-            Email
-          </label>
-          <input
-            id="ra-email"
-            name="email"
-            type="email"
-            required
-            value={form.email}
-            onChange={handleChange}
-            placeholder="jane@company.com"
-            className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
-          />
-        </div>
-        <div>
-          <label htmlFor="ra-usecase" className="block text-xs font-[600] text-[#4B4B4B]">
-            Use case <span className="font-[400] text-black/30">(optional)</span>
-          </label>
-          <textarea
-            id="ra-usecase"
-            name="useCase"
-            rows={3}
-            value={form.useCase}
-            onChange={handleChange}
-            placeholder="e.g. Generating client reports from a CRM export"
-            className="mt-1 w-full resize-none rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
-          />
-        </div>
-
-        {errorMsg && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{errorMsg}</p>
-        )}
-
-        <button
-          type="submit"
-          disabled={status === 'submitting'}
-          className="w-full rounded-xl bg-[#1A1A1A] px-6 py-3 text-sm font-[600] text-white transition hover:bg-[#374151] disabled:opacity-50"
-        >
-          {status === 'submitting' ? 'Submitting\u2026' : 'Request an API key'}
-        </button>
-      </form>
-
-      <p className="mt-4 text-center text-xs text-black/30">
-        We review requests manually and typically respond within 24 hours.
-      </p>
     </section>
   );
 }
@@ -324,9 +351,9 @@ export default function DevelopersPage() {
   ${BASE_URL}/quota`}</CodeBlock>
         <p className="mt-3 text-xs text-[#7D6B58]">
           <a href="#request-access" className="underline underline-offset-2 hover:text-[#1A1A1A]">
-            Request an API key
+            Request early access
           </a>{' '}
-          to get started.
+          to get your key.
         </p>
       </section>
 
