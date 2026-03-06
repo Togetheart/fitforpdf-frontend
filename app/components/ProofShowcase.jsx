@@ -145,28 +145,28 @@ const FORMAT_CONFIGS = {
     id: 'csv',
     label: 'CSV',
     icon: '/csv_icon.svg',
-    inputLabel: 'BROKEN CSV EXPORT',
+    inputLabel: 'Source spreadsheet',
     inputDescription: 'Column overflow and unreadable structure.',
     beforeImage: '/before_csv.webp',
     beforeAlt: 'CSV input preview',
     sourceLink: '/CSV/enterprise-invoices-demo.csv',
     sourceLinkLabel: 'Download source CSV ↗',
     tabs: CSV_TABS,
-    outputLabel: 'FITFORPDF STRUCTURED DOCUMENT',
+    outputLabel: 'Client-ready PDF',
     statLine: '16 columns. Automatically split into 4 readable sections.',
   },
   xlsx: {
     id: 'xlsx',
     label: 'XLSX',
     icon: '/Microsoft_Office_Excel_(2025–present).svg',
-    inputLabel: 'BROKEN EXCEL EXPORT',
-    inputDescription: 'Excel PDF export is unreadable at full width.',
+    inputLabel: 'Source spreadsheet',
+    inputDescription: 'Hard to read at full width.',
     beforeImage: '/Excel/xlxs.webp',
     beforeAlt: 'Excel file exported as PDF — unreadable overflow',
     sourceLink: null,
     sourceLinkLabel: null,
     tabs: XLSX_TABS,
-    outputLabel: 'FITFORPDF STRUCTURED DOCUMENT',
+    outputLabel: 'Client-ready PDF',
     statLine: '11 columns. Automatically split into 5 readable sections.',
   },
 };
@@ -227,7 +227,7 @@ export default function ProofShowcase() {
     <div className="w-full space-y-8">
       {/* Section heading */}
       <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
-        This is what your client receives.
+        See how FitForPDF transforms your file.
       </h2>
 
       {/* Format selector */}
@@ -235,7 +235,7 @@ export default function ProofShowcase() {
         data-testid="format-selector"
         className="flex items-center justify-center gap-8"
         role="radiogroup"
-        aria-label="Input file format"
+        aria-label="Source file type"
       >
         {FORMATS.map((formatId) => {
           const fmt = FORMAT_CONFIGS[formatId];

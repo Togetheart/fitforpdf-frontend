@@ -120,7 +120,7 @@ describe('landing conversion-first structure', () => {
   });
 
   test('proof statement exists', () => {
-    expect(screen.getByRole('heading', { level: 2, name: /This is what your client receives/i })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: /See how FitForPDF transforms your file/i })).toBeTruthy();
   });
 
   test('proof card keeps before/after labels and full-document action', () => {
@@ -128,8 +128,8 @@ describe('landing conversion-first structure', () => {
 
     expect(proofCard).toBeTruthy();
     expect(proofCard).toBeTruthy();
-    expect(within(proofCard).getByText('BROKEN EXCEL EXPORT')).toBeTruthy();
-    expect(within(proofCard).getByText('FITFORPDF STRUCTURED DOCUMENT')).toBeTruthy();
+    expect(within(proofCard).getByText('Source spreadsheet')).toBeTruthy();
+    expect(within(proofCard).getByText('Client-ready PDF')).toBeTruthy();
     expect(within(proofCard).getByRole('button', { name: 'View full document ↗' })).toBeTruthy();
   });
 
@@ -163,8 +163,8 @@ describe('landing conversion-first structure', () => {
     const previewCard = screen.getByTestId('home-preview-card');
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
     // Default format is XLSX
-    expect(within(previewCard).getByText('BROKEN EXCEL EXPORT')).toBeTruthy();
-    expect(within(previewCard).getByText('FITFORPDF STRUCTURED DOCUMENT')).toBeTruthy();
+    expect(within(previewCard).getByText('Source spreadsheet')).toBeTruthy();
+    expect(within(previewCard).getByText('Client-ready PDF')).toBeTruthy();
     const proofWrapper = screen.getByTestId('proof-pdf-image');
     const proofImg = proofWrapper.querySelector('img');
     // XLSX format selected — image src contains '/Excel/'
@@ -179,8 +179,8 @@ describe('landing conversion-first structure', () => {
     expect(previewCard).toBeTruthy();
     expect(proofSection).toBeTruthy();
     expect(proofSection.contains(previewCard)).toBe(true);
-    expect(previewCard.textContent).toContain('FITFORPDF STRUCTURED DOCUMENT');
-    expect(previewCard.textContent).toContain('BROKEN EXCEL EXPORT');
+    expect(previewCard.textContent).toContain('Client-ready PDF');
+    expect(previewCard.textContent).toContain('Source spreadsheet');
   });
 
   test('comparison section sits next to proof section', () => {
