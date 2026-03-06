@@ -41,7 +41,7 @@ export default function PricingPage() {
       <Section id="pricing-comparison" index={2} bg="bg-hero" className="py-20 sm:py-28">
         <FeatureComparison
           title={PRICING_PAGE_COPY.comparisonTitle}
-          columns={['Free', 'Single', 'Starter', 'Pro Sub']}
+          columns={['Free', 'Single', 'Starter', 'Pro subscription']}
           rows={PRICING_PAGE_COPY.comparison}
         />
       </Section>

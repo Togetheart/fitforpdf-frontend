@@ -198,7 +198,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
       {/* Title */}
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
-          Pro Subscription
+          {PRICING_PAGE_COPY.togglePro}
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-black">
           {PRICING_PAGE_COPY.proSubscriptionTitle}

@@ -56,6 +56,8 @@ describe('pricing conversion UI', () => {
     expect(text).toContain('FitForPDF attribution');
     expect(text).toContain('Batch export');
     expect(text).toContain('API access');
+    expect(text).toContain('Pro subscription');
+    expect(text).not.toContain('Pro Sub');
     expect(screen.queryByTestId('plan-highlighted')).toBeNull();
   });
 

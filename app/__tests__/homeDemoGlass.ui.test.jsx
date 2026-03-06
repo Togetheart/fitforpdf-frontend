@@ -84,7 +84,7 @@ describe('home demo proof block', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /Your spreadsheet\. Reorganized into readable sections\s*\. Ready to send\./,
+        name: /Stop Excel PDFs where columns get cut off\.\s*Turn wide spreadsheets into readable sections\s*\. Ready to send\./,
       }),
     ).toBeTruthy();
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();

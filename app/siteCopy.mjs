@@ -2,7 +2,7 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
-  heroTitle: 'Client-ready PDFs.\\nFrom raw data.',
+  heroTitle: 'Stop Excel PDFs where columns get cut off.\\nTurn wide spreadsheets into readable sections.\\nReady to send.',
   heroSubheadline: 'Fix broken Excel and CSV exports. Get a structured, readable PDF that’s ready to send.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
@@ -16,9 +16,9 @@ export const LANDING_COPY = {
     'Manual layout fixes become mandatory.',
   ],
 
-  beforeAfterTitle: 'From raw data to structured document.',
-  beforeLabel: 'CSV input',
-  afterLabel: 'Structured PDF summary',
+  beforeAfterTitle: 'See how FitForPDF transforms your file.',
+  beforeLabel: 'Source spreadsheet',
+  afterLabel: 'Client-ready PDF',
 
   clientReadyTitle: 'Client-ready means',
   clientReadyFeatures: [
@@ -102,7 +102,7 @@ export const HOME_FAQ = [
   {
     id: 'subscription',
     q: 'Is the Starter pack a subscription?',
-    a: 'Absolutely not. The Pay as you go options are strictly one-time payments. We will never auto-charge your card. If you want a recurring plan, check out our Pro Subscription.',
+    a: 'Absolutely not. The Pay as you go options are strictly one-time payments. We will never auto-charge your card. If you want a recurring plan, check out our Pro subscription.',
   },
   {
     id: 'branding',
@@ -131,7 +131,7 @@ export const PRICING_PAGE_COPY = {
 
   // Toggle labels
   togglePayg: 'Pay as you go',
-  togglePro: 'Pro Subscription',
+  togglePro: 'Pro subscription',
 
   // PAYG section
   paygTagline: 'No subscription. Credits never expire.',
@@ -236,7 +236,7 @@ export const PRICING_PAGE_COPY = {
     {
       id: 'subscription',
       q: 'Is the Starter pack a subscription?',
-      a: 'Absolutely not. The Pay as you go options are strictly one-time payments. We will never auto-charge your card. If you want a recurring plan, check out our Pro Subscription.',
+      a: 'Absolutely not. The Pay as you go options are strictly one-time payments. We will never auto-charge your card. If you want a recurring plan, check out our Pro subscription.',
     },
     {
       id: 'branding',
@@ -492,7 +492,7 @@ export const PRIVACY_PAGE_COPY = {
     ],
   },
 
-  sensitiveDataNote: 'Do not upload files containing personal data, health records, or other sensitive information. FitForPDF is not designed for regulated data.',
+  sensitiveDataNote: 'Do not upload highly regulated or special-category data unless you have verified your compliance requirements.',
   legalFooter: 'This page constitutes the Privacy Policy of FitForPDF, in accordance with GDPR (EU) 2016/679.',
   contactEmail: 'support@fitforpdf.com',
   contactLabel: 'support@fitforpdf.com',
@@ -524,7 +524,7 @@ export const PRIVACY_PAGE_COPY = {
     {
       id: 'sensitive',
       q: 'Can I upload sensitive data?',
-      a: 'Please do not. FitForPDF is not designed for sensitive or regulated data (health records, financial PII, etc.).',
+      a: 'Do so only if your organization has approved the file-processing requirements. If you are uncertain, avoid uploading highly sensitive or regulated data.',
     },
   ],
 };

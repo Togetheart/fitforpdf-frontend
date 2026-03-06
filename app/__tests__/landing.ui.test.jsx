@@ -61,14 +61,16 @@ describe('landing conversion-first structure', () => {
   });
 
   test('hero keeps the 3-line headline with required rhythm', () => {
-    const heading = screen.getByRole('heading', { level: 1, name: /Your spreadsheet\./i });
+    const heading = screen.getByRole('heading', { level: 1, name: /Stop Excel PDFs where columns get cut off\./i });
 
     expect(heading).toBeTruthy();
-    expect(screen.getByText('Your spreadsheet.')).toBeTruthy();
+    expect(screen.getByText('Stop Excel PDFs where columns get cut off.')).toBeTruthy();
+    expect(screen.getByText('Turn wide spreadsheets into readable')).toBeTruthy();
+    expect(screen.getByText('sections.')).toBeTruthy();
     expect(screen.getByText('Ready to send.')).toBeTruthy();
     const headingText = heading.textContent || '';
-    expect(headingText).toContain('Your spreadsheet.');
-    expect(headingText).toContain('Reorganized into readable sections.');
+    expect(headingText).toContain('Stop Excel PDFs where columns get cut off.');
+    expect(headingText).toContain('Turn wide spreadsheets into readable sections.');
     expect(headingText).toContain('Ready to send.');
   });
 

@@ -35,7 +35,7 @@ describe('privacy conversion UI', () => {
     expect(screen.getByText('Files are deleted immediately after conversion.')).toBeTruthy();
     expect(screen.getByText('The generated PDF is available for up to 15 minutes. Automatically deleted after.')).toBeTruthy();
     expect(screen.getByText('File contents are never stored in logs.')).toBeTruthy();
-    expect(screen.getByText(/Do not upload files containing personal data/i)).toBeTruthy();
+    expect(screen.getByText(/Do not upload highly regulated or special-category data/i)).toBeTruthy();
   });
 
   test('renders what we log section and shared header/footer', () => {

@@ -34,8 +34,8 @@ describe('HeroHeadline accent animation', () => {
   test('renders section word accent and Ready to send. in plain color', () => {
     render(<HeroHeadline />);
 
-    expect(screen.getByText('Your spreadsheet.')).toBeTruthy();
-    expect(screen.getByText((content) => content.includes('Reorganized into readable'))).toBeTruthy();
+    expect(screen.getByText('Stop Excel PDFs where columns get cut off.')).toBeTruthy();
+    expect(screen.getByText('Turn wide spreadsheets into readable')).toBeTruthy();
     expect(screen.getByText('sections.')).toBeTruthy();
 
     const sectionWordAccent = screen.getByTestId('hero-headline-accent');

@@ -86,6 +86,8 @@ describe('pricing page UI', () => {
     expect(compareText).toContain('Batch export');
     expect(compareText).toContain('API access');
     expect(compareText).not.toContain('Branding removable');
+    expect(compareText).toContain('Pro subscription');
+    expect(compareText).not.toContain('Pro Sub');
   });
 
   test('pricing comparison mobile cards have bg-hero class', () => {
