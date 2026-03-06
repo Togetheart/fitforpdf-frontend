@@ -21,6 +21,37 @@ if (typeof window !== 'undefined' && !window.matchMedia) {
   });
 }
 
+if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
+  const now = () => Date.now();
+  const rafStore = new Map();
+  let rafId = 0;
+
+  window.requestAnimationFrame = (callback) => {
+    const id = ++rafId;
+    const timeoutId = window.setTimeout(() => {
+      callback(now());
+    }, 16);
+    rafStore.set(id, timeoutId);
+    return id;
+  };
+
+  window.cancelAnimationFrame = (id) => {
+    const timeoutId = rafStore.get(id);
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+      rafStore.delete(id);
+    }
+  };
+}
+
+if (typeof globalThis.requestAnimationFrame !== 'function') {
+  globalThis.requestAnimationFrame = window.requestAnimationFrame;
+}
+
+if (typeof globalThis.cancelAnimationFrame !== 'function') {
+  globalThis.cancelAnimationFrame = window.cancelAnimationFrame;
+}
+
 // JSDOM does not implement IntersectionObserver. Provide a no-op stub so
 // components using it (SiteHeader scroll detection, SocialProofStrip dock
 // logic, etc.) can mount without crashing during tests.

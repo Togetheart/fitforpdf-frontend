@@ -37,7 +37,6 @@ function headerLinks(headerRoot) {
   return {
     pricing: getByText('Pricing'),
     privacy: getByText('Privacy'),
-    telegram: getByText('Try on Telegram'),
   };
 }
 
@@ -65,9 +64,13 @@ describe('shared site shell navigation', () => {
     expect(header.privacy?.getAttribute('href')).toBe('/privacy');
 
     const footer = screen.getByTestId('site-footer');
-    expect(footer.querySelector('a[href=\"/pricing\"]')).toBeTruthy();
-    expect(footer.querySelector('a[href=\"/privacy\"]')).toBeTruthy();
-    expect(footer.querySelector('a[href=\"https://t.me/CrabiAssistantBot\"]')).toBeTruthy();
+    expect(footer.querySelector('a[href="/pricing"]')).toBeTruthy();
+    expect(footer.querySelector('a[href="/privacy"]')).toBeTruthy();
+    expect(footer.querySelector('a[href="/developers"]')).toBeTruthy();
+    expect(footer.querySelector('a[href="/excel-to-pdf-columns-cut-off"]')).toBeTruthy();
+    expect(footer.querySelector('a[href="/fit-excel-sheet-on-one-page-pdf"]')).toBeTruthy();
+    expect(footer.querySelector('a[href="/csv-to-structured-pdf"]')).toBeTruthy();
+    expect(footer.querySelector('a[href="/audit-report-excel-to-pdf-tips"]')).toBeTruthy();
     expect(footer.querySelector('img[alt="FitForPDF"]')).toBeTruthy();
   });
 

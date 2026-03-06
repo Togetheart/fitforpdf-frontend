@@ -3,7 +3,7 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
   heroTitle: 'Client-ready PDFs.\\nFrom raw data.',
-  heroSubheadline: 'Upload a spreadsheet. Get a structured, readable PDF. Ready to send to your client.',
+  heroSubheadline: 'Fix broken Excel and CSV exports. Get a structured, readable PDF that’s ready to send.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored',
@@ -22,20 +22,20 @@ export const LANDING_COPY = {
 
   clientReadyTitle: 'Client-ready means',
   clientReadyFeatures: [
-    { key: 'overview', title: 'Document overview page', description: 'A summary page with all sections and columns at a glance.', icon: 'overview' },
-    { key: 'columns', title: 'Smart column sections', description: 'Wide tables automatically grouped into readable column blocks.', icon: 'columns' },
-    { key: 'pinned', title: 'Fixed reference columns', description: 'Key columns like ID and Name repeated in every section.', icon: 'pin' },
-    { key: 'pagination', title: 'Rows X\u2013Y and Page i/n', description: 'Clear row ranges and page numbers on every page.', icon: 'pagination' },
-    { key: 'auto', title: 'Auto-structured', description: 'Zero configuration \u2014 upload and get a structured PDF.', icon: 'wand' },
-    { key: 'toc', title: 'Clickable table of contents', description: 'Jump to any section directly from the overview page.', icon: 'link' },
+    { key: 'overview', title: 'Overview page', description: 'See the full structure at a glance before each section.', icon: 'overview' },
+    { key: 'columns', title: 'Columns grouped into readable sections', description: 'Wide tables split into clear, focused sections.', icon: 'columns' },
+    { key: 'pinned', title: 'Key columns repeated automatically', description: 'Keep important columns (like ID and Name) at the top of each section.', icon: 'pin' },
+    { key: 'pagination', title: 'Clear page numbers and row ranges', description: 'Readable row bands and page references for easier review.', icon: 'pagination' },
+    { key: 'auto', title: 'No manual layout work', description: 'Upload once and let FitForPDF structure it for you.', icon: 'wand' },
+    { key: 'toc', title: 'Jump to any section instantly', description: 'Open any section directly from the overview page.', icon: 'link' },
   ],
   clientReadyBullets: [
-    'Document overview page',
-    'Smart column sections',
-    'Fixed reference columns',
-    'Rows X\u2013Y and Page i/n',
-    'No manual layout',
-    'Clickable table of contents',
+    'Overview page',
+    'Columns grouped into readable sections',
+    'Key columns repeated automatically',
+    'Clear page numbers and row ranges',
+    'No manual layout work',
+    'Jump to any section instantly',
   ],
 
   toolTitle: 'Generate a client-ready PDF',
@@ -81,7 +81,6 @@ export const LANDING_COPY = {
   footerMakerName: 'Sébastien',
   footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
 
-  socialProofCount: '1,098',
 };
 
 export const LANDING_COPY_KEYS = {
@@ -142,7 +141,7 @@ export const PRICING_PAGE_COPY = {
   singleTopline: 'One-time payment',
   singlePrice: '$2.90',
   singleExports: '1 export',
-  singleDescription: 'Ideal for a quick, urgent export.',
+  singleDescription: 'For one urgent export.',
   singleCtaLabel: 'Buy 1 export',
   singleFeatures: ['1 PDF export', 'No FitForPDF watermark', 'Standard structured layout', 'Never expires'],
 
@@ -152,7 +151,7 @@ export const PRICING_PAGE_COPY = {
   paygStarterPrice: '$15',
   paygStarterPerExport: 'Only $1.50 per export',
   paygStarterExports: '10 exports',
-  paygStarterDescription: 'The smart choice for freelancers and easy expense reports.',
+  paygStarterDescription: 'For freelancers and regular client work.',
   paygStarterCtaLabel: 'Get 10 exports',
   paygStarterBadge: 'Most popular',
   paygStarterFeatures: ['10 PDF exports', 'No FitForPDF watermark', 'Standard structured layout', 'Never expires'],
@@ -163,7 +162,7 @@ export const PRICING_PAGE_COPY = {
   volumePrice: '$49',
   volumePerExport: 'Only $0.49 per export',
   volumeExports: '100 exports',
-  volumeDescription: 'For busy consultants with regular reporting needs.',
+  volumeDescription: 'For consultants and recurring reporting.',
   volumeCtaLabel: 'Get 100 exports',
   volumeFeatures: ['100 PDF exports', 'No FitForPDF watermark', 'Standard structured layout', 'Never expires'],
 
@@ -204,7 +203,7 @@ export const PRICING_PAGE_COPY = {
   freeSafetyCtaHref: '/#generate',
 
   proApiTitle: 'Team / API',
-  proApiTagline: 'Need higher volume, API access, or team seats?',
+  proApiTagline: 'Need higher volume, API access, or team plans?',
   proApiCtaLabel: 'Contact us',
   proApiCtaHref: 'mailto:hello@fitforpdf.com',
   proApiFeatures: [

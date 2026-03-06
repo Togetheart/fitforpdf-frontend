@@ -38,6 +38,7 @@ describe('landing conversion-first structure', () => {
   test('sections exist in strict order', () => {
     const hero = screen.getByTestId('hero-section');
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
+    const comparison = screen.getByTestId('section-comparison');
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
     const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
@@ -45,15 +46,34 @@ describe('landing conversion-first structure', () => {
 
     expect(hero).toBeTruthy();
     expect(proof).toBeTruthy();
+    expect(comparison).toBeTruthy();
     expect(pricing).toBeTruthy();
     expect(privacy).toBeTruthy();
     expect(faq).toBeTruthy();
     expect(finalCta).toBeTruthy();
     expect(hero.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(proof.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(proof.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(comparison.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(pricing.compareDocumentPosition(privacy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(privacy.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(faq.compareDocumentPosition(finalCta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  test('hero keeps the 3-line headline with required rhythm', () => {
+    const heading = screen.getByRole('heading', { level: 1, name: /Your spreadsheet\./i });
+
+    expect(heading).toBeTruthy();
+    expect(screen.getByText('Your spreadsheet.')).toBeTruthy();
+    expect(screen.getByText('Ready to send.')).toBeTruthy();
+    const headingText = heading.textContent || '';
+    expect(headingText).toContain('Your spreadsheet.');
+    expect(headingText).toContain('Reorganized into readable sections.');
+    expect(headingText).toContain('Ready to send.');
+  });
+
+  test('unverified social proof claim is not shown', () => {
+    expect(screen.queryByText(/Trusted by 1,098 professionals this week/i)).toBeNull();
   });
 
   test('legacy demo section below options is removed', () => {
@@ -103,6 +123,25 @@ describe('landing conversion-first structure', () => {
     expect(screen.getByRole('heading', { level: 2, name: /This is what your client receives/i })).toBeTruthy();
   });
 
+  test('proof card keeps before/after labels and full-document action', () => {
+    const proofCard = screen.getByTestId('home-preview-card');
+
+    expect(proofCard).toBeTruthy();
+    expect(proofCard).toBeTruthy();
+    expect(within(proofCard).getByText('BROKEN EXCEL EXPORT')).toBeTruthy();
+    expect(within(proofCard).getByText('FITFORPDF STRUCTURED DOCUMENT')).toBeTruthy();
+    expect(within(proofCard).getByRole('button', { name: 'View full document ↗' })).toBeTruthy();
+  });
+
+  test('starter plan remains the highlighted pay-as-you-go option', () => {
+    const cards = screen.getAllByTestId('payg-plan-card');
+    const starterCard = cards.find((card) => card.textContent?.includes('Starter'));
+
+    expect(starterCard).toBeTruthy();
+    expect(starterCard?.textContent).toContain('Most popular');
+    expect(starterCard?.className || '').toContain('md:scale-[1.04]');
+  });
+
   test('single demo entrypoint is in the upload block', () => {
     const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const uploadCard = screen.getByTestId('upload-card');
@@ -113,6 +152,9 @@ describe('landing conversion-first structure', () => {
     expect(uploadCard).toBeTruthy();
     expect(proofCard).toBeTruthy();
     expect(demoButton).toBeTruthy();
+    const demoClass = demoButton.getAttribute('class') || '';
+    expect(demoClass).toContain('text-accent');
+    expect(demoClass).toContain('bg-accent');
     expect(screen.queryByRole('button', { name: 'Run the demo' })).toBeNull();
     expect(screen.getAllByTestId('demo-try-button')).toHaveLength(1);
   });
@@ -121,8 +163,8 @@ describe('landing conversion-first structure', () => {
     const previewCard = screen.getByTestId('home-preview-card');
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
     // Default format is XLSX
-    expect(within(previewCard).getByText('XLSX INPUT')).toBeTruthy();
-    expect(within(previewCard).getByText('STRUCTURED PDF')).toBeTruthy();
+    expect(within(previewCard).getByText('BROKEN EXCEL EXPORT')).toBeTruthy();
+    expect(within(previewCard).getByText('FITFORPDF STRUCTURED DOCUMENT')).toBeTruthy();
     const proofWrapper = screen.getByTestId('proof-pdf-image');
     const proofImg = proofWrapper.querySelector('img');
     // XLSX format selected — image src contains '/Excel/'
@@ -137,6 +179,32 @@ describe('landing conversion-first structure', () => {
     expect(previewCard).toBeTruthy();
     expect(proofSection).toBeTruthy();
     expect(proofSection.contains(previewCard)).toBe(true);
+    expect(previewCard.textContent).toContain('FITFORPDF STRUCTURED DOCUMENT');
+    expect(previewCard.textContent).toContain('BROKEN EXCEL EXPORT');
+  });
+
+  test('comparison section sits next to proof section', () => {
+    const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
+    const comparison = screen.getByTestId('section-comparison');
+
+    expect(screen.getByText('Excel PDF Export vs FitForPDF')).toBeTruthy();
+    expect(screen.getByText('Stop fighting print settings. Get a client-ready structured PDF in seconds.')).toBeTruthy();
+    expect(proofSection.nextElementSibling).toBe(comparison);
+    expect(proofSection.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  test('FAQ items stay focused on conversion objections', () => {
+    const faq = screen.getByTestId('home-faq');
+
+    [
+      'Do my "Pay as you go" credits expire?',
+      'Is the Starter pack a subscription?',
+      'Will my clients see the FitForPDF logo?',
+      'What counts as an export?',
+      'Do you store my files?',
+    ].forEach((question) => {
+      expect(faq.textContent).toContain(question);
+    });
   });
 
   test('landing section spacing uses varied rhythm', () => {

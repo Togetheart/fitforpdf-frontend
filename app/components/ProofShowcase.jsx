@@ -5,7 +5,7 @@ import ImageLightbox from './ImageLightbox';
 
 const FEATURES = [
   {
-    title: 'Document overview page',
+    title: 'Overview page',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -16,7 +16,7 @@ const FEATURES = [
     color: '#818cf8',
   },
   {
-    title: 'Smart column sections',
+    title: 'Columns grouped into readable sections',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="7" height="18" rx="1.5" />
@@ -26,7 +26,7 @@ const FEATURES = [
     color: '#38bdf8',
   },
   {
-    title: 'Fixed reference columns',
+    title: 'Key columns repeated automatically',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="12" y1="17" x2="12" y2="21" />
@@ -36,7 +36,7 @@ const FEATURES = [
     color: '#2dd4bf',
   },
   {
-    title: 'Rows X–Y and Page i/n',
+    title: 'Clear page numbers and row ranges',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="4" y1="9" x2="20" y2="9" />
@@ -48,7 +48,7 @@ const FEATURES = [
     color: '#4ade80',
   },
   {
-    title: 'Auto-structured',
+    title: 'No manual layout work',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
@@ -57,7 +57,7 @@ const FEATURES = [
     color: '#fbbf24',
   },
   {
-    title: 'Clickable table of contents',
+    title: 'Jump to any section instantly',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
@@ -145,28 +145,28 @@ const FORMAT_CONFIGS = {
     id: 'csv',
     label: 'CSV',
     icon: '/csv_icon.svg',
-    inputLabel: 'CSV INPUT',
-    inputDescription: 'Raw spreadsheet data — columns overflow, no structure.',
+    inputLabel: 'BROKEN CSV EXPORT',
+    inputDescription: 'Column overflow and unreadable structure.',
     beforeImage: '/before_csv.webp',
     beforeAlt: 'CSV input preview',
     sourceLink: '/CSV/enterprise-invoices-demo.csv',
     sourceLinkLabel: 'Download source CSV ↗',
     tabs: CSV_TABS,
-    outputLabel: 'STRUCTURED PDF',
+    outputLabel: 'FITFORPDF STRUCTURED DOCUMENT',
     statLine: '16 columns. Automatically split into 4 readable sections.',
   },
   xlsx: {
     id: 'xlsx',
     label: 'XLSX',
     icon: '/Microsoft_Office_Excel_(2025–present).svg',
-    inputLabel: 'XLSX INPUT',
-    inputDescription: 'Excel exported to PDF — unreadable column overflow.',
+    inputLabel: 'BROKEN EXCEL EXPORT',
+    inputDescription: 'Excel PDF export is unreadable at full width.',
     beforeImage: '/Excel/xlxs.webp',
     beforeAlt: 'Excel file exported as PDF — unreadable overflow',
     sourceLink: null,
     sourceLinkLabel: null,
     tabs: XLSX_TABS,
-    outputLabel: 'STRUCTURED PDF',
+    outputLabel: 'FITFORPDF STRUCTURED DOCUMENT',
     statLine: '11 columns. Automatically split into 5 readable sections.',
   },
 };
@@ -174,12 +174,12 @@ const FORMAT_CONFIGS = {
 const FORMATS = ['xlsx', 'csv'];
 
 const TAB_COLORS = [
-  '#ffffff', // white      — Overview
-  '#4f46e5', // indigo-600 — Section A
-  '#0ea5e9', // sky-500    — Section B
-  '#22c55e', // green-500  — Section C
-  '#f59e0b', // amber-500  — Section D
-  '#ef4444', // red-500    — Section E
+  'bg-white', // white      — Overview
+  'bg-indigo-600', // indigo-600 — Section A
+  'bg-sky-500', // sky-500    — Section B
+  'bg-green-500', // green-500  — Section C
+  'bg-amber-500', // amber-500  — Section D
+  'bg-red-500', // red-500    — Section E
 ];
 
 export default function ProofShowcase() {
@@ -274,9 +274,9 @@ export default function ProofShowcase() {
       <div
         ref={cardRef}
         data-testid="home-preview-card"
-        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8 cursor-pointer transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
+        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8 shadow-sm transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
       >
-        <div className="grid gap-6 sm:grid-cols-[1fr_4fr]">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.94fr]">
           {/* Left: Input (20%) */}
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
@@ -337,13 +337,12 @@ export default function ProofShowcase() {
                 {/* Sliding indicator — colored pill */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute rounded-full"
+                  className={`pointer-events-none absolute rounded-full ${TAB_COLORS[activeTab] ?? TAB_COLORS[0]}`}
                   style={{
                     left: indicator.left,
                     width: indicator.width,
                     top: '4px',
                     bottom: '4px',
-                    backgroundColor: TAB_COLORS[activeTab] ?? TAB_COLORS[0],
                     boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
                     transition: 'left 300ms cubic-bezier(0.25,0.1,0.25,1), width 300ms cubic-bezier(0.25,0.1,0.25,1), background-color 200ms ease',
                   }}
@@ -375,14 +374,14 @@ export default function ProofShowcase() {
               role="tabpanel"
               aria-labelledby={`proof-tab-${currentTab.id}`}
             >
-              <div
-                style={{
-                  transform: hasAnimated ? 'translateX(0)' : 'translateX(60px)',
-                  opacity: hasAnimated ? 1 : 0,
-                  transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1) 100ms, opacity 600ms ease 100ms',
-                }}
-              >
-                <div className="proof-tab-image mt-3 overflow-hidden rounded-lg border border-black/10">
+            <div
+              style={{
+                transform: hasAnimated ? 'translateX(0)' : 'translateX(60px)',
+                opacity: hasAnimated ? 1 : 0,
+                transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1) 100ms, opacity 600ms ease 100ms',
+              }}
+            >
+              <div className="proof-tab-image mt-3 overflow-hidden rounded-lg border border-black/10">
                   <ImageLightbox
                     ref={rightLightboxRef}
                     src={currentTab.src}
@@ -418,7 +417,7 @@ export default function ProofShowcase() {
 
         {/* Feature strip — Apple style */}
         <div
-          className="mt-6 grid grid-cols-3 gap-px overflow-hidden rounded-xl sm:grid-cols-6"
+          className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl sm:grid-cols-3"
           style={{ backgroundColor: 'rgba(0,0,0,0.06)' }}
         >
           {FEATURES.map((f) => (

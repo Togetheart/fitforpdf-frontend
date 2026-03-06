@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
@@ -71,6 +71,15 @@ const FEATURE_ICON_COLORS = {
   link:       'text-red-500',
 };
 
+const COMPARISON_ROWS = [
+  ['Wide columns', 'Cut off or unreadable', 'Grouped into sections'],
+  ['Layout', 'Manual configuration', 'Auto-structured'],
+  ['Page breaks', 'Unpredictable splits', 'Automatic pagination'],
+  ['Reference columns', 'Lost after first pages', 'Repeated automatically'],
+  ['Overview', 'None', 'Document overview page'],
+  ['Result', 'Spreadsheet-like output', 'Client-ready document'],
+];
+
 function FeatureIcon({ name }) {
   return (
     <span className={FEATURE_ICON_COLORS[name] ?? 'text-accent'} aria-hidden="true">
@@ -80,104 +89,7 @@ function FeatureIcon({ name }) {
 }
 
 
-function SocialProofStrip() {
-  // Start docked (SSR-safe). On client mount, switch to fixed if user is near top.
-  const [docked, setDocked] = useState(true);
-  const anchorRef = useRef(null);
-
-  useEffect(() => {
-    const el = anchorRef.current;
-    if (!el) return;
-
-    // Only use sticky behavior on sm+ viewports (hero is full-height there)
-    if (window.innerWidth >= 640 && window.scrollY < 100) {
-      setDocked(false);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setDocked(true);
-        } else if (entry.boundingClientRect.top > 0) {
-          // Anchor is below viewport → user scrolled back up → go sticky
-          if (window.innerWidth >= 640) setDocked(false);
-        }
-      },
-      { threshold: 0.01 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const count = LANDING_COPY.socialProofCount;
-
-  const innerContent = (
-    <div className="flex items-center gap-4 px-4 sm:gap-6 sm:px-6">
-      {/* Static label — left */}
-      <p className="flex-shrink-0 whitespace-nowrap text-sm text-muted">
-        Trusted by{' '}
-        <span className="inline-flex items-center rounded-md border border-black/10 px-2 py-0.5 text-xs font-semibold text-black">
-          {count}
-        </span>
-        {' '}professionals this week
-      </p>
-      {/* Vertical separator */}
-      <div className="h-4 w-px flex-shrink-0 bg-black/10" aria-hidden="true" />
-      {/* Scrolling ticker — fills remaining width */}
-      <div className="relative min-w-0 flex-1 overflow-hidden">
-        {/* Left fade */}
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent sm:w-20"
-          aria-hidden="true"
-        />
-        {/* Right fade */}
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent sm:w-20"
-          aria-hidden="true"
-        />
-        <div className="ticker-track">
-          {[...LANDING_COPY.socialProofTicker, ...LANDING_COPY.socialProofTicker].map((item, i) => (
-            <span
-              key={i}
-              className="mr-8 whitespace-nowrap text-sm font-medium text-muted/60 sm:mr-12"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div ref={anchorRef} data-testid="social-proof-ticker">
-      {docked ? (
-        /* In-flow: normal document position */
-        <div className="border-y border-black/10 bg-white py-4">
-          {innerContent}
-        </div>
-      ) : (
-        <>
-          {/* Invisible placeholder keeps layout space while strip is fixed */}
-          <div
-            className="border-y border-black/10 bg-white py-4 invisible pointer-events-none select-none"
-            aria-hidden="true"
-          >
-            {innerContent}
-          </div>
-          {/* Fixed strip slides in from bottom */}
-          <div
-            className="proof-slide-up fixed bottom-0 inset-x-0 z-40 border-t border-black/10 bg-white py-4"
-            style={{ boxShadow: '0 -6px 24px rgba(0,0,0,0.06)' }}
-          >
-            {innerContent}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
+// Sticky trust ticker removed; homepage avoids unverified social-credibility claims.
 
 export default function Page() {
   const quota = useQuota();
@@ -280,27 +192,12 @@ export default function Page() {
         </div>
       </PageHero>
 
-      {/* Social proof — sticky on load, docks on scroll */}
-      <SocialProofStrip />
-
       <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-20 sm:py-28" bg="bg-hero">
         <ProofShowcase />
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-hero">
-        <PricingToggleSection showFreeTier />
-        <div className="flex justify-center">
-          <a href="/pricing" className={CTA_SECONDARY}>
-            {LANDING_COPY.pricingPreviewCta}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-      </Section>
-
-      <Section id="comparison" index={4} bg="bg-hero" className="py-20 sm:py-28">
-        <div className="space-y-10">
+      <Section id="comparison" index={2} bg="bg-hero" className="py-16 sm:py-20">
+        <div className="space-y-8">
           <div className="text-center">
             <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
               Excel PDF Export vs FitForPDF
@@ -313,29 +210,34 @@ export default function Page() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-black/10 bg-black/[0.025]">
-                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-6">Feature</th>
-                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-6">Excel PDF Export</th>
-                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] sm:px-6">FitForPDF</th>
+                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-5">Feature</th>
+                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-5">Excel PDF Export</th>
+                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] sm:px-5">FitForPDF</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/[0.05]">
-                {[
-                  ['Wide columns', 'Cut off or unreadable', '✓ Grouped into sections'],
-                  ['Layout', 'Manual tweaking required', '✓ Zero configuration'],
-                  ['Page breaks', 'Unpredictable splits', '✓ Automatic pagination'],
-                  ['Reference columns', 'Lost after page 1', '✓ Repeated on every section'],
-                  ['Overview', 'None', '✓ Document overview page'],
-                  ['Result', 'Raw spreadsheet feel', '✓ Client-ready document'],
-                ].map(([feature, excel, fitforpdf], i) => (
+                {COMPARISON_ROWS.map(([feature, excel, fitforpdf], i) => (
                   <tr key={feature} className={i % 2 === 1 ? 'bg-black/[0.015]' : ''}>
-                    <td className="px-4 py-3 font-[500] text-[#1A1A1A] sm:px-6">{feature}</td>
-                    <td className="px-4 py-3 text-black/40 sm:px-6">{excel}</td>
-                    <td className="px-4 py-3 font-[500] text-[#1A1A1A] sm:px-6">{fitforpdf}</td>
+                    <td className="px-4 py-3 text-sm font-[500] text-[#1A1A1A] sm:px-5">{feature}</td>
+                    <td className="px-4 py-3 text-sm text-black/40 sm:px-5">{excel}</td>
+                    <td className="px-4 py-3 text-sm font-[500] text-[#1A1A1A] sm:px-5">{fitforpdf}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+        </div>
+      </Section>
+
+      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-hero">
+        <PricingToggleSection showFreeTier />
+        <div className="flex justify-center">
+          <a href="/pricing" className={CTA_SECONDARY}>
+            {LANDING_COPY.pricingPreviewCta}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </Section>
 

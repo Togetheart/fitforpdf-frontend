@@ -1,11 +1,13 @@
-'use client';
-
-import React from 'react';
-import { PRICING_PAGE_COPY } from '../siteCopy.mjs';
+import { PRICING_PAGE_COPY, SEO } from '../siteCopy.mjs';
 import Section from '../components/ui/Section';
 import FaqAccordion from '../components/FaqAccordion';
 import FeatureComparison from '../components/FeatureComparison';
 import PricingToggleSection from '../components/PricingToggleSection';
+
+export const metadata = {
+  title: SEO.pricing.title,
+  description: SEO.pricing.description,
+};
 
 /* ── Main page ─────────────────────────────────────────── */
 export default function PricingPage() {

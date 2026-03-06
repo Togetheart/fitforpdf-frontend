@@ -1,12 +1,15 @@
-'use client';
-
 import React from 'react';
 
-import { PRIVACY_PAGE_COPY, LANDING_COPY } from '../siteCopy.mjs';
+import { PRIVACY_PAGE_COPY, LANDING_COPY, SEO } from '../siteCopy.mjs';
 import Section from '../components/ui/Section';
 import Accordion from '../components/Accordion';
 import PageHero from '../components/PageHero';
 import AnimatedShieldIcon from '../components/AnimatedShieldIcon';
+
+export const metadata = {
+  title: `${SEO.privacy.title}`,
+  description: SEO.privacy.description,
+};
 
 /* ─── SVG icons — même style que landing (stroke, no fill) ─ */
 const ICONS = {
