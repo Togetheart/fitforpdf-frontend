@@ -2,8 +2,8 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
   logoText: 'FitForPDF',
-  heroTitle: 'Stop Excel PDFs where columns get cut off.\\nTurn wide spreadsheets into readable sections.\\nReady to send.',
-  heroSubheadline: 'Fix broken Excel and CSV exports. Get a structured, readable PDF that’s ready to send.',
+  heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
+  heroSubheadline: 'Fix broken Excel and CSV exports where columns get cut off. Get a structured, readable PDF that’s ready to send.',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored',

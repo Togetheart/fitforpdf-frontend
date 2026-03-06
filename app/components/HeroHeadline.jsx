@@ -45,10 +45,10 @@ export default function HeroHeadline() {
     <>
     <h1 className="flex flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
       <span ref={firstLineRef} className="hero-headline-line block text-slate-900">
-        Stop Excel PDFs where columns get cut off.
+        Your spreadsheet.
       </span>
       <span className="hero-headline-line block text-slate-900">
-        Turn wide spreadsheets into readable{' '}
+        Reorganized into readable{' '}
         <span
           ref={sectionWordRef}
           data-testid="hero-headline-accent"
