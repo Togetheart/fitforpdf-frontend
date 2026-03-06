@@ -276,7 +276,7 @@ export default function ProofShowcase() {
         data-testid="home-preview-card"
         className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8 shadow-sm transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
       >
-        <div className="grid gap-6 lg:grid-cols-[1fr_1.94fr]">
+        <div className="grid gap-6 lg:grid-cols-[38%_62%] xl:gap-8">
           {/* Left: Input (20%) */}
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">

@@ -121,19 +121,19 @@ export default function Page() {
         height="min-h-0 sm:min-h-screen"
         title={<HeroHeadline />}
         contentClassName="items-center gap-14 text-center"
-        contentMaxWidthClassName="max-w-[960px]"
+        contentMaxWidthClassName="max-w-[1360px]"
         className="py-0 w-full"
       >
         <div className="space-y-10">
           <p
-            className="hero-headline-line w-full max-w-none text-lg text-slate-900 lg:whitespace-nowrap"
+            className="hero-headline-line w-full max-w-[1020px] mx-auto text-lg text-slate-900"
           >
             {LANDING_COPY.heroSubheadline}
           </p>
           <div
             id={LANDING_COPY_KEYS.upload}
             data-testid={LANDING_COPY_KEYS.upload}
-            className="hero-headline-line feature-card-hover relative rounded-xl bg-white"
+            className="hero-headline-line mx-auto w-full max-w-[1320px] feature-card-hover relative rounded-xl bg-white"
           >
             <UploadCard
               toolTitle={LANDING_COPY.toolTitle}
@@ -192,11 +192,23 @@ export default function Page() {
         </div>
       </PageHero>
 
-      <Section id={LANDING_COPY_KEYS.beforeAfter} index={1} className="py-20 sm:py-28" bg="bg-hero">
+      <Section
+        id={LANDING_COPY_KEYS.beforeAfter}
+        index={1}
+        maxWidth="max-w-[1440px]"
+        className="py-20 sm:py-28"
+        bg="bg-hero"
+      >
         <ProofShowcase />
       </Section>
 
-      <Section id="comparison" index={2} bg="bg-hero" className="py-16 sm:py-20">
+      <Section
+        id="comparison"
+        index={2}
+        maxWidth="max-w-[1360px]"
+        bg="bg-hero"
+        className="py-16 sm:py-20"
+      >
         <div className="space-y-8">
           <div className="text-center">
             <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
@@ -210,17 +222,17 @@ export default function Page() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-black/10 bg-black/[0.025]">
-                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-5">Feature</th>
-                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 sm:px-5">Excel PDF Export</th>
-                  <th className="px-4 py-3 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] sm:px-5">FitForPDF</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Feature</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Excel PDF Export</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] lg:px-6">FitForPDF</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/[0.05]">
                 {COMPARISON_ROWS.map(([feature, excel, fitforpdf], i) => (
                   <tr key={feature} className={i % 2 === 1 ? 'bg-black/[0.015]' : ''}>
-                    <td className="px-4 py-3 text-sm font-[500] text-[#1A1A1A] sm:px-5">{feature}</td>
-                    <td className="px-4 py-3 text-sm text-black/40 sm:px-5">{excel}</td>
-                    <td className="px-4 py-3 text-sm font-[500] text-[#1A1A1A] sm:px-5">{fitforpdf}</td>
+                    <td className="px-5 py-3.5 text-sm font-[500] text-[#1A1A1A] lg:px-6">{feature}</td>
+                    <td className="px-5 py-3.5 text-sm text-black/40 lg:px-6">{excel}</td>
+                    <td className="px-5 py-3.5 text-sm font-[500] text-[#1A1A1A] lg:px-6">{fitforpdf}</td>
                   </tr>
                 ))}
               </tbody>
@@ -229,7 +241,13 @@ export default function Page() {
         </div>
       </Section>
 
-      <Section id={LANDING_COPY_KEYS.pricingPreview} index={3} className="py-16 sm:py-24" bg="bg-hero">
+      <Section
+        id={LANDING_COPY_KEYS.pricingPreview}
+        index={3}
+        maxWidth="max-w-[1440px]"
+        className="py-16 sm:py-24"
+        bg="bg-hero"
+      >
         <PricingToggleSection showFreeTier />
         <div className="flex justify-center">
           <a href="/pricing" className={CTA_SECONDARY}>
@@ -245,9 +263,9 @@ export default function Page() {
         id={LANDING_COPY_KEYS.privacyStrip}
         index={5}
         bg="bg-hero"
+        maxWidth="max-w-[1240px]"
         className="py-20 sm:py-28"
         testId="privacy-section"
-        maxWidth="max-w-3xl"
       >
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center gap-2">
@@ -278,6 +296,7 @@ export default function Page() {
         id="home-faq"
         index={6}
         bg="bg-hero"
+        maxWidth="max-w-[1240px]"
         className="py-20 sm:py-28"
         testId="faq-section"
       >

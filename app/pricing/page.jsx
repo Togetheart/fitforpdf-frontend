@@ -17,7 +17,7 @@ export default function PricingPage() {
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-hero pt-24 pb-10 sm:pt-32 sm:pb-14">
         {/* Subtle warm top glow */}
-        <div className="relative mx-auto flex max-w-[960px] flex-col items-center gap-4 px-4 text-center sm:px-6">
+        <div className="relative mx-auto flex max-w-[1280px] flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-10 xl:px-12">
           {/* Page label */}
           <p className="text-2xl font-[650] tracking-tight text-[#1A1A1A]">Pricing</p>
           {/* Headline */}
@@ -33,12 +33,24 @@ export default function PricingPage() {
       </section>
 
       {/* ── Plans ── */}
-      <Section id="pricing-plans" index={1} bg="bg-hero" className="py-16 sm:py-24">
+      <Section
+        id="pricing-plans"
+        index={1}
+        bg="bg-hero"
+        className="py-16 sm:py-24"
+        maxWidth="max-w-[1440px]"
+      >
         <PricingToggleSection showFreeTier />
       </Section>
 
       {/* ── Feature comparison ── */}
-      <Section id="pricing-comparison" index={2} bg="bg-hero" className="py-20 sm:py-28">
+      <Section
+        id="pricing-comparison"
+        index={2}
+        bg="bg-hero"
+        className="py-20 sm:py-28"
+        maxWidth="max-w-[1360px]"
+      >
         <FeatureComparison
           title={PRICING_PAGE_COPY.comparisonTitle}
           columns={['Free', 'Single', 'Starter', 'Pro subscription']}
@@ -47,7 +59,7 @@ export default function PricingPage() {
       </Section>
 
       {/* ── FAQ ── */}
-      <Section id="pricing-faq" index={3} bg="bg-hero" className="py-20 sm:py-28">
+      <Section id="pricing-faq" index={3} bg="bg-hero" className="py-20 sm:py-28" maxWidth="max-w-[1200px]">
         <h2 className="text-center text-3xl sm:text-[2.5rem] font-[700] tracking-[-0.018em] text-[#1A1A1A]">
           {PRICING_PAGE_COPY.faqTitle}
         </h2>

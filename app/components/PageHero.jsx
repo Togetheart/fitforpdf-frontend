@@ -12,7 +12,7 @@ export default function PageHero({
   height = 'min-h-[360px] sm:min-h-[460px]',
   className = '',
   contentClassName = '',
-  contentMaxWidthClassName = 'max-w-[960px]',
+  contentMaxWidthClassName = 'max-w-[1280px]',
   titleClassName = 'text-[2rem] sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.08]',
   subtitleClassName = '',
   heroTestId = 'page-hero',
@@ -33,7 +33,7 @@ export default function PageHero({
       className={`relative overflow-hidden ${height} ${className}`}
     >
       <HeroBackdrop variant={variant} height={height} />
-      <div className={`relative z-10 mx-auto flex ${alignClass} ${contentMaxWidthClassName} flex-col gap-6 px-4 py-16 sm:px-6 ${contentClassName}`}>
+      <div className={`relative z-10 mx-auto flex ${alignClass} ${contentMaxWidthClassName} flex-col gap-6 px-4 py-16 sm:px-6 lg:px-10 xl:px-12 ${contentClassName}`}>
         {children || hasDefaultContent ? (
           <>
             {eyebrow ? (

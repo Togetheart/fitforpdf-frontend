@@ -43,7 +43,7 @@ export default function HeroHeadline() {
 
   return (
     <>
-    <h1 className="flex flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
+    <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
       <span ref={firstLineRef} className="hero-headline-line block text-slate-900">
         Your spreadsheet.
       </span>

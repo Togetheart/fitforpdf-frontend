@@ -14,7 +14,7 @@ export default function SiteShell({ children, variant = 'default' }) {
       <div className="relative z-10">
         <SiteHeader />
         <div data-testid="site-header-spacer" className={headerSpacerClass} aria-hidden="true" />
-        <main className={hasCompactSpacing ? 'mx-auto w-full max-w-[960px] px-4 py-8 sm:px-6' : ''}>{children}</main>
+        <main className={hasCompactSpacing ? 'mx-auto w-full max-w-[1240px] px-4 py-8 sm:px-6' : ''}>{children}</main>
         <SiteFooter />
       </div>
     </div>

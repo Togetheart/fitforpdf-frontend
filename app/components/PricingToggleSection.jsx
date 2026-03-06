@@ -368,7 +368,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           </div>
 
           {/* 3 cards */}
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:items-start">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:items-start xl:gap-6">
             {PAYG_PACKS.map((pack) => (
               <PaygCard
                 key={pack.id}
@@ -408,7 +408,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           </div>
 
           {/* Pro + API cards */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch lg:gap-8">
             <ProSubscriptionCard billing={billing} onSubscribe={() => checkout.openProCheckout(billing)} />
             <ProApiCard />
           </div>

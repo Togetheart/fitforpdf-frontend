@@ -15,7 +15,7 @@ export default function Section({
   testId,
   className = '',
   bg,
-  maxWidth = 'max-w-[960px]',
+  maxWidth = 'max-w-[1280px]',
 }) {
   const resolvedBg = bg ?? 'bg-white';
   const testIdValue = testId ?? `section-${id}`;
@@ -66,7 +66,7 @@ export default function Section({
     >
       <div
         ref={innerRef}
-        className={`mx-auto flex w-full flex-col gap-8 ${maxWidth} px-4 py-10 sm:px-6 sm:py-12`}
+        className={`mx-auto flex w-full flex-col gap-8 ${maxWidth} px-4 py-10 sm:px-6 lg:px-10 xl:px-12 sm:py-12`}
       >
         {children}
       </div>

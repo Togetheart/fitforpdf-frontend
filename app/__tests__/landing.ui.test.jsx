@@ -237,8 +237,8 @@ describe('landing conversion-first structure', () => {
     expect(faqSectionClass).toContain('bg-hero');
     expect((privacy.textContent || '').includes('Your data. Not our business.')).toBe(true);
     expect((faq.textContent || '').includes('Frequently asked questions')).toBe(true);
-    expect(pricingInner?.getAttribute('class') || '').toContain('max-w-[960px]');
-    expect(faqInner?.getAttribute('class') || '').toContain('max-w-[960px]');
+    expect(pricingInner?.getAttribute('class') || '').toContain('max-w-[1440px]');
+    expect(faqInner?.getAttribute('class') || '').toContain('max-w-[1240px]');
     expect(faqAccordion.parentElement?.getAttribute('class') || '').toContain('w-full');
   });
 
