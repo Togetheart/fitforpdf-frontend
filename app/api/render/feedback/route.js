@@ -1,9 +1,11 @@
+import { getNeatExportApiKey } from '../../lib/backendKeys.js';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
   const upstream = process.env.CLEAN_SHEET_API_URL;
-  const apiKey = process.env.NEATEXPORT_API_KEY;
+  const apiKey = getNeatExportApiKey();
 
   if (!upstream || !apiKey) {
     return new Response(JSON.stringify({ error: 'Missing env vars' }), {

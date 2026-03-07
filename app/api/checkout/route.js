@@ -1,3 +1,5 @@
+import { getNeatExportApiKey } from '../../lib/backendKeys.js';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +25,7 @@ function normalizeCheckoutUrl(raw) {
 }
 
 export async function POST(req) {
+  const neatExportApiKey = getNeatExportApiKey();
   let payload;
   try {
     payload = await req.json();
@@ -49,8 +52,8 @@ export async function POST(req) {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        ...(process.env.NEATEXPORT_API_KEY
-          ? { 'X-NEATEXPORT-KEY': process.env.NEATEXPORT_API_KEY }
+        ...(neatExportApiKey
+          ? { 'X-NEATEXPORT-KEY': neatExportApiKey }
           : {}),
       },
       body: JSON.stringify({

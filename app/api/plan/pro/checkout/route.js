@@ -1,3 +1,5 @@
+import { getNeatExportApiKey } from '../../../../lib/backendKeys.js';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -10,8 +12,9 @@ function jsonResponse(status, body) {
 
 function buildHeaders() {
   const headers = { 'content-type': 'application/json' };
-  if (process.env.NEATEXPORT_API_KEY) {
-    headers['X-NEATEXPORT-KEY'] = process.env.NEATEXPORT_API_KEY;
+  const apiKey = getNeatExportApiKey();
+  if (apiKey) {
+    headers['X-NEATEXPORT-KEY'] = apiKey;
   }
   return headers;
 }

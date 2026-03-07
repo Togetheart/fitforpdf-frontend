@@ -28,6 +28,7 @@ function setupEnv(vars) {
   const previous = {
     CLEAN_SHEET_API_URL: process.env.CLEAN_SHEET_API_URL,
     NEATEXPORT_API_KEY: process.env.NEATEXPORT_API_KEY,
+    FITFORPDF_BENCHMARK_KEY: process.env.FITFORPDF_BENCHMARK_KEY,
   };
 
   if (vars?.CLEAN_SHEET_API_URL === undefined) {
@@ -42,6 +43,12 @@ function setupEnv(vars) {
     process.env.NEATEXPORT_API_KEY = vars.NEATEXPORT_API_KEY;
   }
 
+  if (vars?.FITFORPDF_BENCHMARK_KEY === undefined) {
+    delete process.env.FITFORPDF_BENCHMARK_KEY;
+  } else {
+    process.env.FITFORPDF_BENCHMARK_KEY = vars.FITFORPDF_BENCHMARK_KEY;
+  }
+
   return () => {
     if (previous.CLEAN_SHEET_API_URL === undefined) {
       delete process.env.CLEAN_SHEET_API_URL;
@@ -52,6 +59,11 @@ function setupEnv(vars) {
       delete process.env.NEATEXPORT_API_KEY;
     } else {
       process.env.NEATEXPORT_API_KEY = previous.NEATEXPORT_API_KEY;
+    }
+    if (previous.FITFORPDF_BENCHMARK_KEY === undefined) {
+      delete process.env.FITFORPDF_BENCHMARK_KEY;
+    } else {
+      process.env.FITFORPDF_BENCHMARK_KEY = previous.FITFORPDF_BENCHMARK_KEY;
     }
   };
 }
@@ -96,6 +108,36 @@ test('POST /api/render errors when NEATEXPORT_API_KEY is missing', async () => {
   assert.equal(res.status, 500);
   assert.equal(json.error, 'Missing required environment variable(s)');
   assert.deepEqual(json.details, { missing: ['NEATEXPORT_API_KEY'] });
+  restoreEnv();
+});
+
+test('POST /api/render accepts FITFORPDF_BENCHMARK_KEY as alias', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: undefined,
+    FITFORPDF_BENCHMARK_KEY: 'benchmark-key',
+  });
+
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'content-disposition': 'attachment; filename="server.pdf"',
+    },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody('customers-100.csv'),
+  });
+  const res = await POST(req);
+
+  assert.equal(res.status, 200);
+  const { calls } = fetchMock;
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].options.headers['X-NEATEXPORT-KEY'], 'benchmark-key');
+
+  fetchMock.restore();
   restoreEnv();
 });
 

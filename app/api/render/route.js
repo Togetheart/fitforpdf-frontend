@@ -1,3 +1,5 @@
+import { getNeatExportApiKey } from '../../lib/backendKeys.js';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -152,7 +154,7 @@ function copyPassThroughHeaders(from) {
 
 export async function POST(req) {
   const upstream = process.env.CLEAN_SHEET_API_URL;
-  const apiKey = process.env.NEATEXPORT_API_KEY;
+  const apiKey = getNeatExportApiKey();
 
   const missing = [];
   if (!upstream) missing.push('CLEAN_SHEET_API_URL');
