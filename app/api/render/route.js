@@ -115,7 +115,7 @@ function buildUpstreamUrl(reqUrl, upstream, clientLocale = null) {
       target.searchParams.set('locale', 'en');
     }
   }
-  target.searchParams.set('columnMap', 'force');
+  target.searchParams.set('columnMap', 'auto');
   return target;
 }
 

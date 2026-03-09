@@ -141,7 +141,7 @@ test('POST /api/render accepts FITFORPDF_BENCHMARK_KEY as alias', async () => {
   restoreEnv();
 });
 
-test('POST /api/render forces columnMap=force and derives PDF filename from X-FitForPDF-Source-Filename', async () => {
+test('POST /api/render sets columnMap=auto and derives PDF filename from X-FitForPDF-Source-Filename', async () => {
   const restoreEnv = setupEnv({
     CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
     NEATEXPORT_API_KEY: 'backend-key',
@@ -176,7 +176,7 @@ test('POST /api/render forces columnMap=force and derives PDF filename from X-Fi
   const called = new URL(calls[0].url);
   assert.equal(called.pathname, '/render');
   assert.equal(called.searchParams.get('mode'), 'normal');
-  assert.equal(called.searchParams.get('columnMap'), 'force');
+  assert.equal(called.searchParams.get('columnMap'), 'auto');
   assert.equal(calls[0].options.headers['X-NEATEXPORT-KEY'], 'backend-key');
 
   fetchMock.restore();
@@ -360,7 +360,7 @@ test('POST /api/render does not rewrite content-disposition for non-PDF upstream
   const called = new URL(calls[0].url);
   assert.equal(called.pathname, '/render');
   assert.equal(called.searchParams.get('mode'), 'compact');
-  assert.equal(called.searchParams.get('columnMap'), 'force');
+  assert.equal(called.searchParams.get('columnMap'), 'auto');
 
   fetchMock.restore();
   restoreEnv();
