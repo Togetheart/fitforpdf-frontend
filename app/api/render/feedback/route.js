@@ -1,4 +1,4 @@
-import { getNeatExportApiKey } from '../../lib/backendKeys.js';
+import { getNeatExportApiKey } from '../../../lib/backendKeys.js';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
