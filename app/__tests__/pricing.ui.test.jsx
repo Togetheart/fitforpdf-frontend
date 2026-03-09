@@ -82,7 +82,7 @@ describe('pricing page UI', () => {
     const compareText = compare.textContent || '';
 
     expect(compareText).toContain('Client-ready PDF output');
-    expect(compareText).toContain('FitForPDF attribution');
+    expect(compareText).toContain('fitforpdf attribution');
     expect(compareText).toContain('Batch export');
     expect(compareText).toContain('API access');
     expect(compareText).not.toContain('Branding removable');

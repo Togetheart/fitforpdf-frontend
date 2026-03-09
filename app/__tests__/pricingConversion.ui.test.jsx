@@ -53,7 +53,7 @@ describe('pricing conversion UI', () => {
     expect(compare).toBeTruthy();
     expect(faq).toBeTruthy();
     expect(text).toContain('Client-ready PDF output');
-    expect(text).toContain('FitForPDF attribution');
+    expect(text).toContain('fitforpdf attribution');
     expect(text).toContain('Batch export');
     expect(text).toContain('API access');
     expect(text).toContain('Pro subscription');

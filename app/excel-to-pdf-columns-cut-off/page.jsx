@@ -33,8 +33,8 @@ const faqs = [
     a: 'You can adjust page scaling, orientation, and margins — but this often distorts layout for sheets with many columns.',
   },
   {
-    q: 'Does FitForPDF preserve all columns?',
-    a: 'Yes — FitForPDF restructures the sheet into sections, so no column is cut off. Reference columns (ID, Name) are repeated on each section for context.',
+    q: 'Does fitforpdf preserve all columns?',
+    a: 'Yes — fitforpdf restructures the sheet into sections, so no column is cut off. Reference columns (ID, Name) are repeated on each section for context.',
   },
 ];
 
@@ -69,9 +69,9 @@ export default function ExcelCutoffPage() {
         truncates sheets with 20+ columns. Splitting into areas takes time and breaks context.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#1A1A1A]">Structured export with FitForPDF</h2>
+      <h2 className="mb-3 text-xl font-[650] text-[#1A1A1A]">Structured export with fitforpdf</h2>
       <p className="mb-8 leading-relaxed text-[#4B4B4B]">
-        FitForPDF automatically groups wide columns into readable sections — each section fits on
+        fitforpdf automatically groups wide columns into readable sections — each section fits on
         a page with the reference columns (ID, Name) repeated. No manual layout needed.
       </p>
 

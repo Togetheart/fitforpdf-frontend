@@ -71,7 +71,7 @@ describe('shared site shell navigation', () => {
     expect(footer.querySelector('a[href="/fit-excel-sheet-on-one-page-pdf"]')).toBeTruthy();
     expect(footer.querySelector('a[href="/csv-to-structured-pdf"]')).toBeTruthy();
     expect(footer.querySelector('a[href="/audit-report-excel-to-pdf-tips"]')).toBeTruthy();
-    expect(footer.querySelector('img[alt="FitForPDF"]')).toBeTruthy();
+    expect(footer.querySelector('img[alt="fitforpdf"]')).toBeTruthy();
   });
 
   test('pricing has shared header/footer links and single instances', () => {

@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: 'How do I export a financial audit report from Excel to PDF?',
-    a: 'For clean results: hide internal-only columns, use landscape orientation, set print titles to repeat reference columns, and adjust margins. Or use FitForPDF to automate all of this.',
+    a: 'For clean results: hide internal-only columns, use landscape orientation, set print titles to repeat reference columns, and adjust margins. Or use fitforpdf to automate all of this.',
   },
   {
     q: 'How do I make an Excel audit report look professional in PDF?',
@@ -33,8 +33,8 @@ const faqs = [
     a: 'Landscape helps for sheets with up to ~15 columns, but for wider data it still truncates. Structured sectioning is more reliable.',
   },
   {
-    q: 'How does FitForPDF handle complex audit data?',
-    a: 'FitForPDF creates an overview page then groups columns into sections — each with key reference columns repeated for context. No manual setup required.',
+    q: 'How does fitforpdf handle complex audit data?',
+    a: 'fitforpdf creates an overview page then groups columns into sections — each with key reference columns repeated for context. No manual setup required.',
   },
 ];
 
@@ -71,7 +71,7 @@ export default function AuditPdfPage() {
       <h2 className="mb-3 text-xl font-[650] text-[#1A1A1A]">Better approach: use structured sectioning</h2>
       <p className="mb-8 leading-relaxed text-[#4B4B4B]">
         For complex audit sheets, the best result comes from structuring the data into column
-        groups. FitForPDF does this automatically — producing an overview page, then sectioned
+        groups. fitforpdf does this automatically — producing an overview page, then sectioned
         column groups with repeated reference columns and clear row ranges.
       </p>
 

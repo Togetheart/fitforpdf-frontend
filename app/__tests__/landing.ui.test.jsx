@@ -122,7 +122,7 @@ describe('landing conversion-first structure', () => {
   });
 
   test('proof statement exists', () => {
-    expect(screen.getByRole('heading', { level: 2, name: /See how FitForPDF transforms your file/i })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: /See how fitforpdf transforms your file/i })).toBeTruthy();
   });
 
   test('proof card keeps before/after labels and full-document action', () => {
@@ -189,7 +189,7 @@ describe('landing conversion-first structure', () => {
     const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const comparison = screen.getByTestId('section-comparison');
 
-    expect(screen.getByText('Excel PDF Export vs FitForPDF')).toBeTruthy();
+    expect(screen.getByText('Excel PDF Export vs fitforpdf')).toBeTruthy();
     expect(screen.getByText('Stop fighting print settings. Get a client-ready structured PDF in seconds.')).toBeTruthy();
     expect(proofSection.nextElementSibling).toBe(comparison);
     expect(proofSection.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -201,7 +201,7 @@ describe('landing conversion-first structure', () => {
     [
       'Do my "Pay as you go" credits expire?',
       'Is the Starter pack a subscription?',
-      'Will my clients see the FitForPDF logo?',
+      'Will my clients see the fitforpdf logo?',
       'What counts as an export?',
       'Do you store my files?',
     ].forEach((question) => {

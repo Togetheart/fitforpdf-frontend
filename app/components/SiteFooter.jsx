@@ -6,7 +6,7 @@ export default function SiteFooter() {
     <footer data-testid="site-footer" className="border-t border-black/5 bg-white">
       <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:px-10 xl:px-12 2xl:grid-cols-4">
         <div className="space-y-3">
-          <img src="/fitforpdf@2x.webp" alt="FitForPDF" className="h-6 w-auto object-contain opacity-60" />
+          <img src="/fitforpdf@2x.webp" alt="fitforpdf" className="h-6 w-auto object-contain opacity-60" />
           <p className="text-xs text-black/40">Transform spreadsheets into professional PDFs.</p>
           <p className="text-xs text-black/40">
             Made by{' '}

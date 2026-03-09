@@ -1,7 +1,7 @@
 export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
-  logoText: 'FitForPDF',
+  logoText: 'fitforpdf',
   heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
   heroSubheadline: 'Fix broken Excel and CSV exports where columns get cut off. Get a structured, readable PDF that’s ready to send.',
   heroLabel: 'FITFORPDF',
@@ -16,7 +16,7 @@ export const LANDING_COPY = {
     'Manual layout fixes become mandatory.',
   ],
 
-  beforeAfterTitle: 'See how FitForPDF transforms your file.',
+  beforeAfterTitle: 'See how fitforpdf transforms your file.',
   beforeLabel: 'Source spreadsheet',
   afterLabel: 'Client-ready PDF',
 
@@ -26,7 +26,7 @@ export const LANDING_COPY = {
     { key: 'columns', title: 'Columns grouped into readable sections', description: 'Wide tables split into clear, focused sections.', icon: 'columns' },
     { key: 'pinned', title: 'Key columns repeated automatically', description: 'Keep important columns (like ID and Name) at the top of each section.', icon: 'pin' },
     { key: 'pagination', title: 'Clear page numbers and row ranges', description: 'Readable row bands and page references for easier review.', icon: 'pagination' },
-    { key: 'auto', title: 'No manual layout work', description: 'Upload once and let FitForPDF structure it for you.', icon: 'wand' },
+    { key: 'auto', title: 'No manual layout work', description: 'Upload once and let fitforpdf structure it for you.', icon: 'wand' },
     { key: 'toc', title: 'Jump to any section instantly', description: 'Open any section directly from the overview page.', icon: 'link' },
   ],
   clientReadyBullets: [
@@ -47,7 +47,7 @@ export const LANDING_COPY = {
     'Columns grouped into sections',
     'Rows X–Y and Page i/n',
   ],
-  credibilityMicro: "If it looks wrong once, you won't trust it. FitForPDF is built for the first try.",
+  credibilityMicro: "If it looks wrong once, you won't trust it. fitforpdf is built for the first try.",
 
   pricingPreviewTitle: 'Simple pricing.',
   pricingPreviewSubline: 'Pay only for what you export.',
@@ -106,7 +106,7 @@ export const HOME_FAQ = [
   },
   {
     id: 'branding',
-    q: 'Will my clients see the FitForPDF logo?',
+    q: 'Will my clients see the fitforpdf logo?',
     a: 'Not if you use a paid export. All paid options (whether one-time credits or the Pro subscription) completely remove our branding so you can send professional, white-label documents.',
   },
   {
@@ -143,7 +143,7 @@ export const PRICING_PAGE_COPY = {
   singleExports: '1 export',
   singleDescription: 'For one urgent export.',
   singleCtaLabel: 'Buy 1 export',
-  singleFeatures: ['1 PDF export', 'No FitForPDF watermark', 'Standard structured layout', 'Never expires'],
+  singleFeatures: ['1 PDF export', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
 
   // Pack Starter (coming soon — no Stripe ID yet)
   paygStarterTitle: 'Starter',
@@ -154,7 +154,7 @@ export const PRICING_PAGE_COPY = {
   paygStarterDescription: 'For freelancers and regular client work.',
   paygStarterCtaLabel: 'Get 10 exports',
   paygStarterBadge: 'Most popular',
-  paygStarterFeatures: ['10 PDF exports', 'No FitForPDF watermark', 'Standard structured layout', 'Never expires'],
+  paygStarterFeatures: ['10 PDF exports', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
 
   // Pack Volume (uses credits_100 / $19 — existing Stripe)
   volumeTitle: 'Volume',
@@ -164,7 +164,7 @@ export const PRICING_PAGE_COPY = {
   volumeExports: '100 exports',
   volumeDescription: 'For consultants and recurring reporting.',
   volumeCtaLabel: 'Get 100 exports',
-  volumeFeatures: ['100 PDF exports', 'No FitForPDF watermark', 'Standard structured layout', 'Never expires'],
+  volumeFeatures: ['100 PDF exports', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
 
   // Pro subscription
   proTagline: 'Everything you need to scale your reporting.',
@@ -179,7 +179,7 @@ export const PRICING_PAGE_COPY = {
   proCtaLabel: 'Subscribe to Pro',
   proFeatures: [
     '500 PDF exports per month',
-    'No FitForPDF watermark',
+    'No fitforpdf watermark',
     'Advanced layout controls',
     'Priority processing & support',
     'Cancel anytime, no questions asked',
@@ -193,12 +193,12 @@ export const PRICING_PAGE_COPY = {
   freeTitle: 'Free',
   freeSubtitle: '$0 forever',
   freeExports: '3 exports included',
-  freeFeature: 'FitForPDF branding included',
+  freeFeature: 'fitforpdf branding included',
   freeFeatureAlt: 'Account-free',
   freeCtaLabel: 'Start free',
   freeCtaHref: '/#upload',
   freeSafetyTitle: 'Just want to test the waters?',
-  freeSafetyDesc: '3 free exports. FitForPDF watermark included. No account needed.',
+  freeSafetyDesc: '3 free exports. fitforpdf watermark included. No account needed.',
   freeSafetyCtaLabel: 'Upload a file for free →',
   freeSafetyCtaHref: '/#generate',
 
@@ -220,7 +220,7 @@ export const PRICING_PAGE_COPY = {
   comparisonTitle: 'Compare features',
   comparison: [
     ['Client-ready PDF output', '✓', '✓', '✓', '✓'],
-    ['FitForPDF attribution', '✓ included', '✗ removed', '✗ removed', '✗ removed'],
+    ['fitforpdf attribution', '✓ included', '✗ removed', '✗ removed', '✗ removed'],
     ['Credits expire', 'N/A', '✗ never', '✗ never', 'monthly reset'],
     ['Batch export', '✗', '✗', '✗', '✗'],
     ['API access', '✗', '✗', '✗', 'Contact us'],
@@ -240,7 +240,7 @@ export const PRICING_PAGE_COPY = {
     },
     {
       id: 'branding',
-      q: 'Will my clients see the FitForPDF logo?',
+      q: 'Will my clients see the fitforpdf logo?',
       a: 'Not if you use a paid export. All paid options (whether one-time credits or the Pro subscription) completely remove our branding so you can send professional, white-label documents.',
     },
     {
@@ -427,7 +427,7 @@ export const PRIVACY_PAGE_COPY = {
   heroLabel: 'PRIVACY',
   pageTitle: 'Your data.',
   pageTitleAccent: 'Not our business.',
-  pageSubtitle: 'FitForPDF processes files — it does not store them.',
+  pageSubtitle: 'fitforpdf processes files — it does not store them.',
   microLine: 'No accounts. No tracking of file contents.',
 
   handlingTitle: 'How file handling works',
@@ -493,7 +493,7 @@ export const PRIVACY_PAGE_COPY = {
   },
 
   sensitiveDataNote: 'Do not upload highly regulated or special-category data unless you have verified your compliance requirements.',
-  legalFooter: 'This page constitutes the Privacy Policy of FitForPDF, in accordance with GDPR (EU) 2016/679.',
+  legalFooter: 'This page constitutes the Privacy Policy of fitforpdf, in accordance with GDPR (EU) 2016/679.',
   contactEmail: 'support@fitforpdf.com',
   contactLabel: 'support@fitforpdf.com',
   security: [
@@ -533,7 +533,7 @@ export const SEO = {
   siteUrl: 'https://www.fitforpdf.com',
   ogImage: 'https://www.fitforpdf.com/og-image.png',
   home: {
-    title: 'FitForPDF — Convert Excel & CSV to Structured PDF',
+    title: 'fitforpdf — Convert Excel & CSV to Structured PDF',
     description: 'Upload any spreadsheet and instantly get a structured, client-ready PDF with sections, pagination, and column groupings. 3 free exports. No account required.',
   },
   pricing: {
@@ -542,26 +542,26 @@ export const SEO = {
   },
   privacy: {
     title: 'Privacy Policy — Your Data, Not Our Business',
-    description: 'FitForPDF deletes all files immediately after processing. No content stored in logs. GDPR compliant. Data processed in France.',
+    description: 'fitforpdf deletes all files immediately after processing. No content stored in logs. GDPR compliant. Data processed in France.',
   },
   excelCutoff: {
     title: 'Fix Cut-Off Columns in Excel PDF Export',
-    description: 'Learn why Excel cuts off columns when exporting to PDF and how to fix it — with manual tips and structured PDF export via FitForPDF.',
+    description: 'Learn why Excel cuts off columns when exporting to PDF and how to fix it — with manual tips and structured PDF export via fitforpdf.',
     slug: 'excel-to-pdf-columns-cut-off',
   },
   fitOnePage: {
     title: 'How to Fit a Large Excel Sheet on One PDF Page',
-    description: 'Step-by-step guide to fit a large Excel sheet on one PDF page — manual scaling tips plus smarter structured export with FitForPDF.',
+    description: 'Step-by-step guide to fit a large Excel sheet on one PDF page — manual scaling tips plus smarter structured export with fitforpdf.',
     slug: 'fit-excel-sheet-on-one-page-pdf',
   },
   csvPdf: {
     title: 'Convert CSV to Structured, Readable PDF',
-    description: 'Learn how to convert wide CSV files into structured, readable PDFs with automatic sectioning and pagination via FitForPDF.',
+    description: 'Learn how to convert wide CSV files into structured, readable PDFs with automatic sectioning and pagination via fitforpdf.',
     slug: 'csv-to-structured-pdf',
   },
   auditPdf: {
     title: 'Export Audit Excel Sheets to PDF — Best Practices',
-    description: 'Best practices for exporting audit Excel reports to PDF that clients can read — including tools like FitForPDF for structured output.',
+    description: 'Best practices for exporting audit Excel reports to PDF that clients can read — including tools like fitforpdf for structured output.',
     slug: 'audit-report-excel-to-pdf-tips',
   },
 };

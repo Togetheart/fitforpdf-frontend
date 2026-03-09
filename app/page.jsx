@@ -212,7 +212,7 @@ export default function Page() {
         <div className="space-y-8">
           <div className="text-center">
             <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
-              Excel PDF Export vs FitForPDF
+              Excel PDF Export vs fitforpdf
             </h2>
             <p className="mt-3 text-base text-muted max-w-xl mx-auto">
               Stop fighting print settings. Get a client-ready structured PDF in seconds.
@@ -224,7 +224,7 @@ export default function Page() {
                 <tr className="border-b border-black/10 bg-black/[0.025]">
                   <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Feature</th>
                   <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Excel PDF Export</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] lg:px-6">FitForPDF</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] lg:px-6">fitforpdf</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/[0.05]">

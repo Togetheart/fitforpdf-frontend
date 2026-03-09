@@ -63,7 +63,7 @@ describe('site navbar style and behavior', () => {
     expect(document.activeElement).toBe(pricingLink);
   });
 
-  test('logo link contains the FitForPDF logo image', () => {
+  test('logo link contains the fitforpdf logo image', () => {
     render(
       <SiteShell>
         <main data-testid="page-content">content</main>
@@ -74,7 +74,7 @@ describe('site navbar style and behavior', () => {
     const logoLink = header.querySelector('a[href="/"]');
 
     expect(logoLink).not.toBeNull();
-    const logoImg = logoLink.querySelector('img[alt="FitForPDF"]');
+    const logoImg = logoLink.querySelector('img[alt="fitforpdf"]');
     expect(logoImg).not.toBeNull();
   });
 });

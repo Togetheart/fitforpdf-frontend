@@ -22,19 +22,19 @@ const faqs = [
   },
   {
     q: 'How do I convert a CSV file to a formatted PDF?',
-    a: 'Import the CSV into Excel or Google Sheets, apply print layout settings, then export. Or upload directly to FitForPDF which handles formatting automatically.',
+    a: 'Import the CSV into Excel or Google Sheets, apply print layout settings, then export. Or upload directly to fitforpdf which handles formatting automatically.',
   },
   {
     q: 'How do I make a CSV look professional as a PDF?',
-    a: 'The key is adding structure: column groupings, an overview page, paginated sections with row ranges, and repeated reference columns. FitForPDF does all of this automatically.',
+    a: 'The key is adding structure: column groupings, an overview page, paginated sections with row ranges, and repeated reference columns. fitforpdf does all of this automatically.',
   },
   {
     q: 'What is the best way to convert a large CSV to PDF?',
-    a: 'For large CSVs with many columns, a sectioned approach works best. FitForPDF splits wide data into manageable column groups, each with its own page.',
+    a: 'For large CSVs with many columns, a sectioned approach works best. fitforpdf splits wide data into manageable column groups, each with its own page.',
   },
   {
-    q: 'Will FitForPDF preserve my CSV column structure?',
-    a: 'Yes — FitForPDF reads the CSV, groups columns into sections, and produces a paginated PDF where every column is readable.',
+    q: 'Will fitforpdf preserve my CSV column structure?',
+    a: 'Yes — fitforpdf reads the CSV, groups columns into sections, and produces a paginated PDF where every column is readable.',
   },
 ];
 
@@ -68,9 +68,9 @@ export default function CsvPdfPage() {
         widths need adjustment, headers may not repeat across pages, and wide data gets truncated.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#1A1A1A]">Structured PDF with FitForPDF</h2>
+      <h2 className="mb-3 text-xl font-[650] text-[#1A1A1A]">Structured PDF with fitforpdf</h2>
       <p className="mb-8 leading-relaxed text-[#4B4B4B]">
-        FitForPDF reads your CSV, detects wide column layouts, and automatically produces a
+        fitforpdf reads your CSV, detects wide column layouts, and automatically produces a
         sectioned PDF — with an overview page, grouped column sections, and row ranges on every
         page. No configuration needed.
       </p>

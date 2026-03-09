@@ -14,7 +14,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import UploadCard from '../components/UploadCard';
 
 const BASE_PROPS = {
-  toolTitle: 'FitForPDF',
+  toolTitle: 'fitforpdf',
   toolSubcopy: '3 free exports. No account required.',
   file: null,
   freeExportsLeft: 3,

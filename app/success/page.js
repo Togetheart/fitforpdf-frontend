@@ -29,7 +29,7 @@ export default function SuccessPage() {
             fontWeight: 600,
           }}
         >
-          Return to FitForPDF
+          Return to fitforpdf
         </a>
       </section>
     </main>

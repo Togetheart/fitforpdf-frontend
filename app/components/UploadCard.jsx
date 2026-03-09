@@ -392,7 +392,7 @@ export default function UploadCard({
     if (feature === 'branding') {
       setNudgeData({
         title: 'Remove branding is a Pro feature',
-        description: 'Upgrade to remove FitForPDF branding from exported PDFs.',
+        description: 'Upgrade to remove fitforpdf branding from exported PDFs.',
       });
       trackEvent('paywall_branding_attempt');
       return;

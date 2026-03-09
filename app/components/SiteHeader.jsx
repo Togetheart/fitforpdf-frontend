@@ -41,10 +41,10 @@ export default function SiteHeader() {
         )}
       >
         <div className="mx-auto flex w-full max-w-[1520px] items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-12">
-          <a href="/" className="flex items-center" aria-label="FitForPDF — accueil">
+          <a href="/" className="flex items-center" aria-label="fitforpdf — accueil">
             <img
               src="/fitforpdf@2x.webp"
-              alt="FitForPDF"
+              alt="fitforpdf"
               className={cn(
                 'w-auto object-contain transition-all duration-300',
                 scrolled ? 'h-7' : 'h-8',

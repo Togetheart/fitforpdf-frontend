@@ -43,7 +43,7 @@ export default function DemoGlassCard({
             data-testid="demo-glass-iframe"
             src={DEMO_IFRAME_SRC}
             loading="lazy"
-            title="FitForPDF interactive demo"
+            title="fitforpdf interactive demo"
             className="h-full w-full border-0 bg-white/40"
             sandbox="allow-scripts allow-same-origin allow-forms"
             onLoad={handleIframeLoad}

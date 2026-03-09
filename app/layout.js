@@ -6,7 +6,7 @@ import { SEO } from './siteCopy.mjs';
 export const metadata = {
   title: {
     default: SEO.home.title,
-    template: '%s | FitForPDF',
+    template: '%s | fitforpdf',
   },
   description: SEO.home.description,
   metadataBase: new URL(SEO.siteUrl),
@@ -14,7 +14,7 @@ export const metadata = {
     title: SEO.home.title,
     description: SEO.home.description,
     url: SEO.siteUrl,
-    siteName: 'FitForPDF',
+    siteName: 'fitforpdf',
     images: [{ url: SEO.ogImage, width: 1200, height: 630 }],
     type: 'website',
   },
@@ -29,7 +29,7 @@ export const metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'FitForPDF',
+  name: 'fitforpdf',
   url: SEO.siteUrl,
   description: SEO.home.description,
   applicationCategory: 'BusinessApplication',

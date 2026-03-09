@@ -33,8 +33,8 @@ const faqs = [
     a: 'Not always. For sheets with many columns, structuring into readable sections often produces better results than shrinking to one page.',
   },
   {
-    q: 'How does FitForPDF handle large sheets?',
-    a: 'FitForPDF groups columns into sections with repeated reference columns — each section fits on a page without scaling distortion.',
+    q: 'How does fitforpdf handle large sheets?',
+    a: 'fitforpdf groups columns into sections with repeated reference columns — each section fits on a page without scaling distortion.',
   },
 ];
 
@@ -76,7 +76,7 @@ export default function FitOnePagePage() {
 
       <h2 className="mb-3 text-xl font-[650] text-[#1A1A1A]">Smarter alternative: structured sections</h2>
       <p className="mb-8 leading-relaxed text-[#4B4B4B]">
-        Instead of squeezing everything on one page, FitForPDF automatically splits wide sheets
+        Instead of squeezing everything on one page, fitforpdf automatically splits wide sheets
         into readable sections — each with its own page, repeated reference columns, and clear
         row ranges. The result is a professional, client-ready document.
       </p>

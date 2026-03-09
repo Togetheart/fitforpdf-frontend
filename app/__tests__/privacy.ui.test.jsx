@@ -82,7 +82,7 @@ describe('privacy page UI', () => {
     expect(screen.getByText('Your data.')).toBeTruthy();
     expect(screen.getByText('Not our business.')).toBeTruthy();
     // Negative checks — old copy not present
-    expect(screen.queryByText('FitForPDF is designed to process files — not store them.')).toBeNull();
+    expect(screen.queryByText('fitforpdf is designed to process files — not store them.')).toBeNull();
     expect(screen.queryByText('No account. No tracking. Files deleted after conversion.')).toBeNull();
   });
 
@@ -118,7 +118,7 @@ describe('privacy page UI', () => {
   });
 
   test('contains legal footer line', () => {
-    expect(screen.getByText('This page constitutes the Privacy Policy of FitForPDF, in accordance with GDPR (EU) 2016/679.')).toBeTruthy();
+    expect(screen.getByText('This page constitutes the Privacy Policy of fitforpdf, in accordance with GDPR (EU) 2016/679.')).toBeTruthy();
   });
 
   test('header nav links are present', () => {

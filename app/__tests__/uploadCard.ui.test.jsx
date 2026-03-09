@@ -448,7 +448,7 @@ describe('UploadCard unit behavior', () => {
     expect(onBrandingChange).not.toHaveBeenCalled();
     expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
     expect(screen.getByText('Remove branding is a Pro feature')).toBeTruthy();
-    expect(screen.getByText('Upgrade to remove FitForPDF branding from exported PDFs.')).toBeTruthy();
+    expect(screen.getByText('Upgrade to remove fitforpdf branding from exported PDFs.')).toBeTruthy();
     expect(screen.getByTestId('branding-upgrade-nudge-slot').getAttribute('aria-live')).toBe('polite');
     expect(onEvent).toHaveBeenCalledWith('paywall_branding_attempt');
   });

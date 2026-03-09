@@ -74,35 +74,35 @@ const CSV_TABS = [
     label: 'Overview',
     src: '/CSV/enterprise-invoices-demo-overview.webp',
     srcSet: '/CSV/enterprise-invoices-demo-overview.webp 1x, /CSV/enterprise-invoices-demo-overview@2x.webp 2x',
-    alt: 'FitForPDF structured document — overview page with all columns',
+    alt: 'fitforpdf structured document — overview page with all columns',
   },
   {
     id: 'section-a',
     label: 'Section A',
     src: '/CSV/enterprise-invoices-demo-sectionA.webp',
     srcSet: '/CSV/enterprise-invoices-demo-sectionA.webp 1x, /CSV/enterprise-invoices-demo-sectionA@2x.webp 2x',
-    alt: 'FitForPDF structured document — section A columns',
+    alt: 'fitforpdf structured document — section A columns',
   },
   {
     id: 'section-b',
     label: 'Section B',
     src: '/CSV/enterprise-invoices-demo-sectionB.webp',
     srcSet: '/CSV/enterprise-invoices-demo-sectionB.webp 1x, /CSV/enterprise-invoices-demo-sectionB@2x.webp 2x',
-    alt: 'FitForPDF structured document — section B columns',
+    alt: 'fitforpdf structured document — section B columns',
   },
   {
     id: 'section-c',
     label: 'Section C',
     src: '/CSV/enterprise-invoices-demo-sectionC.webp',
     srcSet: '/CSV/enterprise-invoices-demo-sectionC.webp 1x, /CSV/enterprise-invoices-demo-sectionC@2x.webp 2x',
-    alt: 'FitForPDF structured document — section C columns',
+    alt: 'fitforpdf structured document — section C columns',
   },
   {
     id: 'section-d',
     label: 'Section D',
     src: '/CSV/enterprise-invoices-demo-sectionD.webp',
     srcSet: '/CSV/enterprise-invoices-demo-sectionD.webp 1x, /CSV/enterprise-invoices-demo-sectionD@2x.webp 2x',
-    alt: 'FitForPDF structured document — section D columns',
+    alt: 'fitforpdf structured document — section D columns',
   },
 ];
 
@@ -112,42 +112,42 @@ const XLSX_TABS = [
     label: 'Overview',
     src: '/Excel/3mb_small_overview.webp',
     srcSet: '/Excel/3mb_small_overview.webp 1x, /Excel/3mb_small_overview@2x.webp 2x',
-    alt: 'FitForPDF structured document from Excel — overview page with all columns',
+    alt: 'fitforpdf structured document from Excel — overview page with all columns',
   },
   {
     id: 'section-a',
     label: 'Section A',
     src: '/Excel/3mb_small_sectionA.webp',
     srcSet: '/Excel/3mb_small_sectionA.webp 1x, /Excel/3mb_small_sectionA@2x.webp 2x',
-    alt: 'FitForPDF structured document from Excel — section A columns',
+    alt: 'fitforpdf structured document from Excel — section A columns',
   },
   {
     id: 'section-b',
     label: 'Section B',
     src: '/Excel/3mb_small_sectionB.webp',
     srcSet: '/Excel/3mb_small_sectionB.webp 1x, /Excel/3mb_small_sectionB@2x.webp 2x',
-    alt: 'FitForPDF structured document from Excel — section B columns',
+    alt: 'fitforpdf structured document from Excel — section B columns',
   },
   {
     id: 'section-c',
     label: 'Section C',
     src: '/Excel/3mb_small_sectionC.webp',
     srcSet: '/Excel/3mb_small_sectionC.webp 1x, /Excel/3mb_small_sectionC@2x.webp 2x',
-    alt: 'FitForPDF structured document from Excel — section C columns',
+    alt: 'fitforpdf structured document from Excel — section C columns',
   },
   {
     id: 'section-d',
     label: 'Section D',
     src: '/Excel/3mb_small_sectionD.webp',
     srcSet: '/Excel/3mb_small_sectionD.webp 1x, /Excel/3mb_small_sectionD@2x.webp 2x',
-    alt: 'FitForPDF structured document from Excel — section D columns',
+    alt: 'fitforpdf structured document from Excel — section D columns',
   },
   {
     id: 'section-e',
     label: 'Section E',
     src: '/Excel/3mb_small_sectionE.webp',
     srcSet: '/Excel/3mb_small_sectionE.webp 1x, /Excel/3mb_small_sectionE@2x.webp 2x',
-    alt: 'FitForPDF structured document from Excel — section E columns',
+    alt: 'fitforpdf structured document from Excel — section E columns',
   },
 ];
 
@@ -240,7 +240,7 @@ export default function ProofShowcase() {
     <div className="w-full space-y-8">
       {/* Section heading */}
       <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
-        See how FitForPDF transforms your file.
+        See how fitforpdf transforms your file.
       </h2>
 
       {/* Format selector */}
@@ -345,7 +345,7 @@ export default function ProofShowcase() {
             >
               <div
                 role="tablist"
-                className="relative flex items-center rounded-full px-2 py-1"
+                className="relative flex items-center rounded-full px-4 py-1"
                 style={{ minWidth: '100%' }}
               >
                 {/* Sliding indicator — colored pill */}
