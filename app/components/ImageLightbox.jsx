@@ -13,7 +13,7 @@ import { createPortal } from 'react-dom';
  *
  * Exposes { open } via ref (forwardRef + useImperativeHandle).
  */
-const ImageLightbox = forwardRef(function ImageLightbox({ src, alt, className, children, images, imageIndex, ...rest }, ref) {
+const ImageLightbox = forwardRef(function ImageLightbox({ src, srcSet, alt, className, children, images, imageIndex, ...rest }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [current, setCurrent] = useState(imageIndex ?? 0);
 
@@ -59,6 +59,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, alt, className, c
   }, [imageIndex]);
 
   const activeSrc = hasGallery ? images[current].src : src;
+  const activeSrcSet = hasGallery ? images[current].srcSet : srcSet;
   const activeAlt = hasGallery ? images[current].alt : alt;
   const activeLabel = hasGallery ? images[current].label : undefined;
 
@@ -107,6 +108,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, alt, className, c
               <div className="absolute inset-6 top-14 flex items-center justify-center">
                 <img
                   src={activeSrc}
+                  srcSet={activeSrcSet}
                   alt={activeAlt}
                   className="h-full w-full rounded-xl object-contain drop-shadow-2xl"
                   onClick={(e) => e.stopPropagation()}

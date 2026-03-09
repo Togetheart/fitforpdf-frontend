@@ -106,36 +106,42 @@ const XLSX_TABS = [
     id: 'overview',
     label: 'Overview',
     src: '/Excel/3mb_small_overview.webp',
+    srcSet: '/Excel/3mb_small_overview.webp 1x, /Excel/3mb_small_overview@2x.webp 2x',
     alt: 'FitForPDF structured document from Excel — overview page with all columns',
   },
   {
     id: 'section-a',
     label: 'Section A',
     src: '/Excel/3mb_small_sectionA.webp',
+    srcSet: '/Excel/3mb_small_sectionA.webp 1x, /Excel/3mb_small_sectionA@2x.webp 2x',
     alt: 'FitForPDF structured document from Excel — section A columns',
   },
   {
     id: 'section-b',
     label: 'Section B',
     src: '/Excel/3mb_small_sectionB.webp',
+    srcSet: '/Excel/3mb_small_sectionB.webp 1x, /Excel/3mb_small_sectionB@2x.webp 2x',
     alt: 'FitForPDF structured document from Excel — section B columns',
   },
   {
     id: 'section-c',
     label: 'Section C',
     src: '/Excel/3mb_small_sectionC.webp',
+    srcSet: '/Excel/3mb_small_sectionC.webp 1x, /Excel/3mb_small_sectionC@2x.webp 2x',
     alt: 'FitForPDF structured document from Excel — section C columns',
   },
   {
     id: 'section-d',
     label: 'Section D',
     src: '/Excel/3mb_small_sectionD.webp',
+    srcSet: '/Excel/3mb_small_sectionD.webp 1x, /Excel/3mb_small_sectionD@2x.webp 2x',
     alt: 'FitForPDF structured document from Excel — section D columns',
   },
   {
     id: 'section-e',
     label: 'Section E',
     src: '/Excel/3mb_small_sectionE.webp',
+    srcSet: '/Excel/3mb_small_sectionE.webp 1x, /Excel/3mb_small_sectionE@2x.webp 2x',
     alt: 'FitForPDF structured document from Excel — section E columns',
   },
 ];
@@ -162,6 +168,7 @@ const FORMAT_CONFIGS = {
     inputLabel: 'Source spreadsheet',
     inputDescription: 'Hard to read at full width.',
     beforeImage: '/Excel/xlxs.webp',
+    beforeSrcSet: '/Excel/xlxs.webp 1x, /Excel/xlxs@2x.webp 2x',
     beforeAlt: 'Excel file exported as PDF — unreadable overflow',
     sourceLink: null,
     sourceLinkLabel: null,
@@ -298,6 +305,7 @@ export default function ProofShowcase() {
                 >
                   <img
                     src={config.beforeImage}
+                    srcSet={config.beforeSrcSet}
                     alt={config.beforeAlt}
                     className="h-auto w-full rounded-lg object-cover"
                   />
@@ -388,11 +396,12 @@ export default function ProofShowcase() {
                     alt={currentTab.alt}
                     className="block w-full"
                     data-testid="proof-pdf-image"
-                    images={config.tabs.map((t) => ({ src: t.src, alt: t.alt, label: t.label }))}
+                    images={config.tabs.map((t) => ({ src: t.src, srcSet: t.srcSet, alt: t.alt, label: t.label }))}
                     imageIndex={activeTab}
                   >
                     <img
                       src={currentTab.src}
+                      srcSet={currentTab.srcSet}
                       alt={currentTab.alt}
                       className="h-auto w-full rounded-lg object-cover"
                     />
