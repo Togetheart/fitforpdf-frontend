@@ -470,7 +470,7 @@ export const PRIVACY_PAGE_COPY = {
   },
   dataLocation: {
     title: 'Where your data lives',
-    text: 'All files are processed exclusively on OVH servers located in France (EU). No data is transferred outside the European Union.',
+    text: 'Files are processed on OVH servers in France (EU). Account metadata (plan type, credits balance, API keys) is stored on Supabase within the European Union. No data is transferred outside the EU.',
   },
   userRights: {
     title: 'Your GDPR rights',
@@ -487,6 +487,7 @@ export const PRIVACY_PAGE_COPY = {
     title: 'Sub-processors',
     list: [
       { name: 'OVH', role: 'Cloud infrastructure & hosting', location: 'France (EU)' },
+      { name: 'Supabase', role: 'Account metadata & quota tracking', location: 'AWS Europe (EU)' },
       { name: 'Stripe', role: 'Payment processing', location: 'EU data residency' },
       { name: 'Microsoft Clarity', role: 'Behavioral analytics (anonymized sessions)', location: 'Microsoft (EU)' },
     ],
@@ -514,7 +515,7 @@ export const PRIVACY_PAGE_COPY = {
     {
       id: 'gdpr',
       q: 'Are you GDPR compliant?',
-      a: 'Yes. Processing is based on legitimate interest (Art. 6(1)(f) GDPR). Data stays on OVH servers in France. No transfers outside the EU.',
+      a: 'Yes. Processing is based on legitimate interest (Art. 6(1)(f) GDPR). Files are processed on OVH servers in France. Account metadata is stored on Supabase in the EU. No transfers outside the EU.',
     },
     {
       id: 'rights',
