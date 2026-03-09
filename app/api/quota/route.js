@@ -16,16 +16,31 @@ function getQuotaUrl() {
   return `${upstream.replace(/\/+$/, '')}/quota`;
 }
 
-function buildHeaders() {
+function extractAnonCookie(cookieHeader) {
+  if (!cookieHeader) return null;
+  const match = cookieHeader.split(';').map((c) => c.trim()).find((c) => c.startsWith('anon_id='));
+  return match || null;
+}
+
+function buildHeaders(req) {
   const headers = {};
   const apiKey = getNeatExportApiKey();
   if (apiKey) {
     headers['X-NEATEXPORT-KEY'] = apiKey;
   }
+  const cookieHeader = req?.headers?.get('cookie');
+  const anonCookie = extractAnonCookie(cookieHeader);
+  if (anonCookie) {
+    headers.Cookie = anonCookie;
+  }
+  const forwardedFor = req?.headers?.get('x-forwarded-for');
+  if (forwardedFor) {
+    headers['X-Forwarded-For'] = forwardedFor;
+  }
   return headers;
 }
 
-export async function GET() {
+export async function GET(req) {
   const quotaUrl = getQuotaUrl();
   if (!quotaUrl) {
     return jsonResponse(500, {
@@ -38,7 +53,7 @@ export async function GET() {
   try {
     upstreamResponse = await fetch(quotaUrl, {
       method: 'GET',
-      headers: buildHeaders(),
+      headers: buildHeaders(req),
     });
   } catch (error) {
     return jsonResponse(502, {
@@ -48,10 +63,14 @@ export async function GET() {
   }
 
   const body = await upstreamResponse.text();
-  const contentType = upstreamResponse.headers.get('content-type') || 'application/json';
+  const responseHeaders = { 'content-type': upstreamResponse.headers.get('content-type') || 'application/json' };
+  const setCookie = upstreamResponse.headers.get('set-cookie');
+  if (setCookie) {
+    responseHeaders['set-cookie'] = setCookie;
+  }
   return new Response(body, {
     status: upstreamResponse.status,
-    headers: { 'content-type': contentType },
+    headers: responseHeaders,
   });
 }
 

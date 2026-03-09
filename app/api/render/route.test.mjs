@@ -366,6 +366,110 @@ test('POST /api/render does not rewrite content-disposition for non-PDF upstream
   restoreEnv();
 });
 
+test('POST /api/render forwards anon_id cookie to upstream', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf' },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody(),
+    headers: { cookie: 'anon_id=signed-token-xyz' },
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(fetchMock.calls.length, 1);
+  const upstreamHeaders = fetchMock.calls[0].options.headers;
+  assert.ok(upstreamHeaders.Cookie, 'anon_id cookie must be forwarded to upstream');
+  assert.ok(upstreamHeaders.Cookie.includes('anon_id=signed-token-xyz'));
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render forwards only anon_id cookie, not other cookies', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf' },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody(),
+    headers: { cookie: 'anon_id=token-abc; session=secret; _ga=GA1.2.123' },
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  const upstreamCookie = fetchMock.calls[0].options.headers.Cookie;
+  assert.ok(upstreamCookie.includes('anon_id=token-abc'), 'must forward anon_id');
+  assert.ok(!upstreamCookie.includes('session='), 'must not forward session cookie');
+  assert.ok(!upstreamCookie.includes('_ga='), 'must not forward analytics cookie');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render forwards set-cookie from upstream response', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'set-cookie': 'anon_id=new-token-from-backend; HttpOnly; SameSite=Lax; Path=/',
+    },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  const setCookie = res.headers.get('set-cookie');
+  assert.ok(setCookie, 'set-cookie from upstream must be forwarded to browser');
+  assert.ok(setCookie.includes('anon_id=new-token-from-backend'));
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render forwards x-forwarded-for to upstream', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf' },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody(),
+    headers: { 'x-forwarded-for': '82.123.45.67' },
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(fetchMock.calls.length, 1);
+  const upstreamHeaders = fetchMock.calls[0].options.headers;
+  assert.equal(upstreamHeaders['X-Forwarded-For'], '82.123.45.67');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
 test('GET /api/render is not allowed', async () => {
   const res = await GET();
   const json = await res.json();

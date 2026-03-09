@@ -60,6 +60,97 @@ test('GET /api/quota forwards to backend /quota and returns response body', asyn
   restoreEnv();
 });
 
+test('GET /api/quota forwards anon_id cookie to upstream', async () => {
+  const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
+  const fetchMock = withMockFetch(() => {
+    return new Response(JSON.stringify({ plan_type: 'free', free_exports_left: 2 }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/quota', {
+    headers: { cookie: 'anon_id=signed-token-abc' },
+  });
+  const res = await GET(req);
+  assert.equal(res.status, 200);
+  assert.equal(fetchMock.calls.length, 1);
+  const upstreamHeaders = fetchMock.calls[0].options.headers;
+  assert.ok(upstreamHeaders.Cookie, 'anon_id cookie must be forwarded to upstream');
+  assert.ok(upstreamHeaders.Cookie.includes('anon_id=signed-token-abc'));
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('GET /api/quota forwards only anon_id cookie, not other cookies', async () => {
+  const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
+  const fetchMock = withMockFetch(() => {
+    return new Response(JSON.stringify({ plan_type: 'free' }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/quota', {
+    headers: { cookie: 'anon_id=signed-token; session=secret123; tracking=abc' },
+  });
+  const res = await GET(req);
+  assert.equal(res.status, 200);
+  const upstreamCookie = fetchMock.calls[0].options.headers.Cookie;
+  assert.ok(upstreamCookie.includes('anon_id=signed-token'), 'must forward anon_id');
+  assert.ok(!upstreamCookie.includes('session='), 'must not forward session cookie');
+  assert.ok(!upstreamCookie.includes('tracking='), 'must not forward tracking cookie');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('GET /api/quota forwards set-cookie from upstream response', async () => {
+  const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
+  const fetchMock = withMockFetch(() => {
+    return new Response(JSON.stringify({ plan_type: 'free' }), {
+      status: 200,
+      headers: {
+        'content-type': 'application/json',
+        'set-cookie': 'anon_id=new-signed-token; HttpOnly; SameSite=Lax; Path=/',
+      },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/quota');
+  const res = await GET(req);
+  assert.equal(res.status, 200);
+  const setCookie = res.headers.get('set-cookie');
+  assert.ok(setCookie, 'set-cookie from upstream must be forwarded to browser');
+  assert.ok(setCookie.includes('anon_id=new-signed-token'));
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('GET /api/quota forwards x-forwarded-for to upstream', async () => {
+  const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
+  const fetchMock = withMockFetch(() => {
+    return new Response(JSON.stringify({ plan_type: 'free' }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/quota', {
+    headers: { 'x-forwarded-for': '82.123.45.67' },
+  });
+  const res = await GET(req);
+  assert.equal(res.status, 200);
+  assert.equal(fetchMock.calls.length, 1);
+  const upstreamHeaders = fetchMock.calls[0].options.headers;
+  assert.equal(upstreamHeaders['X-Forwarded-For'], '82.123.45.67');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
 test('GET /api/quota requires CLEAN_SHEET_API_URL', async () => {
   const restoreEnv = setupEnv(undefined);
   const fetchMock = withMockFetch(() => {

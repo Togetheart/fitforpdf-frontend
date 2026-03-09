@@ -119,6 +119,12 @@ function buildUpstreamUrl(reqUrl, upstream, clientLocale = null) {
   return target;
 }
 
+function extractAnonCookie(cookieHeader) {
+  if (!cookieHeader) return null;
+  const match = cookieHeader.split(';').map((c) => c.trim()).find((c) => c.startsWith('anon_id='));
+  return match || null;
+}
+
 function buildUpstreamHeaders(apiKey, req) {
   const headers = {
     'X-NEATEXPORT-KEY': apiKey,
@@ -127,6 +133,10 @@ function buildUpstreamHeaders(apiKey, req) {
   if (flowId) headers['X-CleanSheet-Flow-Id'] = flowId;
   const branding = req.headers.get('x-fitforpdf-branding');
   if (branding) headers['X-FitForPDF-Branding'] = branding;
+  const anonCookie = extractAnonCookie(req.headers.get('cookie'));
+  if (anonCookie) headers.Cookie = anonCookie;
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  if (forwardedFor) headers['X-Forwarded-For'] = forwardedFor;
   return headers;
 }
 
@@ -199,6 +209,10 @@ export async function POST(req) {
   const finalRenderMs = debugRenderMs ?? Math.round(requestMs);
   const totalMs = Number.isFinite(scoreMs) ? scoreMs + finalRenderMs : finalRenderMs;
   const responseHeaders = copyPassThroughHeaders(upstreamResponse.headers);
+  const upstreamSetCookie = upstreamResponse.headers.get('set-cookie');
+  if (upstreamSetCookie) {
+    responseHeaders.set('set-cookie', upstreamSetCookie);
+  }
 
   responseHeaders.set('X-Render-MS', String(finalRenderMs));
   responseHeaders.set('X-Score-MS', String(scoreMs != null ? scoreMs : finalRenderMs));
