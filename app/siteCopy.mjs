@@ -78,7 +78,7 @@ export const LANDING_COPY = {
   finalCtaLabel: 'Try it now',
 
   footerTagline: 'Transform spreadsheets into professional PDFs.',
-  footerMakerName: 'Sébastien',
+  footerMakerName: 'BLVTR',
   footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
 
 };

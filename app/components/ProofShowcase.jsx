@@ -345,7 +345,7 @@ export default function ProofShowcase() {
             >
               <div
                 role="tablist"
-                className="relative flex items-center rounded-full p-1"
+                className="relative flex items-center rounded-full px-2 py-1"
                 style={{ minWidth: '100%' }}
               >
                 {/* Sliding indicator — colored pill */}
