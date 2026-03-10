@@ -60,18 +60,15 @@ describe('landing conversion-first structure', () => {
     expect(faq.compareDocumentPosition(finalCta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  test('hero keeps the 3-line headline with required rhythm', () => {
-    const heading = screen.getByRole('heading', { level: 1, name: /Your spreadsheet\./i });
+  test('hero keeps the 2-line headline with required rhythm', () => {
+    const heading = screen.getByRole('heading', { level: 1, name: /Readable PDFs/i });
 
     expect(heading).toBeTruthy();
-    expect(screen.getByText('Your spreadsheet.')).toBeTruthy();
-    expect(screen.getByText('Reorganized into readable')).toBeTruthy();
-    expect(screen.getByText('sections.')).toBeTruthy();
-    expect(screen.getByText('Ready to send.')).toBeTruthy();
+    expect(screen.getByTestId('hero-headline-accent').textContent).toBe('Readable');
+    expect(screen.getByText(/for wide Excel/)).toBeTruthy();
     const headingText = heading.textContent || '';
-    expect(headingText).toContain('Your spreadsheet.');
-    expect(headingText).toContain('Reorganized into readable sections.');
-    expect(headingText).toContain('Ready to send.');
+    expect(headingText).toContain('Readable PDFs');
+    expect(headingText).toContain('for wide Excel');
   });
 
   test('unverified social proof claim is not shown', () => {
@@ -85,12 +82,15 @@ describe('landing conversion-first structure', () => {
   test('hero has no standalone CTA — upload card is the primary action', () => {
     const hero = screen.getByTestId('hero-section');
     expect(within(hero).queryByTestId('hero-primary-cta')).toBeNull();
-    const uploadCard = within(hero).getByTestId('upload-card');
+    // Upload card now lives outside hero (proof-first flow)
+    const uploadCard = screen.getByTestId('upload-card');
     expect(uploadCard).toBeTruthy();
+    expect(hero.compareDocumentPosition(uploadCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('hero has headline/subline/trust line', () => {
-    expect(screen.getByText(LANDING_COPY.heroSubheadline)).toBeTruthy();
+    expect(screen.getByText(LANDING_COPY.heroSubheadlineL1)).toBeTruthy();
+    expect(screen.getByText(LANDING_COPY.heroSubheadlineL2)).toBeTruthy();
     expect(screen.getByText(LANDING_COPY.heroTrustLine)).toBeTruthy();
     expect(screen.getAllByText(LANDING_COPY.heroTrustLine)).toHaveLength(1);
   });
@@ -185,13 +185,13 @@ describe('landing conversion-first structure', () => {
     expect(previewCard.textContent).toContain('Source spreadsheet');
   });
 
-  test('comparison section sits next to proof section', () => {
+  test('comparison section follows proof section in document order', () => {
     const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const comparison = screen.getByTestId('section-comparison');
 
     expect(screen.getByText('Excel PDF Export vs fitforpdf')).toBeTruthy();
     expect(screen.getByText('Stop fighting print settings. Get a client-ready structured PDF in seconds.')).toBeTruthy();
-    expect(proofSection.nextElementSibling).toBe(comparison);
+    // Comparison follows proof in document order (upload card sits between them in proof-first flow)
     expect(proofSection.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
@@ -215,10 +215,10 @@ describe('landing conversion-first structure', () => {
     const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
 
-    expect((proof.getAttribute('class') || '').includes('py-20')).toBe(true);
-    expect((pricing.getAttribute('class') || '').includes('py-16')).toBe(true);
-    expect((privacy.getAttribute('class') || '').includes('py-20')).toBe(true);
-    expect((faq.getAttribute('class') || '').includes('py-20')).toBe(true);
+    expect((proof.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((pricing.getAttribute('class') || '').includes('py-10')).toBe(true);
+    expect((privacy.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((faq.getAttribute('class') || '').includes('py-12')).toBe(true);
   });
 
   test('privacy and faq sections use dedicated sizing and layout', () => {

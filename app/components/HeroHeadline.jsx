@@ -5,8 +5,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
 export default function HeroHeadline() {
-  const firstLineRef = useRef(null); // kept for ref, no longer used for GSAP
-  const sectionWordRef = useRef(null);
+  const accentRef = useRef(null);
 
   const hasWindow = typeof window !== 'undefined';
   const reducedMotion =
@@ -17,8 +16,7 @@ export default function HeroHeadline() {
   useEffect(() => {
     if (!hasWindow || reducedMotion) return;
 
-    const accentNode = sectionWordRef.current;
-    const firstNode = firstLineRef.current;
+    const accentNode = accentRef.current;
     if (!accentNode) return;
 
     let timeline = null;
@@ -43,23 +41,25 @@ export default function HeroHeadline() {
 
   return (
     <>
-    <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
-      <span ref={firstLineRef} className="hero-headline-line block text-slate-900">
-        Your spreadsheet.
+    <div className="hero-headline-line flex justify-center mb-4">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-1 text-xs font-[600] uppercase tracking-[0.08em] text-black/50">
+        Rendering engine for wide business tables
       </span>
-      <span className="hero-headline-line block text-slate-900">
-        Reorganized into readable{' '}
+    </div>
+    <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
+      <span className="hero-headline-line block">
         <span
-          ref={sectionWordRef}
+          ref={accentRef}
           data-testid="hero-headline-accent"
           data-anim={reducedMotion ? 'off' : 'on'}
           className="hero-accent hero-accent--sections inline-block"
         >
-          sections.
+          Readable
         </span>
+        <span className="text-slate-900"> PDFs</span>
       </span>
       <span className="hero-headline-line block text-slate-900">
-        Ready to send.
+        for wide Excel &amp; CSV tables.
       </span>
     </h1>
     </>

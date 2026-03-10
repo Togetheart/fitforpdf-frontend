@@ -193,7 +193,7 @@ describe('quota-driven plan state and paywall flows', () => {
     render(<LandingPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('3 free exports. No account required.')).toBeTruthy();
+      expect(screen.getAllByText('3 free exports. No account required.').length).toBeGreaterThan(0);
       expect(screen.getByTestId('quota-pill').textContent).toContain('Free · 3 exports left');
     });
     expect(screen.queryByText('5 free exports. No account required.')).toBeNull();

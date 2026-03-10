@@ -84,7 +84,7 @@ describe('home demo proof block', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /Your spreadsheet\.\s*Reorganized into readable sections\s*\. Ready to send\./,
+        name: /Readable PDFs/,
       }),
     ).toBeTruthy();
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();

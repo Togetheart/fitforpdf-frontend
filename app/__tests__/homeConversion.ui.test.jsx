@@ -50,17 +50,21 @@ describe('home conversion-critical UI', () => {
     expect(within(hero).queryByRole('link', { name: 'Generate PDF' })).toBeNull();
     expect(within(hero).queryByRole('link', { name: 'See pricing' })).toBeNull();
     expect(within(hero).queryByRole('link', { name: 'Try on Telegram' })).toBeNull();
-    expect(within(hero).getByTestId('upload-card')).toBeTruthy();
+    // Upload card now lives in its own section after the hero (proof-first flow)
+    expect(screen.getByTestId('upload-card')).toBeTruthy();
   });
 
-  test('hero is followed by upload module and FAQ is present', () => {
+  test('upload module is outside hero and FAQ is present', () => {
     const hero = screen.getByTestId('hero-section');
     const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
     const faq = screen.getByTestId('home-faq');
 
-    expect(hero.contains(toolSection)).toBe(true);
+    // Upload card moved outside hero (proof-first flow)
+    expect(hero.contains(toolSection)).toBe(false);
     expect(hero.contains(faq)).toBeFalsy();
     expect(screen.getAllByTestId(LANDING_COPY_KEYS.upload)).toHaveLength(1);
+    // Tool section still follows hero in document order
+    expect(hero.compareDocumentPosition(toolSection) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('upload module includes dropzone, toggles and quota badge', () => {

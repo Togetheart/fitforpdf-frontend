@@ -7,7 +7,7 @@ export default function SiteFooter() {
       <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:px-10 xl:px-12 2xl:grid-cols-4">
         <div className="space-y-3">
           <img src="/fitforpdf@2x.webp" alt="fitforpdf" className="h-6 w-auto object-contain opacity-60" />
-          <p className="text-xs text-black/40">Transform spreadsheets into professional PDFs.</p>
+          <p className="text-xs text-black/40">Rendering engine for wide business tables.</p>
           <p className="text-xs text-black/40">
             Made by{' '}
             <a
@@ -24,7 +24,7 @@ export default function SiteFooter() {
         <div className="space-y-2">
           <p className="text-xs font-[600] uppercase tracking-[0.08em] text-black/30">Product</p>
           <nav className="flex flex-col gap-1.5">
-            <a className="text-sm text-black/50 transition hover:text-black/80" href="/#upload">
+            <a className="text-sm text-black/50 transition hover:text-black/80" href="/#tool">
               Try free
             </a>
             <a className="text-sm text-black/50 transition hover:text-black/80" href="/pricing">
@@ -63,8 +63,11 @@ export default function SiteFooter() {
             <a className="text-sm text-black/50 transition hover:text-black/80" href="/privacy">
               Privacy policy
             </a>
-            <a className="text-sm text-black/50 transition hover:text-black/80" href="/developers">
-              API documentation
+            <a className="text-sm text-black/50 transition hover:text-black/80" href="/terms">
+              Terms of use
+            </a>
+            <a className="text-sm text-black/50 transition hover:text-black/80" href="/mentions-legales">
+              Mentions légales
             </a>
             <a
               className="text-sm text-black/50 transition hover:text-black/80"

@@ -3,7 +3,11 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'fitforpdf',
   heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
-  heroSubheadline: 'Fix broken Excel and CSV exports where columns get cut off. Get a structured, readable PDF that’s ready to send.',
+  heroSubheadline: 'No more cut-off columns, broken layouts, or manual print settings. Saves 30–45 minutes of formatting per export — automatically.',
+  heroSubheadlineL1: 'No more cut-off columns, broken layouts, or manual print settings.',
+  heroSubheadlineL2: 'Saves 30–45 minutes of formatting per export — automatically.',
+  heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
+  heroTypicalOutput: 'Typical output: CRM reports · financial exports · inventory tables',
   heroLabel: 'FITFORPDF',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored',
@@ -50,7 +54,7 @@ export const LANDING_COPY = {
   credibilityMicro: "If it looks wrong once, you won't trust it. fitforpdf is built for the first try.",
 
   pricingPreviewTitle: 'Simple pricing.',
-  pricingPreviewSubline: 'Pay only for what you export.',
+  pricingPreviewSubline: 'Consultants and analysts spend 30–45 minutes fixing broken Excel PDFs. fitforpdf does it automatically.',
   pricingPreviewCta: 'See full pricing',
 
   privacyStripTitle: 'Privacy-first by default.',
@@ -78,6 +82,19 @@ export const LANDING_COPY = {
   finalCtaLabel: 'Try it now',
 
   footerTagline: 'Transform spreadsheets into professional PDFs.',
+
+  whoThisIsForTitle:   'Designed for wide business tables',
+  whoThisIsForPerfect: ['CRM exports', 'financial reports', 'analytics tables', 'inventory reports'],
+  whoThisIsForNot:     ['invoice templates', 'formatted Excel documents', 'pixel-perfect spreadsheets'],
+
+  apiBlockTitle:   'fitforpdf engine',
+  apiBlockCopy:    'Use fitforpdf to render readable PDFs from Excel exports, CSV data, or database tables. REST API available.',
+  apiBlockSpecs:   '60 req/min · up to 50 columns · 5,000 rows',
+  apiBlockCta:     'Get your API key',
+  apiBlockCtaHref: '/developers#request-access',
+
+  whoUsesTitle: 'Who uses fitforpdf',
+  whoUsesItems: ['Consultants', 'Finance teams', 'SaaS reporting tools', 'Operations teams'],
   footerMakerName: 'BLVTR',
   footerMakerHref: 'https://www.linkedin.com/in/sebastienneusch/',
 

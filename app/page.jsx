@@ -17,7 +17,14 @@ import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
 import Button from './components/ui/Button';
 import ProofShowcase from './components/ProofShowcase';
+
 import AnimatedShieldIcon from './components/AnimatedShieldIcon';
+
+const MINI_COMPARISON_ROWS = [
+  ['Cut-off columns',      'Grouped sections'],
+  ['Tiny unreadable text', 'Full-width readable columns'],
+  ['Broken page flow',     'Clean pagination'],
+];
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#1A1A1A]/20 bg-white text-[#1A1A1A] hover:border-[#1A1A1A]/40 hover:bg-[#1A1A1A]/5';
 
@@ -76,7 +83,7 @@ const COMPARISON_ROWS = [
   ['Layout', 'Manual configuration', 'Auto-structured'],
   ['Page breaks', 'Unpredictable splits', 'Automatic pagination'],
   ['Reference columns', 'Lost after first pages', 'Repeated automatically'],
-  ['Overview', 'None', 'Document overview page'],
+  ['Overview', 'None', 'Automatic navigation between sections'],
   ['Result', 'Spreadsheet-like output', 'Client-ready document'],
 ];
 
@@ -124,90 +131,189 @@ export default function Page() {
         contentMaxWidthClassName="max-w-[1360px]"
         className="py-0 w-full"
       >
-        <div className="space-y-10">
-          <p
-            className="hero-headline-line w-full max-w-[1020px] mx-auto text-lg text-slate-900"
-          >
-            {LANDING_COPY.heroSubheadline}
+        {/* Primary pitch: subtitle + CTA */}
+        <div className="space-y-6">
+          <p className="hero-headline-line w-full max-w-[1020px] mx-auto text-lg text-slate-900">
+            <span className="block">{LANDING_COPY.heroSubheadlineL1}</span>
+            <span className="block">{LANDING_COPY.heroSubheadlineL2}</span>
           </p>
-          <div
-            id={LANDING_COPY_KEYS.upload}
-            data-testid={LANDING_COPY_KEYS.upload}
-            className="hero-headline-line mx-auto w-full max-w-[1320px] feature-card-hover relative rounded-xl bg-white"
-          >
-            <UploadCard
-              toolTitle={LANDING_COPY.toolTitle}
-              toolSubcopy={(() => {
-                if (quota.planType === 'credits') {
-                  const count = Number.isFinite(quota.freeExportsLeft) ? quota.freeExportsLeft : 0;
-                  if (count <= 0) return 'No exports left. Get more to continue.';
-                  return `${count} purchased export${count === 1 ? '' : 's'} remaining.`;
-                }
-                if (quota.planType === 'pro') {
-                  return 'Pro plan. 500 exports/month.';
-                }
-                const count = Number.isFinite(quota.freeExportsLeft)
-                  ? quota.freeExportsLeft
-                  : Number.isFinite(quota.freeExportsLimit)
-                    ? quota.freeExportsLimit
-                    : 3;
-                return `${count} free export${count === 1 ? '' : 's'}. No account required.`;
-              })()}
-              file={conversion.file}
-              freeExportsLeft={quota.freeExportsLeft}
-              includeBranding={conversion.includeBranding}
-              truncateLongText={conversion.truncateLongText}
-              isLoading={conversion.isLoading}
-              notice={conversion.notice}
-              error={conversion.error}
-              hasResultBlob={Boolean(conversion.pdfBlob)}
-              onFileSelect={(nextFile) => conversion.handleFileSelect(nextFile)}
-              onRemoveFile={conversion.handleRemoveFile}
-              onBrandingChange={conversion.setIncludeBranding}
-              onTruncateChange={conversion.setTruncateLongText}
-              onSubmit={conversion.handleSubmit}
-              onDownloadAgain={conversion.handleDownloadAnyway}
-              onTrySample={conversion.handleTrySample}
-              downloadedFileName={Boolean(conversion.pdfBlob) ? conversion.resolvedPdfFilename : null}
-              verdict={conversion.renderVerdict}
-              conversionProgress={conversion.conversionProgress}
-              onBuyCredits={quota.openBuyCreditsPanel}
-              isPro={quota.planType === 'pro'}
-              showBuyCreditsForTwo={false}
-              isQuotaLocked={quota.isQuotaLocked}
-              planType={quota.planType}
-              remainingInPeriod={quota.remainingInPeriod}
-              usedInPeriod={quota.usedInPeriod}
-              periodLimit={quota.periodLimit}
-              paywallReason={quota.paywallReason}
-              onBuyCreditsPack={conversion.handleBuyCreditsPack}
-              showBuyCreditsPanel={quota.showBuyCreditsPanel}
-              onCloseBuyPanel={quota.closeBuyCreditsPanel}
-              purchaseMessage={quota.purchaseMessage}
-              onGoPro={conversion.handleGoProCheckout}
-              onLayoutChange={conversion.handleLayoutChange}
-              layout={conversion.layout}
-            />
+
+          {/* Hero CTA */}
+          <div className="hero-headline-line flex flex-col items-center gap-2">
+            <a
+              href="#generate"
+              onClick={handleHeroGenerateClick}
+              className="inline-flex h-12 items-center justify-center rounded-full bg-[#1A1A1A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80"
+            >
+              Upload a file
+            </a>
+            <span className="text-xs text-black/40">3 free exports. No account required.</span>
+          </div>
+        </div>
+
+        {/* Social proof zone — intentional breathing room */}
+        <div className="mt-14 space-y-5">
+          {/* Example anchor badge */}
+          <div className="hero-headline-line flex justify-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-sm font-[500] text-slate-600">
+              <span className="text-black/30">▸</span>
+              {LANDING_COPY.heroExample}
+            </span>
+          </div>
+
+          {/* Mini comparison */}
+          <div className="hero-headline-line mx-auto w-full max-w-[540px] overflow-hidden rounded-xl border border-black/10 text-sm">
+            <div className="grid grid-cols-2 divide-x divide-black/10">
+              <div className="bg-black/[0.02] px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-black/40">Excel export</div>
+              <div className="px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A]">fitforpdf</div>
+            </div>
+            {MINI_COMPARISON_ROWS.map(([before, after]) => (
+              <div key={before} className="grid grid-cols-2 divide-x divide-black/[0.06] border-t border-black/[0.06]">
+                <div className="bg-black/[0.02] px-4 py-2.5 text-black/40 line-through decoration-black/20">{before}</div>
+                <div className="px-4 py-2.5 font-[500] text-[#1A1A1A]">{after}</div>
+              </div>
+            ))}
           </div>
         </div>
       </PageHero>
 
+      {/* Visual demo — moved before the upload for "proof first" flow */}
       <Section
         id={LANDING_COPY_KEYS.beforeAfter}
         index={1}
         maxWidth="max-w-[1440px]"
-        className="py-20 sm:py-28"
+        className="py-12 sm:py-16"
         bg="bg-hero"
       >
         <ProofShowcase />
       </Section>
 
+      {/* Upload tool */}
       <Section
-        id="comparison"
+        id={LANDING_COPY_KEYS.upload}
         index={2}
         maxWidth="max-w-[1360px]"
         bg="bg-hero"
-        className="py-16 sm:py-20"
+        className="py-10 sm:py-14"
+      >
+        <div
+          data-testid={LANDING_COPY_KEYS.upload}
+          className="mx-auto w-full max-w-[1320px] feature-card-hover relative rounded-xl bg-white"
+        >
+          <UploadCard
+            toolTitle={LANDING_COPY.toolTitle}
+            toolSubcopy={(() => {
+              if (quota.planType === 'credits') {
+                const count = Number.isFinite(quota.freeExportsLeft) ? quota.freeExportsLeft : 0;
+                if (count <= 0) return 'No exports left. Get more to continue.';
+                return `${count} purchased export${count === 1 ? '' : 's'} remaining.`;
+              }
+              if (quota.planType === 'pro') {
+                return 'Pro plan. 500 exports/month.';
+              }
+              const count = Number.isFinite(quota.freeExportsLeft)
+                ? quota.freeExportsLeft
+                : Number.isFinite(quota.freeExportsLimit)
+                  ? quota.freeExportsLimit
+                  : 3;
+              return `${count} free export${count === 1 ? '' : 's'}. No account required.`;
+            })()}
+            file={conversion.file}
+            freeExportsLeft={quota.freeExportsLeft}
+            includeBranding={conversion.includeBranding}
+            truncateLongText={conversion.truncateLongText}
+            isLoading={conversion.isLoading}
+            notice={conversion.notice}
+            error={conversion.error}
+            hasResultBlob={Boolean(conversion.pdfBlob)}
+            onFileSelect={(nextFile) => conversion.handleFileSelect(nextFile)}
+            onRemoveFile={conversion.handleRemoveFile}
+            onBrandingChange={conversion.setIncludeBranding}
+            onTruncateChange={conversion.setTruncateLongText}
+            onSubmit={conversion.handleSubmit}
+            onDownloadAgain={conversion.handleDownloadAnyway}
+            onTrySample={conversion.handleTrySample}
+            downloadedFileName={Boolean(conversion.pdfBlob) ? conversion.resolvedPdfFilename : null}
+            verdict={conversion.renderVerdict}
+            conversionProgress={conversion.conversionProgress}
+            onBuyCredits={quota.openBuyCreditsPanel}
+            isPro={quota.planType === 'pro'}
+            showBuyCreditsForTwo={false}
+            isQuotaLocked={quota.isQuotaLocked}
+            planType={quota.planType}
+            remainingInPeriod={quota.remainingInPeriod}
+            usedInPeriod={quota.usedInPeriod}
+            periodLimit={quota.periodLimit}
+            paywallReason={quota.paywallReason}
+            onBuyCreditsPack={conversion.handleBuyCreditsPack}
+            showBuyCreditsPanel={quota.showBuyCreditsPanel}
+            onCloseBuyPanel={quota.closeBuyCreditsPanel}
+            purchaseMessage={quota.purchaseMessage}
+            onGoPro={conversion.handleGoProCheckout}
+            onLayoutChange={conversion.handleLayoutChange}
+            layout={conversion.layout}
+          />
+        </div>
+        <p className="mt-6 text-center text-sm text-muted">
+          {LANDING_COPY.heroTypicalOutput}
+        </p>
+      </Section>
+
+      {/* Who this is for */}
+      <Section
+        id="who-this-is-for"
+        index={3}
+        maxWidth="max-w-[1360px]"
+        bg="bg-hero"
+        className="py-10 sm:py-14"
+      >
+        <div className="space-y-8">
+          <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
+            {LANDING_COPY.whoThisIsForTitle}
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-[860px] mx-auto">
+            <div className="rounded-2xl border border-black/10 bg-white p-6 space-y-4">
+              <p className="text-sm font-[600] uppercase tracking-[0.06em] text-emerald-600">Perfect for</p>
+              <ul className="space-y-2.5">
+                {LANDING_COPY.whoThisIsForPerfect.map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-[#1A1A1A]">
+                    <span className="flex-none text-emerald-500" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M5 8l2.5 2.5L11 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-black/10 bg-black/[0.02] p-6 space-y-4">
+              <p className="text-sm font-[600] uppercase tracking-[0.06em] text-black/40">Not designed for</p>
+              <ul className="space-y-2.5">
+                {LANDING_COPY.whoThisIsForNot.map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-muted">
+                    <span className="flex-none text-black/25" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M5.5 10.5l5-5M10.5 10.5l-5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      <Section
+        id="comparison"
+        index={4}
+        maxWidth="max-w-[1360px]"
+        bg="bg-hero"
+        className="py-10 sm:py-14"
       >
         <div className="space-y-8">
           <div className="text-center">
@@ -243,9 +349,9 @@ export default function Page() {
 
       <Section
         id={LANDING_COPY_KEYS.pricingPreview}
-        index={3}
+        index={5}
         maxWidth="max-w-[1440px]"
-        className="py-16 sm:py-24"
+        className="py-10 sm:py-14"
         bg="bg-hero"
       >
         <PricingToggleSection showFreeTier />
@@ -259,12 +365,44 @@ export default function Page() {
         </div>
       </Section>
 
+      {/* Built for SaaS / API teaser */}
+      <Section
+        id="api-teaser"
+        index={6}
+        maxWidth="max-w-[860px]"
+        bg="bg-hero"
+        className="py-10 sm:py-14"
+      >
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl sm:text-3xl font-[650] tracking-tight text-black">
+            {LANDING_COPY.apiBlockTitle}
+          </h2>
+          <p className="text-base text-muted max-w-lg mx-auto">
+            {LANDING_COPY.apiBlockCopy}
+          </p>
+          <p className="text-xs font-[500] text-black/35 tracking-wide">
+            {LANDING_COPY.apiBlockSpecs}
+          </p>
+          <div className="pt-2">
+            <a
+              href={LANDING_COPY.apiBlockCtaHref}
+              className={CTA_SECONDARY}
+            >
+              {LANDING_COPY.apiBlockCta}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </Section>
+
       <Section
         id={LANDING_COPY_KEYS.privacyStrip}
-        index={5}
+        index={7}
         bg="bg-hero"
         maxWidth="max-w-[1240px]"
-        className="py-20 sm:py-28"
+        className="py-12 sm:py-16"
         testId="privacy-section"
       >
         <div className="flex flex-col items-center text-center">
@@ -294,10 +432,10 @@ export default function Page() {
 
       <Section
         id="home-faq"
-        index={6}
+        index={8}
         bg="bg-hero"
         maxWidth="max-w-[1240px]"
-        className="py-20 sm:py-28"
+        className="py-12 sm:py-16"
         testId="faq-section"
       >
         <div className="space-y-10">
@@ -313,11 +451,36 @@ export default function Page() {
         </div>
       </Section>
 
+      {/* Who uses fitforpdf */}
+      <Section
+        id="who-uses"
+        index={9}
+        maxWidth="max-w-[860px]"
+        bg="bg-hero"
+        className="py-10 sm:py-14"
+      >
+        <div className="text-center space-y-6">
+          <h2 className="text-2xl sm:text-3xl font-[650] tracking-tight text-black">
+            {LANDING_COPY.whoUsesTitle}
+          </h2>
+          <div className="flex flex-wrap justify-center gap-3">
+            {LANDING_COPY.whoUsesItems.map((item) => (
+              <span
+                key={item}
+                className="rounded-full border border-black/10 bg-white px-5 py-2 text-sm font-[500] text-[#1A1A1A]"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      </Section>
+
       <Section
         id="final-cta"
-        index={7}
+        index={10}
         bg="bg-hero"
-        className="py-24 sm:py-32"
+        className="py-16 sm:py-20"
         testId="final-cta-section"
       >
         <div className="mx-auto max-w-2xl text-center">
