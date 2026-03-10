@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ImageLightbox from './ImageLightbox';
+import { LANDING_COPY } from '../siteCopy.mjs';
 
 const FEATURES = [
   {
@@ -242,6 +243,9 @@ export default function ProofShowcase() {
       <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
         See how fitforpdf transforms your file.
       </h2>
+      <p className="text-center text-sm text-muted -mt-2">
+        {LANDING_COPY.proofSourceLine}
+      </p>
 
       {/* Format selector — segmented control */}
       <div
