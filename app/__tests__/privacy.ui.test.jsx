@@ -127,8 +127,8 @@ describe('privacy page UI', () => {
     expect(Array.from(headerLinks).find((link) => link.textContent?.trim() === 'Pricing')?.getAttribute('href')).toBe(
       '/pricing',
     );
-    expect(Array.from(headerLinks).find((link) => link.textContent?.trim() === 'Privacy')?.getAttribute('href')).toBe(
-      '/privacy',
+    expect(Array.from(headerLinks).find((link) => link.textContent?.trim() === 'API')?.getAttribute('href')).toBe(
+      '/developers',
     );
   });
 

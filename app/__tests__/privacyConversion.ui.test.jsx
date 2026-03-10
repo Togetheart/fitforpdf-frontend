@@ -42,7 +42,7 @@ describe('privacy conversion UI', () => {
     expect(screen.getByRole('heading', { name: 'What we log' })).toBeTruthy();
     const headerLinks = screen.getAllByRole('navigation')[0];
     expect(headerLinks.textContent).toContain('Pricing');
-    expect(headerLinks.textContent).toContain('Privacy');
+    expect(headerLinks.textContent).toContain('API');
     expect(screen.getAllByRole('contentinfo').length).toBe(1);
   });
 });

@@ -36,7 +36,7 @@ function headerLinks(headerRoot) {
 
   return {
     pricing: getByText('Pricing'),
-    privacy: getByText('Privacy'),
+    api: getByText('API'),
   };
 }
 
@@ -61,7 +61,7 @@ describe('shared site shell navigation', () => {
 
     const header = headerLinks('site-header');
     expect(header.pricing?.getAttribute('href')).toBe('/pricing');
-    expect(header.privacy?.getAttribute('href')).toBe('/privacy');
+    expect(header.api?.getAttribute('href')).toBe('/developers');
 
     const footer = screen.getByTestId('site-footer');
     expect(footer.querySelector('a[href="/pricing"]')).toBeTruthy();
@@ -86,7 +86,7 @@ describe('shared site shell navigation', () => {
 
     const header = headerLinks('site-header');
     expect(header.pricing?.getAttribute('href')).toBe('/pricing');
-    expect(header.privacy?.getAttribute('href')).toBe('/privacy');
+    expect(header.api?.getAttribute('href')).toBe('/developers');
   });
 
   test('privacy has shared header/footer links and single instances', () => {
@@ -101,6 +101,6 @@ describe('shared site shell navigation', () => {
 
     const header = headerLinks('site-header');
     expect(header.pricing?.getAttribute('href')).toBe('/pricing');
-    expect(header.privacy?.getAttribute('href')).toBe('/privacy');
+    expect(header.api?.getAttribute('href')).toBe('/developers');
   });
 });

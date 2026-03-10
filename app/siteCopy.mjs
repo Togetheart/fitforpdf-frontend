@@ -3,9 +3,9 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'fitforpdf',
   heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
-  heroSubheadline: 'No more cut-off columns, broken layouts, or manual print settings. Saves 30–45 minutes of formatting per export — automatically.',
+  heroSubheadline: 'No more cut-off columns, broken layouts, or manual print settings. Saves 30–45 minutes of formatting per export, automatically.',
   heroSubheadlineL1: 'No more cut-off columns, broken layouts, or manual print settings.',
-  heroSubheadlineL2: 'Saves 30–45 minutes of formatting per export — automatically.',
+  heroSubheadlineL2: 'Saves 30–45 minutes of formatting per export, automatically.',
   heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Typical output: CRM reports · financial exports · inventory tables',
   heroLabel: 'FITFORPDF',
@@ -84,7 +84,7 @@ export const LANDING_COPY = {
   footerTagline: 'Transform spreadsheets into professional PDFs.',
 
   whoThisIsForTitle:   'Designed for wide business tables',
-  whoThisIsForPerfect: ['CRM exports', 'financial reports', 'analytics tables', 'inventory reports'],
+  whoThisIsForPerfect: ['CRM exports', 'financial reports', 'analytics tables', 'inventory reports', 'SaaS reporting exports'],
   whoThisIsForNot:     ['invoice templates', 'formatted Excel documents', 'pixel-perfect spreadsheets'],
 
   apiBlockTitle:   'fitforpdf engine',
@@ -219,13 +219,17 @@ export const PRICING_PAGE_COPY = {
   freeSafetyCtaLabel: 'Upload a file for free →',
   freeSafetyCtaHref: '/#generate',
 
-  proApiTitle: 'Team / API',
-  proApiTagline: 'Need higher volume, API access, or team plans?',
-  proApiCtaLabel: 'Contact us',
-  proApiCtaHref: 'mailto:hello@fitforpdf.com',
+  proApiTitle: 'For SaaS & automation',
+  proApiTagline: "Render readable PDFs from your product's reports and data exports.",
+  proApiSubTagline: 'REST API for Excel, CSV, and database tables.',
+  proApiPricePlaceholder: 'API for SaaS',
+  proApiSocialProof: 'Used by SaaS products exporting reports.',
+  proApiSocialProof2: 'Built for wide business tables.',
+  proApiCtaLabel: 'Get API access',
+  proApiCtaHref: '/developers#request-access',
   proApiFeatures: [
-    'Unlimited exports',
     'REST API access',
+    'Unlimited API renders',
     'Team seats & shared billing',
     'White-label output',
     'Custom SLA & priority support',

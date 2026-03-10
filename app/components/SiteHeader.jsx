@@ -54,17 +54,14 @@ export default function SiteHeader() {
 
           {/* Desktop nav — hidden on mobile */}
           <nav className="hidden sm:flex items-center gap-6 text-sm text-black/70">
-            <a className="transition hover:text-black" href="/privacy">
-              Privacy
-            </a>
             <a className="transition hover:text-black" href="/pricing">
               Pricing
             </a>
             <a className="transition hover:text-black" href="/developers">
               API
             </a>
-            <Button variant="primary" href="/#generate" className="px-4 text-xs h-9">
-              Try it now
+            <Button variant="primary" href="/#tool" className="px-4 text-xs h-9">
+              Try free
             </Button>
           </nav>
 
@@ -104,13 +101,6 @@ export default function SiteHeader() {
       >
         <nav className="flex flex-col gap-1">
           <a
-            href="/privacy"
-            onClick={closeMenu}
-            className="rounded-lg px-3 py-3 text-sm font-medium text-black/70 transition hover:bg-black/5 hover:text-black"
-          >
-            Privacy
-          </a>
-          <a
             href="/pricing"
             onClick={closeMenu}
             className="rounded-lg px-3 py-3 text-sm font-medium text-black/70 transition hover:bg-black/5 hover:text-black"
@@ -127,11 +117,11 @@ export default function SiteHeader() {
           <div className="mt-3 pt-3 border-t border-black/5">
             <Button
               variant="primary"
-              href="/#generate"
+              href="/#tool"
               className="w-full"
               onClick={closeMenu}
             >
-              Try it now
+              Try free
             </Button>
           </div>
         </nav>

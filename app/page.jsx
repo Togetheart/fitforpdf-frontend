@@ -83,7 +83,7 @@ const COMPARISON_ROWS = [
   ['Layout', 'Manual configuration', 'Auto-structured'],
   ['Page breaks', 'Unpredictable splits', 'Automatic pagination'],
   ['Reference columns', 'Lost after first pages', 'Repeated automatically'],
-  ['Overview', 'None', 'Automatic navigation between sections'],
+  ['Overview', 'None', 'Navigate between sections instantly'],
   ['Result', 'Spreadsheet-like output', 'Client-ready document'],
 ];
 
@@ -174,6 +174,11 @@ export default function Page() {
               </div>
             ))}
           </div>
+
+          {/* Engine anchor */}
+          <p className="hero-headline-line text-xs text-black/25 tracking-wide">
+            Built on the fitforpdf rendering engine for wide business tables.
+          </p>
         </div>
       </PageHero>
 

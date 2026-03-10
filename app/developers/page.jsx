@@ -37,7 +37,7 @@ const ENDPOINTS = [
     path: '/v1/render',
     auth: true,
     summary: 'Generate a PDF',
-    description: 'Upload a CSV or XLSX file (max 10 MB) and receive a client-ready PDF.',
+    description: 'Upload a CSV or XLSX file (max 10 MB) and receive a structured, readable PDF.',
     example: `curl -X POST \\
   -H "X-FITFORPDF-KEY: ffp_live_..." \\
   -F file=@data.csv \\
@@ -75,6 +75,21 @@ const RESPONSE_HEADERS = [
   { header: 'X-FitForPDF-Plan', desc: 'Your current plan' },
   { header: 'X-FitForPDF-Remaining', desc: 'Remaining exports' },
   { header: 'X-Render-MS', desc: 'Render time in milliseconds' },
+];
+
+const USE_CASES = [
+  { label: 'SaaS reporting', desc: 'Generate PDF reports from your product data on demand' },
+  { label: 'CRM exports', desc: 'Turn wide CRM tables into client-ready documents' },
+  { label: 'Financial exports', desc: 'Render financial data with clean pagination and layout' },
+  { label: 'Analytics tables', desc: 'Export analytics dashboards as structured PDFs' },
+  { label: 'Inventory reports', desc: 'Convert inventory data into readable, shareable PDFs' },
+];
+
+const DIFFERENTIATORS = [
+  { label: 'Splits wide tables into sections', desc: 'No more cut-off columns — wide tables are restructured into readable grouped sections.' },
+  { label: 'Preserves key columns across sections', desc: 'Identifier columns stay visible on every section so records stay linked.' },
+  { label: 'Full-width text rendering', desc: 'Every column gets the space it needs. No cramped cells or truncated values.' },
+  { label: 'Automatic pagination', desc: 'Page breaks follow record boundaries, not arbitrary row counts.' },
 ];
 
 function MethodBadge({ method }) {
@@ -307,27 +322,96 @@ function RequestAccessForm() {
 export default function DevelopersPage() {
   return (
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+
       {/* Hero */}
-      <div className="mb-12">
+      <div className="mb-14">
         <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
           Developer API
         </p>
         <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[#1A1A1A] sm:text-4xl">
-          Turn spreadsheets into PDFs with one API call
+          Render readable PDFs<br className="hidden sm:block" /> from wide tables
         </h1>
         <p className="mt-4 text-base leading-relaxed text-[#4B4B4B]">
-          Send a CSV or XLSX file, get back a client-ready PDF.
-          Built for automation, agents, and developer workflows.
+          Use the fitforpdf API to generate structured PDFs from Excel exports, CSV datasets,
+          and database tables. Built specifically for wide business tables that break normal PDF rendering.
         </p>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           <code className="rounded-lg bg-[#F5F3EE] px-3 py-2 text-sm text-[#1A1A1A]">
             {BASE_URL}
           </code>
+          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-[500] text-emerald-700">
+            No HTML templates. No PDF layout code.
+          </span>
         </div>
       </div>
 
+      {/* Why fitforpdf exists */}
+      <section className="mb-14 border-t border-black/10 pt-10">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+          Why fitforpdf exists
+        </p>
+        <h2 className="mb-4 text-xl font-[700] leading-tight text-[#1A1A1A]">
+          Wide tables break every PDF renderer
+        </h2>
+        <div className="space-y-3 text-sm leading-relaxed text-[#4B4B4B]">
+          <p>
+            Standard PDF libraries — wkhtmltopdf, Puppeteer, ReportLab — were built for documents,
+            not data. Feed them a 20-column CRM export and you get cut-off columns, microscopic text,
+            and broken page flows that no client wants to read.
+          </p>
+          <p>
+            fitforpdf was built specifically for this problem. The rendering engine analyses your table
+            structure, splits wide tables into readable sections, and produces a PDF that actually
+            communicates the data inside it.
+          </p>
+        </div>
+      </section>
+
+      {/* Typical API use cases */}
+      <section className="mb-14 border-t border-black/10 pt-10">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+          Typical use cases
+        </p>
+        <h2 className="mb-6 text-xl font-[700] leading-tight text-[#1A1A1A]">
+          Built for SaaS products and data-heavy workflows
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {USE_CASES.map((uc) => (
+            <div key={uc.label} className="rounded-xl border border-black/8 bg-[#FAFAF8] px-4 py-4">
+              <p className="text-sm font-[650] text-[#1A1A1A]">{uc.label}</p>
+              <p className="mt-1 text-xs leading-relaxed text-[#6B6B6B]">{uc.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* What makes fitforpdf different */}
+      <section className="mb-14 border-t border-black/10 pt-10">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+          What makes fitforpdf different
+        </p>
+        <h2 className="mb-6 text-xl font-[700] leading-tight text-[#1A1A1A]">
+          Designed around the wide-table problem
+        </h2>
+        <div className="space-y-4">
+          {DIFFERENTIATORS.map((d) => (
+            <div key={d.label} className="flex gap-3">
+              <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#F5F3EE]">
+                <svg className="h-3 w-3 text-[#7D6B58]" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-[650] text-[#1A1A1A]">{d.label}</p>
+                <p className="mt-0.5 text-sm leading-relaxed text-[#4B4B4B]">{d.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Quick start */}
-      <section className="mb-12">
+      <section className="mb-12 border-t border-black/10 pt-10">
         <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Quick start</h2>
         <p className="mb-4 text-sm text-[#4B4B4B]">
           Generate a PDF in one command:
@@ -430,11 +514,15 @@ export default function DevelopersPage() {
           <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">X-RateLimit-Limit</code>,{' '}
           <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">X-RateLimit-Remaining</code>, and{' '}
           <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">Retry-After</code> (on 429).
+          Maximum 50 columns and 5,000 rows per request.
+        </p>
+        <p className="mt-3 text-xs text-[#7D6B58]">
+          Designed for business reporting exports.
         </p>
       </section>
 
       {/* Error codes */}
-      <section className="mb-12 border-t border-black/10 pt-8">
+      <section className="mb-14 border-t border-black/10 pt-8">
         <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Error codes</h2>
         <p className="mb-4 text-sm text-[#4B4B4B]">
           All errors use a standard envelope:
@@ -467,6 +555,16 @@ export default function DevelopersPage() {
           </table>
         </div>
       </section>
+
+      {/* Integrate in minutes callout */}
+      <div className="mb-6 text-center">
+        <p className="text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+          Integrate in minutes.
+        </p>
+        <p className="mt-1 text-sm text-[#4B4B4B]">
+          One endpoint, one file upload, one PDF back.
+        </p>
+      </div>
 
       {/* Request access */}
       <RequestAccessForm />

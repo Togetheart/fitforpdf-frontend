@@ -232,7 +232,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
       </ul>
 
       {/* CTA */}
-      <div className="mt-8">
+      <div className="mt-auto pt-8">
         <button
           type="button"
           onClick={onSubscribe}
@@ -255,7 +255,7 @@ export function ProApiCard() {
       {/* Title */}
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
-          Enterprise
+          API
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-black">
           {PRICING_PAGE_COPY.proApiTitle}
@@ -264,10 +264,11 @@ export function ProApiCard() {
 
       {/* Tagline */}
       <p className="mt-2 text-sm text-muted leading-relaxed">{PRICING_PAGE_COPY.proApiTagline}</p>
+      <p className="mt-0.5 text-xs text-muted/70">{PRICING_PAGE_COPY.proApiSubTagline}</p>
 
       {/* Price placeholder */}
       <div className="mt-5">
-        <span className="text-4xl font-bold tracking-tight leading-none text-black">Custom</span>
+        <span className="text-4xl font-bold tracking-tight leading-none text-black">{PRICING_PAGE_COPY.proApiPricePlaceholder}</span>
       </div>
 
       {/* Divider */}
@@ -286,16 +287,15 @@ export function ProApiCard() {
       </ul>
 
       {/* CTA */}
-      <div className="mt-8">
+      <div className="mt-auto pt-8">
+        <p className="mb-0.5 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof}</p>
+        <p className="mb-3 text-center text-xs text-muted/40">{PRICING_PAGE_COPY.proApiSocialProof2}</p>
         <a
           href={PRICING_PAGE_COPY.proApiCtaHref}
           className="flex w-full items-center justify-center rounded-full border border-black/20 py-2.5 text-sm font-semibold text-black hover:border-black/30 hover:bg-white transition-all duration-150 active:scale-[0.98]"
         >
           {PRICING_PAGE_COPY.proApiCtaLabel}
         </a>
-        <p className="mt-3 text-center text-xs text-muted/70">
-          We'll get back to you within 24 hours.
-        </p>
       </div>
     </Card>
   );

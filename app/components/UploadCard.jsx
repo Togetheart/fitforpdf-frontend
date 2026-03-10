@@ -839,7 +839,7 @@ export default function UploadCard({
           <Button
             type="submit"
             variant="primary"
-            className="w-full"
+            className="w-full !h-9"
             disabled={isLoading || !file}
           >
             {isLoading ? (

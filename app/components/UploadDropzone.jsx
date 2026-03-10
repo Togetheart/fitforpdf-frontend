@@ -79,13 +79,13 @@ export default function UploadDropzone({
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="block rounded-xl bg-transparent px-4 py-7 text-center"
+          className="block rounded-xl bg-transparent px-4 py-4 text-center"
         >
           {file ? (
             <div className="mx-auto max-w-xl">
               <CheckCircle2
                 aria-hidden="true"
-                className="mx-auto h-8 w-8 text-accent"
+                className="mx-auto h-6 w-6 text-accent"
               />
               <p className="mt-3 text-sm font-semibold text-slate-900">{file.name}</p>
               <p className="mt-1 text-xs text-muted">{formatBytes(file.size)}</p>
@@ -108,7 +108,7 @@ export default function UploadDropzone({
             </div>
           ) : (
             <div className="mx-auto max-w-xl">
-              <AnimatedCloudIcon size={32} className="mx-auto text-muted" />
+              <AnimatedCloudIcon size={24} className="mx-auto text-muted" />
               <p className="mt-3 text-sm font-semibold text-slate-900">Drop CSV or XLSX here</p>
               <p className="mt-1 text-xs text-muted">{DROPZONE_HINT}</p>
             </div>
