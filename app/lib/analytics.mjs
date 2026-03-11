@@ -7,17 +7,13 @@
  */
 import posthog from 'posthog-js';
 
-function isReady() {
-  try {
-    return typeof window !== 'undefined' && posthog.__loaded;
-  } catch {
-    return false;
-  }
-}
-
 function capture(event, properties) {
-  if (!isReady()) return;
-  posthog.capture(event, properties);
+  if (typeof window === 'undefined') return;
+  try {
+    posthog.capture(event, properties);
+  } catch {
+    // PostHog not yet initialized — silently skip
+  }
 }
 
 // ── Public helpers ──────────────────────────────────────────
