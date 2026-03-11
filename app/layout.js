@@ -1,7 +1,8 @@
 import Script from 'next/script';
 import './globals.css';
 import SiteShell from './components/SiteShell';
-import { SEO } from './siteCopy.mjs';
+import { SEO, HOME_FAQ } from './siteCopy.mjs';
+import { JsonLd } from './components/JsonLd';
 
 export const metadata = {
   title: {
@@ -10,6 +11,9 @@ export const metadata = {
   },
   description: SEO.home.description,
   metadataBase: new URL(SEO.siteUrl),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: SEO.home.title,
     description: SEO.home.description,
@@ -26,7 +30,8 @@ export const metadata = {
   },
 };
 
-const jsonLd = {
+/* ── Structured data (JSON-LD) ── */
+const softwareAppLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'fitforpdf',
@@ -34,7 +39,36 @@ const jsonLd = {
   description: SEO.home.description,
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  offers: {
+    '@type': 'AggregateOffer',
+    lowPrice: '0',
+    highPrice: '29',
+    priceCurrency: 'USD',
+    offerCount: 4,
+  },
+};
+
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'fitforpdf',
+  url: SEO.siteUrl,
+  logo: `${SEO.siteUrl}/og-image.png`,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'support@fitforpdf.com',
+    contactType: 'customer support',
+  },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: HOME_FAQ.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
 };
 
 export default function RootLayout({ children }) {
@@ -51,15 +85,18 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="bg-white text-black">
+        {/* JSON-LD structured data for search engines & AI */}
+        <JsonLd data={softwareAppLd} />
+        <JsonLd data={organizationLd} />
+        <JsonLd data={faqLd} />
         <SiteShell>{children}</SiteShell>
         {clarityId && (
           <Script
             id="microsoft-clarity"
             strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${clarityId}");`,
-            }}
-          />
+          >
+            {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${clarityId}")`}
+          </Script>
         )}
       </body>
     </html>

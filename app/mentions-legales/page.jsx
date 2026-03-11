@@ -3,6 +3,10 @@ import React from 'react';
 export const metadata = {
   title: 'Legal Notice — fitforpdf',
   description: "Legal notice for fitforpdf, pursuant to French law n°2004-575 of 21 June 2004 on confidence in the digital economy.",
+  alternates: {
+    canonical: '/mentions-legales',
+    languages: { 'fr': '/mentions-legales' },
+  },
 };
 
 function Clause({ title, children }) {

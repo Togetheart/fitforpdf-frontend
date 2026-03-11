@@ -3,6 +3,7 @@ import { SEO } from '../siteCopy.mjs';
 export const metadata = {
   title: SEO.auditPdf.title,
   description: SEO.auditPdf.description,
+  alternates: { canonical: `/${SEO.auditPdf.slug}` },
   openGraph: {
     title: SEO.auditPdf.title,
     description: SEO.auditPdf.description,

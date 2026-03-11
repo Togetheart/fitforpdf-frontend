@@ -3,6 +3,7 @@ import { SEO } from '../siteCopy.mjs';
 export const metadata = {
   title: SEO.privacy.title,
   description: SEO.privacy.description,
+  alternates: { canonical: '/privacy' },
   openGraph: {
     title: SEO.privacy.title,
     description: SEO.privacy.description,

@@ -3,6 +3,7 @@ import { SEO } from '../siteCopy.mjs';
 export const metadata = {
   title: SEO.excelCutoff.title,
   description: SEO.excelCutoff.description,
+  alternates: { canonical: `/${SEO.excelCutoff.slug}` },
   openGraph: {
     title: SEO.excelCutoff.title,
     description: SEO.excelCutoff.description,
