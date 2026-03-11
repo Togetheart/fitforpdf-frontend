@@ -5,12 +5,11 @@
  * This module covers the 4 user-behaviour events:
  *   upload_started, demo_file_used, payment_started, payment_completed
  */
-import posthog from 'posthog-js';
-
 function capture(event, properties) {
   if (typeof window === 'undefined') return;
+  if (typeof window.posthog === 'undefined') return;
   try {
-    posthog.capture(event, properties);
+    window.posthog.capture(event, properties);
   } catch {
     // PostHog not yet initialized — silently skip
   }
