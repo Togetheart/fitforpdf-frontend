@@ -2,21 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Satoshi (Variable) ─────────────────────────────── */
+/* ── Satoshi (self-hosted) ─────────────────────────────── */
 @font-face {
   font-family: 'Satoshi';
-  src: url('https://cdn.fontshare.com/wf/EKRUOY5NRRLBDHCQHYMXGXV2N4AVMBQW/YYSC4MDBHQAIF5GI37IHXQWMXQ7OD644/RLJJDXBJ6MKZNVQHFSXHCT5HRYXKPJWD.woff2') format('woff2');
-  font-weight: 300 900;
+  src: url('/fonts/satoshi-400.woff2') format('woff2');
+  font-weight: 400;
   font-display: swap;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Satoshi';
-  src: url('https://cdn.fontshare.com/wf/EKRUOY5NRRLBDHCQHYMXGXV2N4AVMBQW/YYSC4MDBHQAIF5GI37IHXQWMXQ7OD644/4SZZJBYXH2GX7K2KYQOIQLQMDR232ZXI.woff2') format('woff2');
-  font-weight: 300 900;
+  src: url('/fonts/satoshi-700.woff2') format('woff2');
+  font-weight: 700;
   font-display: swap;
-  font-style: italic;
+  font-style: normal;
 }
 
 /* ── Design tokens (CSS custom properties) ──────────

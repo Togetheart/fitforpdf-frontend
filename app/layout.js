@@ -79,7 +79,14 @@ export default function RootLayout({ children }) {
       <head>
         <link
           rel="preload"
-          href="https://cdn.fontshare.com/wf/EKRUOY5NRRLBDHCQHYMXGXV2N4AVMBQW/YYSC4MDBHQAIF5GI37IHXQWMXQ7OD644/RLJJDXBJ6MKZNVQHFSXHCT5HRYXKPJWD.woff2"
+          href="/fonts/satoshi-400.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/satoshi-700.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
