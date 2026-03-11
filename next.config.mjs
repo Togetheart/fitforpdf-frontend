@@ -3,6 +3,10 @@ const nextConfig = {
   // Ensure no trailing slash — avoids duplicate URLs in Google index
   trailingSlash: false,
 
+  // Allow PostHog SDK to POST to /ingest/e/ with trailing slash
+  // without being 308-redirected by Next.js
+  skipTrailingSlashRedirect: true,
+
   // Force permanent redirects for non-www → www
   async redirects() {
     return [
