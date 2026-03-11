@@ -1,6 +1,7 @@
 import Script from 'next/script';
 import './globals.css';
 import SiteShell from './components/SiteShell';
+import PostHogProvider from './components/PostHogProvider';
 import { SEO, HOME_FAQ } from './siteCopy.mjs';
 import { JsonLd } from './components/JsonLd';
 
@@ -89,7 +90,9 @@ export default function RootLayout({ children }) {
         <JsonLd data={softwareAppLd} />
         <JsonLd data={organizationLd} />
         <JsonLd data={faqLd} />
-        <SiteShell>{children}</SiteShell>
+        <PostHogProvider>
+          <SiteShell>{children}</SiteShell>
+        </PostHogProvider>
         {clarityId && (
           <Script
             id="microsoft-clarity"
