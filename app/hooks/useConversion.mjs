@@ -9,6 +9,7 @@ import {
 } from '../pageUiLogic.mjs';
 import { QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
 import { useCheckout } from './useCheckout.mjs';
+import { trackUploadStarted, trackDemoFileUsed } from '../lib/analytics.mjs';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
@@ -392,6 +393,10 @@ export default function useConversion({ quota }) {
   async function handleSubmit(e) {
     e.preventDefault();
     if (isQuotaLocked) return;
+    if (file) {
+      const ext = (file.name || '').split('.').pop()?.toLowerCase();
+      trackUploadStarted({ fileType: ext, fileSize: file.size });
+    }
     const nextFlowId = createFlowId();
     setFlowId(nextFlowId);
     await submitRender('normal', { flowIdOverride: nextFlowId });
@@ -407,6 +412,7 @@ export default function useConversion({ quota }) {
 
   async function handleTrySample() {
     try {
+      trackDemoFileUsed();
       const sampleResponse = await fetch('/api/sample/premium');
       if (!sampleResponse.ok) throw new Error(`Failed to load sample CSV (${sampleResponse.status})`);
       const sampleCsv = await sampleResponse.text();

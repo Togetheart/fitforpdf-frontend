@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { trackPaymentStarted } from '../lib/analytics.mjs';
 
 /**
  * Shared checkout hook — use from any page to open a Stripe checkout session.
@@ -34,6 +35,7 @@ export function useCheckout() {
 
   async function openCreditsPack(pack) {
     if (!pack) return { ok: false, error: null };
+    trackPaymentStarted({ plan: 'credits', pack });
     setIsLoading(true);
     setError(null);
     try {
@@ -56,6 +58,7 @@ export function useCheckout() {
   }
 
   async function openProCheckout(billing = 'monthly') {
+    trackPaymentStarted({ plan: 'pro', pack: billing });
     setIsLoading(true);
     setError(null);
     try {

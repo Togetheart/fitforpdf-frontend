@@ -1,9 +1,16 @@
-export const metadata = {
-  title: 'Payment Successful',
-  description: 'Your payment was received. Credits will be available shortly.',
-};
+'use client';
+
+import { useEffect } from 'react';
+import { trackPaymentCompleted } from '../lib/analytics.mjs';
 
 export default function SuccessPage() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const plan = params.get('plan') || 'credits';
+    const pack = params.get('pack') || null;
+    trackPaymentCompleted({ plan, pack });
+  }, []);
+
   return (
     <main
       style={{
