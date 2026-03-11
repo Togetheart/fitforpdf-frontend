@@ -13,6 +13,7 @@ export default function PostHogProvider({ children }) {
       person_profiles: 'identified_only',
       capture_pageview: false, // We capture manually below
       capture_pageleave: true,
+      disable_compression: true, // Required: Vercel rewrites don't forward gzip-js body
     });
   }, []);
 
