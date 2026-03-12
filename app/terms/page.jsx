@@ -8,8 +8,8 @@ export const metadata = {
 function Clause({ title, children }) {
   return (
     <section className="border-t border-black/10 pt-8 mb-10">
-      <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">{title}</h2>
-      <div className="space-y-3 text-sm leading-relaxed text-[#4B4B4B]">{children}</div>
+      <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">{title}</h2>
+      <div className="space-y-3 text-sm leading-relaxed text-[#475569]">{children}</div>
     </section>
   );
 }
@@ -20,13 +20,13 @@ export default function TermsPage() {
 
       {/* Header */}
       <div className="mb-12">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
           Legal
         </p>
-        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[#1A1A1A] sm:text-4xl">
+        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[#0F172A] sm:text-4xl">
           Terms of Use
         </h1>
-        <p className="mt-4 text-base leading-relaxed text-[#4B4B4B]">
+        <p className="mt-4 text-base leading-relaxed text-[#475569]">
           By using fitforpdf, you agree to these terms.
         </p>
       </div>
@@ -39,7 +39,7 @@ export default function TermsPage() {
         </p>
         <p>
           Contact:{' '}
-          <a href="mailto:hello@fitforpdf.com" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#1A1A1A]">
+          <a href="mailto:hello@fitforpdf.com" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
             hello@fitforpdf.com
           </a>
         </p>
@@ -73,7 +73,7 @@ export default function TermsPage() {
         </p>
         <p>
           No file content is stored in logs. For full details, see our{' '}
-          <a href="/privacy" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#1A1A1A]">
+          <a href="/privacy" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
             privacy policy
           </a>.
         </p>
@@ -82,7 +82,7 @@ export default function TermsPage() {
       <Clause title="5. Pricing and payments">
         <p>
           Prices are listed on the{' '}
-          <a href="/pricing" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#1A1A1A]">
+          <a href="/pricing" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
             pricing page
           </a>.
           Payments are processed by Stripe. Purchased credits do not expire.
@@ -125,7 +125,7 @@ export default function TermsPage() {
         </p>
         <p>
           For any claim:{' '}
-          <a href="mailto:hello@fitforpdf.com" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#1A1A1A]">
+          <a href="mailto:hello@fitforpdf.com" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
             hello@fitforpdf.com
           </a>
         </p>

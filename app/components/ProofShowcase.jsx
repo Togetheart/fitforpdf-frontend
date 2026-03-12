@@ -14,7 +14,7 @@ const FEATURES = [
         <line x1="9" y1="9" x2="9" y2="21" />
       </svg>
     ),
-    color: '#818cf8',
+    color: '#2563EB',
   },
   {
     title: 'Columns grouped into readable sections',
@@ -24,7 +24,7 @@ const FEATURES = [
         <rect x="14" y="3" width="7" height="18" rx="1.5" />
       </svg>
     ),
-    color: '#38bdf8',
+    color: '#3B82F6',
   },
   {
     title: 'Key columns repeated automatically',
@@ -34,7 +34,7 @@ const FEATURES = [
         <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" />
       </svg>
     ),
-    color: '#2dd4bf',
+    color: '#60A5FA',
   },
   {
     title: 'Clear page numbers and row ranges',
@@ -46,7 +46,7 @@ const FEATURES = [
         <line x1="16" y1="3" x2="14" y2="21" />
       </svg>
     ),
-    color: '#4ade80',
+    color: '#93C5FD',
   },
   {
     title: 'No manual layout work',
@@ -55,7 +55,7 @@ const FEATURES = [
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
       </svg>
     ),
-    color: '#fbbf24',
+    color: '#3B82F6',
   },
   {
     title: 'Jump to any section instantly',
@@ -65,7 +65,7 @@ const FEATURES = [
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
       </svg>
     ),
-    color: '#f87171',
+    color: '#60A5FA',
   },
 ];
 
@@ -189,11 +189,11 @@ const FORMATS = ['xlsx', 'csv'];
 
 const TAB_COLORS = [
   'bg-white', // white      — Overview
-  'bg-indigo-600', // indigo-600 — Section A
-  'bg-sky-500', // sky-500    — Section B
-  'bg-green-500', // green-500  — Section C
-  'bg-amber-500', // amber-500  — Section D
-  'bg-red-500', // red-500    — Section E
+  'bg-blue-600', // blue-600  — Section A
+  'bg-blue-500', // blue-500  — Section B
+  'bg-sky-500', // sky-500   — Section C
+  'bg-blue-400', // blue-400  — Section D
+  'bg-sky-400', // sky-400   — Section E
 ];
 
 export default function ProofShowcase() {
@@ -280,7 +280,7 @@ export default function ProofShowcase() {
                 />
                 <span
                   className={`text-[11px] font-[650] uppercase tracking-[0.12em] transition-colors duration-200 ${
-                    isActive ? 'text-[#1A1A1A]' : 'text-black/35'
+                    isActive ? 'text-[#0F172A]' : 'text-black/35'
                   }`}
                 >
                   {fmt.label}
@@ -349,7 +349,7 @@ export default function ProofShowcase() {
             {/* Tab buttons — Apple pill style */}
             <div
               className="mt-3 w-full overflow-x-auto scrollbar-none rounded-full"
-              style={{ backgroundColor: '#3a3a3c' }}
+              style={{ backgroundColor: '#0F172A' }}
             >
               <div
                 role="tablist"
@@ -381,7 +381,7 @@ export default function ProofShowcase() {
                     className="relative z-10 flex-1 text-center rounded-full px-2 py-2.5 sm:px-3 text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
                     style={{
                       color: i === activeTab
-                        ? (i === 0 ? '#1A1A1A' : '#ffffff')
+                        ? (i === 0 ? '#0F172A' : '#ffffff')
                         : 'rgba(235,235,245,0.55)',
                     }}
                   >

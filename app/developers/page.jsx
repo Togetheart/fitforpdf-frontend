@@ -115,7 +115,7 @@ function CodeBlock({ children }) {
 
   return (
     <div className="group relative">
-      <pre className="overflow-x-auto rounded-xl bg-[#1A1A1A] p-4 text-[13px] leading-relaxed text-white/90">
+      <pre className="overflow-x-auto rounded-xl bg-[#0F172A] p-4 text-[13px] leading-relaxed text-white/90">
         <code>{children}</code>
       </pre>
       <button
@@ -133,21 +133,21 @@ function EndpointCard({ endpoint }) {
     <div className="space-y-3 border-t border-black/10 py-6" id={endpoint.path.replace(/\//g, '-').slice(1)}>
       <div className="flex items-center gap-3">
         <MethodBadge method={endpoint.method} />
-        <code className="text-sm font-[600] text-[#1A1A1A]">{endpoint.path}</code>
+        <code className="text-sm font-[600] text-[#0F172A]">{endpoint.path}</code>
         {endpoint.auth && (
           <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-[500] text-amber-700">
             auth required
           </span>
         )}
       </div>
-      <p className="text-sm text-[#4B4B4B]">{endpoint.description}</p>
+      <p className="text-sm text-[#475569]">{endpoint.description}</p>
       <CodeBlock>{endpoint.example}</CodeBlock>
       {endpoint.response && (
         <details className="group">
           <summary className="cursor-pointer text-xs font-[500] text-black/40 transition hover:text-black/60">
             Response
           </summary>
-          <pre className="mt-2 overflow-x-auto rounded-xl bg-[#F5F3EE] p-4 text-[13px] leading-relaxed text-[#1A1A1A]">
+          <pre className="mt-2 overflow-x-auto rounded-xl bg-[#F8FAFC] p-4 text-[13px] leading-relaxed text-[#0F172A]">
             <code>{endpoint.response}</code>
           </pre>
         </details>
@@ -194,24 +194,24 @@ function RequestAccessForm() {
 
   if (status === 'success') {
     return (
-      <section id="request-access" className="rounded-2xl bg-[#F5F3EE] px-6 py-10 text-center">
+      <section id="request-access" className="rounded-2xl bg-[#F8FAFC] px-6 py-10 text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
           <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
-        <h2 className="mt-4 text-lg font-[650] text-[#1A1A1A]">You&apos;re on the list</h2>
-        <p className="mt-2 text-sm text-[#4B4B4B]">
+        <h2 className="mt-4 text-lg font-[650] text-[#0F172A]">You&apos;re on the list</h2>
+        <p className="mt-2 text-sm text-[#475569]">
           We&apos;ll send your API key to{' '}
-          <strong className="font-[600] text-[#1A1A1A]">{form.email}</strong>{' '}
+          <strong className="font-[600] text-[#0F172A]">{form.email}</strong>{' '}
           once your access is approved.
         </p>
-        <p className="mt-1 text-sm text-[#4B4B4B]">
-          Early users get <strong className="font-[600] text-[#1A1A1A]">50 free exports</strong> to start.
+        <p className="mt-1 text-sm text-[#475569]">
+          Early users get <strong className="font-[600] text-[#0F172A]">50 free exports</strong> to start.
         </p>
         <a
           href="/"
-          className="mt-6 inline-block rounded-xl border border-black/10 bg-white px-6 py-3 text-sm font-[600] text-[#1A1A1A] transition hover:bg-[#FAFAF8]"
+          className="mt-6 inline-block rounded-xl border border-black/10 bg-white px-6 py-3 text-sm font-[600] text-[#0F172A] transition hover:bg-[#F8FAFC]"
         >
           Try the web app while you wait
         </a>
@@ -220,17 +220,17 @@ function RequestAccessForm() {
   }
 
   return (
-    <section id="request-access" className="overflow-hidden rounded-2xl bg-[#F5F3EE]">
+    <section id="request-access" className="overflow-hidden rounded-2xl bg-[#F8FAFC]">
       <div className="flex flex-col md:flex-row">
         {/* Left — value props */}
         <div className="flex-1 px-6 py-8 md:px-8 md:py-10">
-          <p className="text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+          <p className="text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
             Early access
           </p>
-          <h2 className="mt-2 text-xl font-[700] leading-tight text-[#1A1A1A]">
+          <h2 className="mt-2 text-xl font-[700] leading-tight text-[#0F172A]">
             Get your API key
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-[#4B4B4B]">
+          <p className="mt-3 text-sm leading-relaxed text-[#475569]">
             We&apos;re onboarding developers in small batches to ensure
             quality and support. Early users get:
           </p>
@@ -240,7 +240,7 @@ function RequestAccessForm() {
               'Direct access to the engineering team',
               'Priority feature requests',
             ].map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm text-[#4B4B4B]">
+              <li key={item} className="flex items-start gap-2 text-sm text-[#475569]">
                 <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
@@ -254,7 +254,7 @@ function RequestAccessForm() {
         <div className="flex-1 border-t border-black/5 bg-white/50 px-6 py-8 md:border-l md:border-t-0 md:px-8 md:py-10">
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label htmlFor="ra-name" className="block text-xs font-[600] text-[#4B4B4B]">
+              <label htmlFor="ra-name" className="block text-xs font-[600] text-[#475569]">
                 Name
               </label>
               <input
@@ -266,11 +266,11 @@ function RequestAccessForm() {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="Jane Smith"
-                className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+                className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#0F172A] outline-none transition placeholder:text-black/25 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label htmlFor="ra-email" className="block text-xs font-[600] text-[#4B4B4B]">
+              <label htmlFor="ra-email" className="block text-xs font-[600] text-[#475569]">
                 Work email
               </label>
               <input
@@ -281,11 +281,11 @@ function RequestAccessForm() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="jane@company.com"
-                className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+                className="mt-1 w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#0F172A] outline-none transition placeholder:text-black/25 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label htmlFor="ra-usecase" className="block text-xs font-[600] text-[#4B4B4B]">
+              <label htmlFor="ra-usecase" className="block text-xs font-[600] text-[#475569]">
                 What are you building? <span className="font-[400] text-black/30">(optional)</span>
               </label>
               <textarea
@@ -295,7 +295,7 @@ function RequestAccessForm() {
                 value={form.useCase}
                 onChange={handleChange}
                 placeholder="e.g. Auto-generating client reports from our CRM"
-                className="mt-1 w-full resize-none rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#1A1A1A] outline-none transition placeholder:text-black/25 focus:border-[#7D6B58] focus:ring-1 focus:ring-[#7D6B58]"
+                className="mt-1 w-full resize-none rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm text-[#0F172A] outline-none transition placeholder:text-black/25 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -306,7 +306,7 @@ function RequestAccessForm() {
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full rounded-xl bg-[#1A1A1A] px-6 py-3 text-sm font-[600] text-white transition hover:bg-[#374151] disabled:opacity-50"
+              className="w-full rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-[600] text-white transition hover:bg-[#1E293B] disabled:opacity-50"
             >
               {status === 'submitting' ? 'Submitting\u2026' : 'Request early access'}
             </button>
@@ -327,18 +327,18 @@ export default function DevelopersPage() {
 
       {/* Hero */}
       <div className="mb-14">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
           Developer API
         </p>
-        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[#1A1A1A] sm:text-4xl">
+        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[#0F172A] sm:text-4xl">
           Render readable PDFs<br className="hidden sm:block" /> from wide tables
         </h1>
-        <p className="mt-4 text-base leading-relaxed text-[#4B4B4B]">
+        <p className="mt-4 text-base leading-relaxed text-[#475569]">
           Use the fitforpdf API to generate structured PDFs from Excel exports, CSV datasets,
           and database tables. Built specifically for wide business tables that break normal PDF rendering.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <code className="rounded-lg bg-[#F5F3EE] px-3 py-2 text-sm text-[#1A1A1A]">
+          <code className="rounded-lg bg-[#F8FAFC] px-3 py-2 text-sm text-[#0F172A]">
             {BASE_URL}
           </code>
           <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-[500] text-emerald-700">
@@ -349,13 +349,13 @@ export default function DevelopersPage() {
 
       {/* Why fitforpdf exists */}
       <section className="mb-14 border-t border-black/10 pt-10">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
           Why fitforpdf exists
         </p>
-        <h2 className="mb-4 text-xl font-[700] leading-tight text-[#1A1A1A]">
+        <h2 className="mb-4 text-xl font-[700] leading-tight text-[#0F172A]">
           Wide tables break every PDF renderer
         </h2>
-        <div className="space-y-3 text-sm leading-relaxed text-[#4B4B4B]">
+        <div className="space-y-3 text-sm leading-relaxed text-[#475569]">
           <p>
             Standard PDF libraries — wkhtmltopdf, Puppeteer, ReportLab — were built for documents,
             not data. Feed them a 20-column CRM export and you get cut-off columns, microscopic text,
@@ -371,17 +371,17 @@ export default function DevelopersPage() {
 
       {/* Typical API use cases */}
       <section className="mb-14 border-t border-black/10 pt-10">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
           Typical use cases
         </p>
-        <h2 className="mb-6 text-xl font-[700] leading-tight text-[#1A1A1A]">
+        <h2 className="mb-6 text-xl font-[700] leading-tight text-[#0F172A]">
           Built for SaaS products and data-heavy workflows
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {USE_CASES.map((uc) => (
-            <div key={uc.label} className="rounded-xl border border-black/8 bg-[#FAFAF8] px-4 py-4">
-              <p className="text-sm font-[650] text-[#1A1A1A]">{uc.label}</p>
-              <p className="mt-1 text-xs leading-relaxed text-[#6B6B6B]">{uc.desc}</p>
+            <div key={uc.label} className="rounded-xl border border-black/8 bg-[#F8FAFC] px-4 py-4">
+              <p className="text-sm font-[650] text-[#0F172A]">{uc.label}</p>
+              <p className="mt-1 text-xs leading-relaxed text-[#64748B]">{uc.desc}</p>
             </div>
           ))}
         </div>
@@ -389,23 +389,23 @@ export default function DevelopersPage() {
 
       {/* What makes fitforpdf different */}
       <section className="mb-14 border-t border-black/10 pt-10">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
           What makes fitforpdf different
         </p>
-        <h2 className="mb-6 text-xl font-[700] leading-tight text-[#1A1A1A]">
+        <h2 className="mb-6 text-xl font-[700] leading-tight text-[#0F172A]">
           Designed around the wide-table problem
         </h2>
         <div className="space-y-4">
           {DIFFERENTIATORS.map((d) => (
             <div key={d.label} className="flex gap-3">
-              <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#F5F3EE]">
-                <svg className="h-3 w-3 text-[#7D6B58]" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+              <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#F8FAFC]">
+                <svg className="h-3 w-3 text-[#64748B]" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-[650] text-[#1A1A1A]">{d.label}</p>
-                <p className="mt-0.5 text-sm leading-relaxed text-[#4B4B4B]">{d.desc}</p>
+                <p className="text-sm font-[650] text-[#0F172A]">{d.label}</p>
+                <p className="mt-0.5 text-sm leading-relaxed text-[#475569]">{d.desc}</p>
               </div>
             </div>
           ))}
@@ -414,8 +414,8 @@ export default function DevelopersPage() {
 
       {/* Quick start */}
       <section className="mb-12 border-t border-black/10 pt-10">
-        <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Quick start</h2>
-        <p className="mb-4 text-sm text-[#4B4B4B]">
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Quick start</h2>
+        <p className="mb-4 text-sm text-[#475569]">
           Generate a PDF in one command:
         </p>
         <CodeBlock>{`curl -X POST \\
@@ -427,16 +427,16 @@ export default function DevelopersPage() {
 
       {/* Authentication */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Authentication</h2>
-        <p className="mb-4 text-sm text-[#4B4B4B]">
-          Pass your API key in the <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">X-FITFORPDF-KEY</code> header.
-          Keys are prefixed <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">ffp_live_</code> and
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Authentication</h2>
+        <p className="mb-4 text-sm text-[#475569]">
+          Pass your API key in the <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">X-FITFORPDF-KEY</code> header.
+          Keys are prefixed <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">ffp_live_</code> and
           should be kept server-side only.
         </p>
         <CodeBlock>{`curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
   ${BASE_URL}/quota`}</CodeBlock>
-        <p className="mt-3 text-xs text-[#7D6B58]">
-          <a href="#request-access" className="underline underline-offset-2 hover:text-[#1A1A1A]">
+        <p className="mt-3 text-xs text-[#64748B]">
+          <a href="#request-access" className="underline underline-offset-2 hover:text-[#0F172A]">
             Request early access
           </a>{' '}
           to get your key.
@@ -445,7 +445,7 @@ export default function DevelopersPage() {
 
       {/* Endpoints */}
       <section className="mb-12">
-        <h2 className="mb-2 text-xl font-[650] text-[#1A1A1A]">Endpoints</h2>
+        <h2 className="mb-2 text-xl font-[650] text-[#0F172A]">Endpoints</h2>
         {ENDPOINTS.map((ep) => (
           <EndpointCard key={ep.path} endpoint={ep} />
         ))}
@@ -453,26 +453,26 @@ export default function DevelopersPage() {
 
       {/* Render options */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Render options</h2>
-        <p className="mb-4 text-sm text-[#4B4B4B]">
-          Pass as a JSON string in the <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">options</code> form field.
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Render options</h2>
+        <p className="mb-4 text-sm text-[#475569]">
+          Pass as a JSON string in the <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">options</code> form field.
         </p>
         <div className="overflow-x-auto rounded-xl border border-black/10">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-black/10 bg-[#FAFAF8]">
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Key</th>
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Type</th>
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Values</th>
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Default</th>
+              <tr className="border-b border-black/10 bg-[#F8FAFC]">
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Key</th>
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Type</th>
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Values</th>
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Default</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
               {RENDER_OPTIONS.map((opt) => (
                 <tr key={opt.key}>
                   <td className="px-4 py-2"><code className="text-[13px]">{opt.key}</code></td>
-                  <td className="px-4 py-2 text-[#6B6B6B]">{opt.type}</td>
-                  <td className="px-4 py-2 text-[#6B6B6B]">{opt.values}</td>
+                  <td className="px-4 py-2 text-[#64748B]">{opt.type}</td>
+                  <td className="px-4 py-2 text-[#64748B]">{opt.values}</td>
                   <td className="px-4 py-2"><code className="text-[13px]">{opt.def}</code></td>
                 </tr>
               ))}
@@ -483,23 +483,23 @@ export default function DevelopersPage() {
 
       {/* Response headers */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Response headers</h2>
-        <p className="mb-4 text-sm text-[#4B4B4B]">
-          Every <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">/v1/render</code> response includes these headers:
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Response headers</h2>
+        <p className="mb-4 text-sm text-[#475569]">
+          Every <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">/v1/render</code> response includes these headers:
         </p>
         <div className="overflow-x-auto rounded-xl border border-black/10">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-black/10 bg-[#FAFAF8]">
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Header</th>
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Description</th>
+              <tr className="border-b border-black/10 bg-[#F8FAFC]">
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Header</th>
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Description</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
               {RESPONSE_HEADERS.map((h) => (
                 <tr key={h.header}>
                   <td className="px-4 py-2"><code className="text-[13px]">{h.header}</code></td>
-                  <td className="px-4 py-2 text-[#6B6B6B]">{h.desc}</td>
+                  <td className="px-4 py-2 text-[#64748B]">{h.desc}</td>
                 </tr>
               ))}
             </tbody>
@@ -509,24 +509,24 @@ export default function DevelopersPage() {
 
       {/* Rate limiting */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Rate limiting</h2>
-        <p className="text-sm text-[#4B4B4B]">
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Rate limiting</h2>
+        <p className="text-sm text-[#475569]">
           <strong>60 requests per minute</strong> per API key.
           Rate limit state is returned in headers:{' '}
-          <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">X-RateLimit-Limit</code>,{' '}
-          <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">X-RateLimit-Remaining</code>, and{' '}
-          <code className="rounded bg-[#F5F3EE] px-1.5 py-0.5 text-[13px]">Retry-After</code> (on 429).
+          <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">X-RateLimit-Limit</code>,{' '}
+          <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">X-RateLimit-Remaining</code>, and{' '}
+          <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">Retry-After</code> (on 429).
           Maximum 50 columns and 5,000 rows per request.
         </p>
-        <p className="mt-3 text-xs text-[#7D6B58]">
+        <p className="mt-3 text-xs text-[#64748B]">
           Designed for business reporting exports.
         </p>
       </section>
 
       {/* Error codes */}
       <section className="mb-14 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#1A1A1A]">Error codes</h2>
-        <p className="mb-4 text-sm text-[#4B4B4B]">
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Error codes</h2>
+        <p className="mb-4 text-sm text-[#475569]">
           All errors use a standard envelope:
         </p>
         <CodeBlock>{`{
@@ -539,10 +539,10 @@ export default function DevelopersPage() {
         <div className="mt-4 overflow-x-auto rounded-xl border border-black/10">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-black/10 bg-[#FAFAF8]">
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">HTTP</th>
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Code</th>
-                <th className="px-4 py-2 font-[600] text-[#1A1A1A]">Description</th>
+              <tr className="border-b border-black/10 bg-[#F8FAFC]">
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">HTTP</th>
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Code</th>
+                <th className="px-4 py-2 font-[600] text-[#0F172A]">Description</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
@@ -550,7 +550,7 @@ export default function DevelopersPage() {
                 <tr key={e.code}>
                   <td className="px-4 py-2 font-[500]">{e.http}</td>
                   <td className="px-4 py-2"><code className="text-[13px]">{e.code}</code></td>
-                  <td className="px-4 py-2 text-[#6B6B6B]">{e.desc}</td>
+                  <td className="px-4 py-2 text-[#64748B]">{e.desc}</td>
                 </tr>
               ))}
             </tbody>
@@ -560,20 +560,20 @@ export default function DevelopersPage() {
 
       {/* GitHub examples */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <div className="flex items-start gap-4 rounded-xl border border-black/8 bg-[#FAFAF8] px-5 py-5">
-          <svg className="mt-0.5 h-6 w-6 flex-shrink-0 text-[#1A1A1A]" viewBox="0 0 24 24" fill="currentColor">
+        <div className="flex items-start gap-4 rounded-xl border border-black/8 bg-[#F8FAFC] px-5 py-5">
+          <svg className="mt-0.5 h-6 w-6 flex-shrink-0 text-[#0F172A]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
           </svg>
           <div className="flex-1">
-            <p className="text-sm font-[650] text-[#1A1A1A]">GitHub examples</p>
-            <p className="mt-1 text-sm leading-relaxed text-[#4B4B4B]">
+            <p className="text-sm font-[650] text-[#0F172A]">GitHub examples</p>
+            <p className="mt-1 text-sm leading-relaxed text-[#475569]">
               Working API examples in Node.js and Python, plus the full OpenAPI 3.1 spec.
             </p>
             <a
               href="https://github.com/Togetheart/fitforpdf-api-examples"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-4 py-2 text-xs font-[600] text-[#1A1A1A] transition hover:bg-[#F5F3EE]"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-4 py-2 text-xs font-[600] text-[#0F172A] transition hover:bg-[#F8FAFC]"
             >
               View API examples on GitHub
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
@@ -586,10 +586,10 @@ export default function DevelopersPage() {
 
       {/* Integrate in minutes callout */}
       <div className="mb-6 text-center">
-        <p className="text-xs font-[650] uppercase tracking-[0.12em] text-[#7D6B58]">
+        <p className="text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
           Integrate in minutes.
         </p>
-        <p className="mt-1 text-sm text-[#4B4B4B]">
+        <p className="mt-1 text-sm text-[#475569]">
           One endpoint, one file upload, one PDF back.
         </p>
       </div>

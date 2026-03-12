@@ -14,7 +14,7 @@ export function PillToggle({ options, value, onChange, size = 'md' }) {
 
   return (
     <div
-      className="relative inline-grid grid-cols-2 rounded-full bg-[#3a3a3c] p-1"
+      className="relative inline-grid grid-cols-2 rounded-full bg-[#0F172A] p-1"
     >
       {/* Sliding indicator */}
       <div
@@ -78,7 +78,7 @@ export function PaygCard({ pack, onBuy }) {
       {/* Badge — centered above */}
       {pack.badge ? (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-          <span className="inline-flex items-center rounded-full bg-[#1A1A1A] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm whitespace-nowrap">
+          <span className="inline-flex items-center rounded-full bg-[#0F172A] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm whitespace-nowrap">
             {pack.badge}
           </span>
         </div>
@@ -137,7 +137,7 @@ export function PaygCard({ pack, onBuy }) {
               'bg-[#F3F4F6]',
             )}>
               <Check
-                className="h-2.5 w-2.5 text-[#1A1A1A]"
+                className="h-2.5 w-2.5 text-[#0F172A]"
                 strokeWidth={3}
               />
             </span>
@@ -224,7 +224,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
         {PRICING_PAGE_COPY.proFeatures.map((feat) => (
           <li key={feat} className="flex items-center gap-2.5">
             <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#F3F4F6]">
-              <Check className="h-2.5 w-2.5 text-[#1A1A1A]" strokeWidth={3} />
+              <Check className="h-2.5 w-2.5 text-[#0F172A]" strokeWidth={3} />
             </span>
             <span className="text-black font-medium">{feat}</span>
           </li>
@@ -279,7 +279,7 @@ export function ProApiCard() {
         {PRICING_PAGE_COPY.proApiFeatures.map((feat) => (
           <li key={feat} className="flex items-center gap-2.5">
             <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#F3F4F6]">
-              <Check className="h-2.5 w-2.5 text-[#1A1A1A]" strokeWidth={3} />
+              <Check className="h-2.5 w-2.5 text-[#0F172A]" strokeWidth={3} />
             </span>
             <span className="text-muted">{feat}</span>
           </li>

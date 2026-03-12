@@ -26,7 +26,7 @@ const MINI_COMPARISON_ROWS = [
   ['Broken page flow',     'Clean pagination'],
 ];
 
-const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#1A1A1A]/20 bg-white text-[#1A1A1A] hover:border-[#1A1A1A]/40 hover:bg-[#1A1A1A]/5';
+const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#0F172A]/20 bg-white text-[#0F172A] hover:border-[#0F172A]/40 hover:bg-[#0F172A]/5';
 
 const FEATURE_ICONS = {
   overview: (
@@ -70,12 +70,12 @@ const FEATURE_ICONS = {
 };
 
 const FEATURE_ICON_COLORS = {
-  overview:   'text-sky-500',
-  columns:    'text-indigo-600',
-  pin:        'text-teal-500',
-  pagination: 'text-green-500',
-  wand:       'text-amber-500',
-  link:       'text-red-500',
+  overview:   'text-blue-600',
+  columns:    'text-blue-500',
+  pin:        'text-sky-500',
+  pagination: 'text-blue-400',
+  wand:       'text-sky-400',
+  link:       'text-blue-300',
 };
 
 const COMPARISON_ROWS = [
@@ -143,7 +143,7 @@ export default function Page() {
             <a
               href="#generate"
               onClick={handleHeroGenerateClick}
-              className="inline-flex h-12 items-center justify-center rounded-full bg-[#1A1A1A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-[#0F172A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80"
             >
               Upload a file
             </a>
@@ -165,12 +165,12 @@ export default function Page() {
           <div className="hero-headline-line mx-auto w-full max-w-[540px] overflow-hidden rounded-xl border border-black/10 text-sm">
             <div className="grid grid-cols-2 divide-x divide-black/10">
               <div className="bg-black/[0.02] px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-black/40">Excel export</div>
-              <div className="px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A]">fitforpdf</div>
+              <div className="px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-[#0F172A]">fitforpdf</div>
             </div>
             {MINI_COMPARISON_ROWS.map(([before, after]) => (
               <div key={before} className="grid grid-cols-2 divide-x divide-black/[0.06] border-t border-black/[0.06]">
                 <div className="bg-black/[0.02] px-4 py-2.5 text-black/40 line-through decoration-black/20">{before}</div>
-                <div className="px-4 py-2.5 font-[500] text-[#1A1A1A]">{after}</div>
+                <div className="px-4 py-2.5 font-[500] text-[#0F172A]">{after}</div>
               </div>
             ))}
           </div>
@@ -281,7 +281,7 @@ export default function Page() {
               <p className="text-sm font-[600] uppercase tracking-[0.06em] text-emerald-600">Perfect for</p>
               <ul className="space-y-2.5">
                 {LANDING_COPY.whoThisIsForPerfect.map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-[#1A1A1A]">
+                  <li key={item} className="flex items-center gap-2.5 text-[#0F172A]">
                     <span className="flex-none text-emerald-500" aria-hidden="true">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
@@ -335,15 +335,15 @@ export default function Page() {
                 <tr className="border-b border-black/10 bg-black/[0.025]">
                   <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Feature</th>
                   <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Excel PDF Export</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#1A1A1A] lg:px-6">fitforpdf</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#0F172A] lg:px-6">fitforpdf</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/[0.05]">
                 {COMPARISON_ROWS.map(([feature, excel, fitforpdf], i) => (
                   <tr key={feature} className={i % 2 === 1 ? 'bg-black/[0.015]' : ''}>
-                    <td className="px-5 py-3.5 text-sm font-[500] text-[#1A1A1A] lg:px-6">{feature}</td>
+                    <td className="px-5 py-3.5 text-sm font-[500] text-[#0F172A] lg:px-6">{feature}</td>
                     <td className="px-5 py-3.5 text-sm text-black/40 lg:px-6">{excel}</td>
-                    <td className="px-5 py-3.5 text-sm font-[500] text-[#1A1A1A] lg:px-6">{fitforpdf}</td>
+                    <td className="px-5 py-3.5 text-sm font-[500] text-[#0F172A] lg:px-6">{fitforpdf}</td>
                   </tr>
                 ))}
               </tbody>
@@ -425,7 +425,7 @@ export default function Page() {
           </div>
           <a
             href="/privacy"
-            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#1A1A1A]/20 bg-white text-[#1A1A1A] hover:border-[#1A1A1A]/40 hover:bg-[#1A1A1A]/5"
+            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#0F172A]/20 bg-white text-[#0F172A] hover:border-[#0F172A]/40 hover:bg-[#0F172A]/5"
           >
             {LANDING_COPY.privacyStripCta}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -472,7 +472,7 @@ export default function Page() {
             {LANDING_COPY.whoUsesItems.map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-black/10 bg-white px-5 py-2 text-sm font-[500] text-[#1A1A1A]"
+                className="rounded-full border border-black/10 bg-white px-5 py-2 text-sm font-[500] text-[#0F172A]"
               >
                 {item}
               </span>

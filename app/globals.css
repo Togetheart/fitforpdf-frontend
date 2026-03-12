@@ -24,16 +24,16 @@
  * These vars are consumed by Tailwind config and glass system.
  */
 :root {
-  --color-accent: #1A1A1A;
-  --color-accent-hover: #374151;
-  --color-text: #1A1A1A;
-  --color-muted: #7D6B58;
+  --color-accent: #0F172A;
+  --color-accent-hover: #1E293B;
+  --color-text: #0F172A;
+  --color-muted: #64748B;
   --color-border: rgba(0, 0, 0, 0.10);
   --color-bg: #FFFFFF;
   --color-bg-hero: #FAF8F5;
-  --color-cta-bg: #1A1A1A;
+  --color-cta-bg: #2563EB;
   --color-cta-text: #FFFFFF;
-  --color-cta-hover: #374151;
+  --color-cta-hover: #1D4ED8;
   --color-badge-free: #F3F4F6;
   --color-badge-hot: #FEF3C7;
   --radius-base: 12px;
@@ -118,14 +118,14 @@
     background:
       radial-gradient(
         circle at 16% 8%,
-        rgba(26, 26, 26, 0.06) 0%,
-        rgba(26, 26, 26, 0.03) 34%,
+        rgba(15, 23, 42, 0.06) 0%,
+        rgba(15, 23, 42, 0.03) 34%,
         transparent 64%
       ),
       radial-gradient(
         circle at 86% 18%,
-        rgba(26, 26, 26, 0.04) 0%,
-        rgba(26, 26, 26, 0.02) 30%,
+        rgba(15, 23, 42, 0.04) 0%,
+        rgba(15, 23, 42, 0.02) 30%,
         transparent 64%
       ),
       radial-gradient(
@@ -390,17 +390,17 @@
   @keyframes heroGlowPulse {
     0% {
       filter: brightness(1);
-      text-shadow: 0 0 0.01px rgba(79, 70, 229, 0.08);
+      text-shadow: 0 0 0.01px rgba(37, 99, 235, 0.08);
     }
 
     50% {
       filter: brightness(1.12) saturate(1.04);
-      text-shadow: 0 0 22px rgba(245, 158, 11, 0.18);
+      text-shadow: 0 0 22px rgba(37, 99, 235, 0.18);
     }
 
     100% {
       filter: brightness(1);
-      text-shadow: 0 0 0.01px rgba(20, 184, 166, 0.08);
+      text-shadow: 0 0 0.01px rgba(15, 23, 42, 0.08);
     }
   }
 

@@ -12,21 +12,21 @@ export const metadata = {
 /* ── Main page ─────────────────────────────────────────── */
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1A]">
+    <div className="min-h-screen bg-white text-[#0F172A]">
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-hero pt-24 pb-10 sm:pt-32 sm:pb-14">
         {/* Subtle warm top glow */}
         <div className="relative mx-auto flex max-w-[1280px] flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-10 xl:px-12">
           {/* Page label */}
-          <p className="text-2xl font-[650] tracking-tight text-[#1A1A1A]">Pricing</p>
+          <p className="text-2xl font-[650] tracking-tight text-[#0F172A]">Pricing</p>
           {/* Headline */}
-          <h1 className="max-w-[20ch] text-[2.5rem] font-[650] leading-[1.06] tracking-tight text-[#1A1A1A] sm:text-5xl">
+          <h1 className="max-w-[20ch] text-[2.5rem] font-[650] leading-[1.06] tracking-tight text-[#0F172A] sm:text-5xl">
             <span className="block">{PRICING_PAGE_COPY.pageTitle}</span>
             <span className="block">{PRICING_PAGE_COPY.pageTitleAccent}</span>
           </h1>
           {/* Subtitle */}
-          <p className="max-w-[44ch] text-[1.0625rem] leading-relaxed text-[#6B6B6B]">
+          <p className="max-w-[44ch] text-[1.0625rem] leading-relaxed text-[#64748B]">
             {PRICING_PAGE_COPY.pageSubtitle}
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function PricingPage() {
 
       {/* ── FAQ ── */}
       <Section id="pricing-faq" index={3} bg="bg-hero" className="py-20 sm:py-28" maxWidth="max-w-[1200px]">
-        <h2 className="text-center text-3xl sm:text-[2.5rem] font-[700] tracking-[-0.018em] text-[#1A1A1A]">
+        <h2 className="text-center text-3xl sm:text-[2.5rem] font-[700] tracking-[-0.018em] text-[#0F172A]">
           {PRICING_PAGE_COPY.faqTitle}
         </h2>
         <div className="divide-y divide-black/10">

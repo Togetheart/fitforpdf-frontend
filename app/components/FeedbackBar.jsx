@@ -93,17 +93,17 @@ export default function FeedbackBar({ renderId, visible }) {
     >
       {phase === 'idle' && (
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-[#1A1A1A]">Happy with this PDF?</p>
+          <p className="text-sm font-medium text-[#0F172A]">Happy with this PDF?</p>
           <div className="flex gap-2">
             <button
               onClick={() => submit('up')}
-              className="rounded-full bg-[#1A1A1A] px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-[#374151]"
+              className="rounded-full bg-[#0F172A] px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-[#1E293B]"
             >
               👍 OK
             </button>
             <button
               onClick={() => setPhase('reasons')}
-              className="rounded-full border border-black/20 px-4 py-1.5 text-sm font-semibold text-[#1A1A1A] transition hover:bg-black/5"
+              className="rounded-full border border-black/20 px-4 py-1.5 text-sm font-semibold text-[#0F172A] transition hover:bg-black/5"
             >
               👎 Issue
             </button>
@@ -113,13 +113,13 @@ export default function FeedbackBar({ renderId, visible }) {
 
       {phase === 'reasons' && (
         <div className="space-y-2.5">
-          <p className="text-sm font-medium text-[#1A1A1A]">What went wrong?</p>
+          <p className="text-sm font-medium text-[#0F172A]">What went wrong?</p>
           <div className="flex flex-wrap gap-2">
             {REASONS.map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => key === 'other' ? setPhase('comment') : submit('down', key)}
-                className="rounded-full border border-black/15 px-3 py-1 text-xs font-medium text-[#1A1A1A] transition hover:bg-black/5"
+                className="rounded-full border border-black/15 px-3 py-1 text-xs font-medium text-[#0F172A] transition hover:bg-black/5"
               >
                 {label}
               </button>
@@ -130,25 +130,25 @@ export default function FeedbackBar({ renderId, visible }) {
 
       {phase === 'comment' && (
         <div className="space-y-2.5">
-          <p className="text-sm font-medium text-[#1A1A1A]">Tell us more:</p>
+          <p className="text-sm font-medium text-[#0F172A]">Tell us more:</p>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value.slice(0, 140))}
             placeholder="Max 140 characters"
             rows={2}
-            className="w-full resize-none rounded-xl border border-black/10 bg-black/[0.03] px-3 py-2 text-sm text-[#1A1A1A] placeholder-black/30 outline-none focus:border-black/20"
+            className="w-full resize-none rounded-xl border border-black/10 bg-black/[0.03] px-3 py-2 text-sm text-[#0F172A] placeholder-black/30 outline-none focus:border-black/20"
           />
           <div className="flex justify-end gap-2">
             <button
               onClick={() => setPhase('reasons')}
-              className="rounded-full px-3 py-1 text-xs text-[#7D6B58] hover:text-[#1A1A1A]"
+              className="rounded-full px-3 py-1 text-xs text-[#64748B] hover:text-[#0F172A]"
             >
               Back
             </button>
             <button
               disabled={!comment.trim()}
               onClick={() => submit('down', 'other', comment.trim())}
-              className="rounded-full bg-[#1A1A1A] px-4 py-1 text-xs font-semibold text-white disabled:opacity-30 hover:bg-[#374151]"
+              className="rounded-full bg-[#0F172A] px-4 py-1 text-xs font-semibold text-white disabled:opacity-30 hover:bg-[#1E293B]"
             >
               Send
             </button>
@@ -157,15 +157,15 @@ export default function FeedbackBar({ renderId, visible }) {
       )}
 
       {phase === 'submitting' && (
-        <p className="text-center text-sm text-[#7D6B58]">Sending…</p>
+        <p className="text-center text-sm text-[#64748B]">Sending…</p>
       )}
 
       {phase === 'thanks' && (
-        <p className="text-center text-sm font-semibold text-[#1A1A1A]">Thank you! 🙏</p>
+        <p className="text-center text-sm font-semibold text-[#0F172A]">Thank you! 🙏</p>
       )}
 
       {phase === 'already_sent' && (
-        <p className="text-center text-sm text-[#7D6B58]">Already sent ✓</p>
+        <p className="text-center text-sm text-[#64748B]">Already sent ✓</p>
       )}
     </div>
   );
