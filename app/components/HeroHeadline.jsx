@@ -43,12 +43,12 @@ export default function HeroHeadline() {
     <>
     <div className="hero-headline-line flex justify-center mb-4">
       <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-1 text-xs font-[600] uppercase tracking-[0.08em] text-black/50">
-        Rendering engine for wide business tables
+        Table rendering engine
       </span>
     </div>
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
       <span className="hero-headline-line block">
-        <span className="text-slate-900">[</span>
+        <span className="text-[#2563EB]">[&nbsp;</span>
         <span
           ref={accentRef}
           data-testid="hero-headline-accent"
@@ -57,7 +57,7 @@ export default function HeroHeadline() {
         >
           Readable PDFs
         </span>
-        <span className="text-slate-900">]</span>
+        <span className="text-[#2563EB]">&nbsp;]</span>
       </span>
       <span className="hero-headline-line block text-slate-900">
         from wide Excel tables.
