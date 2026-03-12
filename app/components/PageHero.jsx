@@ -30,7 +30,8 @@ export default function PageHero({
   return (
     <section
       data-testid={heroTestId}
-      className={`relative overflow-hidden ${height} ${className}`}
+      className={`relative ${height} ${className}`}
+      style={{ overflowX: 'clip' }}
     >
       <HeroBackdrop variant={variant} height={height} />
       <div className={`relative z-10 mx-auto flex ${alignClass} ${contentMaxWidthClassName} flex-col gap-6 px-4 py-16 sm:px-6 lg:px-10 xl:px-12 ${contentClassName}`}>

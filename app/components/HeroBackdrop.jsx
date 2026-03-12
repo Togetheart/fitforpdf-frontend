@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import HeroIllustration from './HeroIllustration';
 
 export default function HeroBackdrop({
   variant = 'home',
@@ -24,6 +25,7 @@ export default function HeroBackdrop({
           className={`hero-bg-gradients hero-bg-gradients--${variant}`}
         />
       </div>
+      {variant === 'home' && <HeroIllustration />}
     </div>
   );
 }

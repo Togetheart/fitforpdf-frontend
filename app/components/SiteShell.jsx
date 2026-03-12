@@ -9,7 +9,7 @@ export default function SiteShell({ children, variant = 'default' }) {
   const headerSpacerClass = 'h-16';
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative" style={{ overflowX: 'clip' }}>
       <AppBackdrop />
       <div className="relative z-10">
         <SiteHeader />
