@@ -205,6 +205,8 @@ function RequestAccessForm() {
           We&apos;ll send your API key to{' '}
           <strong className="font-[600] text-[#1A1A1A]">{form.email}</strong>{' '}
           once your access is approved.
+        </p>
+        <p className="mt-1 text-sm text-[#4B4B4B]">
           Early users get <strong className="font-[600] text-[#1A1A1A]">50 free exports</strong> to start.
         </p>
         <a

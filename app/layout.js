@@ -28,6 +28,9 @@ export const metadata = {
     description: SEO.home.description,
     images: [SEO.ogImage],
   },
+  icons: {
+    icon: '/fitforpdf-icon.svg',
+  },
 };
 
 /* ── Structured data (JSON-LD) ── */

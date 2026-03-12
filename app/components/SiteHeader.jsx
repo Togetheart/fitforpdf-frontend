@@ -41,7 +41,17 @@ export default function SiteHeader() {
         )}
       >
         <div className="mx-auto flex w-full max-w-[1520px] items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-12">
-          <a href="/" className="flex items-center" aria-label="fitforpdf — accueil">
+          <a href="/" className="flex items-center gap-2" aria-label="fitforpdf — accueil">
+            <img
+              src="/fitforpdf-icon.svg"
+              alt=""
+              width={48}
+              height={44}
+              className={cn(
+                'object-contain transition-all duration-300',
+                scrolled ? 'h-6 w-6' : 'h-7 w-7',
+              )}
+            />
             <img
               src="/fitforpdf@2x.webp"
               alt="fitforpdf"
