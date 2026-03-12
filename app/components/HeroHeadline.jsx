@@ -6,6 +6,12 @@ import { gsap } from 'gsap';
 
 export default function HeroHeadline() {
   const accentRef = useRef(null);
+  const bracketRowRef = useRef(null);
+  const bracketLRef = useRef(null);
+  const bracketRRef = useRef(null);
+  const containerRef = useRef(null);
+  const fBarsRef = useRef(null);
+  const initialWidthRef = useRef(null);
 
   const hasWindow = typeof window !== 'undefined';
   const reducedMotion =
@@ -13,6 +19,7 @@ export default function HeroHeadline() {
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
 
+  // ── Gradient shimmer animation (UNCHANGED) ──
   useEffect(() => {
     if (!hasWindow || reducedMotion) return;
 
@@ -39,16 +46,157 @@ export default function HeroHeadline() {
     };
   }, [hasWindow, reducedMotion]);
 
+  // ── Scroll-driven animation ──
+  // Phase 1: bracket squeeze + text clip + [F] logo reveal  (scrollY 10–130)
+  // Phase 2: hero content fades out, comparison fades in     (scrollY 200–500)
+  // Phase 3: everything fades out                            (scrollY 550–750)
+  useEffect(() => {
+    if (!hasWindow || reducedMotion) return;
+
+    const row = bracketRowRef.current;
+    const container = containerRef.current;
+    if (!row || !container) return;
+    const text = container;
+
+    const bL = bracketLRef.current;
+    const bR = bracketRRef.current;
+    const fBars = fBarsRef.current;
+    if (!bL || !bR || !fBars) return;
+
+    // External elements driven by phase 2
+    const fadeables = Array.from(document.querySelectorAll('[data-hero-fadeable]'));
+    const comparison = document.querySelector('[data-hero-comparison]');
+    const heroContent = document.querySelector('[data-testid="hero-section"] > .relative.z-10');
+    let bgLines = null;
+
+    // Clear leftover styles from StrictMode double-mount
+    text.style.clipPath = '';
+    bL.style.transform = '';
+    bR.style.transform = '';
+    fBars.style.opacity = '0';
+
+    if (comparison) {
+      comparison.style.opacity = '0';
+      comparison.style.transform = 'translateY(16px)';
+    }
+    for (const el of fadeables) {
+      el.style.opacity = '';
+      el.style.transform = '';
+    }
+    // Half the container width = distance each bracket travels to meet at center
+    const half = container.offsetWidth / 2;
+
+    let current = 0;   // phase 1 lerp
+    let target = 0;
+    let phase2Current = 0;
+    let rafId = 0;
+    let running = true;
+
+    const tick = () => {
+      if (!running) return;
+
+      const sy = window.scrollY;
+
+      // ─── Phase 1: bracket squeeze (UNTOUCHED logic) ───────────────────
+      target = Math.max(0, Math.min(1, (sy - 10) / 120));
+      current += (target - current) * 0.1;
+      if (Math.abs(current - target) < 0.001) current = target;
+
+      if (current < 0.001) {
+        text.style.clipPath = '';
+        bL.style.transform = '';
+        bR.style.transform = '';
+        bL.style.opacity = '';
+        bR.style.opacity = '';
+        fBars.style.opacity = '0';
+      } else {
+        const clip = current * 50;
+        text.style.clipPath = `inset(0 ${clip}% 0 ${clip}%)`;
+        bL.style.transform = `translateX(${half * current}px)`;
+        bR.style.transform = `translateX(${-half * current}px)`;
+
+        // Logo fades in during last 30%, hero brackets fade out
+        const logoT = current > 0.7 ? (current - 0.7) / 0.3 : 0;
+        fBars.style.opacity = String(logoT);
+        bL.style.opacity = String(1 - logoT);
+        bR.style.opacity = String(1 - logoT);
+      }
+
+      // ─── Phase 2: comparison reveal ───────────────────────────────────
+      const p2Target = Math.max(0, Math.min(1, (sy - 200) / 300));
+      phase2Current += (p2Target - phase2Current) * 0.08;
+      if (Math.abs(phase2Current - p2Target) < 0.001) phase2Current = p2Target;
+
+      // Fade out subtitle, fade in comparison (CTA stays visible)
+      for (const el of fadeables) {
+        // Kill CSS animation fill-mode that overrides inline opacity
+        if (phase2Current > 0.001) {
+          el.style.animation = 'none';
+        } else {
+          el.style.animation = '';
+        }
+        el.style.opacity = String(1 - phase2Current);
+        el.style.transform = `translateY(${-16 * phase2Current}px)`;
+      }
+      if (comparison) {
+        comparison.style.opacity = String(phase2Current);
+        comparison.style.transform = `translateY(${16 * (1 - phase2Current)}px)`;
+      }
+      // Fade out background lines as comparison appears
+      if (!bgLines) bgLines = document.querySelector('[data-hero-bg-lines]');
+      if (bgLines) {
+        bgLines.style.opacity = String(1 - phase2Current);
+      }
+      // Lift hero content up to make room for comparison below viewport edge
+      if (heroContent) {
+        if (phase2Current > 0.001) {
+          heroContent.style.transform = `translateY(${-160 * phase2Current}px)`;
+        } else {
+          heroContent.style.transform = '';
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(rafId);
+      text.style.clipPath = '';
+      bL.style.transform = '';
+      bR.style.transform = '';
+      bL.style.opacity = '';
+      bR.style.opacity = '';
+      fBars.style.opacity = '0';
+      if (comparison) {
+        comparison.style.opacity = '0';
+        comparison.style.transform = '';
+      }
+      if (heroContent) {
+        heroContent.style.transform = '';
+      }
+      if (bgLines) {
+        bgLines.style.opacity = '';
+      }
+      for (const el of fadeables) {
+        el.style.opacity = '';
+        el.style.transform = '';
+        el.style.animation = '';
+      }
+    };
+  }, [hasWindow, reducedMotion]);
+
   return (
     <>
     <div className="hero-headline-line flex justify-center mb-4">
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-1 text-xs font-[600] uppercase tracking-[0.08em] text-black/50">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3.5 py-1 text-xs font-[600] uppercase tracking-[0.08em] text-[#2563EB]">
         Table rendering engine
       </span>
     </div>
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
       <span className="hero-headline-line block">
-        <span className="text-[#2563EB]">[&nbsp;</span>
         <span
           ref={accentRef}
           data-testid="hero-headline-accent"
@@ -57,10 +205,38 @@ export default function HeroHeadline() {
         >
           Readable PDFs
         </span>
-        <span className="text-[#2563EB]">&nbsp;]</span>
       </span>
-      <span className="hero-headline-line block text-slate-900">
-        from wide Excel tables.
+      <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
+        <span className="relative inline-flex items-stretch">
+          {/* Left bracket */}
+          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          </svg>
+          {/* Text container — clips on scroll */}
+          <span ref={containerRef} className="inline-block text-center whitespace-nowrap text-slate-900">
+            from wide Excel tables.
+          </span>
+          {/* Right bracket */}
+          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          </svg>
+          {/* Full [F] logo — appears at center when brackets close */}
+          <svg
+            ref={fBarsRef}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            width={48}
+            height={44}
+            viewBox="0 0 48 44"
+            aria-hidden="true"
+            style={{ opacity: 0 }}
+          >
+            <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M 41,2 L 46,2 L 46,42 L 41,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <rect x="11" y="8" width="26" height="5" rx="1.5" fill="#0F172A" />
+            <rect x="11" y="19" width="18" height="5" rx="1.5" fill="#2563EB" />
+            <rect x="11" y="30" width="11" height="5" rx="1.5" fill="#2563EB" opacity="0.4" />
+          </svg>
+        </span>
       </span>
     </h1>
     </>

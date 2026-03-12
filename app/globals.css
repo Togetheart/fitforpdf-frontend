@@ -109,32 +109,8 @@
 
   .hero-bg-gradients {
     position: absolute;
-    inset: -18%;
-    opacity: 0.78;
-    filter: blur(4px);
-    mix-blend-mode: soft-light;
-    animation: heroMeshA 22s ease-in-out infinite alternate;
+    inset: 0;
     border-radius: inherit;
-    background:
-      radial-gradient(
-        circle at 16% 8%,
-        rgba(15, 23, 42, 0.06) 0%,
-        rgba(15, 23, 42, 0.03) 34%,
-        transparent 64%
-      ),
-      radial-gradient(
-        circle at 86% 18%,
-        rgba(15, 23, 42, 0.04) 0%,
-        rgba(15, 23, 42, 0.02) 30%,
-        transparent 64%
-      ),
-      radial-gradient(
-        circle at 52% 96%,
-        rgba(15, 23, 42, 0.05) 0%,
-        rgba(15, 23, 42, 0) 46%
-      );
-    background-size: 160% 160%, 150% 150%, 200% 200%;
-    background-repeat: no-repeat;
   }
 
   .hero-bg-gradients--home,
@@ -411,6 +387,16 @@
 
     to {
       opacity: 1;
+    }
+  }
+
+  @keyframes heroDrift {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(3px);
     }
   }
 
