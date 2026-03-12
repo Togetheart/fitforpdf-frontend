@@ -192,7 +192,7 @@ export default function HeroHeadline() {
     <>
     <div className="hero-headline-line flex justify-center mb-4">
       <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3.5 py-1 text-xs font-[600] uppercase tracking-[0.08em] text-[#2563EB]">
-        Table rendering engine
+        Engine for wide tables
       </span>
     </div>
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
