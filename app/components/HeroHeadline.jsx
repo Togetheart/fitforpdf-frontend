@@ -48,6 +48,7 @@ export default function HeroHeadline() {
     </div>
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
       <span className="hero-headline-line block">
+        <span className="text-slate-900">[</span>
         <span
           ref={accentRef}
           data-testid="hero-headline-accent"
@@ -56,6 +57,7 @@ export default function HeroHeadline() {
         >
           Readable PDFs
         </span>
+        <span className="text-slate-900">]</span>
       </span>
       <span className="hero-headline-line block text-slate-900">
         from wide Excel tables.
