@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '../lib/cn.mjs';
 import Button from './ui/Button';
+import AnimatedLogo from './AnimatedLogo';
 
 const SCROLL_THRESHOLD = 16;
 
@@ -42,13 +43,9 @@ export default function SiteHeader() {
       >
         <div className="mx-auto flex w-full max-w-[1520px] items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-12">
           <a href="/" className="flex items-center gap-2" aria-label="fitforpdf — accueil">
-            <img
-              src="/fitforpdf-icon.svg"
-              alt=""
-              width={48}
-              height={44}
+            <AnimatedLogo
               className={cn(
-                'object-contain transition-all duration-300',
+                'transition-all duration-300',
                 scrolled ? 'h-6 w-6' : 'h-7 w-7',
               )}
             />
