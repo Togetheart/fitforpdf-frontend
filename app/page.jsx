@@ -20,12 +20,6 @@ import ProofShowcase from './components/ProofShowcase';
 
 import AnimatedShieldIcon from './components/AnimatedShieldIcon';
 
-const MINI_COMPARISON_ROWS = [
-  ['Cut-off columns',      'Grouped sections'],
-  ['Tiny unreadable text', 'Full-width readable columns'],
-  ['Broken page flow',     'Clean pagination'],
-];
-
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#0F172A]/20 bg-white text-[#0F172A] hover:border-[#0F172A]/40 hover:bg-[#0F172A]/5';
 
 const FEATURE_ICONS = {
@@ -121,66 +115,91 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <PageHero
-        heroTestId="hero-section"
-        variant="home"
-        align="center"
-        height="min-h-0 sm:min-h-screen"
-        title={<HeroHeadline />}
-        contentClassName="items-center gap-14 text-center"
-        contentMaxWidthClassName="max-w-[1360px]"
-        className="py-0 w-full"
-      >
-        {/* Primary pitch: subtitle + CTA */}
-        <div className="space-y-6">
+      {/* Scroll spacer — creates room for Apple-style sticky scroll sequence */}
+      <div style={{ height: 'calc(100vh + 900px)' }}>
+        <PageHero
+          heroTestId="hero-section"
+          variant="home"
+          align="center"
+          height="h-screen"
+          title={<HeroHeadline />}
+          contentClassName="items-center justify-center gap-10 text-center h-full !py-6"
+          contentMaxWidthClassName="max-w-[1360px]"
+          className="py-0 w-full sticky top-0"
+        >
+          {/* Subtitle — stays visible throughout */}
           <p className="hero-headline-line w-full max-w-[1020px] mx-auto text-lg text-slate-900">
             <span className="block">{LANDING_COPY.heroSubheadlineL1}</span>
             <span className="block">{LANDING_COPY.heroSubheadlineL2}</span>
           </p>
 
-          {/* Hero CTA */}
-          <div className="hero-headline-line flex flex-col items-center gap-2">
-            <a
-              href="#generate"
-              onClick={handleHeroGenerateClick}
-              className="inline-flex h-12 items-center justify-center rounded-full bg-[#0F172A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80"
-            >
-              Upload a file
-            </a>
+          {/* Hero CTA — stays visible throughout */}
+          <div className="hero-headline-line flex flex-col items-center gap-3">
+            <div className="flex items-center gap-3">
+              <a
+                href="#generate"
+                onClick={handleHeroGenerateClick}
+                className="inline-flex h-12 items-center justify-center rounded-full bg-[#0F172A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80"
+              >
+                Upload a file
+              </a>
+              <a
+                href="/developers"
+                className="inline-flex h-12 items-center gap-1.5 justify-center rounded-full border border-[#0F172A]/15 bg-white px-6 text-sm font-semibold text-[#0F172A] transition duration-150 hover:border-[#0F172A]/30 hover:bg-[#0F172A]/[0.03]"
+              >
+                Get API
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
             <span className="text-xs text-black/40">3 free exports. No account required.</span>
           </div>
-        </div>
 
-        {/* Social proof zone — intentional breathing room */}
-        <div className="mt-14 space-y-5">
-          {/* Example anchor badge */}
-          <div className="hero-headline-line flex justify-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-sm font-[500] text-slate-600">
-              <span className="text-black/30">▸</span>
-              {LANDING_COPY.heroExample}
-            </span>
-          </div>
+          {/* Comparison reveal — fades in below CTA during scroll phase 2.
+               height:0 + overflow:visible = no layout impact, content renders visually */}
+          <div
+            data-hero-comparison
+            style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
+          >
+            <div className="flex flex-col items-center gap-4 pt-2">
+              <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-sm font-[500] text-slate-600">
+                <span className="text-black/30">&#9654;</span>
+                {LANDING_COPY.heroExample}
+              </span>
 
-          {/* Mini comparison */}
-          <div className="hero-headline-line mx-auto w-full max-w-[540px] overflow-hidden rounded-xl border border-black/10 text-sm">
-            <div className="grid grid-cols-2 divide-x divide-black/10">
-              <div className="bg-black/[0.02] px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-black/40">Excel export</div>
-              <div className="px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-[#0F172A]">fitforpdf</div>
-            </div>
-            {MINI_COMPARISON_ROWS.map(([before, after]) => (
-              <div key={before} className="grid grid-cols-2 divide-x divide-black/[0.06] border-t border-black/[0.06]">
-                <div className="bg-black/[0.02] px-4 py-2.5 text-black/40 line-through decoration-black/20">{before}</div>
-                <div className="px-4 py-2.5 font-[500] text-[#0F172A]">{after}</div>
+              <div className="w-full max-w-[540px] overflow-hidden rounded-xl border border-black/10 bg-white text-sm">
+                <div className="grid grid-cols-2 divide-x divide-black/10">
+                  <div className="bg-black/[0.02] px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-black/40">
+                    Excel export
+                  </div>
+                  <div className="px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-[#0F172A]">
+                    fitforpdf
+                  </div>
+                </div>
+                {[
+                  ['Cut-off columns',      'Grouped sections'],
+                  ['Tiny unreadable text', 'Full-width readable columns'],
+                  ['Broken page flow',     'Clean pagination'],
+                ].map(([before, after]) => (
+                  <div key={before} className="grid grid-cols-2 divide-x divide-black/[0.06] border-t border-black/[0.06]">
+                    <div className="bg-black/[0.02] px-4 py-2.5 text-black/40 line-through decoration-black/20">
+                      {before}
+                    </div>
+                    <div className="px-4 py-2.5 font-[500] text-[#0F172A]">
+                      {after}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Engine anchor */}
-          <p className="hero-headline-line text-xs text-black/25 tracking-wide">
-            Built on the fitforpdf rendering engine for wide business tables.
-          </p>
-        </div>
-      </PageHero>
+              <p className="text-xs text-black/25 tracking-wide">
+                Built on the fitforpdf rendering engine for wide business tables.
+              </p>
+            </div>
+          </div>
+        </PageHero>
+      </div>
 
       {/* Visual demo — moved before the upload for "proof first" flow */}
       <Section
@@ -370,35 +389,27 @@ export default function Page() {
         </div>
       </Section>
 
-      {/* Built for SaaS / API teaser */}
+      {/* API teaser — compact pointer to /developers */}
       <Section
         id="api-teaser"
         index={6}
         maxWidth="max-w-[860px]"
         bg="bg-hero"
-        className="py-10 sm:py-14"
+        className="py-6 sm:py-8"
       >
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-[650] tracking-tight text-black">
-            {LANDING_COPY.apiBlockTitle}
-          </h2>
-          <p className="text-base text-muted max-w-lg mx-auto">
-            {LANDING_COPY.apiBlockCopy}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
+          <p className="text-sm text-muted">
+            Need to integrate? <span className="font-[500] text-[#0F172A]">REST API available.</span>
           </p>
-          <p className="text-xs font-[500] text-black/35 tracking-wide">
-            {LANDING_COPY.apiBlockSpecs}
-          </p>
-          <div className="pt-2">
-            <a
-              href={LANDING_COPY.apiBlockCtaHref}
-              className={CTA_SECONDARY}
-            >
-              {LANDING_COPY.apiBlockCta}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
-          </div>
+          <a
+            href="/developers"
+            className="inline-flex items-center gap-1.5 text-sm font-[600] text-[#2563EB] hover:text-[#1d4ed8] transition"
+          >
+            View docs
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </Section>
 

@@ -92,7 +92,7 @@ export const LANDING_COPY = {
   apiBlockCopy:    'Plug fitforpdf into your product. Send tabular data via REST API, get a structured PDF back. Built for SaaS reporting, CRM exports, and database tables.',
   apiBlockSpecs:   '60 req/min · up to 50 columns · 5,000 rows',
   apiBlockCta:     'Get your API key',
-  apiBlockCtaHref: '/developers#request-access',
+  apiBlockCtaHref: '/developers',
 
   whoUsesTitle: 'Who uses fitforpdf',
   whoUsesItems: ['Consultants', 'Finance teams', 'SaaS reporting tools', 'Operations teams'],
