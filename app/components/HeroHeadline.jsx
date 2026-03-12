@@ -54,12 +54,11 @@ export default function HeroHeadline() {
           data-anim={reducedMotion ? 'off' : 'on'}
           className="hero-accent hero-accent--sections inline-block"
         >
-          Readable
+          Readable PDFs
         </span>
-        <span className="text-slate-900"> PDFs</span>
       </span>
       <span className="hero-headline-line block text-slate-900">
-        for wide Excel &amp; CSV tables.
+        from wide Excel tables.
       </span>
     </h1>
     </>
