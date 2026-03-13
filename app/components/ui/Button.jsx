@@ -9,9 +9,9 @@ const VARIANTS = {
   accent:
     'h-11 bg-accent text-white shadow-sm hover:bg-accent-hover active:scale-[0.99]',
   secondary:
-    'h-11 border border-slate-300 bg-white text-[#0F172A] hover:bg-slate-50',
+    'h-11 border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]',
   outline:
-    'h-11 border border-accent text-accent bg-white hover:bg-accent/5 active:scale-[0.99]',
+    'h-11 border border-[var(--color-border)] text-[var(--color-text)] bg-[var(--color-bg)] hover:bg-[var(--color-bg-hero)] active:scale-[0.99]',
 };
 
 export default function Button({
@@ -29,7 +29,7 @@ export default function Button({
     );
   }
   return (
-    <button className={classes} {...props}>
+    <button type="button" className={classes} {...props}>
       {children}
     </button>
   );

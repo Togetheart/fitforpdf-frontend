@@ -206,6 +206,8 @@ export default function ProofShowcase() {
   const cardRef = useRef(null);
   const leftLightboxRef = useRef(null);
   const rightLightboxRef = useRef(null);
+  const [beforeLoaded, setBeforeLoaded] = useState(false);
+  const [afterLoaded, setAfterLoaded] = useState(false);
 
   const config = FORMAT_CONFIGS[activeFormat];
   const currentTab = config.tabs[activeTab];
@@ -233,6 +235,15 @@ export default function ProofShowcase() {
     }
   }, [activeTab, activeFormat, config.tabs.length]);
 
+  // Reset loading states when format or tab changes
+  useEffect(() => {
+    setBeforeLoaded(false);
+  }, [activeFormat]);
+
+  useEffect(() => {
+    setAfterLoaded(false);
+  }, [activeFormat, activeTab]);
+
   function handleFormatChange(formatId) {
     setActiveFormat(formatId);
     setActiveTab(1);
@@ -241,7 +252,7 @@ export default function ProofShowcase() {
   return (
     <div className="w-full space-y-8">
       {/* Section heading */}
-      <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
+      <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
         See how fitforpdf transforms your file.
       </h2>
       <p className="text-center text-sm text-muted -mt-2">
@@ -255,7 +266,7 @@ export default function ProofShowcase() {
         role="radiogroup"
         aria-label="Source file type"
       >
-        <div className="inline-flex items-center rounded-full border border-black/[0.08] bg-black/[0.03] p-1 gap-1">
+        <div className="inline-flex items-center rounded-full border border-[var(--color-border)] bg-black/[0.03] p-1 gap-1">
           {FORMATS.map((formatId) => {
             const fmt = FORMAT_CONFIGS[formatId];
             const isActive = formatId === activeFormat;
@@ -268,13 +279,13 @@ export default function ProofShowcase() {
                 onClick={() => handleFormatChange(formatId)}
                 className={`flex items-center gap-2.5 rounded-full px-5 py-2.5 transition-all duration-200 ${
                   isActive
-                    ? 'bg-white shadow-[0_1px_4px_rgba(0,0,0,0.12)] border border-black/[0.06]'
+                    ? 'bg-[var(--color-bg)] shadow-[0_1px_4px_rgba(0,0,0,0.12)] border border-[var(--color-border)]'
                     : 'hover:bg-black/[0.03]'
                 }`}
               >
                 <span
                   className={`text-[11px] font-[650] uppercase tracking-[0.12em] transition-colors duration-200 ${
-                    isActive ? 'text-[#0F172A]' : 'text-black/35'
+                    isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'
                   }`}
                 >
                   {fmt.label}
@@ -289,7 +300,7 @@ export default function ProofShowcase() {
       <div
         ref={cardRef}
         data-testid="home-preview-card"
-        className="home-preview-float w-full rounded-2xl border border-black/10 bg-white p-4 md:p-8 shadow-sm transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
+        className="home-preview-float w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 md:p-8 shadow-sm transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
       >
         <div className="grid gap-6 lg:grid-cols-[38fr_62fr] xl:gap-8">
           {/* Left: Input (20%) */}
@@ -304,18 +315,22 @@ export default function ProofShowcase() {
                 transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1), opacity 600ms ease',
               }}
             >
-              <div className="mt-3 overflow-hidden rounded-lg border border-black/10">
+              <div className="mt-3 overflow-hidden rounded-lg border border-[var(--color-border)]">
                 <ImageLightbox
                   ref={leftLightboxRef}
                   src={config.beforeImage}
                   alt={config.beforeAlt}
                   className="block w-full"
                 >
+                  {!beforeLoaded && (
+                    <div className="aspect-[16/9] w-full animate-pulse rounded-lg bg-[var(--color-bg-hero)]" />
+                  )}
                   <img
                     src={config.beforeImage}
                     srcSet={config.beforeSrcSet}
                     alt={config.beforeAlt}
-                    className="h-auto w-full rounded-lg object-cover"
+                    className={`h-auto w-full rounded-lg object-cover${beforeLoaded ? '' : ' hidden'}`}
+                    onLoad={() => setBeforeLoaded(true)}
                   />
                 </ImageLightbox>
               </div>
@@ -327,7 +342,7 @@ export default function ProofShowcase() {
               <button
                 type="button"
                 onClick={() => leftLightboxRef.current?.open()}
-                className="mt-2 inline-flex items-center gap-1 text-[11px] text-muted/70 transition hover:text-black"
+                className="mt-2 inline-flex items-center gap-1 text-[11px] text-muted/70 transition hover:text-[var(--color-text)]"
               >
                 {config.sourceLinkLabel}
               </button>
@@ -371,6 +386,7 @@ export default function ProofShowcase() {
                     role="tab"
                     type="button"
                     aria-selected={i === activeTab}
+                    aria-controls="proof-tabpanel"
                     ref={el => tabRefs.current[i] = el}
                     onClick={() => setActiveTab(i)}
                     className="relative z-10 flex-1 text-center rounded-full px-2 py-2.5 sm:px-3 text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
@@ -388,6 +404,7 @@ export default function ProofShowcase() {
 
             {/* Active tab image */}
             <div
+              id="proof-tabpanel"
               role="tabpanel"
               aria-labelledby={`proof-tab-${currentTab.id}`}
             >
@@ -398,7 +415,7 @@ export default function ProofShowcase() {
                 transition: 'transform 600ms cubic-bezier(0.25,0.1,0.25,1) 100ms, opacity 600ms ease 100ms',
               }}
             >
-              <div className="proof-tab-image mt-3 overflow-hidden rounded-lg border border-black/10">
+              <div className="proof-tab-image mt-3 overflow-hidden rounded-lg border border-[var(--color-border)]">
                   <ImageLightbox
                     ref={rightLightboxRef}
                     src={currentTab.src}
@@ -408,11 +425,15 @@ export default function ProofShowcase() {
                     images={config.tabs.map((t) => ({ src: t.src, srcSet: t.srcSet, alt: t.alt, label: t.label }))}
                     imageIndex={activeTab}
                   >
+                    {!afterLoaded && (
+                      <div className="aspect-[16/9] w-full animate-pulse rounded-lg bg-[var(--color-bg-hero)]" />
+                    )}
                     <img
                       src={currentTab.src}
                       srcSet={currentTab.srcSet}
                       alt={currentTab.alt}
-                      className="h-auto w-full rounded-lg object-cover"
+                      className={`h-auto w-full rounded-lg object-cover${afterLoaded ? '' : ' hidden'}`}
+                      onLoad={() => setAfterLoaded(true)}
                     />
                   </ImageLightbox>
                 </div>
@@ -425,7 +446,7 @@ export default function ProofShowcase() {
               <button
                 type="button"
                 onClick={() => rightLightboxRef.current?.open()}
-                className="text-[11px] text-muted/70 transition hover:text-black"
+                className="text-[11px] text-muted/70 transition hover:text-[var(--color-text)]"
               >
                 View full document ↗
               </button>
@@ -436,13 +457,13 @@ export default function ProofShowcase() {
         {/* Feature strip — Apple style */}
         <div
           className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl sm:grid-cols-3"
-          style={{ backgroundColor: 'rgba(0,0,0,0.06)' }}
+          style={{ backgroundColor: 'var(--color-border)' }}
         >
           {FEATURES.map((f) => (
             <div
               key={f.title}
               className="flex flex-col items-center gap-3 px-4 py-5 text-center"
-              style={{ backgroundColor: '#FAF8F5' }}
+              style={{ backgroundColor: 'var(--color-bg-hero)' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>
               <span className="text-xs font-medium leading-tight text-muted">

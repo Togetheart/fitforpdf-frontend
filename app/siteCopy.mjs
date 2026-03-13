@@ -588,3 +588,63 @@ export const SEO = {
     slug: 'audit-report-excel-to-pdf-tips',
   },
 };
+
+export const TESTIMONIAL_QUOTES = [
+  {
+    quote: "I used to spend 45 minutes reformatting every quarterly report. Now it takes 10 seconds.",
+    role: "Senior Auditor",
+    company: "Big4 firm",
+    icon: "audit",
+    featured: true,
+  },
+  {
+    quote: "Our CRM export has 28 columns. fitforpdf turns it into something I can actually send to clients.",
+    role: "Account Manager",
+    company: "SaaS startup",
+    icon: "saas",
+  },
+  {
+    quote: "The automatic section grouping is exactly what I needed for inventory reports.",
+    role: "Operations Manager",
+    company: "Manufacturing",
+    icon: "ops",
+  },
+  {
+    quote: "Finally a tool that understands wide tables aren't meant to be shrunk to 6pt font.",
+    role: "Finance Controller",
+    company: "Mid-cap company",
+    icon: "finance",
+  },
+  {
+    quote: "We integrated the API into our reporting pipeline in under an hour. PDF exports just work now.",
+    role: "Product Engineer",
+    company: "Analytics platform",
+    icon: "dev",
+    featured: true,
+  },
+  {
+    quote: "Board presentations used to take a full day of copy-paste. Now I upload the Excel and it's done.",
+    role: "Consultant",
+    company: "Strategy firm",
+    icon: "consulting",
+  },
+  {
+    quote: "We stopped building internal PDF tooling. fitforpdf handles the edge cases we never could.",
+    role: "Engineering Lead",
+    company: "Fintech startup",
+    icon: "dev",
+  },
+  {
+    quote: "Month-end close used to mean three days of formatting. Now the reports generate themselves.",
+    role: "Head of Finance",
+    company: "Retail chain",
+    icon: "finance",
+  },
+];
+
+export const USE_CASES = [
+  { icon: 'audit', title: 'Audit Firms', stat: '300 columns → 5 sections', time: '45min → 10sec' },
+  { icon: 'saas', title: 'SaaS Reporting', stat: 'CRM data → client PDF', time: 'API integration' },
+  { icon: 'finance', title: 'Finance Teams', stat: 'Monthly KPIs → board-ready', time: 'Automated exports' },
+  { icon: 'consulting', title: 'Consultants', stat: 'Analytics → deliverable', time: 'No manual layout' },
+];

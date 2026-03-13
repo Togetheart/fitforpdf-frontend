@@ -23,7 +23,7 @@ function compareValue(value) {
     );
   }
 
-  return <span className="text-black">{normalized}</span>;
+  return <span className="text-[var(--color-text)]">{normalized}</span>;
 }
 
 export default function FeatureComparison({
@@ -44,11 +44,11 @@ export default function FeatureComparison({
         {title}
       </h2>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-black/10">
+      <div className="mt-6 overflow-hidden rounded-xl border border-[var(--color-border)]">
         <div className="hidden overflow-x-auto md:block">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-black/10 bg-transparent text-left text-xs uppercase tracking-[0.06em] text-muted">
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)] text-left text-xs uppercase tracking-[0.06em] text-muted">
                 <th className="px-4 py-3">Feature</th>
                 {featureColumns.map((column) => (
                   <th key={column} className="px-4 py-3">
@@ -61,9 +61,9 @@ export default function FeatureComparison({
               {visibleRows.map((row, rowIndex) => (
                 <tr
                   key={row[0]}
-                  className={`border-b border-black/10 last:border-b-0 ${rowIndex % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.025]'}`}
+                  className={`border-b border-[var(--color-border)] last:border-b-0 ${rowIndex % 2 === 0 ? 'bg-transparent' : 'bg-[var(--color-bg-hero)]/50'}`}
                 >
-                  <th className="px-4 py-3 text-left font-medium text-black">
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-text)]">
                     {row[0]}
                   </th>
                   {featureColumns.map((_, index) => (
@@ -82,9 +82,9 @@ export default function FeatureComparison({
             <div
               key={row[0]}
               data-testid="feature-compare-row"
-              className="rounded-xl border border-black/10 bg-hero p-3"
+              className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-3"
             >
-              <p className="text-sm font-medium text-black">{row[0]}</p>
+              <p className="text-sm font-medium text-[var(--color-text)]">{row[0]}</p>
               <dl className="mt-2 space-y-1 text-sm">
                 {featureColumns.map((column, index) => (
                   <div key={`${row[0]}-${column}`} className="grid grid-cols-2 gap-2">

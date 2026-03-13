@@ -71,46 +71,49 @@ export default function UploadDropzone({
         tabIndex={disabled ? -1 : 0}
         aria-label="Upload CSV or XLSX file"
         onKeyDown={handleLabelKeyDown}
-        className={`rounded-xl border-2 border-dashed p-1 transition ${
-          isDragActive ? 'border-accent bg-hero' : 'border-black/10 bg-hero'
-        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:border-accent/60'}`}
+        className={`flex-1 min-w-0 transition ${
+          isDragActive ? 'bg-[var(--color-bg-hero)]' : ''
+        } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
       >
         <label
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="block rounded-xl bg-transparent px-4 py-4 text-center"
+          className="flex items-center gap-3 cursor-pointer min-w-0"
         >
           {file ? (
-            <div className="mx-auto max-w-xl">
+            <div className="flex items-center gap-2.5 min-w-0">
               <CheckCircle2
                 aria-hidden="true"
-                className="mx-auto h-6 w-6 text-accent"
+                className="h-5 w-5 shrink-0 text-emerald-500"
               />
-              <p className="mt-3 text-sm font-semibold text-slate-900">{file.name}</p>
-              <p className="mt-1 text-xs text-muted">{formatBytes(file.size)}</p>
-              <div className="mt-4">
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    if (!disabled) {
-                      emitRemovedFile();
-                    }
-                  }}
-                  disabled={disabled}
-                  className="inline-flex h-9 items-center rounded-full border border-slate-200 px-4 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-                >
-                  Remove
-                </button>
-              </div>
+              <span className="truncate text-sm font-medium text-[var(--color-text)]">{file.name}</span>
+              <span className="shrink-0 text-xs text-muted">{formatBytes(file.size)}</span>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (!disabled) {
+                    emitRemovedFile();
+                  }
+                }}
+                disabled={disabled}
+                className="shrink-0 rounded-full p-0.5 text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] transition disabled:opacity-50"
+                aria-label="Remove file"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           ) : (
-            <div className="mx-auto max-w-xl">
-              <AnimatedCloudIcon size={24} className="mx-auto text-blue-500" />
-              <p className="mt-3 text-sm font-semibold text-slate-900">Drop CSV or XLSX here</p>
-              <p className="mt-1 text-xs text-muted">{DROPZONE_HINT}</p>
+            <div className="flex items-center gap-2.5">
+              <AnimatedCloudIcon size={20} className="shrink-0 text-blue-500" />
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-[var(--color-text)]">Drop CSV or XLSX here</p>
+                <p className="text-xs text-muted">{DROPZONE_HINT}</p>
+              </div>
             </div>
           )}
         </label>
