@@ -42,61 +42,61 @@ const faqs = [
 export default function FitOnePagePage() {
   return (
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
-      <h1 className="mb-6 text-[2rem] font-[650] leading-[1.1] tracking-tight text-[#0F172A] sm:text-[2.5rem]">
+      <h1 className="mb-6 text-[2rem] font-[650] leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
         How to fit a large Excel sheet on one PDF page
       </h1>
-      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[#64748B]">
+      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
         If your sheet is too wide, Excel&#39;s default export may shrink or cut content. Learn
         manual steps and better automated solutions for large spreadsheets.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Step 1 — Page layout &amp; scaling</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Step 1 — Page layout &amp; scaling</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Go to Page Layout → Scale to Fit and set Width to 1 page. This forces Excel to compress
         the sheet horizontally, but very wide sheets become unreadable.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Step 2 — Landscape orientation</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Step 2 — Landscape orientation</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Switch to Landscape in Page Layout → Orientation. This gives you more horizontal space
         and works well for sheets up to about 15 columns.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Step 3 — Adjust margins &amp; page breaks</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Step 3 — Adjust margins &amp; page breaks</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Narrow margins (File → Print → Custom Margins) and manual page breaks (View → Page Break
         Preview) let you control where content splits — but it requires careful manual tuning.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Limitations of fitting on one page</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Limitations of fitting on one page</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         For sheets with 20+ columns, fitting on one page means tiny, unreadable text. Clients
         receiving these PDFs often can&#39;t read the data without zooming in. Structured sectioning
         is often a better alternative.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Smarter alternative: structured sections</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Smarter alternative: structured sections</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Instead of squeezing everything on one page, fitforpdf automatically splits wide sheets
         into readable sections — each with its own page, repeated reference columns, and clear
         row ranges. The result is a professional, client-ready document.
       </p>
 
-      <section data-testid="seo-faq" className="mb-12 border-t border-black/10">
-        <h2 className="py-6 text-xl font-[650] text-[#0F172A]">Frequently asked questions</h2>
-        <div className="divide-y divide-black/10">
+      <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">
+        <h2 className="py-6 text-xl font-[650] text-[var(--color-text)]">Frequently asked questions</h2>
+        <div className="divide-y divide-[var(--color-border)]">
           {faqs.map(({ q, a }) => (
             <div key={q} className="py-5">
-              <h3 className="mb-1 font-[600] text-[#0F172A]">{q}</h3>
-              <p className="leading-relaxed text-[#64748B]">{a}</p>
+              <h3 className="mb-1 font-[600] text-[var(--color-text)]">{q}</h3>
+              <p className="leading-relaxed text-[var(--color-muted)]">{a}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section data-testid="seo-cta" className="rounded-2xl bg-[#F8FAFC] px-6 py-8 text-center">
-        <h2 className="mb-2 text-xl font-[650] text-[#0F172A]">Ready to export your sheet cleanly?</h2>
-        <p className="mb-5 text-[#64748B]">
+      <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-8 text-center">
+        <h2 className="mb-2 text-xl font-[650] text-[var(--color-text)]">Ready to export your sheet cleanly?</h2>
+        <p className="mb-5 text-[var(--color-muted)]">
           Upload your Excel file and get a structured, readable PDF in seconds. 3 free exports.
         </p>
         <a

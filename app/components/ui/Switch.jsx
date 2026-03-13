@@ -31,7 +31,7 @@ export default function Switch({
       aria-label={switchLabel}
       onClick={handleToggle}
       disabled={disabled}
-      className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/80 ${checked ? 'bg-accent' : 'bg-slate-300'} ${
+      className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border)] ${checked ? 'bg-accent' : 'bg-[var(--color-border)]'} ${
         disabled ? 'opacity-60' : ''
       }`}
     >

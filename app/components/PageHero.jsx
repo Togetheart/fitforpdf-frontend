@@ -38,7 +38,7 @@ export default function PageHero({
         {children || hasDefaultContent ? (
           <>
             {eyebrow ? (
-              <p className="text-xs font-semibold tracking-[0.18em] text-black/55">{eyebrow}</p>
+              <p className="text-xs font-semibold tracking-[0.18em] text-[var(--color-muted)]">{eyebrow}</p>
             ) : null}
             {title ? (
               titleIsElement && !titleIsHeadLine && !headingTestId ? (
@@ -60,7 +60,7 @@ export default function PageHero({
               )
             ) : null}
             {subtitle ? (
-              <p className={`text-base text-slate-700 ${subtitleClassName}`}>{subtitle}</p>
+              <p className={`text-base text-[var(--color-muted)] ${subtitleClassName}`}>{subtitle}</p>
             ) : null}
             {trustLine ? <p className="max-w-prose text-sm text-muted">{trustLine}</p> : null}
             {children}

@@ -11,9 +11,9 @@ export const metadata = {
 
 function Clause({ title, children }) {
   return (
-    <section className="border-t border-black/10 pt-8 mb-10">
-      <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">{title}</h2>
-      <div className="space-y-3 text-sm leading-relaxed text-[#475569]">{children}</div>
+    <section className="border-t border-[var(--color-border)] pt-8 mb-10">
+      <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]">{title}</h2>
+      <div className="space-y-3 text-sm leading-relaxed text-[var(--color-muted)]">{children}</div>
     </section>
   );
 }
@@ -24,29 +24,29 @@ export default function MentionsLegalesPage() {
 
       {/* Header */}
       <div className="mb-12">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
+        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[var(--color-muted)]">
           Legal
         </p>
-        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[#0F172A] sm:text-4xl">
+        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[var(--color-text)] sm:text-4xl">
           Legal Notice
         </h1>
-        <p className="mt-4 text-base leading-relaxed text-[#475569]">
+        <p className="mt-4 text-base leading-relaxed text-[var(--color-muted)]">
           Pursuant to French law n°2004-575 of 21 June 2004 on confidence in the digital economy.
         </p>
       </div>
 
       <Clause title="Publisher">
         <p>
-          <span className="font-[500] text-[#0F172A]">Publication manager:</span>{' '}
+          <span className="font-[500] text-[var(--color-text)]">Publication manager:</span>{' '}
           Sébastien Neusch
         </p>
         <p>
-          <span className="font-[500] text-[#0F172A]">Status:</span>{' '}
+          <span className="font-[500] text-[var(--color-text)]">Status:</span>{' '}
           CEO, SASU BLVTR
         </p>
         <p>
-          <span className="font-[500] text-[#0F172A]">Contact:</span>{' '}
-          <a href="mailto:hello@fitforpdf.com" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
+          <span className="font-[500] text-[var(--color-text)]">Contact:</span>{' '}
+          <a href="mailto:hello@fitforpdf.com" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             hello@fitforpdf.com
           </a>
         </p>
@@ -54,16 +54,16 @@ export default function MentionsLegalesPage() {
 
       <Clause title="Hosting">
         <p>
-          <span className="font-[500] text-[#0F172A]">Host:</span>{' '}
+          <span className="font-[500] text-[var(--color-text)]">Host:</span>{' '}
           OVH SAS
         </p>
         <p>
-          <span className="font-[500] text-[#0F172A]">Registered office:</span>{' '}
+          <span className="font-[500] text-[var(--color-text)]">Registered office:</span>{' '}
           2 rue Kellermann, 59100 Roubaix, France
         </p>
         <p>
-          <span className="font-[500] text-[#0F172A]">Website:</span>{' '}
-          <a href="https://www.ovhcloud.com" target="_blank" rel="noreferrer" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
+          <span className="font-[500] text-[var(--color-text)]">Website:</span>{' '}
+          <a href="https://www.ovhcloud.com" target="_blank" rel="noreferrer" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             ovhcloud.com
           </a>
         </p>
@@ -80,14 +80,14 @@ export default function MentionsLegalesPage() {
       <Clause title="Personal data">
         <p>
           The processing of personal data is described in our{' '}
-          <a href="/privacy" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
+          <a href="/privacy" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             privacy policy
           </a>
           , in compliance with GDPR (EU) 2016/679.
         </p>
         <p>
           To exercise your rights or for any data-related enquiry:{' '}
-          <a href="mailto:support@fitforpdf.com" className="underline decoration-black/20 underline-offset-2 transition hover:text-[#0F172A]">
+          <a href="mailto:support@fitforpdf.com" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             support@fitforpdf.com
           </a>
         </p>
@@ -100,7 +100,7 @@ export default function MentionsLegalesPage() {
         </p>
       </Clause>
 
-      <p className="mt-4 text-xs text-black/30">Last updated: March 2025</p>
+      <p className="mt-4 text-xs text-[var(--color-muted)]/50">Last updated: March 2025</p>
 
     </main>
   );

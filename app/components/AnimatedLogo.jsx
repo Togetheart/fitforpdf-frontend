@@ -58,14 +58,14 @@ export default function AnimatedLogo({ className }) {
       height={44}
       role="img"
       aria-label="FitForPDF"
-      className={cn('object-contain', className)}
+      className={cn('object-contain text-[var(--color-text)]', className)}
     >
       {/* Brackets */}
       <path
         data-bracket="left"
         d="M 7,2 L 2,2 L 2,42 L 7,42"
         fill="none"
-        stroke="#0F172A"
+        stroke="currentColor"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -74,14 +74,14 @@ export default function AnimatedLogo({ className }) {
         data-bracket="right"
         d="M 41,2 L 46,2 L 46,42 L 41,42"
         fill="none"
-        stroke="#0F172A"
+        stroke="currentColor"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
       {/* F bars — start wide, shrink to fit inside brackets */}
-      <rect data-bar="top" x="11" y="8" width="26" height="5" rx="1.5" fill="#0F172A" />
+      <rect data-bar="top" x="11" y="8" width="26" height="5" rx="1.5" fill="currentColor" />
       <rect data-bar="mid" x="11" y="19" width="18" height="5" rx="1.5" fill="#2563EB" />
       <rect data-bar="bot" x="11" y="30" width="11" height="5" rx="1.5" fill="#2563EB" opacity="0.4" />
     </svg>

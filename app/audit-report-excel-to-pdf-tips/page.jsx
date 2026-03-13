@@ -42,55 +42,55 @@ const faqs = [
 export default function AuditPdfPage() {
   return (
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
-      <h1 className="mb-6 text-[2rem] font-[650] leading-[1.1] tracking-tight text-[#0F172A] sm:text-[2.5rem]">
+      <h1 className="mb-6 text-[2rem] font-[650] leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
         Exporting audit Excel sheets to PDF: best practices
       </h1>
-      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[#64748B]">
+      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
         Audit reports often span dozens of columns and hundreds of rows. Learn how to export them
         to PDF that clients and stakeholders can actually read.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Tip 1 — Know your data first</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Tip 1 — Know your data first</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Before exporting, identify which columns are essential for the reader. Audit reports often
         include internal columns (formulas, raw IDs) that don&#39;t need to appear in the PDF.
         Hide non-essential columns before export.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Tip 2 — Use landscape and scaling</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Tip 2 — Use landscape and scaling</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Switch to Landscape orientation and use Page Layout → Scale to Fit for sheets up to 15
         columns. For wider sheets, this produces text too small to read.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Tip 3 — Freeze and repeat reference columns</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Tip 3 — Freeze and repeat reference columns</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         In Page Layout → Print Titles, set columns to repeat on every page (e.g., ID, Entity
         Name). This prevents readers from losing context when flipping through pages.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[#0F172A]">Better approach: use structured sectioning</h2>
-      <p className="mb-8 leading-relaxed text-[#475569]">
+      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Better approach: use structured sectioning</h2>
+      <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         For complex audit sheets, the best result comes from structuring the data into column
         groups. fitforpdf does this automatically — producing an overview page, then sectioned
         column groups with repeated reference columns and clear row ranges.
       </p>
 
-      <section data-testid="seo-faq" className="mb-12 border-t border-black/10">
-        <h2 className="py-6 text-xl font-[650] text-[#0F172A]">Frequently asked questions</h2>
-        <div className="divide-y divide-black/10">
+      <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">
+        <h2 className="py-6 text-xl font-[650] text-[var(--color-text)]">Frequently asked questions</h2>
+        <div className="divide-y divide-[var(--color-border)]">
           {faqs.map(({ q, a }) => (
             <div key={q} className="py-5">
-              <h3 className="mb-1 font-[600] text-[#0F172A]">{q}</h3>
-              <p className="leading-relaxed text-[#64748B]">{a}</p>
+              <h3 className="mb-1 font-[600] text-[var(--color-text)]">{q}</h3>
+              <p className="leading-relaxed text-[var(--color-muted)]">{a}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section data-testid="seo-cta" className="rounded-2xl bg-[#F8FAFC] px-6 py-8 text-center">
-        <h2 className="mb-2 text-xl font-[650] text-[#0F172A]">Export your audit report cleanly</h2>
-        <p className="mb-5 text-[#64748B]">
+      <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-8 text-center">
+        <h2 className="mb-2 text-xl font-[650] text-[var(--color-text)]">Export your audit report cleanly</h2>
+        <p className="mb-5 text-[var(--color-muted)]">
           Upload your Excel file and get a professional, structured PDF. 3 free exports.
         </p>
         <a

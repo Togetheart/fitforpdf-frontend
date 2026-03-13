@@ -93,7 +93,7 @@ export default function PlanCard({
       className={cn(
         'relative flex flex-col overflow-visible p-6 transition-all duration-150',
         isFeatured
-          ? `md:${featuredScaleClass} border-2 border-black/10 feature-card-hover`
+          ? `md:${featuredScaleClass} border-2 border-[var(--color-border)] feature-card-hover`
           : 'feature-card-hover',
       )}
       aria-label={plan.title}
@@ -130,7 +130,7 @@ export default function PlanCard({
               {pricePairs.map(({ label, price }) => (
                 <div key={label} className="flex items-baseline justify-between gap-3">
                   <span className="text-sm text-muted">{label}</span>
-                  <span className="text-xl font-bold tracking-tight text-slate-900">{price}</span>
+                  <span className="text-xl font-bold tracking-tight text-[var(--color-text)]">{price}</span>
                 </div>
               ))}
             </div>
@@ -139,18 +139,18 @@ export default function PlanCard({
             ) : null}
           </>
         ) : (
-          <p className="text-3xl font-bold tracking-tight text-slate-900">
+          <p className="text-3xl font-bold tracking-tight text-[var(--color-text)]">
             {topline}
           </p>
         )}
       </div>
 
       {/* Divider */}
-      <div className="my-5 h-px bg-slate-200/80" />
+      <div className="my-5 h-px bg-[var(--color-border)]" />
 
       {/* Features */}
       {plan.points?.length ? (
-        <ul className="flex-1 space-y-2.5 text-sm text-slate-700">
+        <ul className="flex-1 space-y-2.5 text-sm font-medium text-[var(--color-text)]">
           {plan.points.map((point) => (
             <li key={point} className="flex items-start gap-2.5">
               {isNegativePoint(point) ? (

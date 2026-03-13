@@ -3,6 +3,7 @@
 import React from 'react';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import Badge from './ui/Badge';
 
 export default function HeroHeadline() {
   const accentRef = useRef(null);
@@ -191,11 +192,9 @@ export default function HeroHeadline() {
   return (
     <>
     <div className="hero-headline-line flex justify-center mb-4">
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3.5 py-1 text-xs font-[600] uppercase tracking-[0.08em] text-[#2563EB]">
-        Engine for wide tables
-      </span>
+      <Badge variant="accent">Engine for wide tables</Badge>
     </div>
-    <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[2.25rem] font-semibold sm:text-5xl">
+    <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[1.875rem] font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
       <span className="hero-headline-line block">
         <span
           ref={accentRef}
@@ -209,16 +208,16 @@ export default function HeroHeadline() {
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
         <span className="relative inline-flex items-stretch">
           {/* Left bracket */}
-          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)]" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Text container — clips on scroll */}
-          <span ref={containerRef} className="inline-block text-center whitespace-nowrap text-slate-900">
+          <span ref={containerRef} className="inline-block text-center whitespace-nowrap text-[var(--color-text)]">
             from wide Excel tables.
           </span>
           {/* Right bracket */}
-          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)]" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Full [F] logo — appears at center when brackets close */}
           <svg
@@ -230,9 +229,9 @@ export default function HeroHeadline() {
             aria-hidden="true"
             style={{ opacity: 0 }}
           >
-            <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M 41,2 L 46,2 L 46,42 L 41,42" fill="none" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <rect x="11" y="8" width="26" height="5" rx="1.5" fill="#0F172A" />
+            <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="var(--color-text)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M 41,2 L 46,2 L 46,42 L 41,42" fill="none" stroke="var(--color-text)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <rect x="11" y="8" width="26" height="5" rx="1.5" fill="var(--color-text)" />
             <rect x="11" y="19" width="18" height="5" rx="1.5" fill="#2563EB" />
             <rect x="11" y="30" width="11" height="5" rx="1.5" fill="#2563EB" opacity="0.4" />
           </svg>

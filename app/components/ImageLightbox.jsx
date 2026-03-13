@@ -75,8 +75,8 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, srcSet, alt, clas
         {children || (
           <img src={src} alt={alt} className="h-auto w-full rounded-lg object-cover" />
         )}
-        <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg bg-transparent transition-colors duration-200 group-hover:bg-white/60">
-          <span className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-700 opacity-0 shadow-sm backdrop-blur transition-opacity duration-200 group-hover:opacity-100">
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg bg-transparent transition-colors duration-200 group-hover:bg-[var(--color-bg)]/60">
+          <span className="rounded-full bg-[var(--color-bg)]/90 px-3 py-1.5 text-xs font-semibold text-[var(--color-text)] opacity-0 shadow-sm backdrop-blur transition-opacity duration-200 group-hover:opacity-100">
             Click to enlarge
           </span>
         </span>
@@ -85,7 +85,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, srcSet, alt, clas
       {isOpen
         ? createPortal(
             <div
-              className="fixed inset-0 z-[9999] bg-white/90 backdrop-blur-xl"
+              className="fixed inset-0 z-[9999] bg-[var(--color-bg)]/90 backdrop-blur-xl"
               onClick={close}
               role="dialog"
               aria-modal="true"
@@ -122,7 +122,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, srcSet, alt, clas
                   <button
                     type="button"
                     onClick={prev}
-                    className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur transition hover:bg-white"
+                    className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--color-bg)]/80 shadow-lg backdrop-blur transition hover:bg-[var(--color-bg)]"
                     aria-label="Previous image"
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -134,7 +134,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, srcSet, alt, clas
                   <button
                     type="button"
                     onClick={next}
-                    className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur transition hover:bg-white"
+                    className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--color-bg)]/80 shadow-lg backdrop-blur transition hover:bg-[var(--color-bg)]"
                     aria-label="Next image"
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
