@@ -206,9 +206,6 @@ export default function ProofShowcase() {
   const cardRef = useRef(null);
   const leftLightboxRef = useRef(null);
   const rightLightboxRef = useRef(null);
-  const [beforeLoaded, setBeforeLoaded] = useState(false);
-  const [afterLoaded, setAfterLoaded] = useState(false);
-
   const config = FORMAT_CONFIGS[activeFormat];
   const currentTab = config.tabs[activeTab];
 
@@ -234,15 +231,6 @@ export default function ProofShowcase() {
       setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
     }
   }, [activeTab, activeFormat, config.tabs.length]);
-
-  // Reset loading states when format or tab changes
-  useEffect(() => {
-    setBeforeLoaded(false);
-  }, [activeFormat]);
-
-  useEffect(() => {
-    setAfterLoaded(false);
-  }, [activeFormat, activeTab]);
 
   function handleFormatChange(formatId) {
     setActiveFormat(formatId);
@@ -320,17 +308,13 @@ export default function ProofShowcase() {
                   ref={leftLightboxRef}
                   src={config.beforeImage}
                   alt={config.beforeAlt}
-                  className="block w-full"
+                  className="block w-full overflow-hidden"
                 >
-                  {!beforeLoaded && (
-                    <div className="aspect-[16/9] w-full animate-pulse rounded-lg bg-[var(--color-bg-hero)]" />
-                  )}
                   <img
                     src={config.beforeImage}
                     srcSet={config.beforeSrcSet}
                     alt={config.beforeAlt}
-                    className={`h-auto w-full rounded-lg object-cover${beforeLoaded ? '' : ' hidden'}`}
-                    onLoad={() => setBeforeLoaded(true)}
+                    className="h-auto w-full rounded-lg object-cover"
                   />
                 </ImageLightbox>
               </div>
@@ -420,20 +404,16 @@ export default function ProofShowcase() {
                     ref={rightLightboxRef}
                     src={currentTab.src}
                     alt={currentTab.alt}
-                    className="block w-full"
+                    className="block w-full overflow-hidden"
                     data-testid="proof-pdf-image"
                     images={config.tabs.map((t) => ({ src: t.src, srcSet: t.srcSet, alt: t.alt, label: t.label }))}
                     imageIndex={activeTab}
                   >
-                    {!afterLoaded && (
-                      <div className="aspect-[16/9] w-full animate-pulse rounded-lg bg-[var(--color-bg-hero)]" />
-                    )}
                     <img
                       src={currentTab.src}
                       srcSet={currentTab.srcSet}
                       alt={currentTab.alt}
-                      className={`h-auto w-full rounded-lg object-cover${afterLoaded ? '' : ' hidden'}`}
-                      onLoad={() => setAfterLoaded(true)}
+                      className="h-auto w-full rounded-lg object-cover"
                     />
                   </ImageLightbox>
                 </div>

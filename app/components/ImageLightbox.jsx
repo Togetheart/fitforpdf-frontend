@@ -68,7 +68,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, srcSet, alt, clas
       <button
         type="button"
         onClick={open}
-        className={`group relative cursor-zoom-in border-0 bg-transparent p-0 ${className || ''}`}
+        className={`group relative cursor-zoom-in border-0 bg-transparent p-0 max-w-full overflow-hidden ${className || ''}`}
         aria-label={`View ${alt || 'image'} fullscreen`}
         {...rest}
       >
