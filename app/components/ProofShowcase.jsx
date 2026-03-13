@@ -248,49 +248,6 @@ export default function ProofShowcase() {
         {LANDING_COPY.proofSourceLine}
       </p>
 
-      {/* Format selector — segmented control */}
-      <div
-        data-testid="format-selector"
-        className="flex items-center justify-center"
-        role="radiogroup"
-        aria-label="Source file type"
-      >
-        <div className="inline-flex items-center rounded-full border border-black/[0.08] bg-black/[0.03] p-1 gap-1">
-          {FORMATS.map((formatId) => {
-            const fmt = FORMAT_CONFIGS[formatId];
-            const isActive = formatId === activeFormat;
-            return (
-              <button
-                key={formatId}
-                type="button"
-                role="radio"
-                aria-checked={isActive}
-                onClick={() => handleFormatChange(formatId)}
-                className={`flex items-center gap-2.5 rounded-full px-5 py-2.5 transition-all duration-200 ${
-                  isActive
-                    ? 'bg-white shadow-[0_1px_4px_rgba(0,0,0,0.12)] border border-black/[0.06]'
-                    : 'hover:bg-black/[0.03]'
-                }`}
-              >
-                <img
-                  src={fmt.icon}
-                  alt=""
-                  className={`h-6 w-6 object-contain transition-opacity duration-200 ${
-                    isActive ? 'opacity-100' : 'opacity-35'
-                  }`}
-                />
-                <span
-                  className={`text-[11px] font-[650] uppercase tracking-[0.12em] transition-colors duration-200 ${
-                    isActive ? 'text-[#0F172A]' : 'text-black/35'
-                  }`}
-                >
-                  {fmt.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* Glass card */}
       <div
