@@ -196,6 +196,15 @@ const TAB_COLORS = [
   'bg-sky-400', // sky-400   — Section E
 ];
 
+const TAB_DOT_COLORS = [
+  '#ffffff',   // Overview
+  '#2563EB',   // Section A — blue-600
+  '#3B82F6',   // Section B — blue-500
+  '#0EA5E9',   // Section C — sky-500
+  '#60A5FA',   // Section D — blue-400
+  '#38BDF8',   // Section E — sky-400
+];
+
 export default function ProofShowcase() {
   const [activeFormat, setActiveFormat] = useState('xlsx');
   const [activeTab, setActiveTab] = useState(1);
@@ -385,7 +394,17 @@ export default function ProofShowcase() {
                         : 'rgba(235,235,245,0.55)',
                     }}
                   >
-                    {tab.label}
+                    <span className="inline-flex items-center gap-1.5">
+                      <span
+                        className="inline-block h-2 w-2 rounded-full shrink-0"
+                        style={{
+                          backgroundColor: TAB_DOT_COLORS[i] ?? TAB_DOT_COLORS[0],
+                          opacity: i === activeTab ? 0 : 0.8,
+                          transition: 'opacity 200ms ease',
+                        }}
+                      />
+                      {tab.label}
+                    </span>
                   </button>
                 ))}
               </div>
