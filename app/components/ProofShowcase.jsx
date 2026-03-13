@@ -272,13 +272,6 @@ export default function ProofShowcase() {
                     : 'hover:bg-black/[0.03]'
                 }`}
               >
-                <img
-                  src={fmt.icon}
-                  alt=""
-                  className={`h-6 w-6 object-contain transition-opacity duration-200 ${
-                    isActive ? 'opacity-100' : 'opacity-35'
-                  }`}
-                />
                 <span
                   className={`text-[11px] font-[650] uppercase tracking-[0.12em] transition-colors duration-200 ${
                     isActive ? 'text-[#0F172A]' : 'text-black/35'
