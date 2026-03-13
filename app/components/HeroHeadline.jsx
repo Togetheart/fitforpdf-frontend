@@ -92,6 +92,7 @@ export default function HeroHeadline() {
     let phase2Current = 0;
     let rafId = 0;
     let running = true;
+    let settled = true; // true when lerps have converged — no RAF needed
 
     const tick = () => {
       if (!running) return;
@@ -157,14 +158,32 @@ export default function HeroHeadline() {
         }
       }
 
+      // Stop the loop once lerps have converged — restart on next scroll
+      const isSettled =
+        Math.abs(current - target) < 0.001 &&
+        Math.abs(phase2Current - p2Target) < 0.001;
+      if (isSettled) {
+        settled = true;
+        return; // don't schedule another frame
+      }
       rafId = requestAnimationFrame(tick);
     };
 
+    const onScroll = () => {
+      if (settled) {
+        settled = false;
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Initial tick to set correct state
     rafId = requestAnimationFrame(tick);
 
     return () => {
       running = false;
       cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', onScroll);
       text.style.clipPath = '';
       bL.style.transform = '';
       bR.style.transform = '';
@@ -208,7 +227,7 @@ export default function HeroHeadline() {
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
         <span className="relative inline-flex items-stretch">
           {/* Left bracket */}
-          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)]" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Text container — clips on scroll */}
@@ -216,7 +235,7 @@ export default function HeroHeadline() {
             from wide Excel tables.
           </span>
           {/* Right bracket */}
-          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)]" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Full [F] logo — appears at center when brackets close */}
