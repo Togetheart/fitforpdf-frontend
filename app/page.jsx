@@ -164,7 +164,6 @@ export default function Page() {
           >
             <div className="flex flex-col items-center gap-4 pt-2">
               <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-sm font-[500] text-slate-400">
-                <span className="text-black/30">&#9654;</span>
                 CRM export :{' '}<span className="font-[600] text-[#0F172A]">14</span>{' '}columns →{' '}<span className="font-[600] text-[#0F172A]">4</span>{' '}PDF sections
               </span>
 
