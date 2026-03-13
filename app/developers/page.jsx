@@ -6,16 +6,18 @@ const BASE_URL = 'https://api.fitforpdf.com/v1';
 
 const ENDPOINTS = [
   {
-    method: 'GET',
-    path: '/v1/health',
-    auth: false,
-    summary: 'Health check',
-    description: 'Returns API status. No authentication required.',
-    example: `curl ${BASE_URL}/health`,
-    response: `{
-  "status": "ok",
-  "version": "1"
-}`,
+    method: 'POST',
+    path: '/v1/render',
+    auth: true,
+    summary: 'Generate a PDF',
+    description: 'Render a readable PDF from a wide CSV or XLSX table (max 10 MB).',
+    example: `curl -X POST \\
+  -H "X-FITFORPDF-KEY: ffp_live_..." \\
+  -F file=@data.csv \\
+  -F 'options={"mode":"compact","branding":false}' \\
+  ${BASE_URL}/render \\
+  -o output.pdf`,
+    response: 'Binary PDF (application/pdf)',
   },
   {
     method: 'GET',
@@ -33,18 +35,16 @@ const ENDPOINTS = [
 }`,
   },
   {
-    method: 'POST',
-    path: '/v1/render',
-    auth: true,
-    summary: 'Generate a PDF',
-    description: 'Upload a CSV or XLSX file (max 10 MB) and receive a structured, readable PDF.',
-    example: `curl -X POST \\
-  -H "X-FITFORPDF-KEY: ffp_live_..." \\
-  -F file=@data.csv \\
-  -F 'options={"mode":"compact","branding":false}' \\
-  ${BASE_URL}/render \\
-  -o output.pdf`,
-    response: 'Binary PDF (application/pdf)',
+    method: 'GET',
+    path: '/v1/health',
+    auth: false,
+    summary: 'Health check',
+    description: 'Returns API status. No authentication required.',
+    example: `curl ${BASE_URL}/health`,
+    response: `{
+  "status": "ok",
+  "version": "1"
+}`,
   },
 ];
 
@@ -348,6 +348,24 @@ export default function DevelopersPage() {
         </div>
       </div>
 
+      {/* Try it in 10 seconds */}
+      <section className="mb-14 border-t border-black/10 pt-10">
+        <p className="mb-3 text-sm font-[650] text-[#0F172A]">Try it in 10 seconds</p>
+        <CodeBlock>{`curl -X POST https://api.fitforpdf.com/v1/render \\
+  -H "X-FITFORPDF-KEY: YOUR_KEY" \\
+  -F "file=@sample.csv" \\
+  --output report.pdf`}</CodeBlock>
+        <div className="mt-4 flex items-center gap-3 rounded-lg border border-black/5 bg-white px-4 py-3 text-sm">
+          <span className="font-mono text-[#64748B]">sample.csv</span>
+          <span className="text-xs text-[#94A3B8]">14 cols × 2k rows</span>
+          <span className="text-[#64748B]">→</span>
+          <span className="font-[600] text-[#0F172A]">structured PDF sections</span>
+        </div>
+        <a href="#request-access" className="mt-3 inline-block text-xs text-[#64748B] underline underline-offset-2 hover:text-[#0F172A]">
+          Request access →
+        </a>
+      </section>
+
       {/* Why fitforpdf exists */}
       <section className="mb-14 border-t border-black/10 pt-10">
         <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[#64748B]">
@@ -415,7 +433,7 @@ export default function DevelopersPage() {
 
       {/* Quick start */}
       <section className="mb-12 border-t border-black/10 pt-10">
-        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Quick start</h2>
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Quick start</h2>
         <p className="mb-4 text-sm text-[#475569]">
           Generate a PDF in one command:
         </p>
@@ -428,7 +446,7 @@ export default function DevelopersPage() {
 
       {/* Authentication */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Authentication</h2>
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Authentication</h2>
         <p className="mb-4 text-sm text-[#475569]">
           Pass your API key in the <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">X-FITFORPDF-KEY</code> header.
           Keys are prefixed <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">ffp_live_</code> and
@@ -446,7 +464,7 @@ export default function DevelopersPage() {
 
       {/* Endpoints */}
       <section className="mb-12">
-        <h2 className="mb-2 text-xl font-[650] text-[#0F172A]">Endpoints</h2>
+        <h2 className="mb-2 text-xl font-[650] text-[#0F172A]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Endpoints</h2>
         {ENDPOINTS.map((ep) => (
           <EndpointCard key={ep.path} endpoint={ep} />
         ))}
@@ -454,7 +472,7 @@ export default function DevelopersPage() {
 
       {/* Render options */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Render options</h2>
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Render options</h2>
         <p className="mb-4 text-sm text-[#475569]">
           Pass as a JSON string in the <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">options</code> form field.
         </p>
@@ -484,7 +502,7 @@ export default function DevelopersPage() {
 
       {/* Response headers */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Response headers</h2>
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Response headers</h2>
         <p className="mb-4 text-sm text-[#475569]">
           Every <code className="rounded bg-[#F8FAFC] px-1.5 py-0.5 text-[13px]">/v1/render</code> response includes these headers:
         </p>
@@ -510,7 +528,7 @@ export default function DevelopersPage() {
 
       {/* Rate limiting */}
       <section className="mb-12 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Rate limiting</h2>
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Rate limiting</h2>
         <p className="text-sm text-[#475569]">
           <strong>60 requests per minute</strong> per API key.
           Rate limit state is returned in headers:{' '}
@@ -526,7 +544,7 @@ export default function DevelopersPage() {
 
       {/* Error codes */}
       <section className="mb-14 border-t border-black/10 pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]">Error codes</h2>
+        <h2 className="mb-4 text-xl font-[650] text-[#0F172A]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Error codes</h2>
         <p className="mb-4 text-sm text-[#475569]">
           All errors use a standard envelope:
         </p>
