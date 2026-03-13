@@ -84,9 +84,9 @@ function getProgressPercent(progress) {
 }
 
 const EXPORT_BADGE_STYLES = {
-  neutral: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
-  warning: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
-  warningStrong: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-700',
+  neutral: 'border-blue-200/60 bg-blue-50/80 text-blue-700',
+  warning: 'border-blue-200/60 bg-blue-50/80 text-blue-700',
+  warningStrong: 'border-blue-200/60 bg-blue-50/80 text-blue-700',
   danger: 'border-red-300 bg-red-600 text-white',
 };
 
@@ -171,8 +171,8 @@ function getFreeExportsBadgeClass(exportsLeft) {
 function verdictVisualStyle(verdict) {
   if (verdict === 'WARN') {
     return {
-      badge: 'border-amber-200 bg-amber-50 text-amber-700',
-      icon: 'text-amber-700',
+      badge: 'border-blue-200 bg-blue-50 text-blue-700',
+      icon: 'text-blue-700',
     };
   }
 
@@ -544,7 +544,7 @@ export default function UploadCard({
                 Close
               </button>
             </div>
-            <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700">
+            <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
@@ -651,7 +651,7 @@ export default function UploadCard({
                         Close
                       </button>
                     </div>
-                    <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700">
+                    <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
@@ -680,7 +680,7 @@ export default function UploadCard({
                     aria-live="polite"
                   >
                     <section
-                      className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+                      className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3"
                       data-testid="branding-upgrade-nudge"
                     >
                       <p className="text-sm font-semibold text-slate-900">
@@ -832,7 +832,7 @@ export default function UploadCard({
           </Button>
         ) : (
           <>
-          <p data-testid="upload-privacy-messages" className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700 w-full justify-center">
+          <p data-testid="upload-privacy-messages" className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700 w-full justify-center">
             <span aria-label="European Union flag">🇪🇺</span>
             GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored
           </p>
