@@ -108,7 +108,7 @@ export default function UploadDropzone({
             </div>
           ) : (
             <div className="mx-auto max-w-xl">
-              <AnimatedCloudIcon size={24} className="mx-auto text-muted" />
+              <AnimatedCloudIcon size={24} className="mx-auto text-blue-500" />
               <p className="mt-3 text-sm font-semibold text-slate-900">Drop CSV or XLSX here</p>
               <p className="mt-1 text-xs text-muted">{DROPZONE_HINT}</p>
             </div>
