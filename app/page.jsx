@@ -297,11 +297,11 @@ export default function Page() {
           </h2>
           <div className="grid sm:grid-cols-2 gap-4 max-w-[860px] mx-auto">
             <div className="rounded-2xl border border-black/10 bg-white p-6 space-y-4">
-              <p className="text-sm font-[600] uppercase tracking-[0.06em] text-emerald-600">Perfect for</p>
+              <p className="text-sm font-[600] uppercase tracking-[0.06em] text-blue-600">Perfect for</p>
               <ul className="space-y-2.5">
                 {LANDING_COPY.whoThisIsForPerfect.map((item) => (
                   <li key={item} className="flex items-center gap-2.5 text-[#0F172A]">
-                    <span className="flex-none text-emerald-500" aria-hidden="true">
+                    <span className="flex-none text-blue-500" aria-hidden="true">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
                         <path d="M5 8l2.5 2.5L11 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
