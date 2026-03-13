@@ -187,13 +187,14 @@ const FORMAT_CONFIGS = {
 
 const FORMATS = ['xlsx', 'csv'];
 
-const TAB_COLORS = [
-  'bg-white', // white      — Overview
-  'bg-blue-600', // blue-600  — Section A
-  'bg-blue-500', // blue-500  — Section B
-  'bg-sky-500', // sky-500   — Section C
-  'bg-blue-400', // blue-400  — Section D
-  'bg-sky-400', // sky-400   — Section E
+// Matches SECTION_COLOR_PALETTE from pdfRenderer.js (index 0–4)
+const TAB_COLORS_HEX = [
+  '#FFFFFF',   // Overview
+  '#2563EB',   // Section A — brand blue
+  '#0F172A',   // Section B — brand navy
+  '#0EA5E9',   // Section C — sky
+  '#6366F1',   // Section D — indigo
+  '#8B5CF6',   // Section E — violet
 ];
 
 export default function ProofShowcase() {
@@ -359,12 +360,13 @@ export default function ProofShowcase() {
                 {/* Sliding indicator — colored pill */}
                 <div
                   aria-hidden="true"
-                  className={`pointer-events-none absolute rounded-full ${TAB_COLORS[activeTab] ?? TAB_COLORS[0]}`}
+                  className="pointer-events-none absolute rounded-full"
                   style={{
                     left: indicator.left,
                     width: indicator.width,
                     top: '4px',
                     bottom: '4px',
+                    backgroundColor: TAB_COLORS_HEX[activeTab] ?? TAB_COLORS_HEX[0],
                     boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
                     transition: 'left 300ms cubic-bezier(0.25,0.1,0.25,1), width 300ms cubic-bezier(0.25,0.1,0.25,1), background-color 200ms ease',
                   }}
@@ -381,7 +383,7 @@ export default function ProofShowcase() {
                     className="relative z-10 flex-1 text-center rounded-full px-2 py-2.5 sm:px-3 text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
                     style={{
                       color: i === activeTab
-                        ? (i === 0 ? '#0F172A' : '#ffffff')
+                        ? (TAB_COLORS_HEX[i] === '#FFFFFF' ? '#0F172A' : '#ffffff')
                         : 'rgba(235,235,245,0.55)',
                     }}
                   >
