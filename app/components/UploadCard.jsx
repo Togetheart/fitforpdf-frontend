@@ -582,7 +582,7 @@ export default function UploadCard({
             type="button"
             onClick={onTrySample}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 rounded-full border border-accent/50 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent transition hover:border-accent hover:bg-accent/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-12 items-center gap-1.5 justify-center rounded-full bg-[#0F172A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
             <span aria-hidden="true">▶</span>
