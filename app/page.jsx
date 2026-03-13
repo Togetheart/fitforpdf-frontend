@@ -163,9 +163,9 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center gap-4 pt-2">
-              <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-sm font-[500] text-slate-600">
+              <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-sm font-[500] text-slate-400">
                 <span className="text-black/30">&#9654;</span>
-                {LANDING_COPY.heroExample}
+                CRM export — <span className="font-[600] text-[#0F172A]">14</span> columns → <span className="font-[600] text-[#0F172A]">4</span> PDF sections
               </span>
 
               <div className="w-full max-w-[540px] overflow-hidden rounded-xl border border-black/10 bg-white text-sm">
