@@ -51,7 +51,7 @@ export default function SiteHeader() {
               src="/fitforpdf@2x.webp"
               alt="fitforpdf"
               className={cn(
-                'w-auto object-contain transition-all duration-300 translate-y-[1px]',
+                'w-auto object-contain transition-all duration-300 translate-y-[2px]',
                 scrolled ? 'h-6' : 'h-7',
               )}
             />
