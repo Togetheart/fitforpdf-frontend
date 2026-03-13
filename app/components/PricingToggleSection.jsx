@@ -46,7 +46,7 @@ export function PillToggle({ options, value, onChange, size = 'md' }) {
             {opt.sub ? (
               <span className={cn(
                 'text-[10px] font-medium leading-tight mt-0.5',
-                isActive ? 'text-amber-400' : 'text-amber-500',
+                isActive ? 'text-blue-300' : 'text-blue-500',
               )}>
                 {opt.sub}
               </span>
@@ -109,7 +109,7 @@ export function PaygCard({ pack, onBuy }) {
           <span className="text-sm font-medium text-muted/70">{pack.exportsLabel}</span>
         </div>
         {pack.perExport ? (
-          <p className="mt-1.5 inline-block rounded-full bg-[#FEF3C7] px-2 py-0.5 text-xs font-semibold text-amber-700">
+          <p className="mt-1.5 inline-block rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
             {pack.perExport}
           </p>
         ) : (
@@ -210,7 +210,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
         <span className="text-4xl font-bold tracking-tight leading-none text-black tabular-nums">{price}</span>
         <span className="text-base font-medium text-muted/70">{period}</span>
         {isYearly ? (
-          <span className="ml-1 rounded-full border border-amber-200 bg-[#FEF3C7] px-2.5 py-0.5 text-xs font-semibold text-amber-700">
+          <span className="ml-1 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
             {PRICING_PAGE_COPY.proYearlySaving}
           </span>
         ) : null}
@@ -346,7 +346,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
       {/* Main toggle + social proof pill */}
       <div className="flex flex-col items-center gap-3">
         <PillToggle options={modeOptions} value={mode} onChange={setMode} />
-        <p className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700">
+        <p className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
