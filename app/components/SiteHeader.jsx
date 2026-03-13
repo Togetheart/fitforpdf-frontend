@@ -40,11 +40,11 @@ export default function SiteHeader() {
         )}
       >
         <div className="mx-auto flex w-full max-w-[1520px] items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-12">
-          <a href="/" className="flex items-center gap-1.5" aria-label="fitforpdf — accueil">
+          <a href="/" className="flex items-center gap-2" aria-label="fitforpdf — accueil">
             <AnimatedLogo
               className={cn(
                 'transition-all duration-300',
-                scrolled ? 'h-5 w-5' : 'h-[22px] w-[22px]',
+                scrolled ? 'h-7 w-7' : 'h-8 w-8',
               )}
             />
             <img
@@ -52,7 +52,7 @@ export default function SiteHeader() {
               alt="fitforpdf"
               className={cn(
                 'w-auto object-contain transition-all duration-300',
-                scrolled ? 'h-[18px]' : 'h-5',
+                scrolled ? 'h-[22px]' : 'h-6',
               )}
             />
           </a>
