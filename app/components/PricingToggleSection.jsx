@@ -351,7 +351,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
           </svg>
-          Saves <span className="font-bold">30–45 min</span> of manual formatting per export.
+          Saves <span className="font-bold">45 min</span> of manual formatting per export.
         </p>
       </div>
 

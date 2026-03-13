@@ -3,9 +3,9 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'fitforpdf',
   heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
-  heroSubheadline: 'No more cut-off columns, broken layouts, or manual print settings. Saves 30–45 minutes of formatting per export, automatically.',
+  heroSubheadline: 'No more cut-off columns, broken layouts, or manual print settings. Saves 45 minutes of formatting per export, automatically.',
   heroSubheadlineL1: 'No more cut-off columns, broken layouts, or manual print settings.',
-  heroSubheadlineL2: 'Saves 30–45 minutes of formatting per export, automatically.',
+  heroSubheadlineL2: 'Saves 45 minutes of formatting per export, automatically.',
   heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
   proofSourceLine: 'Typical sources: Excel exports · CSV datasets · SaaS reports',
@@ -55,7 +55,7 @@ export const LANDING_COPY = {
   credibilityMicro: "If it looks wrong once, you won't trust it. fitforpdf is built for the first try.",
 
   pricingPreviewTitle: 'Simple pricing.',
-  pricingPreviewSubline: 'Consultants and analysts spend 30–45 minutes fixing broken Excel PDFs. fitforpdf does it automatically.',
+  pricingPreviewSubline: 'Consultants and analysts spend 45 minutes fixing broken Excel PDFs. fitforpdf does it automatically.',
   pricingPreviewCta: 'See full pricing',
 
   privacyStripTitle: 'Privacy-first by default.',
