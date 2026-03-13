@@ -124,7 +124,7 @@ function PrivacyFeatureCard({ icon, title, description, testId }) {
 /* ─── Trust pill — même style exact que landing ────────── */
 function TrustPill() {
   return (
-    <p className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-[#FEF3C7]/80 px-4 py-1.5 text-xs font-medium text-amber-700">
+    <p className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
       <span aria-label="European Union flag">🇪🇺</span>
       {LANDING_COPY.heroTrustLine}
     </p>

@@ -11,7 +11,7 @@ export const UI_TOKENS = Object.freeze({
     ctaText: '#FFFFFF',
     ctaHover: '#1D4ED8',
     badgeFree: '#F3F4F6',
-    badgeHot: '#FEF3C7',
+    badgeHot: '#DBEAFE',
   },
   spacing: {
     x4: '4px',

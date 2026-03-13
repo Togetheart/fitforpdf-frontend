@@ -135,7 +135,7 @@ function EndpointCard({ endpoint }) {
         <MethodBadge method={endpoint.method} />
         <code className="text-sm font-[600] text-[#0F172A]">{endpoint.path}</code>
         {endpoint.auth && (
-          <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-[500] text-amber-700">
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-[500] text-blue-700">
             auth required
           </span>
         )}
@@ -323,7 +323,8 @@ function RequestAccessForm() {
 
 export default function DevelopersPage() {
   return (
-    <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+    <main className="min-h-screen bg-[#FAF8F5]">
+    <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
 
       {/* Hero */}
       <div className="mb-14">
@@ -596,6 +597,7 @@ export default function DevelopersPage() {
 
       {/* Request access */}
       <RequestAccessForm />
+    </div>
     </main>
   );
 }
