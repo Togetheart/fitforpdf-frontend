@@ -3,9 +3,9 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'fitforpdf',
   heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
-  heroSubheadline: 'No more cut-off columns, broken layouts, or manual print settings. Saves 45 minutes of formatting per export, automatically.',
-  heroSubheadlineL1: 'No more cut-off columns, broken layouts, or manual print settings.',
-  heroSubheadlineL2: 'Saves 45 minutes of formatting per export, automatically.',
+  heroSubheadline: 'Wide tables, automatically split into readable PDF sections.',
+  heroSubheadlineL1: 'Wide tables, automatically split into readable PDF sections.',
+  heroSubheadlineL2: 'Wide tables, automatically split into readable PDF sections.',
   heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
   proofSourceLine: 'Typical sources: Excel exports · CSV datasets · SaaS reports',
