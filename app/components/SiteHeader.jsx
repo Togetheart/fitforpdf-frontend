@@ -52,7 +52,7 @@ export default function SiteHeader() {
               alt="fitforpdf"
               className={cn(
                 'w-auto object-contain transition-all duration-300',
-                scrolled ? 'h-[22px]' : 'h-6',
+                scrolled ? 'h-6' : 'h-7',
               )}
             />
           </a>
