@@ -129,8 +129,7 @@ export default function Page() {
         >
           {/* Subtitle — stays visible throughout */}
           <p className="hero-headline-line w-full max-w-[1020px] mx-auto text-lg text-slate-900">
-            <span className="block">{LANDING_COPY.heroSubheadlineL1}</span>
-            <span className="block">{LANDING_COPY.heroSubheadlineL2}</span>
+            {LANDING_COPY.heroSubheadlineL2}
           </p>
 
           {/* Hero CTA — stays visible throughout */}
@@ -163,10 +162,6 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center gap-4 pt-2">
-              <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-sm font-[500] text-slate-400">
-                CRM export :{' '}<span className="font-[600] text-[#0F172A]">14</span>{' '}columns →{' '}<span className="font-[600] text-[#0F172A]">4</span>{' '}PDF sections
-              </span>
-
               <div className="w-full max-w-[540px] overflow-hidden rounded-xl border border-black/10 bg-white text-sm">
                 <div className="grid grid-cols-2 divide-x divide-black/10">
                   <div className="bg-black/[0.02] px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-black/40">
@@ -192,9 +187,6 @@ export default function Page() {
                 ))}
               </div>
 
-              <p className="text-xs text-black/25 tracking-wide">
-                Built on the fitforpdf rendering engine for wide business tables.
-              </p>
             </div>
           </div>
         </PageHero>
