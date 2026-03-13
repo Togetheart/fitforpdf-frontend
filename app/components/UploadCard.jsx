@@ -7,6 +7,7 @@ import {
   ShoppingCart,
 } from 'lucide-react';
 
+import AnimatedCheckmark from './AnimatedCheckmark';
 import Button from './ui/Button';
 import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
@@ -16,14 +17,14 @@ const PROGRESS_STEPS = ['Uploading', 'Structuring (column grouping)', 'Generatin
 const PROGRESS_STEP_STATES = {
   completed: {
     circle: 'border border-emerald-300 bg-emerald-50 text-emerald-700',
-    label: 'text-slate-700',
+    label: 'text-[var(--color-text)]',
   },
   active: {
     circle: 'border border-accent bg-accent text-white',
-    label: 'text-slate-900 font-medium',
+    label: 'text-[var(--color-text)] font-medium',
   },
   pending: {
-    circle: 'border border-slate-200 bg-slate-100 text-muted/70',
+    circle: 'border border-[var(--color-border)] bg-[var(--color-bg-hero)] text-muted/70',
     label: 'text-muted/70',
   },
 };
@@ -84,9 +85,9 @@ function getProgressPercent(progress) {
 }
 
 const EXPORT_BADGE_STYLES = {
-  neutral: 'border-blue-200/60 bg-blue-50/80 text-blue-700',
-  warning: 'border-blue-200/60 bg-blue-50/80 text-blue-700',
-  warningStrong: 'border-blue-200/60 bg-blue-50/80 text-blue-700',
+  neutral: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-800',
+  warning: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-800',
+  warningStrong: 'border-amber-200/60 bg-[#FEF3C7]/80 text-amber-800',
   danger: 'border-red-300 bg-red-600 text-white',
 };
 
@@ -211,26 +212,26 @@ function SettingRow({
 
   return (
     <div
-      className={`flex w-full items-start justify-between gap-6 px-0 py-4 ${showBottomBorder ? 'border-b border-slate-100' : ''}`}
+      className={`flex w-full items-start justify-between gap-6 px-0 py-4 ${showBottomBorder ? 'border-b border-[var(--color-border)]' : ''}`}
     >
       <div
         data-testid={rowTestId}
         tabIndex={-1}
         className="min-w-0"
       >
-        <div
-          role="button"
-          tabIndex={-1}
-          className="w-full cursor-pointer px-1 py-0.5 text-left transition-colors hover:bg-slate-50"
+        <button
+          type="button"
+          tabIndex={0}
+          className="w-full cursor-pointer px-1 py-0.5 text-left transition-colors hover:bg-[var(--color-bg-hero)] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/25"
           onClick={handleTextToggle}
         >
-          <div className="text-sm font-semibold text-slate-900">{title}</div>
+          <div className="text-sm font-semibold text-[var(--color-text)]">{title}</div>
           <div
             className="mt-1 text-sm text-muted"
           >
             {description}
           </div>
-        </div>
+        </button>
       </div>
 
       <div className="shrink-0 flex w-12 justify-end pt-0.5">
@@ -465,343 +466,195 @@ export default function UploadCard({
 
   const buyCreditsButtonText = paywallReason ? 'Buy credits' : 'Buy credits';
 
+  const gearRef = React.useRef(null);
+
+  // Close dropdown on outside click
+  React.useEffect(() => {
+    if (!isOptionsExpanded) return;
+    const handleClick = (e) => {
+      if (gearRef.current && !gearRef.current.contains(e.target)) {
+        setIsOptionsExpanded(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [isOptionsExpanded]);
+
   return (
     <article
-      className="relative overflow-hidden rounded-xl bg-white/20 backdrop-blur-[5px] border border-black/10"
       data-testid="upload-card"
+      className="w-full"
     >
-      <div
-        aria-hidden="true"
-        data-testid="uploadcard-glass-backdrop"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.75),transparent_52%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.45),transparent_65%)]"
-      />
-      <div
-        aria-hidden="true"
-        data-testid="uploadcard-glass-highlight"
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-20 rounded-xl bg-gradient-to-b from-white/40 to-transparent"
-      />
-      <div className="relative z-10 p-5">
-        <form className="relative space-y-5" onSubmit={onSubmit}>
-        <div className="flex flex-col gap-1">
-          <div id="generate" className="scroll-mt-24 flex items-center justify-between gap-2">
-            <p className="text-sm text-muted">{toolSubcopy}</p>
-            <div className="flex shrink-0 items-center gap-2">
-              {showProBanner ? (
-                <p
-                  data-testid="pro-top-banner"
-                  className="rounded-full bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700"
-                >
-                  Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
-                </p>
-              ) : null}
-              <span
-                data-testid="quota-buy-slot"
-                className="flex h-9 w-9 shrink-0 items-center justify-center"
-                aria-hidden={showBuyCredits ? 'false' : 'true'}
+      <form className="relative" onSubmit={onSubmit}>
+        {/* ── The Pill ─────────────────────────────── */}
+        <div id="generate" className="scroll-mt-24 upload-pill flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5">
+          <UploadDropzone
+            inputId="fitforpdf-file-input"
+            file={file}
+            onFileSelect={onFileSelect}
+            onFileSelected={onFileSelect}
+            onRemoveFile={onRemoveFile}
+            accept=".csv,.xlsx"
+            disabled={isLoading}
+          />
+
+          {/* Gear button */}
+          <div ref={gearRef} className="relative shrink-0">
+            <button
+              type="button"
+              data-testid="options-accordion-toggle"
+              aria-expanded={isOptionsExpanded}
+              aria-controls="upload-options"
+              onClick={() => setIsOptionsExpanded((c) => !c)}
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-full border transition text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] ${isOptionsExpanded ? 'border-accent/30 bg-[var(--color-bg-hero)] text-[var(--color-text)]' : 'border-[var(--color-border)]'}`}
+              aria-label="Advanced options"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+              </svg>
+            </button>
+
+            {/* Gear dropdown */}
+            {isOptionsExpanded ? (
+              <div
+                id="upload-options"
+                data-testid="upload-options"
+                className="absolute right-0 top-full mt-2 w-[340px] rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg z-20 p-4"
+                data-testid-shell="upload-options-shell"
+                aria-live="polite"
               >
-                {showBuyCredits ? (
-                  <span className="group relative inline-flex">
-                    <button
-                      type="button"
-                      aria-label="Buy credits"
-                      aria-describedby="buy-credits-tooltip"
-                      title="Buy credits"
-                      onClick={onBuyCredits}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-muted transition hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/80"
-                    >
-                      <ShoppingCart aria-hidden="true" className="h-4 w-4" />
-                    </button>
-                    <span
-                      id="buy-credits-tooltip"
-                      role="tooltip"
-                      className="pointer-events-none absolute right-0 top-full mt-1 translate-y-0.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 group-focus:opacity-100"
-                    >
-                      {buyCreditsButtonText}
-                    </span>
-                  </span>
-                ) : null}
+                <div className="min-h-0 divide-y divide-[var(--color-border)]">
+                  {effectiveShowBuyCreditsPanel ? (
+                    <section className="rounded-xl glass-subtle p-4 mb-3" data-testid="credits-purchase-panel">
+                      <div className="mb-3 flex items-center justify-between">
+                        <p className="text-sm font-semibold text-[var(--color-text)]">Buy credits</p>
+                        <button type="button" onClick={handleBuyCreditsPanelClose} className="text-xs font-semibold text-muted underline">Close</button>
+                      </div>
+                      {CREDIT_PACKS.map((pack) => (
+                        <button type="button" key={pack.pack} onClick={() => onBuyCreditsPack(pack.pack)} className="mt-2 flex w-full items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm font-medium">
+                          <span>{pack.exportsLabel}</span>
+                          <span>{pack.price}</span>
+                        </button>
+                      ))}
+                      {purchaseMessage ? <p className="mt-3 text-sm text-[var(--color-text)]">{purchaseMessage}</p> : null}
+                    </section>
+                  ) : null}
+
+                  {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+                    <div data-testid="branding-upgrade-nudge-slot" aria-live="polite">
+                      <section className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 mb-3" data-testid="branding-upgrade-nudge">
+                        <p className="text-sm font-semibold text-[var(--color-text)]">{nudgeData?.title || 'Upgrade to unlock this feature'}</p>
+                        <p className="mt-1 text-sm text-muted">{nudgeData?.description || 'Upgrade to unlock this feature.'}</p>
+                        <div className="mt-3 flex items-center gap-2">
+                          <button type="button" onClick={handleBrandingUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent bg-accent px-3 text-xs font-semibold text-white hover:bg-accent-hover">Buy credits</button>
+                          <button type="button" onClick={handleProUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-blue-50">Go Pro</button>
+                          <button type="button" onClick={handleBrandingNudgeDismiss} className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]">Not now</button>
+                        </div>
+                      </section>
+                    </div>
+                  ) : null}
+
+                  <SettingRow title="Branding" description="Adds a lightweight brand treatment by default" checked={includeBranding} onChange={handleBrandingChange} rowTestId="setting-row-branding" disabled={isLoading} />
+                  <SettingRow title="Keep overview" description="Show overview summary page in the export." checked={layout?.overview !== false} onChange={(v) => handleLayoutChange('overview', v)} rowTestId="setting-row-overview" disabled={isLoading} />
+                  <SettingRow title="Keep headers" description="Keep repeated headers for multi-page outputs." checked={layout?.headers !== false} onChange={(v) => handleLayoutChange('headers', v)} rowTestId="setting-row-headers" disabled={isLoading} />
+                  <SettingRow title="Keep footer" description="Keep footer metadata in the exported PDF." checked={layout?.footer !== false} onChange={(v) => handleLayoutChange('footer', v)} rowTestId="setting-row-footer" disabled={isLoading} />
+                  <SettingRow title="Truncate long text" description="Auto-crops very long content to keep layout stable" checked={truncateLongText} onChange={onTruncateChange} rowTestId="setting-row-truncate" disabled={isLoading} showBottomBorder={false} />
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Generate button — inside the pill */}
+          <Button
+            type="submit"
+            variant="primary"
+            className="shrink-0 !h-10 !rounded-xl !px-5"
+            disabled={isLoading || !file}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 aria-hidden="true" className="mr-1.5 h-4 w-4 animate-spin" />
+                <span className="hidden sm:inline">Generating…</span>
+              </>
+            ) : (
+              <>
+                Generate
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </>
+            )}
+          </Button>
+        </div>
+
+        {/* ── Below-pill zone ─────────────────────── */}
+        <div className="mt-4 flex flex-col items-center gap-3 text-center">
+          {/* Quota + Pro badge */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {showProBanner ? (
+              <span data-testid="pro-top-banner" className="text-xs font-semibold text-[var(--color-text)]">
+                Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
               </span>
-              <span
-                data-testid="quota-pill"
-                className={`inline-flex h-9 min-w-0 items-center rounded-full border px-4 text-xs font-semibold shadow-sm ${freeExportsBadgeClass}`}
-                aria-label="remaining exports"
-              >
+            ) : (
+              <span data-testid="quota-pill" className="text-xs font-medium text-muted" aria-label="remaining exports">
                 {quotaText}
               </span>
-            </div>
-          </div>
-        </div>
-
-        {effectiveShowBuyCreditsPanel && !isOptionsExpanded ? (
-          <section className="rounded-xl glass-subtle p-4" data-testid="credits-purchase-panel">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-semibold text-slate-900">Buy credits</p>
+            )}
+            {showBuyCredits ? (
               <button
                 type="button"
-                onClick={handleBuyCreditsPanelClose}
-                className="text-xs font-semibold text-muted underline"
+                onClick={onBuyCredits}
+                data-testid="quota-buy-slot"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-cta hover:underline"
               >
-                Close
+                <ShoppingCart aria-hidden="true" className="h-3.5 w-3.5" />
+                Buy credits
               </button>
-            </div>
-            <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              Saves <span className="font-semibold">45 min</span> of manual formatting per export.
-            </p>
-            {CREDIT_PACKS.map((pack) => (
-              <button
-                type="button"
-                key={pack.pack}
-                onClick={() => onBuyCreditsPack(pack.pack)}
-                className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
-              >
-                <span>{pack.exportsLabel}</span>
-                <span>{pack.price}</span>
-              </button>
-            ))}
-            {purchaseMessage ? (
-              <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
             ) : null}
-          </section>
-        ) : null}
+          </div>
 
-        <UploadDropzone
-          inputId="fitforpdf-file-input"
-          file={file}
-          onFileSelect={onFileSelect}
-          onFileSelected={onFileSelect}
-          onRemoveFile={onRemoveFile}
-          accept=".csv,.xlsx"
-          disabled={isLoading}
-        />
-        <div className="text-center" data-testid="demo-try-row">
-          <button
-            type="button"
+          {/* Try demo */}
+          <Button
+            variant="accent"
             onClick={onTrySample}
             disabled={isLoading}
-            className="inline-flex h-12 items-center gap-1.5 justify-center rounded-full bg-[#0F172A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:cursor-not-allowed disabled:opacity-50"
             data-testid="demo-try-button"
           >
-            <span aria-hidden="true">▶</span>
             Try with a demo file
-          </button>
-        </div>
+          </Button>
 
-        {isLoading && conversionProgress ? (
-          <div
-            className="space-y-3 rounded-xl glass-subtle p-4"
-            data-testid="upload-progress"
-          >
-            <div className="flex items-center justify-between text-sm">
-              <p className="font-medium text-slate-800">Converting your file</p>
-              <p className="font-semibold text-muted">{progressPercent}%</p>
-            </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
-              <div
-                className="h-full rounded-full bg-accent transition-all duration-200 ease-out"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-            <p data-testid="upload-progress-label" className="text-xs font-medium text-muted">
-              {progressStepLabel}
-            </p>
-            <StepIndicator activeStepIndex={progressStepIndex} />
-          </div>
-        ) : null}
-
-        <div
-          className="mt-6 rounded-xl border border-black/10 bg-white"
-          data-testid="upload-options-shell"
-        >
-          <button
-            type="button"
-            data-testid="options-accordion-toggle"
-            aria-expanded={isOptionsExpanded}
-            aria-controls="upload-options"
-            onClick={() => setIsOptionsExpanded((current) => !current)}
-            className={`group flex w-full items-center justify-between gap-2 px-5 py-3 text-left text-xs font-semibold text-muted transition hover:text-black ${isOptionsExpanded ? 'border-b border-black/10' : ''}`}
-          >
-            <span>Advanced options</span>
-            <ChevronDown
-              aria-hidden="true"
-              className={`h-4 w-4 text-muted transition-transform duration-200 ${isOptionsExpanded ? 'rotate-180' : ''}`}
-            />
-          </button>
-
-          {isOptionsExpanded ? (
-            <div
-              id="upload-options"
-              data-testid="upload-options"
-              className="px-5 py-5 space-y-4"
-              aria-live="polite"
-            >
-              <div className="min-h-0 divide-y divide-slate-100">
-                {effectiveShowBuyCreditsPanel && isOptionsExpanded ? (
-                  <section className="rounded-xl glass-subtle p-4" data-testid="credits-purchase-panel">
-                    <div className="mb-3 flex items-center justify-between">
-                      <p className="text-sm font-semibold text-slate-900">Buy credits</p>
-                      <button
-                        type="button"
-                        onClick={handleBuyCreditsPanelClose}
-                        className="text-xs font-semibold text-muted underline"
-                      >
-                        Close
-                      </button>
-                    </div>
-                    <p className="mb-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                      </svg>
-                      Saves <span className="font-semibold">45 min</span> of manual formatting per export.
-                    </p>
-                    {CREDIT_PACKS.map((pack) => (
-                      <button
-                        type="button"
-                        key={pack.pack}
-                        onClick={() => onBuyCreditsPack(pack.pack)}
-                        className="mt-2 flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium"
-                      >
-                        <span>{pack.exportsLabel}</span>
-                        <span>{pack.price}</span>
-                      </button>
-                    ))}
-                    {purchaseMessage ? (
-                      <p className="mt-3 text-sm text-slate-700">{purchaseMessage}</p>
-                    ) : null}
-                  </section>
-                ) : null}
-                {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
-                  <div
-                    data-testid="branding-upgrade-nudge-slot"
-                    aria-live="polite"
-                  >
-                    <section
-                      className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3"
-                      data-testid="branding-upgrade-nudge"
-                    >
-                      <p className="text-sm font-semibold text-slate-900">
-                        {nudgeData?.title || 'Upgrade to unlock this feature'}
-                      </p>
-                      <p className="mt-1 text-sm text-muted">
-                        {nudgeData?.description || 'Upgrade to unlock this feature.'}
-                      </p>
-                      <div className="mt-3 flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={handleBrandingUpgrade}
-                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-white transition-colors rounded-full border border-accent bg-accent px-4 hover:bg-accent-hover"
-                        >
-                          Buy credits
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleProUpgrade}
-                          className="inline-flex h-9 items-center justify-center text-center text-sm font-semibold text-slate-700 transition-colors rounded-full border border-accent px-4 hover:bg-blue-50"
-                        >
-                          Go Pro
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleBrandingNudgeDismiss}
-                          className="inline-flex h-9 items-center rounded-full border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                        >
-                          Not now
-                        </button>
-                      </div>
-                    </section>
-                  </div>
-                ) : null}
-
-                <SettingRow
-                  title="Branding"
-                  description="Adds a lightweight brand treatment by default"
-                  checked={includeBranding}
-                  onChange={handleBrandingChange}
-                  rowTestId="setting-row-branding"
-                  disabled={isLoading}
-                />
-
-                <SettingRow
-                  title="Keep overview"
-                  description="Show overview summary page in the export."
-                  checked={layout?.overview !== false}
-                  onChange={(nextChecked) => handleLayoutChange('overview', nextChecked)}
-                  rowTestId="setting-row-overview"
-                  disabled={isLoading}
-                />
-
-                <SettingRow
-                  title="Keep headers"
-                  description="Keep repeated headers for multi-page outputs."
-                  checked={layout?.headers !== false}
-                  onChange={(nextChecked) => handleLayoutChange('headers', nextChecked)}
-                  rowTestId="setting-row-headers"
-                  disabled={isLoading}
-                />
-
-                <SettingRow
-                  title="Keep footer"
-                  description="Keep footer metadata in the exported PDF."
-                  checked={layout?.footer !== false}
-                  onChange={(nextChecked) => handleLayoutChange('footer', nextChecked)}
-                  rowTestId="setting-row-footer"
-                  disabled={isLoading}
-                />
-
-                <SettingRow
-                  title="Truncate long text"
-                  description="Auto-crops very long content to keep layout stable"
-                  checked={truncateLongText}
-                  onChange={onTruncateChange}
-                  rowTestId="setting-row-truncate"
-                  disabled={isLoading}
-                  showBottomBorder={false}
-                />
+          {/* Progress */}
+          {isLoading && conversionProgress ? (
+            <div className="w-full max-w-[640px] space-y-3 rounded-xl glass-subtle p-4" data-testid="upload-progress">
+              <div className="flex items-center justify-between text-sm">
+                <p className="font-medium text-[var(--color-text)]">Converting your file</p>
+                <p className="font-semibold text-muted">{progressPercent}%</p>
               </div>
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-border)]">
+                <div className="h-full rounded-full bg-accent transition-all duration-200 ease-out" style={{ width: `${progressPercent}%` }} />
+              </div>
+              <p data-testid="upload-progress-label" className="text-xs font-medium text-muted">{progressStepLabel}</p>
+              <StepIndicator activeStepIndex={progressStepIndex} />
             </div>
           ) : null}
-        </div>
 
-        {isQuotaLocked ? (
-          <>
-            <section
-              data-testid="upload-paywall"
-              className="rounded-2xl border border-black/10 bg-hero p-5 space-y-4"
-            >
-              {/* Header */}
+          {/* Paywall */}
+          {isQuotaLocked ? (
+            <section data-testid="upload-paywall" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 space-y-4">
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-black">
-                  You've used your free exports.
-                </p>
-                <p className="text-xs text-muted">
-                  {paywallReason || 'Pick a credit pack — one-time purchase, no subscription.'}
-                </p>
+                <p className="text-sm font-semibold text-[var(--color-text)]">You've used your free exports.</p>
+                <p className="text-xs text-muted">{paywallReason || 'Pick a credit pack — one-time purchase, no subscription.'}</p>
               </div>
-
-              {/* Credit packs */}
               <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
                 {PAYWALL_PACKS.map((p, i) => (
                   i === 0 ? (
-                    <button
-                      key={p.stripePackId}
-                      type="button"
-                      onClick={() => onBuyCreditsPack(p.stripePackId)}
-                      className="group flex flex-col items-start gap-0.5 rounded-xl border border-black/10 bg-white px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]"
-                    >
+                    <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group flex flex-col items-start gap-0.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]">
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
-                      <span className="text-lg font-bold tracking-tight text-black group-hover:text-accent transition-colors">{p.priceDisplay}</span>
+                      <span className="text-lg font-bold tracking-tight text-[var(--color-text)] group-hover:text-cta transition-colors">{p.priceDisplay}</span>
                     </button>
                   ) : (
-                    <button
-                      key={p.stripePackId}
-                      type="button"
-                      onClick={() => onBuyCreditsPack(p.stripePackId)}
-                      className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]"
-                    >
+                    <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]">
                       <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
                       <span className="text-lg font-bold tracking-tight text-accent">{p.priceDisplay}</span>
@@ -809,69 +662,42 @@ export default function UploadCard({
                   )
                 ))}
               </div>
-
-              {/* Footer */}
               <p className="text-center text-xs text-muted/70">
                 Need more?{' '}
-                <a href="mailto:hello@fitforpdf.com" className="text-muted underline underline-offset-2 hover:text-black transition-colors">
-                  Contact us for Team/API
-                </a>
+                <a href="mailto:hello@fitforpdf.com" className="text-muted underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Contact us for Team/API</a>
               </p>
             </section>
-          </>
-        ) : hasResultBlob ? (
-          <Button
-            type="button"
-            variant="primary"
-            className="w-full"
-            data-testid="download-again"
-            onClick={onDownloadAgain}
-            disabled={isLoading}
-          >
-            Download again
-          </Button>
-        ) : (
-          <>
-          <p data-testid="upload-privacy-messages" className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700 w-full justify-center">
-            <span aria-label="European Union flag">🇪🇺</span>
-            GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored
-          </p>
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full !h-9"
-            disabled={isLoading || !file}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 aria-hidden="true" className="mr-2 h-4 w-4 animate-spin" />
-                Generating…
-              </>
-            ) : (
-              'Generate PDF'
-            )}
-          </Button>
-          </>
-        )}
+          ) : hasResultBlob ? (
+            <div className="flex flex-col items-center gap-3 w-full max-w-[640px]">
+              <AnimatedCheckmark size={48} />
+              <p className="text-emerald-600 text-sm font-medium">PDF generated successfully!</p>
+              <Button type="button" variant="primary" className="w-full" data-testid="download-again" onClick={onDownloadAgain} disabled={isLoading}>
+                Download again
+              </Button>
+            </div>
+          ) : (
+            <p data-testid="upload-privacy-messages" className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
+              <span aria-label="European Union flag">🇪🇺</span>
+              GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored
+            </p>
+          )}
 
-        {downloadedFileName || shouldShowVerdict ? (
-          <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-            {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
-            {shouldShowVerdict ? (
-              <span
-                className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-[11px] font-semibold ${verdictStyle.badge}`}
-              >
-                <VerdictIcon aria-hidden="true" className={`h-3.5 w-3.5 ${verdictStyle.icon}`} />
-                {String(verdict).toUpperCase()}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
+          {downloadedFileName || shouldShowVerdict ? (
+            <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+              {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
+              {shouldShowVerdict ? (
+                <span className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-[11px] font-semibold ${verdictStyle.badge}`}>
+                  <VerdictIcon aria-hidden="true" className={`h-3.5 w-3.5 ${verdictStyle.icon}`} />
+                  {String(verdict).toUpperCase()}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
 
-        {notice ? <p className="text-sm text-slate-700">{notice}</p> : null}
-        {error && <p className="text-sm text-rose-700">{error}</p>}
-            </form>
-          </div>
+          {notice ? <p className="text-sm text-[var(--color-text)]">{notice}</p> : null}
+          {error && <p className="text-sm text-rose-700">{error}</p>}
+        </div>
+      </form>
     </article>
   );
 }

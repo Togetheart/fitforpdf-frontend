@@ -36,11 +36,11 @@ describe('HeroHeadline accent animation', () => {
 
     const accent = screen.getByTestId('hero-headline-accent');
     expect(accent).toBeTruthy();
-    expect(accent.textContent).toBe('Readable');
+    expect(accent.textContent).toBe('Readable PDFs');
     expect(accent.className).toContain('hero-accent');
     expect(accent.className).toContain('hero-accent--sections');
 
-    const secondLine = screen.getByText(/for wide Excel/);
+    const secondLine = screen.getByText(/from wide Excel/);
     expect(secondLine).toBeTruthy();
     expect(secondLine.className).not.toContain('hero-accent');
     expect(secondLine.className).not.toContain('hero-accent--sections');

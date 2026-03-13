@@ -15,11 +15,11 @@ export default function DemoGlassCard({
   return (
     <section
       data-testid="demo-glass-card"
-      className="feature-card-hover relative mx-auto mt-6 flex w-full max-w-5xl flex-col gap-3 overflow-hidden rounded-3xl border border-black/10 bg-white/55 bg-gradient-to-b from-white/60 to-white/30 p-4 backdrop-blur-xl sm:p-6"
+      className="feature-card-hover relative mx-auto mt-6 flex w-full max-w-5xl flex-col gap-3 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)]/55 bg-gradient-to-b from-[var(--color-bg)]/60 to-[var(--color-bg)]/30 p-4 backdrop-blur-xl sm:p-6"
     >
       <div
         data-testid="demo-glass-highlight"
-        className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-b from-white/50 to-transparent"
+        className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/50 to-transparent"
       />
       <div className="relative">
         <header className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.14em] text-muted">
@@ -28,12 +28,12 @@ export default function DemoGlassCard({
         </header>
         <div
           data-testid="demo-glass-embed"
-          className="aspect-[16/9] relative overflow-hidden rounded-xl bg-white/40"
+          className="aspect-[16/9] relative overflow-hidden rounded-xl bg-[var(--color-bg)]/40"
         >
           {isLoading ? (
             <div
               data-testid="demo-glass-skeleton"
-              className="absolute inset-0 animate-pulse bg-slate-200/80"
+              className="absolute inset-0 animate-pulse bg-[var(--color-bg-hero)]"
               aria-label="demo-loading"
             >
               <div className="h-full w-full bg-gradient-to-r from-white/30 via-white/60 to-white/30" />
@@ -44,7 +44,7 @@ export default function DemoGlassCard({
             src={DEMO_IFRAME_SRC}
             loading="lazy"
             title="fitforpdf interactive demo"
-            className="h-full w-full border-0 bg-white/40"
+            className="h-full w-full border-0 bg-[var(--color-bg)]/40"
             sandbox="allow-scripts allow-same-origin allow-forms"
             onLoad={handleIframeLoad}
           />

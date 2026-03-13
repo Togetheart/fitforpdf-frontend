@@ -64,11 +64,11 @@ describe('landing conversion-first structure', () => {
     const heading = screen.getByRole('heading', { level: 1, name: /Readable PDFs/i });
 
     expect(heading).toBeTruthy();
-    expect(screen.getByTestId('hero-headline-accent').textContent).toBe('Readable');
-    expect(screen.getByText(/for wide Excel/)).toBeTruthy();
+    expect(screen.getByTestId('hero-headline-accent').textContent).toBe('Readable PDFs');
+    expect(screen.getByText(/from wide Excel/)).toBeTruthy();
     const headingText = heading.textContent || '';
     expect(headingText).toContain('Readable PDFs');
-    expect(headingText).toContain('for wide Excel');
+    expect(headingText).toContain('from wide Excel');
   });
 
   test('unverified social proof claim is not shown', () => {
@@ -155,7 +155,7 @@ describe('landing conversion-first structure', () => {
     expect(proofCard).toBeTruthy();
     expect(demoButton).toBeTruthy();
     const demoClass = demoButton.getAttribute('class') || '';
-    expect(demoClass).toContain('text-accent');
+    expect(demoClass).toContain('text-white');
     expect(demoClass).toContain('bg-accent');
     expect(screen.queryByRole('button', { name: 'Run the demo' })).toBeNull();
     expect(screen.getAllByTestId('demo-try-button')).toHaveLength(1);
@@ -216,7 +216,8 @@ describe('landing conversion-first structure', () => {
     const faq = screen.getByTestId('faq-section');
 
     expect((proof.getAttribute('class') || '').includes('py-12')).toBe(true);
-    expect((pricing.getAttribute('class') || '').includes('py-10')).toBe(true);
+    // Pricing section has no extra py className; its inner div uses the Section default py-10
+    expect((pricing.firstElementChild?.getAttribute('class') || '').includes('py-10')).toBe(true);
     expect((privacy.getAttribute('class') || '').includes('py-12')).toBe(true);
     expect((faq.getAttribute('class') || '').includes('py-12')).toBe(true);
   });
@@ -237,8 +238,8 @@ describe('landing conversion-first structure', () => {
     expect(faqSectionClass).toContain('bg-hero');
     expect((privacy.textContent || '').includes('Your data. Not our business.')).toBe(true);
     expect((faq.textContent || '').includes('Frequently asked questions')).toBe(true);
-    expect(pricingInner?.getAttribute('class') || '').toContain('max-w-[1440px]');
-    expect(faqInner?.getAttribute('class') || '').toContain('max-w-[1240px]');
+    expect(pricingInner?.getAttribute('class') || '').toContain('max-w-wide');
+    expect(faqInner?.getAttribute('class') || '').toContain('max-w-narrow');
     expect(faqAccordion.parentElement?.getAttribute('class') || '').toContain('w-full');
   });
 

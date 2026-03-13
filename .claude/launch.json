@@ -2,12 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "dev",
+      "name": "frontend-dev",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["next", "dev"],
-      "port": 3002,
-      "autoPort": true
+      "autoPort": true,
+      "port": 3001
     }
-  ],
-  "autoVerify": false
+  ]
 }

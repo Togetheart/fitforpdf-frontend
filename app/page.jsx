@@ -19,8 +19,13 @@ import Button from './components/ui/Button';
 import ProofShowcase from './components/ProofShowcase';
 
 import AnimatedShieldIcon from './components/AnimatedShieldIcon';
+import StickyMobileCTA from './components/StickyMobileCTA';
+import UseCaseCards from './components/UseCaseCards';
+import WallOfLove from './components/WallOfLove';
+import ApiTeaserWidget from './components/ApiTeaserWidget';
+import RoiCalculator from './components/RoiCalculator';
 
-const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#0F172A]/20 bg-white text-[#0F172A] hover:border-[#0F172A]/40 hover:bg-[#0F172A]/5';
+const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
 
 const FEATURE_ICONS = {
   overview: (
@@ -72,6 +77,38 @@ const FEATURE_ICON_COLORS = {
   link:       'text-blue-300',
 };
 
+/* Category icons for "Who this is for" items (16x16, stroke-based) */
+const WHO_ICONS = {
+  'CRM exports': (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="5" r="3" />
+      <path d="M2 14c0-2.5 2.5-4 6-4s6 1.5 6 4" />
+    </svg>
+  ),
+  'financial reports': (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 2v12M5 5h6M5 8h6M6 11h4" />
+    </svg>
+  ),
+  'analytics tables': (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 13V7M6.5 13V5M10 13V8M13.5 13V3" />
+    </svg>
+  ),
+  'inventory reports': (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="3" width="12" height="10" rx="1.5" />
+      <path d="M2 7h12M6 7v6" />
+    </svg>
+  ),
+  'SaaS reporting exports': (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 12a3 3 0 0 1-.5-5.95A4.5 4.5 0 0 1 12.5 6a3.5 3.5 0 0 1-.5 6.95" />
+      <path d="M8 9v4M6 11l2-2 2 2" />
+    </svg>
+  ),
+};
+
 const COMPARISON_ROWS = [
   ['Wide columns', 'Cut off or unreadable', 'Grouped into sections'],
   ['Layout', 'Manual configuration', 'Auto-structured'],
@@ -91,6 +128,49 @@ function FeatureIcon({ name }) {
 
 
 // Sticky trust ticker removed; homepage avoids unverified social-credibility claims.
+
+/* Inline ROI slider for the Apple grid card (dark context) */
+function RoiSliderInline() {
+  const [count, setCount] = React.useState(10);
+  const mins = count * 45;
+  const hours = Math.round((mins / 60) * 10) / 10;
+  const dollars = Math.round(hours * 75);
+  const plan = count <= 1 ? 'Single export' : count <= 10 ? 'Starter 10-pack' : 'Volume 100-pack';
+
+  return (
+    <>
+      <div className="mt-2 flex items-center gap-4">
+        <input
+          type="range"
+          min={1}
+          max={500}
+          step={1}
+          value={count}
+          aria-label="Number of exports per month"
+          onChange={(e) => setCount(Number(e.target.value))}
+          className="roi-slider h-1.5 w-full cursor-pointer appearance-none rounded-full bg-white/10"
+        />
+        <span className="w-12 shrink-0 text-right text-base font-semibold tabular-nums text-white">
+          {count}
+        </span>
+      </div>
+      <div className="mt-5 grid grid-cols-3 gap-3">
+        <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
+          <p className="text-2xl font-bold text-white tabular-nums">{hours}<span className="text-base font-normal text-slate-400">h</span></p>
+          <p className="mt-0.5 text-[11px] text-slate-500">saved / month</p>
+        </div>
+        <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
+          <p className="text-2xl font-bold text-white tabular-nums">${dollars.toLocaleString()}</p>
+          <p className="mt-0.5 text-[11px] text-slate-500">at $75/hr</p>
+        </div>
+        <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
+          <p className="text-sm font-semibold text-blue-400">{plan}</p>
+          <p className="mt-0.5 text-[11px] text-slate-500">recommended</p>
+        </div>
+      </div>
+    </>
+  );
+}
 
 export default function Page() {
   const quota = useQuota();
@@ -114,9 +194,9 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       {/* Scroll spacer — creates room for Apple-style sticky scroll sequence */}
-      <div style={{ height: 'calc(100vh + 900px)' }}>
+      <div className="h-[calc(100vh+600px)] sm:h-[calc(100vh+900px)]">
         <PageHero
           heroTestId="hero-section"
           variant="home"
@@ -124,35 +204,37 @@ export default function Page() {
           height="h-screen"
           title={<HeroHeadline />}
           contentClassName="items-center justify-center gap-10 text-center h-full !py-6"
-          contentMaxWidthClassName="max-w-[1360px]"
+          contentMaxWidthClassName="max-w-content"
           className="py-0 w-full sticky top-0"
         >
           {/* Subtitle — stays visible throughout */}
-          <p className="hero-headline-line w-full max-w-[1020px] mx-auto text-lg text-slate-900">
+          <p className="hero-headline-line w-full max-w-3xl mx-auto text-lg text-[var(--color-text)]">
             {LANDING_COPY.heroSubheadlineL2}
           </p>
 
           {/* Hero CTA — stays visible throughout */}
           <div className="hero-headline-line flex flex-col items-center gap-3">
             <div className="flex items-center gap-3">
-              <a
+              <Button
+                variant="accent"
                 href="#generate"
                 onClick={handleHeroGenerateClick}
-                className="inline-flex h-12 items-center justify-center rounded-full bg-[#0F172A] px-8 text-sm font-semibold text-white transition duration-150 hover:bg-black/80"
+                className="h-12 px-8"
               >
                 Upload a file
-              </a>
-              <a
+              </Button>
+              <Button
+                variant="outline"
                 href="/developers"
-                className="inline-flex h-12 items-center gap-1.5 justify-center rounded-full border border-[#0F172A]/15 bg-white px-6 text-sm font-semibold text-[#0F172A] transition duration-150 hover:border-[#0F172A]/30 hover:bg-[#0F172A]/[0.03]"
+                className="h-12 gap-1.5"
               >
                 Get API
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
-              </a>
+              </Button>
             </div>
-            <span className="text-xs text-black/40">3 free exports. No account required.</span>
+            <span className="text-xs text-[var(--color-muted)]">3 free exports. No account required.</span>
           </div>
 
           {/* Comparison reveal — fades in below CTA during scroll phase 2.
@@ -162,12 +244,12 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center gap-4 pt-2">
-              <div className="w-full max-w-[540px] overflow-hidden rounded-xl border border-black/10 bg-white text-sm">
-                <div className="grid grid-cols-2 divide-x divide-black/10">
-                  <div className="bg-black/[0.02] px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-black/40">
+              <div className="w-full max-w-[540px] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] text-sm">
+                <div className="grid grid-cols-2 divide-x divide-[var(--color-border)]">
+                  <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)]">
                     Excel export
                   </div>
-                  <div className="px-4 py-2 text-xs font-[600] uppercase tracking-[0.06em] text-[#0F172A]">
+                  <div className="bg-cta/[0.06] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-cta">
                     fitforpdf
                   </div>
                 </div>
@@ -176,12 +258,12 @@ export default function Page() {
                   ['Tiny unreadable text', 'Full-width readable columns'],
                   ['Broken page flow',     'Clean pagination'],
                 ].map(([before, after]) => (
-                  <div key={before} className="grid grid-cols-2 divide-x divide-black/[0.06] border-t border-black/[0.06]">
-                    <div className="bg-black/[0.02] px-4 py-2.5 text-black/40 line-through decoration-black/20">
-                      {before}
+                  <div key={before} className="grid grid-cols-2 divide-x divide-[var(--color-border)] border-t border-[var(--color-border)]">
+                    <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-[var(--color-muted)] line-through decoration-[var(--color-border)]">
+                      <span className="mr-1.5 text-red-400/60">✗</span>{before}
                     </div>
-                    <div className="px-4 py-2.5 font-[500] text-[#0F172A]">
-                      {after}
+                    <div className="bg-cta/[0.06] px-4 py-2.5 font-semibold text-[var(--color-text)]">
+                      <span className="mr-1.5 text-emerald-500">✓</span>{after}
                     </div>
                   </div>
                 ))}
@@ -196,7 +278,7 @@ export default function Page() {
       <Section
         id={LANDING_COPY_KEYS.beforeAfter}
         index={1}
-        maxWidth="max-w-[1440px]"
+        maxWidth="max-w-wide"
         className="py-12 sm:py-16"
         bg="bg-hero"
       >
@@ -204,16 +286,15 @@ export default function Page() {
       </Section>
 
       {/* Upload tool */}
-      <Section
+      <section
         id={LANDING_COPY_KEYS.upload}
-        index={2}
-        maxWidth="max-w-[1360px]"
-        bg="bg-hero"
-        className="py-10 sm:py-14"
+        className="upload-section-bg py-12 sm:py-16"
+        data-testid={`section-${LANDING_COPY_KEYS.upload}`}
       >
+        <div className="mx-auto max-w-[640px] px-4 sm:px-6">
         <div
           data-testid={LANDING_COPY_KEYS.upload}
-          className="mx-auto w-full max-w-[1320px] feature-card-hover relative rounded-xl bg-white"
+          className="mx-auto w-full relative"
         >
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}
@@ -272,43 +353,47 @@ export default function Page() {
         <p className="mt-6 text-center text-sm text-muted">
           {LANDING_COPY.heroTypicalOutput}
         </p>
-      </Section>
+        </div>
+      </section>
 
       {/* Who this is for */}
       <Section
         id="who-this-is-for"
         index={3}
-        maxWidth="max-w-[1360px]"
         bg="bg-hero"
-        className="py-10 sm:py-14"
       >
         <div className="space-y-8">
-          <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
+          <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
             {LANDING_COPY.whoThisIsForTitle}
           </h2>
-          <div className="grid sm:grid-cols-2 gap-4 max-w-[860px] mx-auto">
-            <div className="rounded-2xl border border-black/10 bg-white p-6 space-y-4">
-              <p className="text-sm font-[600] uppercase tracking-[0.06em] text-blue-600">Perfect for</p>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-tight mx-auto">
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-blue-600">Perfect for</p>
               <ul className="space-y-2.5">
                 {LANDING_COPY.whoThisIsForPerfect.map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-[#0F172A]">
+                  <li key={item} className="flex items-center gap-2.5 text-[var(--color-text)]">
                     <span className="flex-none text-blue-500" aria-hidden="true">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
                         <path d="M5 8l2.5 2.5L11 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </span>
+                    {WHO_ICONS[item] && (
+                      <span className="flex-none text-blue-400" aria-hidden="true">
+                        {WHO_ICONS[item]}
+                      </span>
+                    )}
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-black/10 bg-black/[0.02] p-6 space-y-4">
-              <p className="text-sm font-[600] uppercase tracking-[0.06em] text-black/40">Not designed for</p>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)]">Not designed for</p>
               <ul className="space-y-2.5">
                 {LANDING_COPY.whoThisIsForNot.map((item) => (
                   <li key={item} className="flex items-center gap-2.5 text-muted">
-                    <span className="flex-none text-black/25" aria-hidden="true">
+                    <span className="flex-none text-[var(--color-muted)]" aria-hidden="true">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
                         <path d="M5.5 10.5l5-5M10.5 10.5l-5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -323,37 +408,59 @@ export default function Page() {
         </div>
       </Section>
 
+      {/* Use cases */}
+      <Section
+        id="use-cases"
+        index={4}
+        bg="bg-hero"
+      >
+        <UseCaseCards />
+      </Section>
+
       <Section
         id="comparison"
-        index={4}
-        maxWidth="max-w-[1360px]"
+        index={5}
         bg="bg-hero"
-        className="py-10 sm:py-14"
       >
         <div className="space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
+            <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
               Excel PDF Export vs fitforpdf
             </h2>
             <p className="mt-3 text-base text-muted max-w-xl mx-auto">
               Stop fighting print settings. Get a client-ready structured PDF in seconds.
             </p>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-black/10">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)]">
+            <table
+              className="comp-table-reveal w-full min-w-[640px] text-sm"
+              ref={(el) => {
+                if (!el || el.dataset.observed) return;
+                el.dataset.observed = '1';
+                const obs = new IntersectionObserver(
+                  ([e]) => { if (e.isIntersecting) { el.classList.add('is-visible'); obs.disconnect(); } },
+                  { threshold: 0.2 },
+                );
+                obs.observe(el);
+              }}
+            >
               <thead>
-                <tr className="border-b border-black/10 bg-black/[0.025]">
-                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Feature</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-black/40 lg:px-6">Excel PDF Export</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-[600] uppercase tracking-[0.06em] text-[#0F172A] lg:px-6">fitforpdf</th>
+                <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">Feature</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">Excel PDF Export</th>
+                  <th className="bg-cta/[0.06] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-cta lg:px-6">fitforpdf</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/[0.05]">
+              <tbody className="divide-y divide-[var(--color-border)]">
                 {COMPARISON_ROWS.map(([feature, excel, fitforpdf], i) => (
-                  <tr key={feature} className={i % 2 === 1 ? 'bg-black/[0.015]' : ''}>
-                    <td className="px-5 py-3.5 text-sm font-[500] text-[#0F172A] lg:px-6">{feature}</td>
-                    <td className="px-5 py-3.5 text-sm text-black/40 lg:px-6">{excel}</td>
-                    <td className="px-5 py-3.5 text-sm font-[500] text-[#0F172A] lg:px-6">{fitforpdf}</td>
+                  <tr
+                    key={feature}
+                    className={`transition-colors hover:bg-[var(--color-bg-hero)] ${i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/60' : ''}`}
+                    style={{ animationDelay: `${i * 80}ms` }}
+                  >
+                    <td className="px-5 py-3.5 text-sm font-medium text-[var(--color-text)] lg:px-6">{feature}</td>
+                    <td className="px-5 py-3.5 text-sm text-[var(--color-muted)] lg:px-6"><span className="mr-1.5 text-red-400/60">✗</span>{excel}</td>
+                    <td className="bg-cta/[0.06] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6"><span className="mr-1.5 text-emerald-500">✓</span>{fitforpdf}</td>
                   </tr>
                 ))}
               </tbody>
@@ -362,62 +469,110 @@ export default function Page() {
         </div>
       </Section>
 
+      {/* Pricing plans — full width, above the Apple grid */}
       <Section
         id={LANDING_COPY_KEYS.pricingPreview}
-        index={5}
-        maxWidth="max-w-[1440px]"
-        className="py-10 sm:py-14"
+        index={6}
+        maxWidth="max-w-wide"
         bg="bg-hero"
       >
         <PricingToggleSection showFreeTier />
-        <div className="flex justify-center">
-          <a href="/pricing" className={CTA_SECONDARY}>
-            {LANDING_COPY.pricingPreviewCta}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
       </Section>
 
-      {/* API teaser — compact pointer to /developers */}
-      <Section
-        id="api-teaser"
-        index={6}
-        maxWidth="max-w-[860px]"
-        bg="bg-hero"
-        className="py-6 sm:py-8"
+      {/* Apple-style two-up grid: ROI + API teaser */}
+      <section
+        id="apple-grid"
+        className="apple-grid-bg"
+        data-testid="apple-grid-section"
       >
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
-          <p className="text-sm text-muted">
-            Need to integrate? <span className="font-[500] text-[#0F172A]">REST API available.</span>
-          </p>
-          <a
-            href="/developers"
-            className="inline-flex items-center gap-1.5 text-sm font-[600] text-[#2563EB] hover:text-[#1d4ed8] transition"
-          >
-            View docs
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
+        <div className="apple-grid-noise" />
+        <div className="relative z-10 mx-auto max-w-wide px-4 py-16 sm:px-6 sm:py-20 lg:px-10 xl:px-12">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {/* Card 1 — ROI Calculator */}
+            <div className="apple-grid-card flex flex-col p-6 sm:p-8">
+              {/* Card header label */}
+              <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-400 tracking-wide uppercase">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                </svg>
+                ROI
+              </span>
+              {/* Embedded ROI calculator with overridden colors */}
+              <div className="flex-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  How much time could you save?
+                </h3>
+                <div className="mt-6">
+                  <label className="block">
+                    <span className="text-sm font-medium text-slate-400">
+                      Exports per month
+                    </span>
+                    <RoiSliderInline />
+                  </label>
+                </div>
+              </div>
+              {/* CTA */}
+              <a
+                href="/pricing"
+                className="mt-8 inline-flex w-fit items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"
+              >
+                {LANDING_COPY.pricingPreviewCta}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+
+            {/* Card 2 — API Teaser */}
+            <div className="apple-grid-card flex flex-col p-6 sm:p-8">
+              {/* Card header label */}
+              <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-400 tracking-wide uppercase">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+                API
+              </span>
+              <div className="flex-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  Integrate in minutes
+                </h3>
+                <p className="mt-2 text-sm text-slate-400">
+                  One API call. Any HTML to pixel-perfect PDF.
+                </p>
+                <div className="mt-6">
+                  <ApiTeaserWidget variant="dark" />
+                </div>
+              </div>
+              {/* CTA */}
+              <a
+                href="/developers"
+                className="mt-8 inline-flex w-fit items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"
+              >
+                Explore the docs
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
-      </Section>
+      </section>
 
       <Section
         id={LANDING_COPY_KEYS.privacyStrip}
-        index={7}
+        index={8}
         bg="bg-hero"
-        maxWidth="max-w-[1240px]"
+        maxWidth="max-w-narrow"
         className="py-12 sm:py-16"
         testId="privacy-section"
       >
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center gap-2">
             <AnimatedShieldIcon animateOnMount={false} />
-            <span className="text-2xl font-[650] tracking-tight text-black">Privacy</span>
+            <span className="text-2xl font-bold tracking-tight text-[var(--color-text)]">Privacy</span>
           </div>
-          <h2 className="mt-4 text-[2rem] sm:text-[2.5rem] font-[650] tracking-tight text-black leading-[1.1]">
+          <h2 className="mt-4 text-[2rem] sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)] leading-[1.1]">
             Your data. Not our business.
           </h2>
           <div className="mt-8 space-y-4 text-base leading-relaxed text-muted">
@@ -427,7 +582,7 @@ export default function Page() {
           </div>
           <a
             href="/privacy"
-            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[#0F172A]/20 bg-white text-[#0F172A] hover:border-[#0F172A]/40 hover:bg-[#0F172A]/5"
+            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]"
           >
             {LANDING_COPY.privacyStripCta}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -439,17 +594,17 @@ export default function Page() {
 
       <Section
         id="home-faq"
-        index={8}
+        index={9}
         bg="bg-hero"
-        maxWidth="max-w-[1240px]"
+        maxWidth="max-w-narrow"
         className="py-12 sm:py-16"
         testId="faq-section"
       >
         <div className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
+          <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
             Frequently asked questions
           </h2>
-          <div className="divide-y divide-black/10">
+          <div className="divide-y divide-[var(--color-border)]">
             <Accordion
               items={HOME_FAQ}
               testId="home-faq"
@@ -458,40 +613,39 @@ export default function Page() {
         </div>
       </Section>
 
-      {/* Who uses fitforpdf */}
+      {/* Testimonials — Wall of Love */}
       <Section
-        id="who-uses"
-        index={9}
-        maxWidth="max-w-[860px]"
+        id="testimonials"
+        index={10}
         bg="bg-hero"
-        className="py-10 sm:py-14"
       >
-        <div className="text-center space-y-6">
-          <h2 className="text-2xl sm:text-3xl font-[650] tracking-tight text-black">
-            {LANDING_COPY.whoUsesTitle}
-          </h2>
-          <div className="flex flex-wrap justify-center gap-3">
-            {LANDING_COPY.whoUsesItems.map((item) => (
-              <span
-                key={item}
-                className="rounded-full border border-black/10 bg-white px-5 py-2 text-sm font-[500] text-[#0F172A]"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
+        <div className="space-y-2 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">Trusted by teams worldwide</p>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-[2.5rem]">What people say</h2>
+          <p className="text-[var(--color-muted)]">Real feedback from real workflows.</p>
+        </div>
+        <WallOfLove />
+        <div className="flex flex-wrap justify-center gap-2 pt-4">
+          {LANDING_COPY.whoUsesItems.map((item) => (
+            <span
+              key={item}
+              className="rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-1.5 text-xs font-medium text-[var(--color-muted)]"
+            >
+              {item}
+            </span>
+          ))}
         </div>
       </Section>
 
       <Section
         id="final-cta"
-        index={10}
+        index={11}
         bg="bg-hero"
         className="py-16 sm:py-20"
         testId="final-cta-section"
       >
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-black">
+          <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
             {LANDING_COPY.finalCtaTitle}
           </h2>
           <p className="mt-4 text-lg text-muted">{LANDING_COPY.finalCtaCopy}</p>
@@ -507,6 +661,8 @@ export default function Page() {
       </Section>
 
       <FeedbackBar renderId={conversion.renderId} visible={Boolean(conversion.pdfBlob)} />
+
+      <StickyMobileCTA />
     </div>
   );
 }

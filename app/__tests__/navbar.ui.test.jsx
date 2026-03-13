@@ -26,8 +26,7 @@ describe('site navbar style and behavior', () => {
     expect(hasClass(header, 'right-0')).toBe(true);
     expect(hasClass(header, 'z-50')).toBe(true);
     expect(hasClass(header, 'backdrop-blur-xl')).toBe(true);
-    expect(hasClass(header, 'bg-white/60')).toBe(true);
-    expect(hasClass(header, 'supports-[backdrop-filter]:bg-white/50')).toBe(true);
+    expect(hasClass(header, 'bg-[#FAF8F5]')).toBe(true);
     expect(hasClass(header, 'w-full')).toBe(true);
   });
 

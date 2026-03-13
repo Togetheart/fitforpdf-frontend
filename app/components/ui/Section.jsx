@@ -15,9 +15,13 @@ export default function Section({
   testId,
   className = '',
   bg,
-  maxWidth = 'max-w-[1280px]',
+  maxWidth = 'max-w-content',
 }) {
-  const resolvedBg = bg ?? 'bg-white';
+  const BG_MAP = {
+    'bg-hero': 'bg-[var(--color-bg-hero)]',
+    'bg-white': 'bg-[var(--color-bg)]',
+  };
+  const resolvedBg = BG_MAP[bg] ?? bg ?? 'bg-[var(--color-bg)]';
   const testIdValue = testId ?? `section-${id}`;
   const innerRef = useRef(null);
 
@@ -66,7 +70,7 @@ export default function Section({
     >
       <div
         ref={innerRef}
-        className={`mx-auto flex w-full flex-col gap-8 ${maxWidth} px-4 py-10 sm:px-6 lg:px-10 xl:px-12 sm:py-12`}
+        className={`mx-auto flex w-full flex-col gap-8 ${maxWidth} px-4 py-10 sm:px-6 sm:py-14 lg:px-10 xl:px-12`}
       >
         {children}
       </div>
