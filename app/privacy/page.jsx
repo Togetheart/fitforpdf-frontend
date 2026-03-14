@@ -166,11 +166,11 @@ export default function PrivacyPage() {
       >
         <div className="flex items-center gap-2">
           <AnimatedShieldIcon animateOnMount={true} />
-          <h1 className="text-2xl font-[650] tracking-tight text-[var(--color-text)]" data-testid="privacy-h1">
+          <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text)]" data-testid="privacy-h1">
             Privacy
           </h1>
         </div>
-        <p className="text-[2.5rem] sm:text-5xl font-[650] leading-[1.06] tracking-tight text-[var(--color-text)] max-w-[20ch]">
+        <p className="text-[2.5rem] sm:text-5xl font-semibold leading-[1.06] tracking-tight text-[var(--color-text)] max-w-[20ch]">
           <span className="block">{PRIVACY_PAGE_COPY.pageTitle}</span>
           <span className="block">{PRIVACY_PAGE_COPY.pageTitleAccent}</span>
         </p>
@@ -182,7 +182,7 @@ export default function PrivacyPage() {
       {/* ── File handling — même grid pattern que "Client-ready means" ── */}
       <Section id="privacy-handling" index={1} bg="bg-hero" className="pt-12 pb-20 sm:pt-16 sm:pb-28">
         <div className="text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
+          <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
             {PRIVACY_PAGE_COPY.handlingTitle}
           </h2>
         </div>
@@ -211,7 +211,7 @@ export default function PrivacyPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* Bloc 1 : What we log */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-center text-xl font-[650] tracking-tight text-[var(--color-text)] sm:text-left">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-[var(--color-text)] sm:text-left">
               {PRIVACY_PAGE_COPY.logs.title}
             </h2>
             <div data-testid="privacy-logs-card" className="feature-card-hover flex-1 rounded-xl glass-elevated divide-y divide-[var(--color-border)] px-6 py-2">
@@ -225,7 +225,7 @@ export default function PrivacyPage() {
 
           {/* Bloc 2 : What we don't do */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-center text-xl font-[650] tracking-tight text-[var(--color-text)] sm:text-left">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-[var(--color-text)] sm:text-left">
               {PRIVACY_PAGE_COPY.dontDoTitle}
             </h2>
             <div className="feature-card-hover flex-1 rounded-xl glass-elevated divide-y divide-[var(--color-border)] px-6 py-2">
@@ -240,7 +240,7 @@ export default function PrivacyPage() {
       {/* ── Legal basis + Data location ── */}
       <Section id="privacy-gdpr" index={3} bg="bg-hero" className="py-20 sm:py-28">
         <div className="text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
+          <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
             GDPR compliance
           </h2>
         </div>
@@ -263,7 +263,7 @@ export default function PrivacyPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* User rights list */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-center text-xl font-[650] tracking-tight text-[var(--color-text)] sm:text-left">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-[var(--color-text)] sm:text-left">
               {PRIVACY_PAGE_COPY.userRights.title}
             </h2>
             <div className="feature-card-hover flex-1 rounded-xl glass-elevated px-6 py-5">
@@ -290,7 +290,7 @@ export default function PrivacyPage() {
 
           {/* Sub-processors */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-center text-xl font-[650] tracking-tight text-[var(--color-text)] sm:text-left">
+            <h2 className="text-center text-xl font-semibold tracking-tight text-[var(--color-text)] sm:text-left">
               {PRIVACY_PAGE_COPY.subProcessors.title}
             </h2>
             <div className="feature-card-hover flex-1 rounded-xl glass-elevated divide-y divide-[var(--color-border)] px-6">
@@ -335,7 +335,7 @@ export default function PrivacyPage() {
 
       {/* ── FAQ — même pattern exact que landing ── */}
       <Section id="privacy-faq" index={6} bg="bg-hero" className="py-20 sm:py-28">
-        <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
+        <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
           Frequently asked questions
         </h2>
         <div className="divide-y divide-[var(--color-border)]">

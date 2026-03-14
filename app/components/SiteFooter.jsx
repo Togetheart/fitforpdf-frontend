@@ -26,7 +26,7 @@ export default function SiteFooter() {
         </div>
 
         <div className="space-y-2">
-          <p className="text-xs font-[600] uppercase tracking-[0.08em] text-[var(--color-muted)]">Product</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Product</p>
           <nav className="flex flex-col gap-1.5">
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/#tool">
               Try free
@@ -47,7 +47,7 @@ export default function SiteFooter() {
         </div>
 
         <div className="space-y-2">
-          <p className="text-xs font-[600] uppercase tracking-[0.08em] text-[var(--color-muted)]">Resources</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Resources</p>
           <nav className="flex flex-col gap-1.5">
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/excel-to-pdf-columns-cut-off">
               Fix cut-off columns in Excel PDF
@@ -65,7 +65,7 @@ export default function SiteFooter() {
         </div>
 
         <div className="space-y-2">
-          <p className="text-xs font-[600] uppercase tracking-[0.08em] text-[var(--color-muted)]">Legal</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Legal</p>
           <nav className="flex flex-col gap-1.5">
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/privacy">
               Privacy policy

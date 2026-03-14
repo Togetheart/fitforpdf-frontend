@@ -240,7 +240,7 @@ export default function ProofShowcase() {
   return (
     <div className="w-full space-y-8">
       {/* Section heading */}
-      <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
+      <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
         See how fitforpdf transforms your file.
       </h2>
       <p className="text-center text-sm text-muted -mt-2">
@@ -272,7 +272,7 @@ export default function ProofShowcase() {
                 }`}
               >
                 <span
-                  className={`text-[11px] font-[650] uppercase tracking-[0.12em] transition-colors duration-200 ${
+                  className={`text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors duration-200 ${
                     isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'
                   }`}
                 >

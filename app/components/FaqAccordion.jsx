@@ -65,7 +65,7 @@ export default function FaqAccordion({
                 aria-controls={panelId}
                 aria-expanded={isOpen}
                 onClick={() => setOpenId((current) => (current === item.id ? null : item.id))}
-                className="group flex w-full items-center justify-between gap-4 py-1 text-left text-lg leading-snug font-[650] text-[var(--color-text)] sm:text-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border)] focus-visible:ring-offset-2"
+                className="group flex w-full items-center justify-between gap-4 py-1 text-left text-lg leading-snug font-semibold text-[var(--color-text)] sm:text-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border)] focus-visible:ring-offset-2"
               >
                 <span className="flex min-h-6 items-center">
                   {item.q}

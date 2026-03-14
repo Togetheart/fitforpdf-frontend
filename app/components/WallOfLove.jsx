@@ -112,7 +112,7 @@ export default function WallOfLove() {
                 style={{ minHeight: '160px', maxHeight: '220px' }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/60 to-transparent" />
-              <p className="absolute bottom-4 left-5 text-sm font-[600] text-white/90 tracking-wide">
+              <p className="absolute bottom-4 left-5 text-sm font-semibold text-white/90 tracking-wide">
                 Structured data, beautiful output.
               </p>
             </div>,
