@@ -18,7 +18,7 @@ export default function Section({
   maxWidth = 'max-w-content',
 }) {
   const BG_MAP = {
-    'bg-hero': 'bg-[var(--color-bg-hero)]',
+    'bg-warm': 'bg-[var(--color-bg-warm)]',
     'bg-white': 'bg-[var(--color-bg)]',
   };
   const resolvedBg = BG_MAP[bg] ?? bg ?? 'bg-[var(--color-bg)]';
@@ -37,7 +37,7 @@ export default function Section({
     const targets = el.children;
     if (!targets || targets.length === 0) return;
 
-    gsap.set(targets, { opacity: 0, y: 24 });
+    gsap.set(targets, { opacity: 0, y: 12 });
 
     const trigger = ScrollTrigger.create({
       trigger: el,
@@ -47,8 +47,8 @@ export default function Section({
         gsap.to(targets, {
           opacity: 1,
           y: 0,
-          duration: 0.7,
-          stagger: 0.1,
+          duration: 0.4,
+          stagger: 0.06,
           ease: 'power2.out',
         });
       },
