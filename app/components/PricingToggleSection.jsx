@@ -134,10 +134,10 @@ export function PaygCard({ pack, onBuy }) {
           <li key={point} className="flex items-center gap-2.5">
             <span className={cn(
               'flex h-4 w-4 shrink-0 items-center justify-center rounded-full',
-              'bg-[var(--color-bg-hero)]',
+              'bg-[var(--color-bg-warm)]',
             )}>
               <Check
-                className="h-2.5 w-2.5 text-cta"
+                className="h-2.5 w-2.5 text-accent"
                 strokeWidth={3}
               />
             </span>
@@ -157,7 +157,7 @@ export function PaygCard({ pack, onBuy }) {
             className={cn(
               'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight cursor-not-allowed',
               isFeatured
-                ? 'bg-cta/15 text-cta/55'
+                ? 'bg-accent/15 text-accent/55'
                 : 'border border-[var(--color-border)] bg-[var(--color-bg)] text-muted/70',
             )}
           >
@@ -223,8 +223,8 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
       <ul className="flex-1 space-y-2.5 text-sm">
         {PRICING_PAGE_COPY.proFeatures.map((feat) => (
           <li key={feat} className="flex items-center gap-2.5">
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-hero)]">
-              <Check className="h-2.5 w-2.5 text-cta" strokeWidth={3} />
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-warm)]">
+              <Check className="h-2.5 w-2.5 text-accent" strokeWidth={3} />
             </span>
             <span className="text-[var(--color-text)] font-medium">{feat}</span>
           </li>
@@ -278,8 +278,8 @@ export function ProApiCard() {
       <ul className="flex-1 space-y-2.5 text-sm">
         {PRICING_PAGE_COPY.proApiFeatures.map((feat) => (
           <li key={feat} className="flex items-center gap-2.5">
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-hero)]">
-              <Check className="h-2.5 w-2.5 text-cta" strokeWidth={3} />
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-warm)]">
+              <Check className="h-2.5 w-2.5 text-accent" strokeWidth={3} />
             </span>
             <span className="text-muted">{feat}</span>
           </li>
@@ -341,8 +341,8 @@ export function EnterpriseCard() {
       <ul className="flex-1 space-y-2.5 text-sm">
         {features.map((feat) => (
           <li key={feat} className="flex items-center gap-2.5">
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-hero)]">
-              <Check className="h-2.5 w-2.5 text-cta" strokeWidth={3} />
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-warm)]">
+              <Check className="h-2.5 w-2.5 text-accent" strokeWidth={3} />
             </span>
             <span className="text-muted">{feat}</span>
           </li>

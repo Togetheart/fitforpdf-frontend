@@ -48,7 +48,7 @@ export default function FeatureComparison({
         <div className="hidden overflow-x-auto md:block">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)] text-left text-xs uppercase tracking-[0.06em] text-muted">
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-left text-xs uppercase tracking-[0.06em] text-muted">
                 <th className="px-4 py-3">Feature</th>
                 {featureColumns.map((column) => (
                   <th key={column} className="px-4 py-3">
@@ -61,7 +61,7 @@ export default function FeatureComparison({
               {visibleRows.map((row, rowIndex) => (
                 <tr
                   key={row[0]}
-                  className={`border-b border-[var(--color-border)] last:border-b-0 ${rowIndex % 2 === 0 ? 'bg-transparent' : 'bg-[var(--color-bg-hero)]/50'}`}
+                  className={`border-b border-[var(--color-border)] last:border-b-0 ${rowIndex % 2 === 0 ? 'bg-transparent' : 'bg-[var(--color-bg-warm)]/50'}`}
                 >
                   <th className="px-4 py-3 text-left font-medium text-[var(--color-text)]">
                     {row[0]}
@@ -82,7 +82,7 @@ export default function FeatureComparison({
             <div
               key={row[0]}
               data-testid="feature-compare-row"
-              className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-3"
+              className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] p-3"
             >
               <p className="text-sm font-medium text-[var(--color-text)]">{row[0]}</p>
               <dl className="mt-2 space-y-1 text-sm">

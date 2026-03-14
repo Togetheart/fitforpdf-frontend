@@ -24,7 +24,7 @@ export default function VsPage({
       />
 
       {/* Comparison table */}
-      <Section id="comparison" index={0} bg="bg-hero">
+      <Section id="comparison" index={0} bg="bg-warm">
         <div className="space-y-8">
           <div className="text-center">
             <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
@@ -38,14 +38,14 @@ export default function VsPage({
           <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)]">
             <table className="w-full min-w-[640px] text-sm">
               <thead>
-                <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
+                <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]">
                   <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">
                     Feature
                   </th>
                   <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">
                     {tool}
                   </th>
-                  <th className="bg-cta/[0.04] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-cta lg:px-6">
+                  <th className="bg-accent/[0.04] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-accent lg:px-6">
                     fitforpdf
                   </th>
                 </tr>
@@ -54,7 +54,7 @@ export default function VsPage({
                 {comparisonRows.map(([feature, toolVal, fitforpdfVal], i) => (
                   <tr
                     key={feature}
-                    className={`transition-colors hover:bg-[var(--color-bg-hero)] ${i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/60' : ''}`}
+                    className={`transition-colors hover:bg-[var(--color-bg-warm)] ${i % 2 === 1 ? 'bg-[var(--color-bg-warm)]/60' : ''}`}
                   >
                     <td className="px-5 py-3.5 text-sm font-medium text-[var(--color-text)] lg:px-6">
                       {feature}
@@ -63,7 +63,7 @@ export default function VsPage({
                       <span className="mr-1.5 text-red-400/60">&#x2717;</span>
                       {toolVal}
                     </td>
-                    <td className="bg-cta/[0.04] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6">
+                    <td className="bg-accent/[0.04] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6">
                       <span className="mr-1.5 text-emerald-500">&#x2713;</span>
                       {fitforpdfVal}
                     </td>
@@ -76,7 +76,7 @@ export default function VsPage({
       </Section>
 
       {/* Pros & Cons of the competing tool */}
-      <Section id="pros-cons" index={1} bg="bg-hero">
+      <Section id="pros-cons" index={1} bg="bg-warm">
         <div className="space-y-8">
           <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
             {tool} at a glance
@@ -104,7 +104,7 @@ export default function VsPage({
             </div>
 
             {/* Cons */}
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-6 space-y-4">
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] p-6 space-y-4">
               <p className="text-sm font-semibold uppercase tracking-[0.06em] text-red-500">
                 Limitations
               </p>
@@ -127,7 +127,7 @@ export default function VsPage({
       </Section>
 
       {/* Final CTA */}
-      <Section id="vs-cta" index={2} bg="bg-hero" className="py-16 sm:py-20">
+      <Section id="vs-cta" index={2} bg="bg-warm" className="py-16 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
             Ready to switch?

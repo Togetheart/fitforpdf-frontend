@@ -97,7 +97,7 @@ describe('home conversion-critical UI', () => {
     const ctaClass = cta.getAttribute('class') || '';
 
     expect(cta).toHaveProperty('disabled', true);
-    expect(ctaClass).toContain('bg-cta');
+    expect(ctaClass).toContain('bg-accent');
 
     const input = screen.getByTestId('generate-file-input');
     const file = new File(['name,score\na,1'], 'report.csv', { type: 'text/csv' });

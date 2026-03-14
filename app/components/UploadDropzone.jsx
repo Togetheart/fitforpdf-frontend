@@ -72,7 +72,7 @@ export default function UploadDropzone({
         aria-label="Upload CSV or XLSX file"
         onKeyDown={handleLabelKeyDown}
         className={`flex-1 min-w-0 transition ${
-          isDragActive ? 'bg-[var(--color-bg-hero)]' : ''
+          isDragActive ? 'bg-[var(--color-bg-warm)]' : ''
         } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
       >
         <label
@@ -99,7 +99,7 @@ export default function UploadDropzone({
                   }
                 }}
                 disabled={disabled}
-                className="shrink-0 rounded-full p-0.5 text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] transition disabled:opacity-50"
+                className="shrink-0 rounded-full p-0.5 text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-warm)] transition disabled:opacity-50"
                 aria-label="Remove file"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

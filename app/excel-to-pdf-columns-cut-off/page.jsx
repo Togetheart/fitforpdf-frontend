@@ -88,7 +88,7 @@ export default function ExcelCutoffPage() {
         </div>
       </section>
 
-      <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-8 text-center">
+      <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-warm)] px-6 py-8 text-center">
         <h2 className="mb-2 text-xl font-[650] text-[var(--color-text)]">Fix your Excel export now</h2>
         <p className="mb-5 text-[var(--color-muted)]">
           Upload your spreadsheet. Get a structured PDF in seconds. 3 free exports.

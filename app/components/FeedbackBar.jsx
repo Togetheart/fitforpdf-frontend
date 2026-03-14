@@ -103,7 +103,7 @@ export default function FeedbackBar({ renderId, visible }) {
             </button>
             <button
               onClick={() => setPhase('reasons')}
-              className="rounded-full border border-[var(--color-border)] px-4 py-1.5 text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]"
+              className="rounded-full border border-[var(--color-border)] px-4 py-1.5 text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-warm)]"
             >
               👎 Issue
             </button>
@@ -119,7 +119,7 @@ export default function FeedbackBar({ renderId, visible }) {
               <button
                 key={key}
                 onClick={() => key === 'other' ? setPhase('comment') : submit('down', key)}
-                className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-medium text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]"
+                className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-medium text-[var(--color-text)] transition hover:bg-[var(--color-bg-warm)]"
               >
                 {label}
               </button>
@@ -136,7 +136,7 @@ export default function FeedbackBar({ renderId, visible }) {
             onChange={(e) => setComment(e.target.value.slice(0, 140))}
             placeholder="Max 140 characters"
             rows={2}
-            className="w-full resize-none rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-3 py-2 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)]/50 outline-none focus:border-[var(--color-border)]"
+            className="w-full resize-none rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] px-3 py-2 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)]/50 outline-none focus:border-[var(--color-border)]"
           />
           <div className="flex justify-end gap-2">
             <button

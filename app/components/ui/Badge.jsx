@@ -1,8 +1,8 @@
 import { cn } from '../../lib/cn.mjs';
 
 const VARIANTS = {
-  default: 'border-[var(--color-border)] bg-[var(--color-bg-hero)] text-[var(--color-muted)]',
-  accent: 'border-cta/20 bg-cta/[0.06] text-cta',
+  default: 'border-[var(--color-border)] bg-[var(--color-bg-warm)] text-[var(--color-muted)]',
+  accent: 'border-accent/20 bg-accent/[0.06] text-accent',
   success: 'border-emerald-200 bg-emerald-50 text-emerald-700',
 };
 

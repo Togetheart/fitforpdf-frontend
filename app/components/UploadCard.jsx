@@ -24,7 +24,7 @@ const PROGRESS_STEP_STATES = {
     label: 'text-[var(--color-text)] font-medium',
   },
   pending: {
-    circle: 'border border-[var(--color-border)] bg-[var(--color-bg-hero)] text-muted/70',
+    circle: 'border border-[var(--color-border)] bg-[var(--color-bg-warm)] text-muted/70',
     label: 'text-muted/70',
   },
 };
@@ -222,7 +222,7 @@ function SettingRow({
         <button
           type="button"
           tabIndex={0}
-          className="w-full cursor-pointer px-1 py-0.5 text-left transition-colors hover:bg-[var(--color-bg-hero)] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/25"
+          className="w-full cursor-pointer px-1 py-0.5 text-left transition-colors hover:bg-[var(--color-bg-warm)] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/25"
           onClick={handleTextToggle}
         >
           <div className="text-sm font-semibold text-[var(--color-text)]">{title}</div>
@@ -506,7 +506,7 @@ export default function UploadCard({
               aria-expanded={isOptionsExpanded}
               aria-controls="upload-options"
               onClick={() => setIsOptionsExpanded((c) => !c)}
-              className={`inline-flex h-9 w-9 items-center justify-center rounded-full border transition text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] ${isOptionsExpanded ? 'border-accent/30 bg-[var(--color-bg-hero)] text-[var(--color-text)]' : 'border-[var(--color-border)]'}`}
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-full border transition text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-warm)] ${isOptionsExpanded ? 'border-accent/30 bg-[var(--color-bg-warm)] text-[var(--color-text)]' : 'border-[var(--color-border)]'}`}
               aria-label="Advanced options"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -549,7 +549,7 @@ export default function UploadCard({
                         <div className="mt-3 flex items-center gap-2">
                           <button type="button" onClick={handleBrandingUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent bg-accent px-3 text-xs font-semibold text-white hover:bg-accent-hover">Buy credits</button>
                           <button type="button" onClick={handleProUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-blue-50">Go Pro</button>
-                          <button type="button" onClick={handleBrandingNudgeDismiss} className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]">Not now</button>
+                          <button type="button" onClick={handleBrandingNudgeDismiss} className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-warm)]">Not now</button>
                         </div>
                       </section>
                     </div>
@@ -606,7 +606,7 @@ export default function UploadCard({
                 type="button"
                 onClick={onBuyCredits}
                 data-testid="quota-buy-slot"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-cta hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline"
               >
                 <ShoppingCart aria-hidden="true" className="h-3.5 w-3.5" />
                 Buy credits
@@ -651,7 +651,7 @@ export default function UploadCard({
                   i === 0 ? (
                     <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group flex flex-col items-start gap-0.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]">
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
-                      <span className="text-lg font-bold tracking-tight text-[var(--color-text)] group-hover:text-cta transition-colors">{p.priceDisplay}</span>
+                      <span className="text-lg font-bold tracking-tight text-[var(--color-text)] group-hover:text-accent transition-colors">{p.priceDisplay}</span>
                     </button>
                   ) : (
                     <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]">

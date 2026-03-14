@@ -443,7 +443,7 @@ export default function ProofShowcase() {
             <div
               key={f.title}
               className="flex flex-col items-center gap-3 px-4 py-5 text-center"
-              style={{ backgroundColor: 'var(--color-bg-hero)' }}
+              style={{ backgroundColor: 'var(--color-bg-warm)' }}
             >
               <span style={{ color: f.color }}>{f.icon}</span>
               <span className="text-xs font-medium leading-tight text-muted">

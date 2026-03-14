@@ -119,7 +119,7 @@ export default function ApiTeaserWidget({ variant } = {}) {
   const codeText = isDark ? 'text-slate-300' : 'text-[var(--color-text)]';
   const btnCls = isDark
     ? 'bg-blue-500/15 text-blue-400 hover:bg-blue-500/25'
-    : 'bg-cta/10 text-cta hover:bg-cta/20';
+    : 'bg-accent/10 text-accent hover:bg-accent/20';
   const respCardCls = isDark
     ? 'bg-white/[0.04] border border-white/[0.06] rounded-xl overflow-hidden'
     : 'glass rounded-xl overflow-hidden';

@@ -147,7 +147,7 @@ function EndpointCard({ endpoint }) {
           <summary className="cursor-pointer text-xs font-[500] text-[var(--color-muted)] transition hover:text-[var(--color-text)]">
             Response
           </summary>
-          <pre className="mt-2 overflow-x-auto rounded-xl bg-[var(--color-bg-hero)] p-4 text-[13px] leading-relaxed text-[var(--color-text)]">
+          <pre className="mt-2 overflow-x-auto rounded-xl bg-[var(--color-bg-warm)] p-4 text-[13px] leading-relaxed text-[var(--color-text)]">
             <code>{endpoint.response}</code>
           </pre>
         </details>
@@ -194,7 +194,7 @@ function RequestAccessForm() {
 
   if (status === 'success') {
     return (
-      <section id="request-access" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-10 text-center">
+      <section id="request-access" className="rounded-2xl bg-[var(--color-bg-warm)] px-6 py-10 text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
           <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -211,7 +211,7 @@ function RequestAccessForm() {
         </p>
         <a
           href="/"
-          className="mt-6 inline-block rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-3 text-sm font-[600] text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]"
+          className="mt-6 inline-block rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-3 text-sm font-[600] text-[var(--color-text)] transition hover:bg-[var(--color-bg-warm)]"
         >
           Try the web app while you wait
         </a>
@@ -223,7 +223,7 @@ function RequestAccessForm() {
     <section id="request-access" className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-sm">
       <div className="flex flex-col md:flex-row">
         {/* Left — value props */}
-        <div className="flex-1 px-6 py-8 md:px-10 md:py-12 bg-[var(--color-bg-hero)]">
+        <div className="flex-1 px-6 py-8 md:px-10 md:py-12 bg-[var(--color-bg-warm)]">
           <p className="text-xs font-[650] uppercase tracking-[0.12em] text-blue-600">
             Early access
           </p>
@@ -271,7 +271,7 @@ function RequestAccessForm() {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="Jane Smith"
-                className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
             <div>
@@ -286,7 +286,7 @@ function RequestAccessForm() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="jane@company.com"
-                className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
             <div>
@@ -300,7 +300,7 @@ function RequestAccessForm() {
                 value={form.useCase}
                 onChange={handleChange}
                 placeholder="e.g. Auto-generating client reports from our CRM"
-                className="mt-1.5 w-full resize-none rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="mt-1.5 w-full resize-none rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
 
@@ -311,7 +311,7 @@ function RequestAccessForm() {
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full rounded-xl bg-cta px-6 py-3.5 text-sm font-[650] text-cta-text transition hover:bg-cta-hover active:scale-[0.98] disabled:opacity-50"
+              className="w-full rounded-xl bg-accent px-6 py-3.5 text-sm font-[650] text-white transition hover:bg-accent-hover active:scale-[0.98] disabled:opacity-50"
             >
               {status === 'submitting' ? 'Submitting\u2026' : 'Request early access'}
             </button>
@@ -328,7 +328,7 @@ function RequestAccessForm() {
 
 export default function DevelopersPage() {
   return (
-    <main className="min-h-screen bg-[var(--color-bg-hero)]">
+    <main className="min-h-screen bg-[var(--color-bg-warm)]">
     <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
 
       {/* Hero */}
@@ -412,7 +412,7 @@ export default function DevelopersPage() {
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {USE_CASES.map((uc) => (
-            <div key={uc.label} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-4">
+            <div key={uc.label} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] px-4 py-4">
               <p className="text-sm font-[650] text-[var(--color-text)]">{uc.label}</p>
               <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">{uc.desc}</p>
             </div>
@@ -431,7 +431,7 @@ export default function DevelopersPage() {
         <div className="space-y-4">
           {DIFFERENTIATORS.map((d) => (
             <div key={d.label} className="flex gap-3">
-              <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-hero)]">
+              <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-warm)]">
                 <svg className="h-3 w-3 text-[var(--color-muted)]" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
@@ -462,8 +462,8 @@ export default function DevelopersPage() {
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
         <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Authentication</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
-          Pass your API key in the <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">X-FITFORPDF-KEY</code> header.
-          Keys are prefixed <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">ffp_live_</code> and
+          Pass your API key in the <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">X-FITFORPDF-KEY</code> header.
+          Keys are prefixed <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">ffp_live_</code> and
           should be kept server-side only.
         </p>
         <CodeBlock>{`curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
@@ -488,12 +488,12 @@ export default function DevelopersPage() {
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
         <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Render options</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
-          Pass as a JSON string in the <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">options</code> form field.
+          Pass as a JSON string in the <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">options</code> form field.
         </p>
         <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]">
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">Key</th>
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">Type</th>
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">Values</th>
@@ -502,7 +502,7 @@ export default function DevelopersPage() {
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {RENDER_OPTIONS.map((opt, i) => (
-                <tr key={opt.key} className={i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/50' : 'bg-transparent'}>
+                <tr key={opt.key} className={i % 2 === 1 ? 'bg-[var(--color-bg-warm)]/50' : 'bg-transparent'}>
                   <td className="px-4 py-2"><code className="text-[13px]">{opt.key}</code></td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{opt.type}</td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{opt.values}</td>
@@ -518,19 +518,19 @@ export default function DevelopersPage() {
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
         <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Response headers</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
-          Every <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">/v1/render</code> response includes these headers:
+          Every <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">/v1/render</code> response includes these headers:
         </p>
         <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]">
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">Header</th>
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">Description</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {RESPONSE_HEADERS.map((h, i) => (
-                <tr key={h.header} className={i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/50' : 'bg-transparent'}>
+                <tr key={h.header} className={i % 2 === 1 ? 'bg-[var(--color-bg-warm)]/50' : 'bg-transparent'}>
                   <td className="px-4 py-2"><code className="text-[13px]">{h.header}</code></td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{h.desc}</td>
                 </tr>
@@ -546,9 +546,9 @@ export default function DevelopersPage() {
         <p className="text-sm text-[var(--color-muted)]">
           <strong>60 requests per minute</strong> per API key.
           Rate limit state is returned in headers:{' '}
-          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">X-RateLimit-Limit</code>,{' '}
-          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">X-RateLimit-Remaining</code>, and{' '}
-          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">Retry-After</code> (on 429).
+          <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">X-RateLimit-Limit</code>,{' '}
+          <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">X-RateLimit-Remaining</code>, and{' '}
+          <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">Retry-After</code> (on 429).
           Maximum 50 columns and 5,000 rows per request.
         </p>
         <p className="mt-3 text-xs text-[var(--color-muted)]">
@@ -572,7 +572,7 @@ export default function DevelopersPage() {
         <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--color-border)]">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]">
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">HTTP</th>
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">Code</th>
                 <th className="px-4 py-2 font-[600] text-[var(--color-text)]">Description</th>
@@ -580,7 +580,7 @@ export default function DevelopersPage() {
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {ERROR_CODES.map((e, i) => (
-                <tr key={e.code} className={i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/50' : 'bg-transparent'}>
+                <tr key={e.code} className={i % 2 === 1 ? 'bg-[var(--color-bg-warm)]/50' : 'bg-transparent'}>
                   <td className="px-4 py-2 font-[500]">{e.http}</td>
                   <td className="px-4 py-2"><code className="text-[13px]">{e.code}</code></td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{e.desc}</td>
@@ -593,7 +593,7 @@ export default function DevelopersPage() {
 
       {/* GitHub examples */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <div className="flex items-start gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-5 py-5">
+        <div className="flex items-start gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] px-5 py-5">
           <svg className="mt-0.5 h-6 w-6 flex-shrink-0 text-[var(--color-text)]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
           </svg>
@@ -606,7 +606,7 @@ export default function DevelopersPage() {
               href="https://github.com/Togetheart/fitforpdf-api-examples"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-2 text-xs font-[600] text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-2 text-xs font-[600] text-[var(--color-text)] transition hover:bg-[var(--color-bg-warm)]"
             >
               View API examples on GitHub
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">

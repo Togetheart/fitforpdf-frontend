@@ -90,13 +90,13 @@ describe('pricing page UI', () => {
     expect(compareText).not.toContain('Pro Sub');
   });
 
-  test('pricing comparison mobile cards have bg-hero class', () => {
+  test('pricing comparison mobile cards have bg-warm class', () => {
     const featureRows = screen.getAllByTestId('feature-compare-row');
     expect(featureRows.length).toBeGreaterThan(0);
 
     featureRows.forEach((row) => {
       const className = row.getAttribute('class') || '';
-      expect(className).toContain('bg-hero');
+      expect(className).toContain('bg-warm');
     });
   });
 

@@ -30,7 +30,7 @@ export default function VerticalPage({
       </PageHero>
 
       {/* ── Pain points ── */}
-      <Section id="pain-points" bg="bg-hero">
+      <Section id="pain-points" bg="bg-warm">
         <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
           The problem
         </h2>
@@ -74,7 +74,7 @@ export default function VerticalPage({
       </Section>
 
       {/* ── Final CTA ── */}
-      <Section id="cta" bg="bg-hero">
+      <Section id="cta" bg="bg-warm">
         <div className="flex flex-col items-center gap-6 text-center">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Ready to fix your PDF exports?

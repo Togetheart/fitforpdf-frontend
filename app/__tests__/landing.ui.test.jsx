@@ -100,7 +100,7 @@ describe('landing conversion-first structure', () => {
     const uploadGenerate = within(toolSection).getByRole('button', { name: 'Generate PDF' });
 
     expect(uploadGenerate).toBeTruthy();
-    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-cta');
+    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-accent');
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
   });
 
@@ -234,8 +234,8 @@ describe('landing conversion-first structure', () => {
     const faqAccordionClass = faqAccordion.getAttribute('class') || '';
     const faqInner = faq.firstElementChild;
 
-    expect(privacyClass).toContain('bg-hero');
-    expect(faqSectionClass).toContain('bg-hero');
+    expect(privacyClass).toContain('bg-warm');
+    expect(faqSectionClass).toContain('bg-warm');
     expect((privacy.textContent || '').includes('Your data. Not our business.')).toBe(true);
     expect((faq.textContent || '').includes('Frequently asked questions')).toBe(true);
     expect(pricingInner?.getAttribute('class') || '').toContain('max-w-wide');

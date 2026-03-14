@@ -25,7 +25,7 @@ import WallOfLove from './components/WallOfLove';
 import ApiTeaserWidget from './components/ApiTeaserWidget';
 import RoiCalculator from './components/RoiCalculator';
 
-const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
+const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-warm)]';
 
 const FEATURE_ICONS = {
   overview: (
@@ -246,10 +246,10 @@ export default function Page() {
             <div className="flex flex-col items-center gap-4 pt-2">
               <div className="w-full max-w-[540px] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] text-sm">
                 <div className="grid grid-cols-2 divide-x divide-[var(--color-border)]">
-                  <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)]">
+                  <div className="bg-[var(--color-bg-warm)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)]">
                     Excel export
                   </div>
-                  <div className="bg-cta/[0.06] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-cta">
+                  <div className="bg-accent/[0.06] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-accent">
                     fitforpdf
                   </div>
                 </div>
@@ -259,10 +259,10 @@ export default function Page() {
                   ['Broken page flow',     'Clean pagination'],
                 ].map(([before, after]) => (
                   <div key={before} className="grid grid-cols-2 divide-x divide-[var(--color-border)] border-t border-[var(--color-border)]">
-                    <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-[var(--color-muted)] line-through decoration-[var(--color-border)]">
+                    <div className="bg-[var(--color-bg-warm)] px-4 py-2.5 text-[var(--color-muted)] line-through decoration-[var(--color-border)]">
                       <span className="mr-1.5 text-red-400/60">✗</span>{before}
                     </div>
-                    <div className="bg-cta/[0.06] px-4 py-2.5 font-semibold text-[var(--color-text)]">
+                    <div className="bg-accent/[0.06] px-4 py-2.5 font-semibold text-[var(--color-text)]">
                       <span className="mr-1.5 text-emerald-500">✓</span>{after}
                     </div>
                   </div>
@@ -280,7 +280,7 @@ export default function Page() {
         index={1}
         maxWidth="max-w-wide"
         className="py-12 sm:py-16"
-        bg="bg-hero"
+        bg="bg-warm"
       >
         <ProofShowcase />
       </Section>
@@ -360,7 +360,7 @@ export default function Page() {
       <Section
         id="who-this-is-for"
         index={3}
-        bg="bg-hero"
+        bg="bg-warm"
       >
         <div className="space-y-8">
           <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
@@ -388,7 +388,7 @@ export default function Page() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
               <p className="text-sm font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)]">Not designed for</p>
               <ul className="space-y-2.5">
                 {LANDING_COPY.whoThisIsForNot.map((item) => (
@@ -412,7 +412,7 @@ export default function Page() {
       <Section
         id="use-cases"
         index={4}
-        bg="bg-hero"
+        bg="bg-warm"
       >
         <UseCaseCards />
       </Section>
@@ -420,7 +420,7 @@ export default function Page() {
       <Section
         id="comparison"
         index={5}
-        bg="bg-hero"
+        bg="bg-warm"
       >
         <div className="space-y-8">
           <div className="text-center">
@@ -445,22 +445,22 @@ export default function Page() {
               }}
             >
               <thead>
-                <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
+                <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]">
                   <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">Feature</th>
                   <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">Excel PDF Export</th>
-                  <th className="bg-cta/[0.06] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-cta lg:px-6">fitforpdf</th>
+                  <th className="bg-accent/[0.06] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-accent lg:px-6">fitforpdf</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--color-border)]">
                 {COMPARISON_ROWS.map(([feature, excel, fitforpdf], i) => (
                   <tr
                     key={feature}
-                    className={`transition-colors hover:bg-[var(--color-bg-hero)] ${i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/60' : ''}`}
+                    className={`transition-colors hover:bg-[var(--color-bg-warm)] ${i % 2 === 1 ? 'bg-[var(--color-bg-warm)]/60' : ''}`}
                     style={{ animationDelay: `${i * 80}ms` }}
                   >
                     <td className="px-5 py-3.5 text-sm font-medium text-[var(--color-text)] lg:px-6">{feature}</td>
                     <td className="px-5 py-3.5 text-sm text-[var(--color-muted)] lg:px-6"><span className="mr-1.5 text-red-400/60">✗</span>{excel}</td>
-                    <td className="bg-cta/[0.06] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6"><span className="mr-1.5 text-emerald-500">✓</span>{fitforpdf}</td>
+                    <td className="bg-accent/[0.06] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6"><span className="mr-1.5 text-emerald-500">✓</span>{fitforpdf}</td>
                   </tr>
                 ))}
               </tbody>
@@ -474,7 +474,7 @@ export default function Page() {
         id={LANDING_COPY_KEYS.pricingPreview}
         index={6}
         maxWidth="max-w-wide"
-        bg="bg-hero"
+        bg="bg-warm"
       >
         <PricingToggleSection showFreeTier />
       </Section>
@@ -562,7 +562,7 @@ export default function Page() {
       <Section
         id={LANDING_COPY_KEYS.privacyStrip}
         index={8}
-        bg="bg-hero"
+        bg="bg-warm"
         maxWidth="max-w-narrow"
         className="py-12 sm:py-16"
         testId="privacy-section"
@@ -582,7 +582,7 @@ export default function Page() {
           </div>
           <a
             href="/privacy"
-            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]"
+            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-warm)]"
           >
             {LANDING_COPY.privacyStripCta}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -595,7 +595,7 @@ export default function Page() {
       <Section
         id="home-faq"
         index={9}
-        bg="bg-hero"
+        bg="bg-warm"
         maxWidth="max-w-narrow"
         className="py-12 sm:py-16"
         testId="faq-section"
@@ -617,7 +617,7 @@ export default function Page() {
       <Section
         id="testimonials"
         index={10}
-        bg="bg-hero"
+        bg="bg-warm"
       >
         <div className="space-y-2 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">Trusted by teams worldwide</p>
@@ -640,7 +640,7 @@ export default function Page() {
       <Section
         id="final-cta"
         index={11}
-        bg="bg-hero"
+        bg="bg-warm"
         className="py-16 sm:py-20"
         testId="final-cta-section"
       >

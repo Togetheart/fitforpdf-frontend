@@ -48,7 +48,7 @@ export default function PricingComparisonTable({
         <div className="overflow-x-auto hidden md:block">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)] text-left text-xs uppercase tracking-[0.06em] text-muted">
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-left text-xs uppercase tracking-[0.06em] text-muted">
                 <th className="px-4 py-3">Feature</th>
                 {featureColumns.map((col) => (
                   <th key={col} className="px-4 py-3">
@@ -62,7 +62,7 @@ export default function PricingComparisonTable({
                 <tr
                   key={row[0]}
                   className={`border-b border-[var(--color-border)] last:border-b-0 ${
-                    rowIndex % 2 === 0 ? 'bg-transparent' : 'bg-[var(--color-bg-hero)]/50'
+                    rowIndex % 2 === 0 ? 'bg-transparent' : 'bg-[var(--color-bg-warm)]/50'
                   }`}
                 >
                   <th className="px-4 py-3 text-left font-medium text-[var(--color-text)]">{row[0]}</th>

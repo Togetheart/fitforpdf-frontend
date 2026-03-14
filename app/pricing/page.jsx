@@ -15,7 +15,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-[var(--color-bg-hero)] pt-24 pb-10 sm:pt-32 sm:pb-14">
+      <section className="relative overflow-hidden bg-[var(--color-bg-warm)] pt-24 pb-10 sm:pt-32 sm:pb-14">
         {/* Subtle warm top glow */}
         <div className="relative mx-auto flex max-w-[1280px] flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-10 xl:px-12">
           {/* Page label */}
@@ -36,7 +36,7 @@ export default function PricingPage() {
       <Section
         id="pricing-plans"
         index={1}
-        bg="bg-hero"
+        bg="bg-warm"
         className="py-16 sm:py-24"
         maxWidth="max-w-[1440px]"
       >
@@ -47,7 +47,7 @@ export default function PricingPage() {
       <Section
         id="pricing-comparison"
         index={2}
-        bg="bg-hero"
+        bg="bg-warm"
         className="py-20 sm:py-28"
         maxWidth="max-w-[1360px]"
       >
@@ -59,7 +59,7 @@ export default function PricingPage() {
       </Section>
 
       {/* ── FAQ ── */}
-      <Section id="pricing-faq" index={3} bg="bg-hero" className="py-20 sm:py-28" maxWidth="max-w-[1200px]">
+      <Section id="pricing-faq" index={3} bg="bg-warm" className="py-20 sm:py-28" maxWidth="max-w-[1200px]">
         <h2 className="text-center text-3xl sm:text-[2.5rem] font-[700] tracking-[-0.018em] text-[var(--color-text)]">
           {PRICING_PAGE_COPY.faqTitle}
         </h2>

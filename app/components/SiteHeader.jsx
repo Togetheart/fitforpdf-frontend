@@ -36,7 +36,7 @@ export default function SiteHeader() {
         data-testid="site-header"
         className={cn(
           'fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 ease-out',
-          'bg-[var(--color-bg-hero)] backdrop-blur-xl',
+          'bg-[var(--color-bg-warm)] backdrop-blur-xl',
           scrolled ? 'py-2' : 'py-4',
         )}
       >

@@ -154,7 +154,7 @@ function DontDoRow({ icon, text }) {
 /* ─── Page ───────────────────────────────────────────────── */
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[var(--color-bg-hero)] text-[var(--color-text)]">
+    <div className="min-h-screen bg-[var(--color-bg-warm)] text-[var(--color-text)]">
 
       {/* ── Hero — même structure que landing, section privacy ── */}
       <PageHero
@@ -180,7 +180,7 @@ export default function PrivacyPage() {
       </PageHero>
 
       {/* ── File handling — même grid pattern que "Client-ready means" ── */}
-      <Section id="privacy-handling" index={1} bg="bg-hero" className="pt-12 pb-20 sm:pt-16 sm:pb-28">
+      <Section id="privacy-handling" index={1} bg="bg-warm" className="pt-12 pb-20 sm:pt-16 sm:pb-28">
         <div className="text-center">
           <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
             {PRIVACY_PAGE_COPY.handlingTitle}
@@ -206,7 +206,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── What we log + What we don't do — grille 2 colonnes ── */}
-      <Section id="privacy-logs" index={2} bg="bg-hero" className="py-20 sm:py-28">
+      <Section id="privacy-logs" index={2} bg="bg-warm" className="py-20 sm:py-28">
         {/* Enfant unique du Section → grille 2 col avec hauteur égale */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* Bloc 1 : What we log */}
@@ -238,7 +238,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── Legal basis + Data location ── */}
-      <Section id="privacy-gdpr" index={3} bg="bg-hero" className="py-20 sm:py-28">
+      <Section id="privacy-gdpr" index={3} bg="bg-warm" className="py-20 sm:py-28">
         <div className="text-center">
           <h2 className="text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
             GDPR compliance
@@ -259,7 +259,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── User rights ── */}
-      <Section id="privacy-rights" index={4} bg="bg-hero" className="py-20 sm:py-28">
+      <Section id="privacy-rights" index={4} bg="bg-warm" className="py-20 sm:py-28">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           {/* User rights list */}
           <div className="flex flex-col gap-4">
@@ -280,7 +280,7 @@ export default function PrivacyPage() {
                 <p className="mb-1 text-sm text-muted">{PRIVACY_PAGE_COPY.userRights.contact}</p>
                 <a
                   href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
-                  className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-cta"
+                  className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-accent"
                 >
                   {PRIVACY_PAGE_COPY.contactEmail}
                 </a>
@@ -310,7 +310,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── Sensitive note + legal ── */}
-      <Section id="privacy-sensitive" index={5} bg="bg-hero">
+      <Section id="privacy-sensitive" index={5} bg="bg-warm">
         <div
           data-testid="privacy-sensitive-callout"
           className="feature-card-hover rounded-xl glass px-6 py-5"
@@ -325,7 +325,7 @@ export default function PrivacyPage() {
         <div className="flex flex-col items-center gap-2 text-center text-sm text-muted">
           <p>{PRIVACY_PAGE_COPY.legalFooter}</p>
           <a
-            className="w-fit text-sm font-medium text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-cta"
+            className="w-fit text-sm font-medium text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-accent"
             href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
           >
             {PRIVACY_PAGE_COPY.contactLabel}
@@ -334,7 +334,7 @@ export default function PrivacyPage() {
       </Section>
 
       {/* ── FAQ — même pattern exact que landing ── */}
-      <Section id="privacy-faq" index={6} bg="bg-hero" className="py-20 sm:py-28">
+      <Section id="privacy-faq" index={6} bg="bg-warm" className="py-20 sm:py-28">
         <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
           Frequently asked questions
         </h2>

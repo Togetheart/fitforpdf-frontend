@@ -33,7 +33,7 @@ export default function DemoGlassCard({
           {isLoading ? (
             <div
               data-testid="demo-glass-skeleton"
-              className="absolute inset-0 animate-pulse bg-[var(--color-bg-hero)]"
+              className="absolute inset-0 animate-pulse bg-[var(--color-bg-warm)]"
               aria-label="demo-loading"
             >
               <div className="h-full w-full bg-gradient-to-r from-white/30 via-white/60 to-white/30" />
