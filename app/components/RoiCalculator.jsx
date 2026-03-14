@@ -54,11 +54,11 @@ export default function RoiCalculator() {
       {/* Results */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl bg-[var(--color-bg-warm)] px-4 py-3 text-center">
-          <p className="text-2xl font-bold text-[var(--color-text)]">{hours}<span className="text-base font-normal">h</span></p>
+          <p className="text-2xl font-semibold text-[var(--color-text)]">{hours}<span className="text-base font-normal">h</span></p>
           <p className="mt-0.5 text-xs text-[var(--color-muted)]">saved / month</p>
         </div>
         <div className="rounded-xl bg-[var(--color-bg-warm)] px-4 py-3 text-center">
-          <p className="text-2xl font-bold text-[var(--color-text)]">${dollars.toLocaleString()}</p>
+          <p className="text-2xl font-semibold text-[var(--color-text)]">${dollars.toLocaleString()}</p>
           <p className="mt-0.5 text-xs text-[var(--color-muted)]">at $75/hr</p>
         </div>
         <div className="rounded-xl bg-[var(--color-bg-warm)] px-4 py-3 text-center">

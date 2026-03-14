@@ -27,7 +27,7 @@ export default function VsPage({
       <Section id="comparison" index={0} bg="bg-warm">
         <div className="space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+            <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
               Feature comparison
             </h2>
             <p className="mt-3 text-base text-muted max-w-xl mx-auto">
@@ -78,7 +78,7 @@ export default function VsPage({
       {/* Pros & Cons of the competing tool */}
       <Section id="pros-cons" index={1} bg="bg-warm">
         <div className="space-y-8">
-          <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
             {tool} at a glance
           </h2>
 
@@ -129,7 +129,7 @@ export default function VsPage({
       {/* Final CTA */}
       <Section id="vs-cta" index={2} bg="bg-warm" className="py-16 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
             Ready to switch?
           </h2>
           <p className="mt-4 text-lg text-muted">

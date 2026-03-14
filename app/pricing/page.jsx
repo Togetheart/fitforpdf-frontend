@@ -19,9 +19,9 @@ export default function PricingPage() {
         {/* Subtle warm top glow */}
         <div className="relative mx-auto flex max-w-[1280px] flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-10 xl:px-12">
           {/* Page label */}
-          <p className="text-2xl font-[650] tracking-tight text-[var(--color-text)]">Pricing</p>
+          <p className="text-2xl font-semibold tracking-tight text-[var(--color-text)]">Pricing</p>
           {/* Headline */}
-          <h1 className="max-w-[20ch] text-[2.5rem] font-[650] leading-[1.06] tracking-tight text-[var(--color-text)] sm:text-5xl">
+          <h1 className="max-w-[20ch] text-[2.5rem] font-semibold leading-[1.06] tracking-tight text-[var(--color-text)] sm:text-5xl">
             <span className="block">{PRICING_PAGE_COPY.pageTitle}</span>
             <span className="block">{PRICING_PAGE_COPY.pageTitleAccent}</span>
           </h1>
@@ -60,7 +60,7 @@ export default function PricingPage() {
 
       {/* ── FAQ ── */}
       <Section id="pricing-faq" index={3} bg="bg-warm" className="py-20 sm:py-28" maxWidth="max-w-[1200px]">
-        <h2 className="text-center text-3xl sm:text-[2.5rem] font-[700] tracking-[-0.018em] text-[var(--color-text)]">
+        <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-[-0.018em] text-[var(--color-text)]">
           {PRICING_PAGE_COPY.faqTitle}
         </h2>
         <div className="divide-y divide-[var(--color-border)]">

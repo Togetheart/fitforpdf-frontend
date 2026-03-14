@@ -156,16 +156,16 @@ function RoiSliderInline() {
       </div>
       <div className="mt-5 grid grid-cols-3 gap-3">
         <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
-          <p className="text-2xl font-bold text-white tabular-nums">{hours}<span className="text-base font-normal text-slate-400">h</span></p>
-          <p className="mt-0.5 text-[11px] text-slate-500">saved / month</p>
+          <p className="text-2xl font-semibold text-white tabular-nums">{hours}<span className="text-base font-normal text-slate-400">h</span></p>
+          <p className="mt-0.5 text-[13px] text-slate-500">saved / month</p>
         </div>
         <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
-          <p className="text-2xl font-bold text-white tabular-nums">${dollars.toLocaleString()}</p>
-          <p className="mt-0.5 text-[11px] text-slate-500">at $75/hr</p>
+          <p className="text-2xl font-semibold text-white tabular-nums">${dollars.toLocaleString()}</p>
+          <p className="mt-0.5 text-[13px] text-slate-500">at $75/hr</p>
         </div>
         <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
           <p className="text-sm font-semibold text-blue-400">{plan}</p>
-          <p className="mt-0.5 text-[11px] text-slate-500">recommended</p>
+          <p className="mt-0.5 text-[13px] text-slate-500">recommended</p>
         </div>
       </div>
     </>
@@ -363,7 +363,7 @@ export default function Page() {
         bg="bg-warm"
       >
         <div className="space-y-8">
-          <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
             {LANDING_COPY.whoThisIsForTitle}
           </h2>
           <div className="grid sm:grid-cols-2 gap-4 max-w-tight mx-auto">
@@ -424,7 +424,7 @@ export default function Page() {
       >
         <div className="space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+            <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
               Excel PDF Export vs fitforpdf
             </h2>
             <p className="mt-3 text-base text-muted max-w-xl mx-auto">
@@ -499,7 +499,7 @@ export default function Page() {
               </span>
               {/* Embedded ROI calculator with overridden colors */}
               <div className="flex-1">
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
                   How much time could you save?
                 </h3>
                 <div className="mt-6">
@@ -534,7 +534,7 @@ export default function Page() {
                 API
               </span>
               <div className="flex-1">
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
                   Integrate in minutes
                 </h3>
                 <p className="mt-2 text-sm text-slate-400">
@@ -570,9 +570,9 @@ export default function Page() {
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center gap-2">
             <AnimatedShieldIcon animateOnMount={false} />
-            <span className="text-2xl font-bold tracking-tight text-[var(--color-text)]">Privacy</span>
+            <span className="text-2xl font-semibold tracking-tight text-[var(--color-text)]">Privacy</span>
           </div>
-          <h2 className="mt-4 text-[2rem] sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)] leading-[1.1]">
+          <h2 className="mt-4 text-[2rem] sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)] leading-[1.1]">
             Your data. Not our business.
           </h2>
           <div className="mt-8 space-y-4 text-base leading-relaxed text-muted">
@@ -601,7 +601,7 @@ export default function Page() {
         testId="faq-section"
       >
         <div className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
             Frequently asked questions
           </h2>
           <div className="divide-y divide-[var(--color-border)]">
@@ -621,7 +621,7 @@ export default function Page() {
       >
         <div className="space-y-2 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">Trusted by teams worldwide</p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-[2.5rem]">What people say</h2>
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-[2.5rem]">What people say</h2>
           <p className="text-[var(--color-muted)]">Real feedback from real workflows.</p>
         </div>
         <WallOfLove />
@@ -645,7 +645,7 @@ export default function Page() {
         testId="final-cta-section"
       >
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
             {LANDING_COPY.finalCtaTitle}
           </h2>
           <p className="mt-4 text-lg text-muted">{LANDING_COPY.finalCtaCopy}</p>

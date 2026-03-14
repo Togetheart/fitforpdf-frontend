@@ -240,7 +240,7 @@ export default function ProofShowcase() {
   return (
     <div className="w-full space-y-8">
       {/* Section heading */}
-      <h2 className="text-center text-3xl sm:text-[2.5rem] font-[650] tracking-tight text-[var(--color-text)]">
+      <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
         See how fitforpdf transforms your file.
       </h2>
       <p className="text-center text-sm text-muted -mt-2">
@@ -272,7 +272,7 @@ export default function ProofShowcase() {
                 }`}
               >
                 <span
-                  className={`text-[11px] font-[650] uppercase tracking-[0.12em] transition-colors duration-200 ${
+                  className={`text-[13px] font-semibold uppercase tracking-[0.12em] transition-colors duration-200 ${
                     isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'
                   }`}
                 >
@@ -293,7 +293,7 @@ export default function ProofShowcase() {
         <div className="grid gap-6 lg:grid-cols-[38fr_62fr] xl:gap-8">
           {/* Left: Input (20%) */}
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-muted">
               {config.inputLabel}
             </p>
             <div
@@ -326,7 +326,7 @@ export default function ProofShowcase() {
               <button
                 type="button"
                 onClick={() => leftLightboxRef.current?.open()}
-                className="mt-2 inline-flex items-center gap-1 text-[11px] text-muted/70 transition hover:text-[var(--color-text)]"
+                className="mt-2 inline-flex items-center gap-1 text-[13px] text-muted/70 transition hover:text-[var(--color-text)]"
               >
                 {config.sourceLinkLabel}
               </button>
@@ -335,7 +335,7 @@ export default function ProofShowcase() {
 
           {/* Right: Tabbed PDF Output (70%) */}
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-muted">
               {config.outputLabel}
             </p>
 
@@ -426,7 +426,7 @@ export default function ProofShowcase() {
               <button
                 type="button"
                 onClick={() => rightLightboxRef.current?.open()}
-                className="text-[11px] text-muted/70 transition hover:text-[var(--color-text)]"
+                className="text-[13px] text-muted/70 transition hover:text-[var(--color-text)]"
               >
                 View full document ↗
               </button>

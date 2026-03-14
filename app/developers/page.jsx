@@ -97,7 +97,7 @@ function MethodBadge({ method }) {
     ? 'bg-emerald-100 text-emerald-700'
     : 'bg-sky-100 text-sky-700';
   return (
-    <span className={`inline-block rounded-md px-2 py-0.5 text-xs font-[650] uppercase tracking-wide ${color}`}>
+    <span className={`inline-block rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-wide ${color}`}>
       {method}
     </span>
   );
@@ -120,7 +120,7 @@ function CodeBlock({ children }) {
       </pre>
       <button
         onClick={handleCopy}
-        className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-[11px] text-white/50 opacity-0 transition hover:bg-white/20 hover:text-white/80 group-hover:opacity-100"
+        className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-[13px] text-white/50 opacity-0 transition hover:bg-white/20 hover:text-white/80 group-hover:opacity-100"
       >
         {copied ? 'Copied' : 'Copy'}
       </button>
@@ -135,7 +135,7 @@ function EndpointCard({ endpoint }) {
         <MethodBadge method={endpoint.method} />
         <code className="text-sm font-[600] text-[var(--color-text)]">{endpoint.path}</code>
         {endpoint.auth && (
-          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-[500] text-blue-700">
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[13px] font-[500] text-blue-700">
             auth required
           </span>
         )}
@@ -200,7 +200,7 @@ function RequestAccessForm() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
-        <h2 className="mt-4 text-lg font-[650] text-[var(--color-text)]">You&apos;re on the list</h2>
+        <h2 className="mt-4 text-lg font-semibold text-[var(--color-text)]">You&apos;re on the list</h2>
         <p className="mt-2 text-sm text-[var(--color-muted)]">
           We&apos;ll send your API key to{' '}
           <strong className="font-[600] text-[var(--color-text)]">{form.email}</strong>{' '}
@@ -224,10 +224,10 @@ function RequestAccessForm() {
       <div className="flex flex-col md:flex-row">
         {/* Left — value props */}
         <div className="flex-1 px-6 py-8 md:px-10 md:py-12 bg-[var(--color-bg-warm)]">
-          <p className="text-xs font-[650] uppercase tracking-[0.12em] text-blue-600">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
             Early access
           </p>
-          <h2 className="mt-3 text-2xl font-[700] leading-tight text-[var(--color-text)] sm:text-3xl">
+          <h2 className="mt-3 text-2xl font-semibold leading-tight text-[var(--color-text)] sm:text-3xl">
             Get your API key
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">
@@ -259,7 +259,7 @@ function RequestAccessForm() {
         <div className="flex-1 border-t border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-8 md:border-t-0 md:px-10 md:py-12">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="ra-name" className="block text-xs font-[650] text-[var(--color-text)]">
+              <label htmlFor="ra-name" className="block text-xs font-semibold text-[var(--color-text)]">
                 Name
               </label>
               <input
@@ -275,7 +275,7 @@ function RequestAccessForm() {
               />
             </div>
             <div>
-              <label htmlFor="ra-email" className="block text-xs font-[650] text-[var(--color-text)]">
+              <label htmlFor="ra-email" className="block text-xs font-semibold text-[var(--color-text)]">
                 Work email
               </label>
               <input
@@ -290,7 +290,7 @@ function RequestAccessForm() {
               />
             </div>
             <div>
-              <label htmlFor="ra-usecase" className="block text-xs font-[650] text-[var(--color-text)]">
+              <label htmlFor="ra-usecase" className="block text-xs font-semibold text-[var(--color-text)]">
                 What are you building? <span className="font-[400] text-[var(--color-muted)]">(optional)</span>
               </label>
               <textarea
@@ -311,12 +311,12 @@ function RequestAccessForm() {
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full rounded-xl bg-accent px-6 py-3.5 text-sm font-[650] text-white transition hover:bg-accent-hover active:scale-[0.98] disabled:opacity-50"
+              className="w-full rounded-xl bg-accent px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-accent-hover active:scale-[0.98] disabled:opacity-50"
             >
               {status === 'submitting' ? 'Submitting\u2026' : 'Request early access'}
             </button>
 
-            <p className="text-center text-[11px] text-[var(--color-muted)]">
+            <p className="text-center text-[13px] text-[var(--color-muted)]">
               Most requests approved within a few hours.
             </p>
           </form>
@@ -342,10 +342,10 @@ export default function DevelopersPage() {
             className="h-48 w-full object-cover sm:h-56"
           />
         </div>
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-blue-600">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
           Developer API
         </p>
-        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[var(--color-text)] sm:text-4xl">
+        <h1 className="text-3xl font-semibold leading-tight tracking-tight text-[var(--color-text)] sm:text-4xl">
           Render readable PDFs<br className="hidden sm:block" /> from wide tables
         </h1>
         <p className="mt-4 text-base leading-relaxed text-[var(--color-muted)]">
@@ -364,7 +364,7 @@ export default function DevelopersPage() {
 
       {/* Try it in 10 seconds */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
-        <p className="mb-3 text-sm font-[650] text-[var(--color-text)]">Try it in 10 seconds</p>
+        <p className="mb-3 text-sm font-semibold text-[var(--color-text)]">Try it in 10 seconds</p>
         <CodeBlock>{`curl -X POST https://api.fitforpdf.com/v1/render \\
   -H "X-FITFORPDF-KEY: YOUR_KEY" \\
   -F "file=@sample.csv" \\
@@ -382,10 +382,10 @@ export default function DevelopersPage() {
 
       {/* Why fitforpdf exists */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
           Why fitforpdf exists
         </p>
-        <h2 className="mb-4 text-xl font-[700] leading-tight text-[var(--color-text)]">
+        <h2 className="mb-4 text-xl font-semibold leading-tight text-[var(--color-text)]">
           Wide tables break every PDF renderer
         </h2>
         <div className="space-y-3 text-sm leading-relaxed text-[var(--color-muted)]">
@@ -404,16 +404,16 @@ export default function DevelopersPage() {
 
       {/* Typical API use cases */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
           Typical use cases
         </p>
-        <h2 className="mb-6 text-xl font-[700] leading-tight text-[var(--color-text)]">
+        <h2 className="mb-6 text-xl font-semibold leading-tight text-[var(--color-text)]">
           Built for SaaS products and data-heavy workflows
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {USE_CASES.map((uc) => (
             <div key={uc.label} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-warm)] px-4 py-4">
-              <p className="text-sm font-[650] text-[var(--color-text)]">{uc.label}</p>
+              <p className="text-sm font-semibold text-[var(--color-text)]">{uc.label}</p>
               <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">{uc.desc}</p>
             </div>
           ))}
@@ -422,10 +422,10 @@ export default function DevelopersPage() {
 
       {/* What makes fitforpdf different */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
           What makes fitforpdf different
         </p>
-        <h2 className="mb-6 text-xl font-[700] leading-tight text-[var(--color-text)]">
+        <h2 className="mb-6 text-xl font-semibold leading-tight text-[var(--color-text)]">
           Designed around the wide-table problem
         </h2>
         <div className="space-y-4">
@@ -437,7 +437,7 @@ export default function DevelopersPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-[650] text-[var(--color-text)]">{d.label}</p>
+                <p className="text-sm font-semibold text-[var(--color-text)]">{d.label}</p>
                 <p className="mt-0.5 text-sm leading-relaxed text-[var(--color-muted)]">{d.desc}</p>
               </div>
             </div>
@@ -447,7 +447,7 @@ export default function DevelopersPage() {
 
       {/* Quick start */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-10">
-        <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Quick start</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Quick start</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
           Generate a PDF in one command:
         </p>
@@ -460,7 +460,7 @@ export default function DevelopersPage() {
 
       {/* Authentication */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Authentication</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Authentication</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
           Pass your API key in the <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">X-FITFORPDF-KEY</code> header.
           Keys are prefixed <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">ffp_live_</code> and
@@ -478,7 +478,7 @@ export default function DevelopersPage() {
 
       {/* Endpoints */}
       <section className="mb-12">
-        <h2 className="mb-2 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Endpoints</h2>
+        <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Endpoints</h2>
         {ENDPOINTS.map((ep) => (
           <EndpointCard key={ep.path} endpoint={ep} />
         ))}
@@ -486,7 +486,7 @@ export default function DevelopersPage() {
 
       {/* Render options */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Render options</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Render options</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
           Pass as a JSON string in the <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">options</code> form field.
         </p>
@@ -516,7 +516,7 @@ export default function DevelopersPage() {
 
       {/* Response headers */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Response headers</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Response headers</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
           Every <code className="rounded bg-[var(--color-bg-warm)] px-1.5 py-0.5 text-[13px]">/v1/render</code> response includes these headers:
         </p>
@@ -542,7 +542,7 @@ export default function DevelopersPage() {
 
       {/* Rate limiting */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Rate limiting</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Rate limiting</h2>
         <p className="text-sm text-[var(--color-muted)]">
           <strong>60 requests per minute</strong> per API key.
           Rate limit state is returned in headers:{' '}
@@ -558,7 +558,7 @@ export default function DevelopersPage() {
 
       {/* Error codes */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Error codes</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Error codes</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
           All errors use a standard envelope:
         </p>
@@ -598,7 +598,7 @@ export default function DevelopersPage() {
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
           </svg>
           <div className="flex-1">
-            <p className="text-sm font-[650] text-[var(--color-text)]">GitHub examples</p>
+            <p className="text-sm font-semibold text-[var(--color-text)]">GitHub examples</p>
             <p className="mt-1 text-sm leading-relaxed text-[var(--color-muted)]">
               Working API examples in Node.js and Python, plus the full OpenAPI 3.1 spec.
             </p>
@@ -619,7 +619,7 @@ export default function DevelopersPage() {
 
       {/* Integrate in minutes callout */}
       <div className="mb-6 text-center">
-        <p className="text-xs font-[650] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
           Integrate in minutes.
         </p>
         <p className="mt-1 text-sm text-[var(--color-muted)]">

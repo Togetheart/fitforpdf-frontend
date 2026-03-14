@@ -42,7 +42,7 @@ const faqs = [
 export default function ExcelCutoffPage() {
   return (
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
-      <h1 className="mb-6 text-[2rem] font-[650] leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
+      <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
         Why Excel cuts off columns when exporting to PDF (And how to fix it)
       </h1>
       <p className="mb-10 text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
@@ -50,13 +50,13 @@ export default function ExcelCutoffPage() {
         why it happens and how to fix it — with and without external tools.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Why Excel PDF export breaks on wide sheets</h2>
+      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Why Excel PDF export breaks on wide sheets</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Excel uses a fixed page width when exporting. If your sheet is wider than a standard page,
         Excel truncates content or scales it to unreadable sizes.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Manual workarounds</h2>
+      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Manual workarounds</h2>
       <ul className="mb-8 list-disc pl-6 leading-relaxed text-[var(--color-muted)]">
         <li>Page Layout → Scale to Fit → set Width to 1 page</li>
         <li>Switch orientation to Landscape</li>
@@ -64,20 +64,20 @@ export default function ExcelCutoffPage() {
         <li>Split the sheet into multiple print areas</li>
       </ul>
 
-      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Limitations of manual fixes</h2>
+      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Limitations of manual fixes</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Manual scaling breaks readability for wide data. Landscape orientation helps but still
         truncates sheets with 20+ columns. Splitting into areas takes time and breaks context.
       </p>
 
-      <h2 className="mb-3 text-xl font-[650] text-[var(--color-text)]">Structured export with fitforpdf</h2>
+      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Structured export with fitforpdf</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         fitforpdf automatically groups wide columns into readable sections — each section fits on
         a page with the reference columns (ID, Name) repeated. No manual layout needed.
       </p>
 
       <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">
-        <h2 className="py-6 text-xl font-[650] text-[var(--color-text)]">Frequently asked questions</h2>
+        <h2 className="py-6 text-xl font-semibold text-[var(--color-text)]">Frequently asked questions</h2>
         <div className="divide-y divide-[var(--color-border)]">
           {faqs.map(({ q, a }) => (
             <div key={q} className="py-5">
@@ -89,7 +89,7 @@ export default function ExcelCutoffPage() {
       </section>
 
       <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-warm)] px-6 py-8 text-center">
-        <h2 className="mb-2 text-xl font-[650] text-[var(--color-text)]">Fix your Excel export now</h2>
+        <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]">Fix your Excel export now</h2>
         <p className="mb-5 text-[var(--color-muted)]">
           Upload your spreadsheet. Get a structured PDF in seconds. 3 free exports.
         </p>

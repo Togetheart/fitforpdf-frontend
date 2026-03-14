@@ -78,7 +78,7 @@ export function PaygCard({ pack, onBuy }) {
       {/* Badge — centered above */}
       {pack.badge ? (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm whitespace-nowrap">
+          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-[13px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm whitespace-nowrap">
             {pack.badge}
           </span>
         </div>
@@ -86,11 +86,11 @@ export function PaygCard({ pack, onBuy }) {
 
       {/* Header */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           {pack.priceLine}
         </p>
         <h3 className={cn(
-          'mt-1 font-bold tracking-tight',
+          'mt-1 font-semibold tracking-tight',
           isFeatured ? 'text-2xl text-[var(--color-text)]' : 'text-xl text-[var(--color-text)]',
         )}>
           {pack.title}
@@ -101,7 +101,7 @@ export function PaygCard({ pack, onBuy }) {
       <div className="mt-5">
         <div className="flex items-baseline gap-1.5">
           <span className={cn(
-            'font-bold tracking-tight leading-none tabular-nums',
+            'font-semibold tracking-tight leading-none tabular-nums',
             isFeatured ? 'text-4xl text-[var(--color-text)]' : 'text-[2.2rem] text-[var(--color-text)]',
           )}>
             {pack.priceDisplay}
@@ -197,17 +197,17 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
 
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           {PRICING_PAGE_COPY.togglePro}
         </p>
-        <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
+        <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--color-text)]">
           {PRICING_PAGE_COPY.proSubscriptionTitle}
         </h3>
       </div>
 
       {/* Price */}
       <div className="mt-5 flex items-baseline gap-1.5">
-        <span className="text-4xl font-bold tracking-tight leading-none text-[var(--color-text)] tabular-nums">{price}</span>
+        <span className="text-4xl font-semibold tracking-tight leading-none text-[var(--color-text)] tabular-nums">{price}</span>
         <span className="text-base font-medium text-muted/70">{period}</span>
         {isYearly ? (
           <span className="ml-1 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
@@ -254,10 +254,10 @@ export function ProApiCard() {
     >
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           API
         </p>
-        <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
+        <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--color-text)]">
           {PRICING_PAGE_COPY.proApiTitle}
         </h3>
       </div>
@@ -268,7 +268,7 @@ export function ProApiCard() {
 
       {/* Price placeholder */}
       <div className="mt-5">
-        <span className="text-4xl font-bold tracking-tight leading-none text-[var(--color-text)]">{PRICING_PAGE_COPY.proApiPricePlaceholder}</span>
+        <span className="text-4xl font-semibold tracking-tight leading-none text-[var(--color-text)]">{PRICING_PAGE_COPY.proApiPricePlaceholder}</span>
       </div>
 
       {/* Divider */}
@@ -318,10 +318,10 @@ export function EnterpriseCard() {
     >
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted/70">
           Enterprise
         </p>
-        <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
+        <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--color-text)]">
           Enterprise
         </h3>
       </div>
@@ -331,7 +331,7 @@ export function EnterpriseCard() {
 
       {/* Price */}
       <div className="mt-5">
-        <span className="text-4xl font-bold tracking-tight leading-none text-[var(--color-text)]">Custom</span>
+        <span className="text-4xl font-semibold tracking-tight leading-none text-[var(--color-text)]">Custom</span>
       </div>
 
       {/* Divider */}
@@ -412,7 +412,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
           </svg>
-          Saves <span className="font-bold">45 min</span> of manual formatting per export.
+          Saves <span className="font-semibold">45 min</span> of manual formatting per export.
         </p>
       </div>
 
@@ -422,7 +422,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           {/* PAYG tagline — rule divider style */}
           <div className="flex items-center justify-center gap-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--color-border)] max-w-[80px]" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted/70">
               {PRICING_PAGE_COPY.paygTagline}
             </p>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-black/10 max-w-[80px]" />

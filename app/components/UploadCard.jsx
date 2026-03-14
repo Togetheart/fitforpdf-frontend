@@ -651,13 +651,13 @@ export default function UploadCard({
                   i === 0 ? (
                     <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group flex flex-col items-start gap-0.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]">
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
-                      <span className="text-lg font-bold tracking-tight text-[var(--color-text)] group-hover:text-accent transition-colors">{p.priceDisplay}</span>
+                      <span className="text-lg font-semibold tracking-tight text-[var(--color-text)] group-hover:text-accent transition-colors">{p.priceDisplay}</span>
                     </button>
                   ) : (
                     <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]">
                       <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
-                      <span className="text-lg font-bold tracking-tight text-accent">{p.priceDisplay}</span>
+                      <span className="text-lg font-semibold tracking-tight text-accent">{p.priceDisplay}</span>
                     </button>
                   )
                 ))}
@@ -686,7 +686,7 @@ export default function UploadCard({
             <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
               {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
               {shouldShowVerdict ? (
-                <span className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-[11px] font-semibold ${verdictStyle.badge}`}>
+                <span className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-[13px] font-semibold ${verdictStyle.badge}`}>
                   <VerdictIcon aria-hidden="true" className={`h-3.5 w-3.5 ${verdictStyle.icon}`} />
                   {String(verdict).toUpperCase()}
                 </span>

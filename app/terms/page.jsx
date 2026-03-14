@@ -8,7 +8,7 @@ export const metadata = {
 function Clause({ title, children }) {
   return (
     <section className="border-t border-[var(--color-border)] pt-8 mb-10">
-      <h2 className="mb-4 text-xl font-[650] text-[var(--color-text)]">{title}</h2>
+      <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]">{title}</h2>
       <div className="space-y-3 text-sm leading-relaxed text-[var(--color-muted)]">{children}</div>
     </section>
   );
@@ -20,10 +20,10 @@ export default function TermsPage() {
 
       {/* Header */}
       <div className="mb-12">
-        <p className="mb-3 text-xs font-[650] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
           Legal
         </p>
-        <h1 className="text-3xl font-[700] leading-tight tracking-tight text-[var(--color-text)] sm:text-4xl">
+        <h1 className="text-3xl font-semibold leading-tight tracking-tight text-[var(--color-text)] sm:text-4xl">
           Terms of Use
         </h1>
         <p className="mt-4 text-base leading-relaxed text-[var(--color-muted)]">

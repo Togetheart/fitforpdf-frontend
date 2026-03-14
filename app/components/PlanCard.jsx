@@ -130,7 +130,7 @@ export default function PlanCard({
               {pricePairs.map(({ label, price }) => (
                 <div key={label} className="flex items-baseline justify-between gap-3">
                   <span className="text-sm text-muted">{label}</span>
-                  <span className="text-xl font-bold tracking-tight text-[var(--color-text)]">{price}</span>
+                  <span className="text-xl font-semibold tracking-tight text-[var(--color-text)]">{price}</span>
                 </div>
               ))}
             </div>
@@ -139,7 +139,7 @@ export default function PlanCard({
             ) : null}
           </>
         ) : (
-          <p className="text-3xl font-bold tracking-tight text-[var(--color-text)]">
+          <p className="text-3xl font-semibold tracking-tight text-[var(--color-text)]">
             {topline}
           </p>
         )}
