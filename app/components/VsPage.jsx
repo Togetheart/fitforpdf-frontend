@@ -39,13 +39,13 @@ export default function VsPage({
             <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)] lg:px-6">
                     Feature
                   </th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)] lg:px-6">
                     {tool}
                   </th>
-                  <th className="bg-cta/[0.04] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-cta lg:px-6">
+                  <th className="bg-cta/[0.04] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-cta lg:px-6">
                     fitforpdf
                   </th>
                 </tr>
@@ -85,7 +85,7 @@ export default function VsPage({
           <div className="grid sm:grid-cols-2 gap-4 max-w-tight mx-auto">
             {/* Pros */}
             <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 space-y-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-emerald-600">
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-emerald-600">
                 Strengths
               </p>
               <ul className="space-y-2.5">
@@ -105,7 +105,7 @@ export default function VsPage({
 
             {/* Cons */}
             <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-6 space-y-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-red-500">
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-red-500">
                 Limitations
               </p>
               <ul className="space-y-2.5">

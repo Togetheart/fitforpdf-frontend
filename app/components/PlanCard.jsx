@@ -3,7 +3,7 @@ import { Check, X } from 'lucide-react';
 
 import Card from './Card';
 import Button from './ui/Button';
-import Badge from './Badge';
+import Badge from './ui/Badge';
 import { cn } from '../lib/cn.mjs';
 
 function isNegativePoint(point) {

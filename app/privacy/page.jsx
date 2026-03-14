@@ -315,7 +315,7 @@ export default function PrivacyPage() {
           data-testid="privacy-sensitive-callout"
           className="feature-card-hover rounded-xl glass px-6 py-5"
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-accent">
+          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent">
             Safety note
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-text)]">

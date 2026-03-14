@@ -78,7 +78,7 @@ export function PaygCard({ pack, onBuy }) {
       {/* Badge — centered above */}
       {pack.badge ? (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-white shadow-sm whitespace-nowrap">
+          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-white shadow-sm whitespace-nowrap">
             {pack.badge}
           </span>
         </div>
@@ -86,7 +86,7 @@ export function PaygCard({ pack, onBuy }) {
 
       {/* Header */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
           {pack.priceLine}
         </p>
         <h3 className={cn(
@@ -197,7 +197,7 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
 
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
           {PRICING_PAGE_COPY.togglePro}
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
@@ -254,7 +254,7 @@ export function ProApiCard() {
     >
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
           API
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
@@ -318,7 +318,7 @@ export function EnterpriseCard() {
     >
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
           Enterprise
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
@@ -422,7 +422,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           {/* PAYG tagline — rule divider style */}
           <div className="flex items-center justify-center gap-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--color-border)] max-w-[80px]" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted/70">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
               {PRICING_PAGE_COPY.paygTagline}
             </p>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-black/10 max-w-[80px]" />

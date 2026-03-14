@@ -48,7 +48,7 @@ export default function PricingComparisonTable({
         <div className="overflow-x-auto hidden md:block">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)] text-left text-xs uppercase tracking-[0.06em] text-muted">
+              <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)] text-left text-xs uppercase tracking-[0.08em] text-muted">
                 <th className="px-4 py-3">Feature</th>
                 {featureColumns.map((col) => (
                   <th key={col} className="px-4 py-3">

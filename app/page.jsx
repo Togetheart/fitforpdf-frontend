@@ -246,10 +246,10 @@ export default function Page() {
             <div className="flex flex-col items-center gap-4 pt-2">
               <div className="w-full max-w-[540px] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] text-sm">
                 <div className="grid grid-cols-2 divide-x divide-[var(--color-border)]">
-                  <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)]">
+                  <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
                     Excel export
                   </div>
-                  <div className="bg-cta/[0.06] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.06em] text-cta">
+                  <div className="bg-cta/[0.06] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-cta">
                     fitforpdf
                   </div>
                 </div>
@@ -368,7 +368,7 @@ export default function Page() {
           </h2>
           <div className="grid sm:grid-cols-2 gap-4 max-w-tight mx-auto">
             <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-blue-600">Perfect for</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-blue-600">Perfect for</p>
               <ul className="space-y-2.5">
                 {LANDING_COPY.whoThisIsForPerfect.map((item) => (
                   <li key={item} className="flex items-center gap-2.5 text-[var(--color-text)]">
@@ -389,7 +389,7 @@ export default function Page() {
               </ul>
             </div>
             <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)]">Not designed for</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Not designed for</p>
               <ul className="space-y-2.5">
                 {LANDING_COPY.whoThisIsForNot.map((item) => (
                   <li key={item} className="flex items-center gap-2.5 text-muted">
@@ -446,9 +446,9 @@ export default function Page() {
             >
               <thead>
                 <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">Feature</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-muted)] lg:px-6">Excel PDF Export</th>
-                  <th className="bg-cta/[0.06] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-cta lg:px-6">fitforpdf</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)] lg:px-6">Feature</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)] lg:px-6">Excel PDF Export</th>
+                  <th className="bg-cta/[0.06] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-cta lg:px-6">fitforpdf</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--color-border)]">
@@ -620,7 +620,7 @@ export default function Page() {
         bg="bg-hero"
       >
         <div className="space-y-2 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">Trusted by teams worldwide</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">Trusted by teams worldwide</p>
           <h2 className="text-3xl font-bold tracking-tight sm:text-[2.5rem]">What people say</h2>
           <p className="text-[var(--color-muted)]">Real feedback from real workflows.</p>
         </div>

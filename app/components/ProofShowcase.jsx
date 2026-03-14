@@ -272,7 +272,7 @@ export default function ProofShowcase() {
                 }`}
               >
                 <span
-                  className={`text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors duration-200 ${
+                  className={`text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors duration-200 ${
                     isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'
                   }`}
                 >
@@ -293,7 +293,7 @@ export default function ProofShowcase() {
         <div className="grid gap-6 lg:grid-cols-[38fr_62fr] xl:gap-8">
           {/* Left: Input (20%) */}
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
               {config.inputLabel}
             </p>
             <div
@@ -335,7 +335,7 @@ export default function ProofShowcase() {
 
           {/* Right: Tabbed PDF Output (70%) */}
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
               {config.outputLabel}
             </p>
 

@@ -24,7 +24,7 @@ export default function MentionsLegalesPage() {
 
       {/* Header */}
       <div className="mb-12">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
           Legal
         </p>
         <h1 className="text-3xl font-bold leading-tight tracking-tight text-[var(--color-text)] sm:text-4xl">

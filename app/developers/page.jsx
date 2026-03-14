@@ -224,7 +224,7 @@ function RequestAccessForm() {
       <div className="flex flex-col md:flex-row">
         {/* Left — value props */}
         <div className="flex-1 px-6 py-8 md:px-10 md:py-12 bg-[var(--color-bg-hero)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
             Early access
           </p>
           <h2 className="mt-3 text-2xl font-bold leading-tight text-[var(--color-text)] sm:text-3xl">
@@ -342,7 +342,7 @@ export default function DevelopersPage() {
             className="h-48 w-full object-cover sm:h-56"
           />
         </div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
           Developer API
         </p>
         <h1 className="text-3xl font-bold leading-tight tracking-tight text-[var(--color-text)] sm:text-4xl">
@@ -382,7 +382,7 @@ export default function DevelopersPage() {
 
       {/* Why fitforpdf exists */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
           Why fitforpdf exists
         </p>
         <h2 className="mb-4 text-xl font-bold leading-tight text-[var(--color-text)]">
@@ -404,7 +404,7 @@ export default function DevelopersPage() {
 
       {/* Typical API use cases */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
           Typical use cases
         </p>
         <h2 className="mb-6 text-xl font-bold leading-tight text-[var(--color-text)]">
@@ -422,7 +422,7 @@ export default function DevelopersPage() {
 
       {/* What makes fitforpdf different */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
           What makes fitforpdf different
         </p>
         <h2 className="mb-6 text-xl font-bold leading-tight text-[var(--color-text)]">
@@ -619,7 +619,7 @@ export default function DevelopersPage() {
 
       {/* Integrate in minutes callout */}
       <div className="mb-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
           Integrate in minutes.
         </p>
         <p className="mt-1 text-sm text-[var(--color-muted)]">
