@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import { LANDING_COPY } from '../siteCopy.mjs';
+
+const AUTOPLAY_SEQUENCE = [0, 1, 2, 3, 4, 5]; // Overview → A → B → C → D → E
+const AUTOPLAY_INTERVAL = 4000; // ms per tab
 
 const FEATURES = [
   {
@@ -206,24 +209,28 @@ const TAB_COLORS_HEX = [
 
 export default function ProofShowcase() {
   const [activeFormat, setActiveFormat] = useState('xlsx');
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
   const tabRefs = useRef([]);
   const formatRefs = useRef([]);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const [formatIndicator, setFormatIndicator] = useState({ left: 0, width: 0 });
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
   const cardRef = useRef(null);
   const config = FORMAT_CONFIGS[activeFormat];
   const currentTab = config.tabs[activeTab];
 
+  // Intersection observer — detect visibility + trigger entrance
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
+        setIsVisible(entry.isIntersecting);
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
-          observer.disconnect();
         }
       },
       { threshold: 0.25 },
@@ -231,6 +238,22 @@ export default function ProofShowcase() {
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasAnimated]);
+
+  // Auto-play: cycle tabs when visible & user hasn't interacted
+  useEffect(() => {
+    if (!isVisible || userPaused || !hasAnimated) return;
+    const timer = setInterval(() => {
+      setTransitioning(true);
+      setTimeout(() => {
+        setActiveTab((prev) => {
+          const next = (prev + 1) % AUTOPLAY_SEQUENCE.length;
+          return AUTOPLAY_SEQUENCE[next];
+        });
+        setTransitioning(false);
+      }, 200);
+    }, AUTOPLAY_INTERVAL);
+    return () => clearInterval(timer);
+  }, [isVisible, userPaused, hasAnimated]);
 
   useEffect(() => {
     const el = tabRefs.current[activeTab];
@@ -247,9 +270,23 @@ export default function ProofShowcase() {
     }
   }, [activeFormat]);
 
+  const handleTabClick = useCallback((i) => {
+    setUserPaused(true);
+    setTransitioning(true);
+    setTimeout(() => {
+      setActiveTab(i);
+      setTransitioning(false);
+    }, 150);
+  }, []);
+
   function handleFormatChange(formatId) {
+    setUserPaused(true);
     setActiveFormat(formatId);
-    setActiveTab(1);
+    setTransitioning(true);
+    setTimeout(() => {
+      setActiveTab(0);
+      setTransitioning(false);
+    }, 150);
   }
 
   return (
@@ -347,7 +384,7 @@ export default function ProofShowcase() {
                 aria-selected={i === activeTab}
                 aria-controls="proof-tabpanel"
                 ref={el => tabRefs.current[i] = el}
-                onClick={() => setActiveTab(i)}
+                onClick={() => handleTabClick(i)}
                 className="relative z-10 flex-1 text-center rounded-full px-2 py-2.5 sm:px-3 text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
                 style={{
                   color: i === activeTab
@@ -361,15 +398,20 @@ export default function ProofShowcase() {
           </div>
         </div>
 
+        {/* Micro-copy */}
+        <p className="mt-4 mb-2 text-center text-xs text-muted">
+          Explore how your table is automatically structured
+        </p>
+
         {/* Before/After Slider */}
         <div
           id="proof-tabpanel"
           role="tabpanel"
           aria-labelledby={`proof-tab-${currentTab.id}`}
-          className="mt-4"
           style={{
-            opacity: hasAnimated ? 1 : 0,
-            transition: 'opacity 600ms ease',
+            opacity: hasAnimated && !transitioning ? 1 : 0,
+            transform: transitioning ? 'translateX(8px)' : 'translateX(0)',
+            transition: 'opacity 300ms ease, transform 300ms ease',
           }}
         >
           <BeforeAfterSlider
@@ -391,6 +433,19 @@ export default function ProofShowcase() {
           <p className="text-[11px] text-muted/70">
             Drag to compare
           </p>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-6 flex justify-center">
+          <a
+            href="#upload"
+            className="inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#1E293B] hover:shadow-md"
+          >
+            Upload your file
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 8h10M9 4l4 4-4 4" />
+            </svg>
+          </a>
         </div>
 
         {/* Feature strip */}

@@ -109,10 +109,13 @@ export default function BeforeAfterSlider({
         draggable={false}
       />
 
-      {/* Before image (top layer — clipped, covers full area) */}
+      {/* Before image (top layer — clipped, slightly dimmed for contrast) */}
       <div
         className="absolute inset-0"
-        style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
+        style={{
+          clipPath: `inset(0 ${100 - position}% 0 0)`,
+          filter: 'brightness(0.92) saturate(0.9)',
+        }}
       >
         <img
           src={beforeSrc}
