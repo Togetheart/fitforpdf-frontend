@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { LANDING_COPY } from '../siteCopy.mjs';
 
 export default function StickyMobileCTA() {
   const [visible, setVisible] = useState(false);
@@ -18,7 +19,7 @@ export default function StickyMobileCTA() {
         href="/#tool"
         className="flex h-11 w-full items-center justify-center rounded-full bg-accent text-sm font-semibold text-white"
       >
-        Upload a file
+        {LANDING_COPY.heroCta}
       </a>
     </div>
   );

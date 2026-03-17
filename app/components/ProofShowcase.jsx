@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import { LANDING_COPY } from '../siteCopy.mjs';
+import StatPill from './ui/StatPill';
 
 const AUTOPLAY_SEQUENCE = [0, 1, 2, 3, 4, 5]; // Overview → A → B → C → D → E
 const AUTOPLAY_INTERVAL = 4000; // ms per tab
@@ -299,6 +300,11 @@ export default function ProofShowcase() {
         {LANDING_COPY.proofSourceLine}
       </p>
 
+      {/* Time-saved benefit pill */}
+      <p className="text-center -mt-2">
+        <StatPill>{LANDING_COPY.proofTimeSaved}</StatPill>
+      </p>
+
       {/* Format selector — segmented control */}
       <div
         data-testid="format-selector"
@@ -438,10 +444,10 @@ export default function ProofShowcase() {
         {/* CTA */}
         <div className="mt-6 flex justify-center">
           <a
-            href="#upload"
+            href="#tool"
             className="inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#1E293B] hover:shadow-md"
           >
-            Upload your file
+            {LANDING_COPY.heroCta}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 8h10M9 4l4 4-4 4" />
             </svg>

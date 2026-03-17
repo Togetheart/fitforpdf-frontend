@@ -5,11 +5,17 @@ export const LANDING_COPY = {
   heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
   heroSubheadline: 'Wide tables, automatically split into readable PDF sections.',
   heroSubheadlineL1: 'Wide tables, automatically split into readable PDF sections.',
-  heroSubheadlineL2: 'Wide tables, automatically split into readable PDF sections.',
+  heroSubheadlineL2a: 'Wide Excel and CSV tables from CRM exports and SaaS reports,',
+  heroSubheadlineL2b: 'automatically split into readable PDF sections.',
   heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
+  proofTimeSaved: 'Typically saves 30–45 min per export',
   proofSourceLine: 'Typical sources: Excel exports · CSV datasets · SaaS reports',
   heroLabel: 'FITFORPDF',
+  heroPainBadge: 'Your Excel PDFs become unreadable',
+  heroCta: 'Fix your broken Excel PDF',
+  heroMicrocopy: 'Used by consultants, finance teams, and SaaS reporting tools.',
+  heroMicrocopyFree: 'Free — no account required. Ready in seconds.',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
@@ -78,9 +84,9 @@ export const LANDING_COPY = {
     'Students presenting structured datasets',
   ],
 
-  finalCtaTitle: 'Ready to send professional PDFs?',
-  finalCtaCopy: 'No signup required. Free exports included.',
-  finalCtaLabel: 'Try it now',
+  finalCtaTitle: 'Stop sending unreadable Excel PDFs.',
+  finalCtaCopy: 'Generate client-ready reports in seconds.',
+  finalCtaLabel: 'Fix your broken Excel PDF →',
 
   footerTagline: 'Transform spreadsheets into professional PDFs.',
 
@@ -591,11 +597,18 @@ export const SEO = {
 
 export const TESTIMONIAL_QUOTES = [
   {
+    quote: "We stopped fixing Excel exports manually. This saved us hours every week.",
+    role: "Head of Operations",
+    company: "SaaS company",
+    icon: "ops",
+    featured: true,
+  },
+  {
     quote: "I used to spend 45 minutes reformatting every quarterly report. Now it takes 10 seconds.",
     role: "Senior Auditor",
     company: "Big4 firm",
     icon: "audit",
-    featured: true,
+    featured: false,
   },
   {
     quote: "Our CRM export has 28 columns. fitforpdf turns it into something I can actually send to clients.",

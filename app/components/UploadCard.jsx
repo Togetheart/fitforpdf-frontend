@@ -480,6 +480,23 @@ export default function UploadCard({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [isOptionsExpanded]);
 
+  // Scroll so both the upload pill and the options dropdown are fully visible
+  React.useEffect(() => {
+    if (!isOptionsExpanded || !gearRef.current) return;
+    const id = setTimeout(() => {
+      const rect = gearRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      // Target: gear button sits ~80px from top, leaving ~440px for the dropdown below
+      const idealGearTop = 55;
+      const currentGearTop = rect.top;
+      const delta = currentGearTop - idealGearTop;
+      if (Math.abs(delta) > 20) {
+        window.scrollBy({ top: delta, behavior: 'smooth' });
+      }
+    }, 10);
+    return () => clearTimeout(id);
+  }, [isOptionsExpanded]);
+
   return (
     <article
       data-testid="upload-card"
@@ -520,7 +537,7 @@ export default function UploadCard({
               <div
                 id="upload-options"
                 data-testid="upload-options"
-                className="absolute right-0 top-full mt-2 w-[340px] rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg z-20 p-4"
+                className="absolute right-0 top-full mt-2 w-[340px] rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg z-20 p-4 max-h-[min(440px,calc(100vh-160px))] overflow-y-auto"
                 data-testid-shell="upload-options-shell"
                 aria-live="polite"
               >

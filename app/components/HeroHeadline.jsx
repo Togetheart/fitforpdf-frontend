@@ -3,6 +3,7 @@
 import React from 'react';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { LANDING_COPY } from '../siteCopy.mjs';
 import Badge from './ui/Badge';
 
 export default function HeroHeadline() {
@@ -211,7 +212,7 @@ export default function HeroHeadline() {
   return (
     <>
     <div className="hero-headline-line flex justify-center mb-4">
-      <Badge variant="accent">Engine for wide tables</Badge>
+      <Badge variant="default" className="normal-case tracking-normal">{LANDING_COPY.heroPainBadge}</Badge>
     </div>
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[1.875rem] font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
       <span className="hero-headline-line block">
@@ -232,7 +233,7 @@ export default function HeroHeadline() {
           </svg>
           {/* Text container — clips on scroll */}
           <span ref={containerRef} className="inline-block text-center whitespace-nowrap text-[var(--color-text)]">
-            from wide Excel tables.
+            from wide tables.
           </span>
           {/* Right bracket */}
           <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">

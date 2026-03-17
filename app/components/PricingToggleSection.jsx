@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import { PAYG_PACKS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
+import StatPill from './ui/StatPill';
 import Card from './Card';
 import { useCheckout } from '../hooks/useCheckout.mjs';
 import { cn } from '../lib/cn.mjs';
@@ -407,13 +408,9 @@ export default function PricingToggleSection({ showFreeTier = true }) {
       {/* Main toggle + social proof pill */}
       <div className="flex flex-col items-center gap-3">
         <PillToggle options={modeOptions} value={mode} onChange={setMode} />
-        <p className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
+        <StatPill>
           Saves <span className="font-bold">45 min</span> of manual formatting per export.
-        </p>
+        </StatPill>
       </div>
 
       {/* ── Pay-as-you-go view ── */}

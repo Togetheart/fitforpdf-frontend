@@ -209,7 +209,7 @@ export default function Page() {
         >
           {/* Subtitle — stays visible throughout */}
           <p className="hero-headline-line w-full max-w-3xl mx-auto text-lg text-[var(--color-text)]">
-            {LANDING_COPY.heroSubheadlineL2}
+            {LANDING_COPY.heroSubheadlineL2a}<br />{LANDING_COPY.heroSubheadlineL2b}
           </p>
 
           {/* Hero CTA — stays visible throughout */}
@@ -221,7 +221,10 @@ export default function Page() {
                 onClick={handleHeroGenerateClick}
                 className="h-12 px-8"
               >
-                Upload a file
+                {LANDING_COPY.heroCta}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 opacity-70" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </Button>
               <Button
                 variant="outline"
@@ -234,7 +237,8 @@ export default function Page() {
                 </svg>
               </Button>
             </div>
-            <span className="text-xs text-[var(--color-muted)]">3 free exports. No account required.</span>
+            <span className="text-xs text-[var(--color-text)]">{LANDING_COPY.heroMicrocopy}</span>
+            <span className="text-xs text-[var(--color-muted)]">{LANDING_COPY.heroMicrocopyFree}</span>
           </div>
 
           {/* Comparison reveal — fades in below CTA during scroll phase 2.
