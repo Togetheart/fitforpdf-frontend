@@ -644,7 +644,7 @@ export default function UploadCard({
             <section data-testid="upload-paywall" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 space-y-4">
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-[var(--color-text)]">You've used your free exports.</p>
-                <p className="text-xs text-muted">{paywallReason || 'Pick a credit pack — one-time purchase, no subscription.'}</p>
+                <p className="text-xs text-muted">Pick a credit pack — one-time purchase, no subscription.</p>
               </div>
               <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
                 {PAYWALL_PACKS.map((p, i) => (
@@ -694,8 +694,8 @@ export default function UploadCard({
             </div>
           ) : null}
 
-          {notice ? <p className="text-sm text-[var(--color-text)]">{notice}</p> : null}
-          {error && <p className="text-sm text-rose-700">{error}</p>}
+          {!isQuotaLocked && notice ? <p className="text-sm text-[var(--color-text)]">{notice}</p> : null}
+          {!isQuotaLocked && error && <p className="text-sm text-rose-700">{error}</p>}
         </div>
       </form>
     </article>
