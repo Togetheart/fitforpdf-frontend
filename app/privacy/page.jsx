@@ -279,7 +279,7 @@ export default function PrivacyPage() {
               <div className="mt-5 border-t border-[var(--color-border)] pt-4">
                 <p className="mb-1 text-sm text-muted">{PRIVACY_PAGE_COPY.userRights.contact}</p>
                 <a
-                  href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
+                  href="/contact"
                   className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-cta"
                 >
                   {PRIVACY_PAGE_COPY.contactEmail}
@@ -326,7 +326,7 @@ export default function PrivacyPage() {
           <p>{PRIVACY_PAGE_COPY.legalFooter}</p>
           <a
             className="w-fit text-sm font-medium text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-cta"
-            href={`mailto:${PRIVACY_PAGE_COPY.contactEmail}`}
+            href="/contact"
           >
             {PRIVACY_PAGE_COPY.contactLabel}
           </a>

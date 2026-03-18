@@ -65,10 +65,10 @@ describe('landing conversion-first structure', () => {
 
     expect(heading).toBeTruthy();
     expect(screen.getByTestId('hero-headline-accent').textContent).toBe('Readable PDFs');
-    expect(screen.getByText(/from wide Excel/)).toBeTruthy();
+    expect(screen.getByText(/from wide tables/)).toBeTruthy();
     const headingText = heading.textContent || '';
     expect(headingText).toContain('Readable PDFs');
-    expect(headingText).toContain('from wide Excel');
+    expect(headingText).toContain('from wide tables');
   });
 
   test('unverified social proof claim is not shown', () => {
@@ -89,8 +89,8 @@ describe('landing conversion-first structure', () => {
   });
 
   test('hero has headline/subline/trust line', () => {
-    expect(screen.getByText(LANDING_COPY.heroSubheadlineL1)).toBeTruthy();
-    expect(screen.getByText(LANDING_COPY.heroSubheadlineL2)).toBeTruthy();
+    expect(screen.getByText(LANDING_COPY.heroSubheadlineL2a, { exact: false })).toBeTruthy();
+    expect(screen.getByText(LANDING_COPY.heroSubheadlineL2b, { exact: false })).toBeTruthy();
     expect(screen.getByText(LANDING_COPY.heroTrustLine)).toBeTruthy();
     expect(screen.getAllByText(LANDING_COPY.heroTrustLine)).toHaveLength(1);
   });
@@ -132,7 +132,6 @@ describe('landing conversion-first structure', () => {
     expect(proofCard).toBeTruthy();
     expect(within(proofCard).getByText('Source spreadsheet')).toBeTruthy();
     expect(within(proofCard).getByText('Client-ready PDF')).toBeTruthy();
-    expect(within(proofCard).getByRole('button', { name: 'View full document ↗' })).toBeTruthy();
   });
 
   test('starter plan remains the highlighted pay-as-you-go option', () => {
@@ -167,11 +166,10 @@ describe('landing conversion-first structure', () => {
     // Default format is XLSX
     expect(within(previewCard).getByText('Source spreadsheet')).toBeTruthy();
     expect(within(previewCard).getByText('Client-ready PDF')).toBeTruthy();
-    const proofWrapper = screen.getByTestId('proof-pdf-image');
-    const proofImg = proofWrapper.querySelector('img');
-    // XLSX format selected — image src contains '/Excel/'
-    expect((proofImg?.getAttribute('src') || '')).toContain('/Excel/');
-    expect((proofWrapper.getAttribute('class') || '')).toContain('w-full');
+    // XLSX format selected by default — one of the images should contain '/Excel/'
+    const proofImages = previewCard.querySelectorAll('img');
+    const hasExcelImage = Array.from(proofImages).some((img) => (img.getAttribute('src') || '').includes('/Excel/'));
+    expect(hasExcelImage).toBe(true);
   });
 
   test('proof card styling and before-after section exists', () => {

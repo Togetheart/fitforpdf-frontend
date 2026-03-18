@@ -76,31 +76,31 @@ afterEach(cleanup);
 // ── credits-purchase-panel (shown via showBuyCreditsPanel) ────────────────
 
 describe('credits-purchase-panel shows new PAYG_PACKS prices', () => {
-  test('shows $2.90 for 1 export (single)', () => {
+  test('shows $4.90 for 1 export (single)', () => {
     renderWithPanel();
     const panel = screen.getByTestId('credits-purchase-panel');
-    expect(within(panel).getByText('$2.90')).toBeTruthy();
+    expect(within(panel).getByText('$4.90')).toBeTruthy();
     expect(within(panel).getByText('1 export')).toBeTruthy();
   });
 
-  test('shows $15 for 10 exports (payg-starter)', () => {
+  test('shows $19 for 10 exports (payg-starter)', () => {
     renderWithPanel();
     const panel = screen.getByTestId('credits-purchase-panel');
-    expect(within(panel).getByText('$15')).toBeTruthy();
+    expect(within(panel).getByText('$19')).toBeTruthy();
     expect(within(panel).getByText('10 exports')).toBeTruthy();
   });
 
-  test('shows $49 for 100 exports (volume)', () => {
+  test('shows $79 for 100 exports (volume)', () => {
     renderWithPanel();
     const panel = screen.getByTestId('credits-purchase-panel');
-    expect(within(panel).getByText('$49')).toBeTruthy();
+    expect(within(panel).getByText('$79')).toBeTruthy();
     expect(within(panel).getByText('100 exports')).toBeTruthy();
   });
 
-  test('does NOT show old prices $19 or $69', () => {
+  test('does NOT show old prices $2.90 or $69', () => {
     renderWithPanel();
     const panel = screen.getByTestId('credits-purchase-panel');
-    expect(within(panel).queryByText('$19')).toBeNull();
+    expect(within(panel).queryByText('$2.90')).toBeNull();
     expect(within(panel).queryByText('$69')).toBeNull();
   });
 });
@@ -143,24 +143,24 @@ describe('credits-purchase-panel calls onBuyCreditsPack with correct Stripe pack
 // ── upload-paywall (shown via isQuotaLocked) ──────────────────────────────
 
 describe('upload-paywall shows new PAYG_PACKS prices', () => {
-  test('shows $15 for 10 exports (payg-starter)', () => {
+  test('shows $19 for 10 exports (payg-starter)', () => {
     renderWithPaywall();
     const paywall = screen.getByTestId('upload-paywall');
-    expect(within(paywall).getByText('$15')).toBeTruthy();
+    expect(within(paywall).getByText('$19')).toBeTruthy();
     expect(within(paywall).getByText('10 exports')).toBeTruthy();
   });
 
-  test('shows $49 for 100 exports (volume)', () => {
+  test('shows $79 for 100 exports (volume)', () => {
     renderWithPaywall();
     const paywall = screen.getByTestId('upload-paywall');
-    expect(within(paywall).getByText('$49')).toBeTruthy();
+    expect(within(paywall).getByText('$79')).toBeTruthy();
     expect(within(paywall).getByText('100 exports')).toBeTruthy();
   });
 
-  test('does NOT show old prices $19 or $69', () => {
+  test('does NOT show old prices $15 or $69', () => {
     renderWithPaywall();
     const paywall = screen.getByTestId('upload-paywall');
-    expect(within(paywall).queryByText('$19')).toBeNull();
+    expect(within(paywall).queryByText('$15')).toBeNull();
     expect(within(paywall).queryByText('$69')).toBeNull();
   });
 });

@@ -20,6 +20,7 @@ export default function BeforeAfterSlider({
   afterSrcSet,
   initialPosition = 35,
   className = '',
+  onInteract,
 }) {
   const containerRef = useRef(null);
   const [position, setPosition] = useState(initialPosition);
@@ -32,8 +33,11 @@ export default function BeforeAfterSlider({
     const x = clientX - rect.left;
     const pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
     setPosition(pct);
-    if (!hasInteracted) setHasInteracted(true);
-  }, [hasInteracted]);
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      onInteract?.();
+    }
+  }, [hasInteracted, onInteract]);
 
   // Mouse events
   const onMouseDown = useCallback((e) => {

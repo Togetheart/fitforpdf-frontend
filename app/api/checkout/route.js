@@ -48,6 +48,8 @@ export async function POST(req) {
 
   let checkoutResponse;
   try {
+    const successUrl = payload?.success_url || SUCCESS_URL;
+    const cancelUrl = payload?.cancel_url || CANCEL_URL;
     checkoutResponse = await fetch(backendCheckoutUrl, {
       method: 'POST',
       headers: {
@@ -58,8 +60,8 @@ export async function POST(req) {
       },
       body: JSON.stringify({
         pack,
-        success_url: SUCCESS_URL,
-        cancel_url: CANCEL_URL,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
       }),
     });
   } catch (error) {

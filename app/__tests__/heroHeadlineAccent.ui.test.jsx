@@ -40,7 +40,7 @@ describe('HeroHeadline accent animation', () => {
     expect(accent.className).toContain('hero-accent');
     expect(accent.className).toContain('hero-accent--sections');
 
-    const secondLine = screen.getByText(/from wide Excel/);
+    const secondLine = screen.getByText(/from wide tables/);
     expect(secondLine).toBeTruthy();
     expect(secondLine.className).not.toContain('hero-accent');
     expect(secondLine.className).not.toContain('hero-accent--sections');

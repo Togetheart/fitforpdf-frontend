@@ -617,6 +617,124 @@ export default function DevelopersPage() {
         </div>
       </section>
 
+      {/* API Pricing */}
+      <section className="mb-14 border-t border-[var(--color-border)] pt-10">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
+          API Pricing
+        </p>
+        <h2 className="mb-2 text-xl font-bold leading-tight text-[var(--color-text)]">
+          Start free. Scale when it matters.
+        </h2>
+        <p className="mb-8 text-sm text-[var(--color-muted)]">
+          50 renders included. Then predictable pricing as you grow.
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {/* Free */}
+          <div className="flex flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
+            <p className="text-sm font-semibold text-[var(--color-text)]">Free</p>
+            <p className="mt-1 text-2xl font-bold text-[var(--color-text)]">$0</p>
+            <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                50 renders
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                60 req/min rate limit
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                fitforpdf watermark
+              </li>
+            </ul>
+            <div className="mt-auto pt-6">
+              <a href="#request-access" className="block rounded-full border border-[var(--color-border)] px-6 py-3 text-center text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]">
+                Get started free
+              </a>
+            </div>
+          </div>
+
+          {/* Starter API */}
+          <div className="flex flex-col rounded-xl border-2 border-blue-500/30 bg-[var(--color-bg)] p-5 relative">
+            <span className="absolute -top-2.5 right-4 rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-semibold text-white uppercase tracking-wide">Recommended</span>
+            <p className="text-sm font-semibold text-[var(--color-text)]">Starter API</p>
+            <p className="mt-1"><span className="text-2xl font-bold text-[var(--color-text)]">$49</span><span className="text-sm text-[var(--color-muted)]"> / month</span></p>
+            <p className="mt-0.5 text-xs text-[var(--color-muted)]">~$0.098 per render</p>
+            <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                500 renders / month
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                No watermark
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                Priority queue
+              </li>
+            </ul>
+            <div className="mt-auto pt-6">
+              <a href="#request-access" className="block rounded-full bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700">
+                Get started &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Scale API */}
+          <div className="flex flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
+            <p className="text-sm font-semibold text-[var(--color-text)]">Scale API</p>
+            <p className="mt-1"><span className="text-2xl font-bold text-[var(--color-text)]">$99</span><span className="text-sm text-[var(--color-muted)]"> / month</span></p>
+            <p className="mt-0.5 text-xs text-[var(--color-muted)]">~$0.033 per render</p>
+            <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                3,000 renders / month
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                Faster processing
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                SLA light
+              </li>
+            </ul>
+            <div className="mt-auto pt-6">
+              <a href="#request-access" className="block rounded-full border border-[var(--color-border)] px-6 py-3 text-center text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]">
+                Get started &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Enterprise */}
+          <div className="flex flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
+            <p className="text-sm font-semibold text-[var(--color-text)]">Enterprise</p>
+            <p className="mt-1 text-2xl font-bold text-[var(--color-text)]">Custom</p>
+            <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                Unlimited renders
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                SLA + dedicated support
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                Custom infra
+              </li>
+            </ul>
+            <div className="mt-auto pt-6">
+              <a href="/contact" className="block rounded-full border border-[var(--color-border)] px-6 py-3 text-center text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]">
+                Contact us
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Integrate in minutes callout */}
       <div className="mb-6 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">

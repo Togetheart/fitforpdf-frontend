@@ -61,7 +61,7 @@ export const LANDING_COPY = {
   credibilityMicro: "If it looks wrong once, you won't trust it. fitforpdf is built for the first try.",
 
   pricingPreviewTitle: 'Simple pricing.',
-  pricingPreviewSubline: 'Consultants and analysts spend 45 minutes fixing broken Excel PDFs. fitforpdf does it automatically.',
+  pricingPreviewSubline: 'Typical manual formatting: 30–45 min per export. fitforpdf: done in seconds.',
   pricingPreviewCta: 'See full pricing',
 
   privacyStripTitle: 'Privacy-first by default.',
@@ -84,9 +84,11 @@ export const LANDING_COPY = {
     'Students presenting structured datasets',
   ],
 
-  finalCtaTitle: 'Stop sending unreadable Excel PDFs.',
-  finalCtaCopy: 'Generate client-ready reports in seconds.',
-  finalCtaLabel: 'Fix your broken Excel PDF →',
+  finalCtaTitle: 'Still fixing Excel exports manually?',
+  finalCtaCopy: 'Most teams waste 30–45 minutes per export. Multiply that by every report you send.',
+  finalCtaCopy2: 'Upload one file. Get a client-ready PDF in seconds.',
+  finalCtaLabel: 'Fix your Excel PDF now →',
+  finalCtaPrice: 'From $0.79 per export · Free tier available',
 
   footerTagline: 'Transform spreadsheets into professional PDFs.',
 
@@ -148,7 +150,7 @@ export const HOME_FAQ = [
 export const PRICING_PAGE_COPY = {
   pageTitle: "Simple pricing.",
   pageTitleAccent: "Built for professionals.",
-  pageSubtitle: 'Transform your spreadsheets into client-ready PDFs. Choose exactly how you want to pay.',
+  pageSubtitle: 'Typical manual formatting: 30–45 min per export. fitforpdf: done in seconds.',
   pageTagline: 'No subscriptions. No lock-in.',
   pageMicro: 'No subscriptions. No lock-in.',
   socialProof: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
@@ -160,31 +162,31 @@ export const PRICING_PAGE_COPY = {
   // PAYG section
   paygTagline: 'No subscription. Credits never expire.',
 
-  // Pack Single (coming soon — no Stripe ID yet)
+  // Pack Single
   singleTitle: 'Single',
   singleTopline: 'One-time payment',
-  singlePrice: '$2.90',
+  singlePrice: '$4.90',
   singleExports: '1 export',
   singleDescription: 'For one urgent export.',
   singleCtaLabel: 'Buy 1 export',
   singleFeatures: ['1 PDF export', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
 
-  // Pack Starter (coming soon — no Stripe ID yet)
+  // Pack Starter
   paygStarterTitle: 'Starter',
   paygStarterTopline: 'One-time payment',
-  paygStarterPrice: '$15',
-  paygStarterPerExport: 'Only $1.50 per export',
+  paygStarterPrice: '$19',
+  paygStarterPerExport: '$1.90 per export',
   paygStarterExports: '10 exports',
   paygStarterDescription: 'For freelancers and regular client work.',
   paygStarterCtaLabel: 'Get 10 exports',
   paygStarterBadge: 'Most popular',
   paygStarterFeatures: ['10 PDF exports', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
 
-  // Pack Volume (uses credits_100 / $19 — existing Stripe)
+  // Pack Volume
   volumeTitle: 'Volume',
   volumeTopline: 'One-time payment',
-  volumePrice: '$49',
-  volumePerExport: 'Only $0.49 per export',
+  volumePrice: '$79',
+  volumePerExport: '$0.79 per export',
   volumeExports: '100 exports',
   volumeDescription: 'For consultants and recurring reporting.',
   volumeCtaLabel: 'Get 100 exports',
@@ -229,7 +231,7 @@ export const PRICING_PAGE_COPY = {
   proApiTitle: 'For SaaS & automation',
   proApiTagline: "Render readable PDFs from your product's reports and data exports.",
   proApiSubTagline: 'REST API for Excel, CSV, and database tables.',
-  proApiPricePlaceholder: 'API for SaaS',
+  proApiPricePlaceholder: 'From $49/mo',
   proApiSocialProof: 'Used by SaaS products exporting reports.',
   proApiSocialProof2: 'Built for wide business tables.',
   proApiCtaLabel: 'Get API access',
@@ -599,59 +601,47 @@ export const TESTIMONIAL_QUOTES = [
   {
     quote: "We stopped fixing Excel exports manually. This saved us hours every week.",
     role: "Head of Operations",
-    company: "SaaS company",
+    company: "B2B SaaS — CRM exports, 20+ columns",
     icon: "ops",
     featured: true,
   },
   {
     quote: "I used to spend 45 minutes reformatting every quarterly report. Now it takes 10 seconds.",
     role: "Senior Auditor",
-    company: "Big4 firm",
+    company: "Big 4 advisory — quarterly compliance reports",
     icon: "audit",
     featured: false,
   },
   {
     quote: "Our CRM export has 28 columns. fitforpdf turns it into something I can actually send to clients.",
     role: "Account Manager",
-    company: "SaaS startup",
+    company: "B2B SaaS — HubSpot/Salesforce exports",
     icon: "saas",
-  },
-  {
-    quote: "The automatic section grouping is exactly what I needed for inventory reports.",
-    role: "Operations Manager",
-    company: "Manufacturing",
-    icon: "ops",
   },
   {
     quote: "Finally a tool that understands wide tables aren't meant to be shrunk to 6pt font.",
     role: "Finance Controller",
-    company: "Mid-cap company",
+    company: "Mid-cap — monthly P&L with 40+ columns",
     icon: "finance",
   },
   {
     quote: "We integrated the API into our reporting pipeline in under an hour. PDF exports just work now.",
     role: "Product Engineer",
-    company: "Analytics platform",
+    company: "Analytics platform — automated client reports",
     icon: "dev",
     featured: true,
   },
   {
     quote: "Board presentations used to take a full day of copy-paste. Now I upload the Excel and it's done.",
-    role: "Consultant",
-    company: "Strategy firm",
+    role: "Strategy Consultant",
+    company: "Consulting — board decks from raw data exports",
     icon: "consulting",
   },
   {
     quote: "We stopped building internal PDF tooling. fitforpdf handles the edge cases we never could.",
     role: "Engineering Lead",
-    company: "Fintech startup",
+    company: "Fintech — transaction reports for compliance",
     icon: "dev",
-  },
-  {
-    quote: "Month-end close used to mean three days of formatting. Now the reports generate themselves.",
-    role: "Head of Finance",
-    company: "Retail chain",
-    icon: "finance",
   },
 ];
 

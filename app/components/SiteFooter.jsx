@@ -1,6 +1,7 @@
 import React from 'react';
 import { LANDING_COPY } from '../siteCopy.mjs';
 import AnimatedLogo from './AnimatedLogo';
+import NewsletterForm from './NewsletterForm';
 
 export default function SiteFooter() {
   return (
@@ -78,7 +79,7 @@ export default function SiteFooter() {
             </a>
             <a
               className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1"
-              href="mailto:hello@fitforpdf.com"
+              href="/contact"
             >
               Contact
             </a>
@@ -90,25 +91,7 @@ export default function SiteFooter() {
       <div className="border-t border-[var(--color-border)]">
         <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-6 px-4 py-8 sm:flex-row sm:justify-between sm:px-6 lg:px-10 xl:px-12">
           {/* Newsletter signup */}
-          <form
-            action="mailto:hello@fitforpdf.com"
-            method="GET"
-            className="flex w-full max-w-sm items-center gap-2"
-          >
-            <input
-              type="email"
-              name="email"
-              placeholder="Your email"
-              aria-label="Email for newsletter"
-              className="flex-1 rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-muted)] outline-none focus:border-[var(--color-muted)] transition"
-            />
-            <button
-              type="submit"
-              className="shrink-0 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-white transition hover:bg-accent-hover active:scale-[0.98]"
-            >
-              Subscribe
-            </button>
-          </form>
+          <NewsletterForm />
 
           {/* Social links */}
           <div className="flex items-center gap-4">

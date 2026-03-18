@@ -210,7 +210,7 @@ const TAB_COLORS_HEX = [
 
 export default function ProofShowcase() {
   const [activeFormat, setActiveFormat] = useState('xlsx');
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
   const tabRefs = useRef([]);
   const formatRefs = useRef([]);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
@@ -430,6 +430,7 @@ export default function ProofShowcase() {
             afterAlt={currentTab.alt}
             initialPosition={35}
             className="shadow-[0_2px_20px_rgba(0,0,0,0.06)]"
+            onInteract={() => setUserPaused(true)}
           />
         </div>
 

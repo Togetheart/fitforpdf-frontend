@@ -238,7 +238,11 @@ export default function Page() {
               </Button>
             </div>
             <span className="text-xs text-[var(--color-text)]">{LANDING_COPY.heroMicrocopy}</span>
-            <span className="text-xs text-[var(--color-muted)]">{LANDING_COPY.heroMicrocopyFree}</span>
+            <span className="text-xs text-[var(--color-muted)]">
+              {LANDING_COPY.heroMicrocopyFree}
+              {' · '}
+              <a href="/sample-output.pdf" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">See a sample PDF</a>
+            </span>
           </div>
 
           {/* Comparison reveal — fades in below CTA during scroll phase 2.
@@ -292,7 +296,7 @@ export default function Page() {
       {/* Upload tool */}
       <section
         id={LANDING_COPY_KEYS.upload}
-        className="upload-section-bg py-12 sm:py-16"
+        className="upload-section-bg py-12 sm:py-16 relative z-10"
         data-testid={`section-${LANDING_COPY_KEYS.upload}`}
       >
         <div className="mx-auto max-w-[640px] px-4 sm:px-6">
@@ -653,6 +657,7 @@ export default function Page() {
             {LANDING_COPY.finalCtaTitle}
           </h2>
           <p className="mt-4 text-lg text-muted">{LANDING_COPY.finalCtaCopy}</p>
+          <p className="mt-2 text-lg font-medium text-[var(--color-text)]">{LANDING_COPY.finalCtaCopy2}</p>
           <Button
             variant="primary"
             href="#generate"
@@ -661,6 +666,7 @@ export default function Page() {
           >
             {LANDING_COPY.finalCtaLabel}
           </Button>
+          <p className="mt-3 text-sm text-muted">{LANDING_COPY.finalCtaPrice}</p>
         </div>
       </Section>
 

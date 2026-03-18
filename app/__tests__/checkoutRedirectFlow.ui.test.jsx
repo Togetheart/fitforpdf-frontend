@@ -99,7 +99,7 @@ describe('checkout redirect flow', () => {
 
     const panel = await screen.findByTestId('credits-purchase-panel');
 
-    // Click the first pack button (1 export / $2.90)
+    // Click the first pack button (1 export / $4.90)
     const packButtons = within(panel)
       .getAllByRole('button')
       .filter((btn) => /exports?/i.test(btn.textContent));

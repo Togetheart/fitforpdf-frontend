@@ -47,10 +47,16 @@ export async function POST(req) {
 
   let upstreamResponse;
   try {
+    const successUrl = payload?.success_url || 'https://www.fitforpdf.com/success';
+    const cancelUrl = payload?.cancel_url || 'https://www.fitforpdf.com/';
     upstreamResponse = await fetch(checkoutUrl, {
       method: 'POST',
       headers: buildHeaders(),
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        ...payload,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+      }),
     });
   } catch (error) {
     return jsonResponse(502, {

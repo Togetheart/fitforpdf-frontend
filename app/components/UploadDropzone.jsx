@@ -100,7 +100,7 @@ export default function UploadDropzone({
                 }}
                 disabled={disabled}
                 className="shrink-0 rounded-full p-0.5 text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] transition disabled:opacity-50"
-                aria-label="Remove file"
+                aria-label="Remove"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M18 6L6 18M6 6l12 12" />

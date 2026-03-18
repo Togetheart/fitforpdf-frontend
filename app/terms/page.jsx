@@ -39,7 +39,7 @@ export default function TermsPage() {
         </p>
         <p>
           Contact:{' '}
-          <a href="mailto:hello@fitforpdf.com" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
+          <a href="/contact" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             hello@fitforpdf.com
           </a>
         </p>
@@ -125,7 +125,7 @@ export default function TermsPage() {
         </p>
         <p>
           For any claim:{' '}
-          <a href="mailto:hello@fitforpdf.com" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
+          <a href="/contact" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             hello@fitforpdf.com
           </a>
         </p>

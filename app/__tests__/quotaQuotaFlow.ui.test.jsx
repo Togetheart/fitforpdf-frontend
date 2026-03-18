@@ -444,7 +444,7 @@ describe('quota-driven plan state and paywall flows', () => {
     await waitFor(() => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
     }, { timeout: 2000 });
-    // Paywall shows PAYWALL_PACKS buttons (10 exports/$15, 100 exports/$49), not 'Buy credits'/'Go Pro'
+    // Paywall shows PAYWALL_PACKS buttons (10 exports/$19, 100 exports/$79), not 'Buy credits'/'Go Pro'
     const paywallButtons = within(screen.getByTestId('upload-paywall')).getAllByRole('button');
     expect(paywallButtons.length).toBeGreaterThanOrEqual(2);
     // Generate PDF button is not rendered when paywall is shown

@@ -71,9 +71,9 @@ describe('pricing page UI', () => {
   test('plan cards show correct prices', () => {
     const pageText = document.body.textContent || '';
 
-    expect(pageText.includes('$2.90')).toBe(true);
-    expect(pageText.includes('$15')).toBe(true);
-    expect(pageText.includes('$49')).toBe(true);
+    expect(pageText.includes('$4.90')).toBe(true);
+    expect(pageText.includes('$19')).toBe(true);
+    expect(pageText.includes('$79')).toBe(true);
   });
 
   test('comparison table is present and has comparison test id', () => {
@@ -134,9 +134,9 @@ describe('pricing page UI', () => {
   test('contains expected plan pricing values', () => {
     const pageText = document.body.textContent || '';
 
-    expect(pageText.includes('$2.90')).toBe(true);
-    expect(pageText.includes('$15')).toBe(true);
-    expect(pageText.includes('$49')).toBe(true);
+    expect(pageText.includes('$4.90')).toBe(true);
+    expect(pageText.includes('$19')).toBe(true);
+    expect(pageText.includes('$79')).toBe(true);
     expect(pageText.includes('€29/month')).toBe(false);
     expect(pageText.includes('Coming soon')).toBe(false);
   });

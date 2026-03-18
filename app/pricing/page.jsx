@@ -19,7 +19,7 @@ export default function PricingPage() {
         {/* Subtle warm top glow */}
         <div className="relative mx-auto flex max-w-[1280px] flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-10 xl:px-12">
           {/* Page label */}
-          <p className="text-2xl font-semibold tracking-tight text-[var(--color-text)]">Pricing</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">Pricing</p>
           {/* Headline */}
           <h1 className="max-w-[20ch] text-[2.5rem] font-semibold leading-[1.06] tracking-tight text-[var(--color-text)] sm:text-5xl">
             <span className="block">{PRICING_PAGE_COPY.pageTitle}</span>

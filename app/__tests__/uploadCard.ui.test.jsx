@@ -49,7 +49,7 @@ function UploadCardHarness({
   hasResultBlob = false,
   onBrandingChange = () => {},
   onTruncateChange = () => {},
-  isPro = true,
+  isPro = false,
   onEvent = () => {},
   onUpgrade = () => {},
   planType = 'free',
@@ -109,7 +109,7 @@ function renderUploadCardHarness({
   conversionProgress = null,
   onBrandingChange = () => {},
   onTruncateChange = () => {},
-  isPro = true,
+  isPro = false,
   onEvent = () => {},
   onUpgrade = () => {},
   planType = 'free',
@@ -255,7 +255,7 @@ describe('UploadCard unit behavior', () => {
   test('upload dropzone keeps surface style', () => {
     const dropzone = screen.getByTestId('upload-dropzone');
 
-    expect(dropzone.className).toContain('bg-transparent');
+    expect(dropzone.className).toContain('cursor-pointer');
   });
 
   test('upload card uses transparent glass styling with a single translucent layer', () => {
@@ -286,9 +286,8 @@ describe('UploadCard unit behavior', () => {
     const optionsToggle = screen.getByRole('button', { name: 'Advanced options' });
 
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
-    expect(optionsToggle.className).toContain('px-5');
-    expect(optionsToggle.className).toContain('py-3');
-    expect(optionsToggle.className).not.toContain('bg-');
+    expect(optionsToggle.className).toContain('h-9');
+    expect(optionsToggle.className).toContain('w-9');
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
     expect(screen.queryByTestId('upload-options')).toBeNull();
 
@@ -296,8 +295,7 @@ describe('UploadCard unit behavior', () => {
 
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('true');
     const optionsPanel = screen.getByTestId('upload-options');
-    expect(optionsPanel.className).toContain('px-5');
-    expect(optionsPanel.className).toContain('py-5');
+    expect(optionsPanel.className).toContain('p-4');
     expect(screen.getByRole('switch', { name: 'Branding' })).toBeTruthy();
 
     fireEvent.click(optionsToggle);
@@ -327,11 +325,11 @@ describe('UploadCard unit behavior', () => {
       conversionProgress: { stepIndex: 0, percent: 12 },
     });
 
-    const optionsShell = screen.getByTestId('upload-options-shell');
+    const optionsShell = screen.getByTestId('upload-options');
     const progressPanel = screen.getByTestId('upload-progress');
     const privacyMessages = screen.getByTestId('upload-privacy-messages');
 
-    expect(optionsShell.className).toContain('bg-white');
+    expect(optionsShell.className).toContain('bg-[var(--color-bg)]');
     expect(progressPanel.className).toContain('glass-subtle');
 
     // Privacy messages are now a simple inline <p>, no longer a glass panel
@@ -603,7 +601,7 @@ describe('UploadCard unit behavior', () => {
   test('click on setting title or description toggles the row', () => {
     cleanup();
     const onBrandingChange = vi.fn();
-    renderUploadCardHarness({ onBrandingChange, initialOptionsExpanded: true });
+    renderUploadCardHarness({ onBrandingChange, initialOptionsExpanded: true, isPro: true });
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
     const brandingDescription = screen.getByText('Adds a lightweight brand treatment by default');
 
@@ -845,7 +843,7 @@ describe('UploadCard conversion flow on landing page', () => {
 
     expect(activeCircle.className).toContain('bg-accent');
     expect(activeCircle.className).toContain('text-white');
-    expect(activeLabel.className).toContain('text-slate-900');
+    expect(activeLabel.className).toContain('text-[var(--color-text)]');
     expect(activeLabel.className).toContain('font-medium');
   });
 
@@ -858,7 +856,7 @@ describe('UploadCard conversion flow on landing page', () => {
 
     expect(completedCircle.className).toContain('bg-emerald-50');
     expect(completedCircle.className).toContain('text-emerald-700');
-    expect(completedLabel.className).toContain('text-slate-700');
+    expect(completedLabel.className).toContain('text-[var(--color-text)]');
   });
 
   test('applies pending state classes to upcoming steps', () => {
@@ -868,7 +866,7 @@ describe('UploadCard conversion flow on landing page', () => {
     const pendingCircle = within(steps[2]).getByText('3');
     const pendingLabel = within(steps[2]).getByText('Generating PDF');
 
-    expect(pendingCircle.className).toContain('bg-slate-100');
+    expect(pendingCircle.className).toContain('bg-[var(--color-bg-hero)]');
     expect(pendingCircle.className).toContain('text-muted/70');
     expect(pendingLabel.className).toContain('text-muted/70');
   });

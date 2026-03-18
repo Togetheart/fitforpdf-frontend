@@ -16,13 +16,13 @@ function pricingText() {
 test('pricing contains 100 exports and 100-credit pack price', () => {
   const content = pricingText();
   assert.ok(content.includes('100 exports'));
-  assert.ok(content.includes('$49'));
+  assert.ok(content.includes('$79'));
 });
 
 test('pricing contains 500 exports and 500-credit messaging', () => {
   const content = pricingText();
   assert.ok(content.includes('10 exports'));
-  assert.ok(content.includes('$15'));
+  assert.ok(content.includes('$19'));
 });
 
 test('pricing contains no legacy free-tier-only assertions', () => {

@@ -380,6 +380,10 @@ export default function UploadCard({
   const [nudgeTarget, setNudgeTarget] = React.useState('branding');
   const [nudgeData, setNudgeData] = React.useState(null);
   const [isOptionsExpanded, setIsOptionsExpanded] = React.useState(initialOptionsExpanded);
+  const articleRef = React.useRef(null);
+  const scrollToCard = () => {
+    articleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   const [showBuyCreditsPanelInternal, setShowBuyCreditsPanelInternal] = React.useState(false);
   const effectiveShowBuyCreditsPanel = showBuyCreditsPanel || showBuyCreditsPanelInternal;
   const isBrandingNudgeSuppressed = React.useCallback(() => getBrandingNudgeSuppressedUntil() > Date.now(), []);
@@ -464,6 +468,12 @@ export default function UploadCard({
     }
   }, [canUseAdvanced]);
 
+  React.useEffect(() => {
+    if (showBuyCreditsPanel) {
+      setIsOptionsExpanded(true);
+    }
+  }, [showBuyCreditsPanel]);
+
   const buyCreditsButtonText = paywallReason ? 'Buy credits' : 'Buy credits';
 
   const gearRef = React.useRef(null);
@@ -499,9 +509,20 @@ export default function UploadCard({
 
   return (
     <article
+      ref={articleRef}
       data-testid="upload-card"
-      className="w-full"
+      className="relative overflow-hidden rounded-xl bg-white/20 backdrop-blur-[5px] border border-black/10 w-full p-4 sm:p-6 scroll-mt-20"
     >
+      <div
+        aria-hidden="true"
+        data-testid="uploadcard-glass-backdrop"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.75),transparent_52%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.45),transparent_65%)]"
+      />
+      <div
+        aria-hidden="true"
+        data-testid="uploadcard-glass-highlight"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-20 rounded-xl bg-gradient-to-b from-white/40 to-transparent"
+      />
       <form className="relative" onSubmit={onSubmit}>
         {/* ── The Pill ─────────────────────────────── */}
         <div id="generate" className="scroll-mt-24 upload-pill flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5">
@@ -522,7 +543,7 @@ export default function UploadCard({
               data-testid="options-accordion-toggle"
               aria-expanded={isOptionsExpanded}
               aria-controls="upload-options"
-              onClick={() => setIsOptionsExpanded((c) => !c)}
+              onClick={() => { setIsOptionsExpanded((c) => !c); scrollToCard(); }}
               className={`inline-flex h-9 w-9 items-center justify-center rounded-full border transition text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] ${isOptionsExpanded ? 'border-accent/30 bg-[var(--color-bg-hero)] text-[var(--color-text)]' : 'border-[var(--color-border)]'}`}
               aria-label="Advanced options"
             >
@@ -532,62 +553,16 @@ export default function UploadCard({
               </svg>
             </button>
 
-            {/* Gear dropdown */}
-            {isOptionsExpanded ? (
-              <div
-                id="upload-options"
-                data-testid="upload-options"
-                className="absolute right-0 top-full mt-2 w-[340px] rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg z-20 p-4 max-h-[min(440px,calc(100vh-160px))] overflow-y-auto"
-                data-testid-shell="upload-options-shell"
-                aria-live="polite"
-              >
-                <div className="min-h-0 divide-y divide-[var(--color-border)]">
-                  {effectiveShowBuyCreditsPanel ? (
-                    <section className="rounded-xl glass-subtle p-4 mb-3" data-testid="credits-purchase-panel">
-                      <div className="mb-3 flex items-center justify-between">
-                        <p className="text-sm font-semibold text-[var(--color-text)]">Buy credits</p>
-                        <button type="button" onClick={handleBuyCreditsPanelClose} className="text-xs font-semibold text-muted underline">Close</button>
-                      </div>
-                      {CREDIT_PACKS.map((pack) => (
-                        <button type="button" key={pack.pack} onClick={() => onBuyCreditsPack(pack.pack)} className="mt-2 flex w-full items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm font-medium">
-                          <span>{pack.exportsLabel}</span>
-                          <span>{pack.price}</span>
-                        </button>
-                      ))}
-                      {purchaseMessage ? <p className="mt-3 text-sm text-[var(--color-text)]">{purchaseMessage}</p> : null}
-                    </section>
-                  ) : null}
-
-                  {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
-                    <div data-testid="branding-upgrade-nudge-slot" aria-live="polite">
-                      <section className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 mb-3" data-testid="branding-upgrade-nudge">
-                        <p className="text-sm font-semibold text-[var(--color-text)]">{nudgeData?.title || 'Upgrade to unlock this feature'}</p>
-                        <p className="mt-1 text-sm text-muted">{nudgeData?.description || 'Upgrade to unlock this feature.'}</p>
-                        <div className="mt-3 flex items-center gap-2">
-                          <button type="button" onClick={handleBrandingUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent bg-accent px-3 text-xs font-semibold text-white hover:bg-accent-hover">Buy credits</button>
-                          <button type="button" onClick={handleProUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-blue-50">Go Pro</button>
-                          <button type="button" onClick={handleBrandingNudgeDismiss} className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]">Not now</button>
-                        </div>
-                      </section>
-                    </div>
-                  ) : null}
-
-                  <SettingRow title="Branding" description="Adds a lightweight brand treatment by default" checked={includeBranding} onChange={handleBrandingChange} rowTestId="setting-row-branding" disabled={isLoading} />
-                  <SettingRow title="Keep overview" description="Show overview summary page in the export." checked={layout?.overview !== false} onChange={(v) => handleLayoutChange('overview', v)} rowTestId="setting-row-overview" disabled={isLoading} />
-                  <SettingRow title="Keep headers" description="Keep repeated headers for multi-page outputs." checked={layout?.headers !== false} onChange={(v) => handleLayoutChange('headers', v)} rowTestId="setting-row-headers" disabled={isLoading} />
-                  <SettingRow title="Keep footer" description="Keep footer metadata in the exported PDF." checked={layout?.footer !== false} onChange={(v) => handleLayoutChange('footer', v)} rowTestId="setting-row-footer" disabled={isLoading} />
-                  <SettingRow title="Truncate long text" description="Auto-crops very long content to keep layout stable" checked={truncateLongText} onChange={onTruncateChange} rowTestId="setting-row-truncate" disabled={isLoading} showBottomBorder={false} />
-                </div>
-              </div>
-            ) : null}
+            {/* Gear button only — dropdown moved below pill */}
           </div>
 
           {/* Generate button — inside the pill */}
-          <Button
+          {!isQuotaLocked && <Button
             type="submit"
             variant="primary"
             className="shrink-0 !h-10 !rounded-xl !px-5"
             disabled={isLoading || !file}
+            onClick={scrollToCard}
           >
             {isLoading ? (
               <>
@@ -596,50 +571,107 @@ export default function UploadCard({
               </>
             ) : (
               <>
-                Generate
+                Generate PDF
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </>
             )}
-          </Button>
+          </Button>}
         </div>
+
+        {/* ── Options dropdown — in document flow below pill ── */}
+        {isOptionsExpanded ? (
+          <div
+            id="upload-options"
+            data-testid="upload-options"
+            className="mt-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg p-4"
+            aria-live="polite"
+          >
+            <div className="min-h-0 divide-y divide-[var(--color-border)]">
+              {effectiveShowBuyCreditsPanel ? (
+                <section className="rounded-xl glass-subtle p-4 mb-3" data-testid="credits-purchase-panel">
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="text-sm font-semibold text-[var(--color-text)]">Buy credits</p>
+                    <button type="button" onClick={handleBuyCreditsPanelClose} className="text-xs font-semibold text-muted underline">Close</button>
+                  </div>
+                  {CREDIT_PACKS.map((pack) => (
+                    <button type="button" key={pack.pack} onClick={() => onBuyCreditsPack(pack.pack)} className="mt-2 flex w-full items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm font-medium">
+                      <span>{pack.exportsLabel}</span>
+                      <span>{pack.price}</span>
+                    </button>
+                  ))}
+                  {purchaseMessage ? <p className="mt-3 text-sm text-[var(--color-text)]">{purchaseMessage}</p> : null}
+                </section>
+              ) : null}
+
+              {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+                <div data-testid="branding-upgrade-nudge-slot" aria-live="polite">
+                  <section className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 mb-3" data-testid="branding-upgrade-nudge">
+                    <p className="text-sm font-semibold text-[var(--color-text)]">{nudgeData?.title || 'Upgrade to unlock this feature'}</p>
+                    <p className="mt-1 text-sm text-muted">{nudgeData?.description || 'Upgrade to unlock this feature.'}</p>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button type="button" onClick={handleBrandingUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent bg-accent px-3 text-xs font-semibold text-white hover:bg-accent-hover">Buy credits</button>
+                      <button type="button" onClick={handleProUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-blue-50">Go Pro</button>
+                      <button type="button" onClick={handleBrandingNudgeDismiss} className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]">Not now</button>
+                    </div>
+                  </section>
+                </div>
+              ) : null}
+
+              <SettingRow title="Branding" description="Adds a lightweight brand treatment by default" checked={includeBranding} onChange={handleBrandingChange} rowTestId="setting-row-branding" disabled={isLoading} />
+              <SettingRow title="Keep overview" description="Show overview summary page in the export." checked={layout?.overview !== false} onChange={(v) => handleLayoutChange('overview', v)} rowTestId="setting-row-overview" disabled={isLoading} />
+              <SettingRow title="Keep headers" description="Keep repeated headers for multi-page outputs." checked={layout?.headers !== false} onChange={(v) => handleLayoutChange('headers', v)} rowTestId="setting-row-headers" disabled={isLoading} />
+              <SettingRow title="Keep footer" description="Keep footer metadata in the exported PDF." checked={layout?.footer !== false} onChange={(v) => handleLayoutChange('footer', v)} rowTestId="setting-row-footer" disabled={isLoading} />
+              <SettingRow title="Truncate long text" description="Auto-crops very long content to keep layout stable" checked={truncateLongText} onChange={onTruncateChange} rowTestId="setting-row-truncate" disabled={isLoading} showBottomBorder={false} />
+            </div>
+          </div>
+        ) : null}
 
         {/* ── Below-pill zone ─────────────────────── */}
         <div className="mt-4 flex flex-col items-center gap-3 text-center">
           {/* Quota + Pro badge */}
           <div className="flex flex-wrap items-center justify-center gap-2">
+            <span
+              data-testid="quota-buy-slot"
+              className="flex h-9 w-9 shrink-0 items-center justify-center"
+              aria-hidden={showBuyCredits ? 'false' : 'true'}
+            >
+              {showBuyCredits ? (
+                <button
+                  type="button"
+                  aria-label="Buy credits"
+                  onClick={onBuyCredits}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] text-muted transition hover:bg-[var(--color-bg-hero)] hover:text-[var(--color-text)]"
+                >
+                  <ShoppingCart aria-hidden="true" className="h-4 w-4" />
+                </button>
+              ) : null}
+            </span>
             {showProBanner ? (
               <span data-testid="pro-top-banner" className="text-xs font-semibold text-[var(--color-text)]">
                 Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
               </span>
-            ) : (
-              <span data-testid="quota-pill" className="text-xs font-medium text-muted" aria-label="remaining exports">
-                {quotaText}
-              </span>
-            )}
-            {showBuyCredits ? (
-              <button
-                type="button"
-                onClick={onBuyCredits}
-                data-testid="quota-buy-slot"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-cta hover:underline"
-              >
-                <ShoppingCart aria-hidden="true" className="h-3.5 w-3.5" />
-                Buy credits
-              </button>
             ) : null}
+            <span data-testid="quota-pill" className={`inline-flex min-w-0 items-center rounded-full border px-3 py-1 text-xs font-semibold shadow-sm ${freeExportsBadgeClass}`} aria-label="remaining exports">
+              {quotaText}
+            </span>
           </div>
 
+          {/* Helper subcopy */}
+          {toolSubcopy ? <p className="text-sm text-muted">{toolSubcopy}</p> : null}
+
           {/* Try demo */}
-          <Button
-            variant="accent"
-            onClick={onTrySample}
-            disabled={isLoading}
-            data-testid="demo-try-button"
-          >
-            Try with a demo file
-          </Button>
+          <div data-testid="demo-try-row">
+            <Button
+              variant="accent"
+              onClick={onTrySample}
+              disabled={isLoading}
+              data-testid="demo-try-button"
+            >
+              Try with a demo file
+            </Button>
+          </div>
 
           {/* Progress */}
           {isLoading && conversionProgress ? (
@@ -681,7 +713,7 @@ export default function UploadCard({
               </div>
               <p className="text-center text-xs text-muted/70">
                 Need more?{' '}
-                <a href="mailto:hello@fitforpdf.com" className="text-muted underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Contact us for Team/API</a>
+                <a href="/contact" className="text-muted underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Contact us for Team/API</a>
               </p>
             </section>
           ) : hasResultBlob ? (

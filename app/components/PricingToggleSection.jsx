@@ -353,7 +353,7 @@ export function EnterpriseCard() {
       {/* CTA */}
       <div className="mt-auto pt-8">
         <a
-          href="mailto:hello@fitforpdf.com"
+          href="/contact"
           className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98]"
         >
           Contact us
@@ -442,7 +442,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
 
           <p className="text-center text-sm text-muted/70">
             Need higher volume, API access, or team plans?{' '}
-            <a href="mailto:hello@fitforpdf.com" className="text-muted underline decoration-dotted hover:text-[var(--color-text)] transition-colors">
+            <a href="/contact" className="text-muted underline decoration-dotted hover:text-[var(--color-text)] transition-colors">
               Contact us
             </a>.
           </p>

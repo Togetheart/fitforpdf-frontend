@@ -8,6 +8,24 @@ import { trackPaymentStarted } from '../lib/analytics.mjs';
 export function useCheckout() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const frontendOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+
+  function buildReturnUrls(plan, details = {}) {
+    const params = new URLSearchParams();
+    params.set('plan', plan || 'credits');
+    params.set('expected_plan', plan || 'credits');
+    params.set('session_id', '{CHECKOUT_SESSION_ID}');
+    if (details.pack) {
+      params.set('pack', details.pack);
+    }
+    if (details.billing) {
+      params.set('billing', details.billing);
+    }
+    return {
+      success_url: frontendOrigin ? `${frontendOrigin}/success?${params.toString()}` : undefined,
+      cancel_url: frontendOrigin ? `${frontendOrigin}/?checkout=cancelled` : undefined,
+    };
+  }
 
   async function _post(url, payload = {}) {
     const response = await fetch(url, {
@@ -36,10 +54,11 @@ export function useCheckout() {
   async function openCreditsPack(pack) {
     if (!pack) return { ok: false, error: null };
     trackPaymentStarted({ plan: 'credits', pack });
+    const returnUrls = buildReturnUrls('credits', { pack });
     setIsLoading(true);
     setError(null);
     try {
-      return await _post('/api/credits/purchase/checkout', { pack });
+      return await _post('/api/credits/purchase/checkout', { pack, ...returnUrls });
     } finally {
       setIsLoading(false);
     }
@@ -48,10 +67,11 @@ export function useCheckout() {
   /** For credits_100 / credits_500 packs (pricing page Starter & Pro) */
   async function openCheckout(pack) {
     if (!pack) return { ok: false, error: null };
+    const returnUrls = buildReturnUrls('credits', { pack });
     setIsLoading(true);
     setError(null);
     try {
-      return await _post('/api/checkout', { pack });
+      return await _post('/api/checkout', { pack, ...returnUrls });
     } finally {
       setIsLoading(false);
     }
@@ -59,10 +79,11 @@ export function useCheckout() {
 
   async function openProCheckout(billing = 'monthly') {
     trackPaymentStarted({ plan: 'pro', pack: billing });
+    const returnUrls = buildReturnUrls('pro', { billing });
     setIsLoading(true);
     setError(null);
     try {
-      return await _post('/api/plan/pro/checkout', { billing });
+      return await _post('/api/plan/pro/checkout', { billing, ...returnUrls });
     } finally {
       setIsLoading(false);
     }

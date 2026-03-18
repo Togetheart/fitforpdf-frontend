@@ -47,9 +47,9 @@ describe('pricing highlight on home', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
     const allText = cards.map((c) => c.textContent || '').join(' ');
 
-    expect(allText).toContain('$2.90');
-    expect(allText).toContain('$15');
-    expect(allText).toContain('$49');
+    expect(allText).toContain('$4.90');
+    expect(allText).toContain('$19');
+    expect(allText).toContain('$79');
   });
 
   test('starter pack is marked as recommended (Most popular)', () => {
@@ -63,8 +63,8 @@ describe('pricing highlight on home', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
     const allText = cards.map((c) => c.textContent || '').join(' ');
 
-    expect(allText).toContain('$2.90');
-    expect(allText).toContain('$15');
-    expect(allText).toContain('$49');
+    expect(allText).toContain('$4.90');
+    expect(allText).toContain('$19');
+    expect(allText).toContain('$79');
   });
 });

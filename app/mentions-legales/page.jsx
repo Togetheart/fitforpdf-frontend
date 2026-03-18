@@ -46,7 +46,7 @@ export default function MentionsLegalesPage() {
         </p>
         <p>
           <span className="font-[500] text-[var(--color-text)]">Contact:</span>{' '}
-          <a href="mailto:hello@fitforpdf.com" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
+          <a href="/contact" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             hello@fitforpdf.com
           </a>
         </p>
@@ -87,7 +87,7 @@ export default function MentionsLegalesPage() {
         </p>
         <p>
           To exercise your rights or for any data-related enquiry:{' '}
-          <a href="mailto:support@fitforpdf.com" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
+          <a href="/contact" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             support@fitforpdf.com
           </a>
         </p>
