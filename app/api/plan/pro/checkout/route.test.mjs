@@ -63,6 +63,73 @@ test('POST /api/plan/pro/checkout forwards to backend checkout endpoint', async 
   restoreEnv();
 });
 
+test('POST /api/plan/pro/checkout forwards idempotency key', async () => {
+  const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
+  const fetchMock = withMockFetch(({ url, options }) => {
+    assert.equal(url, 'https://api.fitforpdf.neatexport.local/plan/pro/checkout');
+    assert.equal(options.headers['x-idempotency-key'], 'checkout-idem-pro-api');
+    const parsed = JSON.parse(options.body);
+    assert.equal(parsed.idempotencyKey, 'checkout-idem-pro-api');
+    return new Response(JSON.stringify({ url: 'https://checkout.test/pro' }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/plan/pro/checkout', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ source: 'landing', idempotencyKey: 'checkout-idem-pro-api' }),
+  });
+  const res = await POST(req);
+  const json = await res.json();
+
+  assert.equal(res.status, 200);
+  assert.equal(json.url, 'https://checkout.test/pro');
+  assert.equal(fetchMock.calls.length, 1);
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/plan/pro/checkout forwards trace headers and returns upstream trace ids', async () => {
+  const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
+  const fetchMock = withMockFetch(({ url, options }) => {
+    assert.equal(url, 'https://api.fitforpdf.neatexport.local/plan/pro/checkout');
+    assert.equal(options.headers['x-request-id'], 'frontend-req-pro');
+    assert.equal(options.headers['x-trace-id'], 'frontend-req-pro');
+    assert.equal(JSON.parse(options.body).source, 'landing');
+    return new Response(JSON.stringify({ url: 'https://checkout.test/pro' }), {
+      status: 200,
+      headers: {
+        'content-type': 'application/json',
+        'x-request-id': 'backend-req-pro',
+        'x-trace-id': 'backend-trace-pro',
+      },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/plan/pro/checkout', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-request-id': 'frontend-req-pro',
+    },
+    body: JSON.stringify({ source: 'landing' }),
+  });
+  const res = await POST(req);
+  const json = await res.json();
+
+  assert.equal(res.status, 200);
+  assert.equal(json.url, 'https://checkout.test/pro');
+  assert.equal(res.headers.get('x-request-id'), 'backend-req-pro');
+  assert.equal(res.headers.get('x-trace-id'), 'backend-trace-pro');
+  assert.equal(fetchMock.calls.length, 1);
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
 test('POST /api/plan/pro/checkout returns 405 for missing backend URL', async () => {
   const restoreEnv = setupEnv(undefined);
   const fetchMock = withMockFetch(() => {

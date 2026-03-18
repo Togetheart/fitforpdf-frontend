@@ -356,6 +356,14 @@ export default function Page() {
             onGoPro={conversion.handleGoProCheckout}
             onLayoutChange={conversion.handleLayoutChange}
             layout={conversion.layout}
+            exportHistory={conversion.exportHistory}
+            isHistoryLoading={conversion.isHistoryLoading}
+            historyError={conversion.historyError}
+            historyStatus={conversion.historyStatus}
+            onHistoryStatusChange={conversion.onHistoryStatusChange}
+            hasMoreHistory={conversion.hasMoreHistory}
+            onLoadMoreHistory={conversion.loadMoreExportHistory}
+            onRefreshHistory={conversion.refreshExportHistory}
           />
         </div>
         <p className="mt-6 text-center text-sm text-muted">

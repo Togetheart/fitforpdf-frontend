@@ -82,6 +82,11 @@ describe('Developers page — documentation sections', () => {
     }
   });
 
+  test('documents API free quota as 50 exports in /v1/quota example', () => {
+    render(<DevelopersPage />);
+    expect(screen.getByText(/"limit":\s*50\b/)).toBeTruthy();
+  });
+
   test('shows error codes matching backend implementation', () => {
     render(<DevelopersPage />);
     const expectedCodes = [

@@ -63,6 +63,77 @@ test('POST /api/checkout returns URL returned by backend', async () => {
   restoreEnv();
 });
 
+test('POST /api/checkout forwards request/trace id and returns upstream trace headers', async () => {
+  const restoreEnv = setupEnv('https://checkout.api.local');
+  const fetchMock = withMockFetch(({ url, options }) => {
+    assert.equal(url, 'https://checkout.api.local/api/checkout');
+    assert.equal(options.headers['x-request-id'], 'trace-request-001');
+    assert.equal(options.headers['x-trace-id'], 'trace-request-001');
+    assert.equal(JSON.parse(options.body).pack, 'credits_100');
+    return new Response(JSON.stringify({ url: 'https://checkout.stripe.com/session/abc123' }), {
+      status: 200,
+      headers: {
+        'content-type': 'application/json',
+        'x-request-id': 'backend-req-999',
+        'x-trace-id': 'backend-trace-999',
+      },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/checkout', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-request-id': 'trace-request-001',
+    },
+    body: JSON.stringify({ pack: 'credits_100' }),
+  });
+  const res = await POST(req);
+  const json = await res.json();
+
+  assert.equal(res.status, 200);
+  assert.equal(json.url, 'https://checkout.stripe.com/session/abc123');
+  assert.equal(res.headers.get('x-request-id'), 'backend-req-999');
+  assert.equal(res.headers.get('x-trace-id'), 'backend-trace-999');
+  assert.equal(fetchMock.calls.length, 1);
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/checkout forwards idempotency key from payload', async () => {
+  const restoreEnv = setupEnv('https://checkout.api.local');
+  const fetchMock = withMockFetch(({ url, options }) => {
+    assert.equal(url, 'https://checkout.api.local/api/checkout');
+    assert.equal(options.method, 'POST');
+    assert.equal(options.headers['x-idempotency-key'], 'checkout-idem-frontend');
+    const body = JSON.parse(options.body);
+    assert.equal(body.idempotencyKey, 'checkout-idem-frontend');
+    return new Response(JSON.stringify({ url: 'https://checkout.stripe.com/session/abc123' }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/checkout', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      pack: 'credits_100',
+      idempotencyKey: 'checkout-idem-frontend',
+    }),
+  });
+
+  const res = await POST(req);
+  const json = await res.json();
+
+  assert.equal(res.status, 200);
+  assert.equal(json.url, 'https://checkout.stripe.com/session/abc123');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
 test('POST /api/checkout returns 400 when pack is missing', async () => {
   const restoreEnv = setupEnv('https://checkout.api.local');
   const fetchMock = withMockFetch(() => {

@@ -60,7 +60,8 @@ export function PillToggle({ options, value, onChange, size = 'md' }) {
 }
 
 /* ── PAYG card ─────────────────────────────────────────── */
-export function PaygCard({ pack, onBuy }) {
+export function PaygCard({ pack, onBuy, isLoading }) {
+  const isDisabled = pack?.disabled === true;
   const isFeatured = Boolean(pack.recommended);
 
   return (
@@ -151,40 +152,27 @@ export function PaygCard({ pack, onBuy }) {
 
       {/* CTA */}
       <div className="mt-6">
-        {pack.disabled ? (
-          <button
-            type="button"
-            disabled
-            className={cn(
-              'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight cursor-not-allowed',
-              isFeatured
-                ? 'bg-cta/15 text-cta/55'
-                : 'border border-[var(--color-border)] bg-[var(--color-bg)] text-muted/70',
-            )}
-          >
-            {pack.actionLabel}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={onBuy}
-            className={cn(
-              'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
-              isFeatured
-                ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]'
-                : 'border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)]',
-            )}
-          >
-            {pack.actionLabel}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onBuy}
+          disabled={Boolean(isDisabled) || Boolean(isLoading)}
+          className={cn(
+            'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
+            isFeatured
+              ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50'
+              : 'border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] disabled:cursor-not-allowed disabled:opacity-50',
+            isDisabled ? 'bg-cta/15 text-cta/55 cursor-not-allowed' : '',
+          )}
+        >
+          {pack.actionLabel}
+        </button>
       </div>
     </Card>
   );
 }
 
 /* ── Pro subscription card ─────────────────────────────── */
-export function ProSubscriptionCard({ billing, onSubscribe }) {
+export function ProSubscriptionCard({ billing, onSubscribe, isLoading }) {
   const isYearly = billing === 'yearly';
   const price = isYearly ? PRICING_PAGE_COPY.proYearlyPrice : PRICING_PAGE_COPY.proMonthlyPrice;
   const period = isYearly ? PRICING_PAGE_COPY.proYearlyPeriod : PRICING_PAGE_COPY.proMonthlyPeriod;
@@ -237,7 +225,8 @@ export function ProSubscriptionCard({ billing, onSubscribe }) {
         <button
           type="button"
           onClick={onSubscribe}
-          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
+          disabled={isLoading}
+          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {PRICING_PAGE_COPY.proCtaLabel}
         </button>
@@ -398,9 +387,16 @@ export default function PricingToggleSection({ showFreeTier = true }) {
   ];
 
   function handlePackBuy(pack) {
-    if (pack.id === 'single') checkout.openCheckout('credits_1');
-    else if (pack.id === 'payg-starter') checkout.openCheckout('credits_10');
-    else if (pack.id === 'volume') checkout.openCheckout('credits_100');
+    const fallbackPackId = pack?.id === 'single'
+      ? 'credits_1'
+      : pack?.id === 'payg-starter'
+        ? 'credits_10'
+        : pack?.id === 'volume'
+          ? 'credits_100'
+          : null;
+    const packId = pack?.stripePackId || fallbackPackId;
+    if (!packId) return;
+    checkout.openCheckout(packId);
   }
 
   return (
@@ -430,6 +426,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
             {PAYG_PACKS.map((pack) => (
               <PaygCard
                 key={pack.id}
+                isLoading={checkout.isLoading}
                 pack={pack}
                 onBuy={() => handlePackBuy(pack)}
               />
@@ -467,7 +464,11 @@ export default function PricingToggleSection({ showFreeTier = true }) {
 
           {/* Pro + API + Enterprise cards */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:items-stretch lg:gap-8">
-            <ProSubscriptionCard billing={billing} onSubscribe={() => checkout.openProCheckout(billing)} />
+            <ProSubscriptionCard
+              billing={billing}
+              isLoading={checkout.isLoading}
+              onSubscribe={() => checkout.openProCheckout(billing)}
+            />
             <ProApiCard />
             <EnterpriseCard />
           </div>

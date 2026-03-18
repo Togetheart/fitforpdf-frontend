@@ -36,6 +36,13 @@ const CREDIT_PACKS = PAYG_PACKS.map((p) => ({
 }));
 
 const PAYWALL_PACKS = PAYG_PACKS.filter((p) => p.id !== 'single');
+const HISTORY_STATUS_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'done', label: 'Ready' },
+  { value: 'failed', label: 'Failed' },
+  { value: 'running', label: 'Running' },
+  { value: 'pending', label: 'Queued' },
+];
 
 function getProgressStepLabel(progress, stepIndex) {
   if (progress?.label) return progress.label;
@@ -160,6 +167,44 @@ function freeExportsText(value) {
   return `${safeValue} exports left`;
 }
 
+function formatHistoryDate(value) {
+  if (!value) return 'Unknown date';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Unknown date';
+  return date.toLocaleString();
+}
+
+function formatHistoryStatus(item = {}) {
+  const state = String(item.exportState || item.status || '').toLowerCase();
+  const quotaConsumed = item.quotaConsumed === true;
+  if (state === 'artifact_available') return 'Export ready';
+  if (state === 'render_running') return 'Rendering PDF';
+  if (state === 'render_pending') return 'Export queued';
+  if (state === 'render_failed_retryable' || state === 'render_failed_non_retryable') {
+    return quotaConsumed ? 'Export failed, quota consumed' : 'Export failed, quota not consumed';
+  }
+  return 'Unknown';
+}
+
+function formatHistoryQuota(item = {}) {
+  return item.quotaConsumed ? 'Quota consumed' : 'Quota not consumed';
+}
+
+function formatHistoryMismatch(code) {
+  const normalized = String(code || '').trim();
+  if (!normalized) return null;
+  if (normalized === 'missing_identity_for_provisioning_check') {
+    return 'Payment received, provisioning blocked: missing checkout identity';
+  }
+  if (normalized === 'entitlement_not_yet_provisioned') {
+    return 'Payment received, provisioning access';
+  }
+  if (normalized === 'provisioning_lookup_failed') {
+    return 'Payment received, provisioning verification unavailable';
+  }
+  return normalized;
+}
+
 function getFreeExportsBadgeClass(exportsLeft) {
   const safeValue = toFiniteInt(exportsLeft);
   if (safeValue === null) return EXPORT_BADGE_STYLES.neutral;
@@ -252,6 +297,11 @@ function safeLocalStorage() {
   } catch {
     return null;
   }
+}
+
+function isJsdomEnvironment() {
+  if (typeof navigator === 'undefined') return false;
+  return /jsdom/i.test(String(navigator.userAgent || ''));
 }
 
 function getBrandingNudgeSuppressedUntil() {
@@ -355,6 +405,14 @@ export default function UploadCard({
   purchaseMessage = '',
   onGoPro = onUpgrade,
   initialOptionsExpanded = false,
+  exportHistory = [],
+  isHistoryLoading = false,
+  historyError = null,
+  onRefreshHistory = () => {},
+  historyStatus = 'all',
+  onHistoryStatusChange = () => {},
+  hasMoreHistory = false,
+  onLoadMoreHistory = () => {},
 }) {
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
   const showProBanner = getPlanTypeLabel(planType) === 'pro' || isPro;
@@ -382,7 +440,13 @@ export default function UploadCard({
   const [isOptionsExpanded, setIsOptionsExpanded] = React.useState(initialOptionsExpanded);
   const articleRef = React.useRef(null);
   const scrollToCard = () => {
-    articleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const node = articleRef.current;
+    if (!node || typeof node.scrollIntoView !== 'function') return;
+    try {
+      node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch {
+      // no-op for non-browser test environments
+    }
   };
   const [showBuyCreditsPanelInternal, setShowBuyCreditsPanelInternal] = React.useState(false);
   const effectiveShowBuyCreditsPanel = showBuyCreditsPanel || showBuyCreditsPanelInternal;
@@ -501,7 +565,13 @@ export default function UploadCard({
       const currentGearTop = rect.top;
       const delta = currentGearTop - idealGearTop;
       if (Math.abs(delta) > 20) {
-        window.scrollBy({ top: delta, behavior: 'smooth' });
+        if (!isJsdomEnvironment() && typeof window.scrollBy === 'function') {
+          try {
+            window.scrollBy({ top: delta, behavior: 'smooth' });
+          } catch {
+            // no-op for non-browser test environments
+          }
+        }
       }
     }, 10);
     return () => clearTimeout(id);
@@ -596,7 +666,13 @@ export default function UploadCard({
                     <button type="button" onClick={handleBuyCreditsPanelClose} className="text-xs font-semibold text-muted underline">Close</button>
                   </div>
                   {CREDIT_PACKS.map((pack) => (
-                    <button type="button" key={pack.pack} onClick={() => onBuyCreditsPack(pack.pack)} className="mt-2 flex w-full items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm font-medium">
+                    <button
+                      key={pack.pack}
+                      type="button"
+                      disabled={isLoading}
+                      onClick={() => onBuyCreditsPack(pack.pack)}
+                      className="mt-2 flex w-full items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+                    >
                       <span>{pack.exportsLabel}</span>
                       <span>{pack.price}</span>
                     </button>
@@ -611,8 +687,22 @@ export default function UploadCard({
                     <p className="text-sm font-semibold text-[var(--color-text)]">{nudgeData?.title || 'Upgrade to unlock this feature'}</p>
                     <p className="mt-1 text-sm text-muted">{nudgeData?.description || 'Upgrade to unlock this feature.'}</p>
                     <div className="mt-3 flex items-center gap-2">
-                      <button type="button" onClick={handleBrandingUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent bg-accent px-3 text-xs font-semibold text-white hover:bg-accent-hover">Buy credits</button>
-                      <button type="button" onClick={handleProUpgrade} className="inline-flex h-8 items-center rounded-full border border-accent px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-blue-50">Go Pro</button>
+                      <button
+                        type="button"
+                        disabled={isLoading}
+                        onClick={handleBrandingUpgrade}
+                        className="inline-flex h-8 items-center rounded-full border border-accent bg-accent px-3 text-xs font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Buy credits
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isLoading}
+                        onClick={handleProUpgrade}
+                        className="inline-flex h-8 items-center rounded-full border border-accent px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Go Pro
+                      </button>
                       <button type="button" onClick={handleBrandingNudgeDismiss} className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]">Not now</button>
                     </div>
                   </section>
@@ -642,6 +732,7 @@ export default function UploadCard({
                   type="button"
                   aria-label="Buy credits"
                   onClick={onBuyCredits}
+                  disabled={isLoading}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] text-muted transition hover:bg-[var(--color-bg-hero)] hover:text-[var(--color-text)]"
                 >
                   <ShoppingCart aria-hidden="true" className="h-4 w-4" />
@@ -698,12 +789,24 @@ export default function UploadCard({
               <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
                 {PAYWALL_PACKS.map((p, i) => (
                   i === 0 ? (
-                    <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group flex flex-col items-start gap-0.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98]">
+                    <button
+                      key={p.stripePackId}
+                      type="button"
+                      disabled={isLoading}
+                      onClick={() => onBuyCreditsPack(p.stripePackId)}
+                      className="group flex flex-col items-start gap-0.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-left transition hover:border-accent/40 hover:bg-accent/5 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
                       <span className="text-lg font-bold tracking-tight text-[var(--color-text)] group-hover:text-cta transition-colors">{p.priceDisplay}</span>
                     </button>
                   ) : (
-                    <button key={p.stripePackId} type="button" onClick={() => onBuyCreditsPack(p.stripePackId)} className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98]">
+                    <button
+                      key={p.stripePackId}
+                      type="button"
+                      disabled={isLoading}
+                      onClick={() => onBuyCreditsPack(p.stripePackId)}
+                      className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
                       <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
                       <span className="text-lg font-bold tracking-tight text-accent">{p.priceDisplay}</span>
@@ -745,6 +848,77 @@ export default function UploadCard({
 
           {!isQuotaLocked && notice ? <p className="text-sm text-[var(--color-text)]">{notice}</p> : null}
           {!isQuotaLocked && error && <p className="text-sm text-rose-700">{error}</p>}
+
+          <section data-testid="export-history" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 text-left">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-[var(--color-text)]">Export history</p>
+              <button
+                type="button"
+                onClick={onRefreshHistory}
+                disabled={isHistoryLoading}
+                className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isHistoryLoading ? 'Refreshing…' : 'Refresh'}
+              </button>
+            </div>
+            <div className="mb-3 flex items-center gap-2">
+              <label htmlFor="history-status-filter" className="text-xs font-semibold text-muted">Status</label>
+              <select
+                id="history-status-filter"
+                aria-label="History status filter"
+                value={historyStatus}
+                onChange={(event) => onHistoryStatusChange(event.target.value)}
+                disabled={isHistoryLoading}
+                className="h-8 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-2 text-xs text-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {HISTORY_STATUS_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+            {historyError ? (
+              <p className="text-xs text-rose-700">{historyError}</p>
+            ) : null}
+            {!historyError && (!Array.isArray(exportHistory) || exportHistory.length === 0) ? (
+              <p className="text-xs text-muted">No exports yet.</p>
+            ) : null}
+            {Array.isArray(exportHistory) && exportHistory.length > 0 ? (
+              <ul className="space-y-2">
+                {exportHistory.map((item) => (
+                  <li key={item.id || item.supportId || item.createdAt} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-3 py-2">
+                    <p className="text-xs font-semibold text-[var(--color-text)]">{formatHistoryStatus(item)}</p>
+                    <p className="mt-1 text-xs text-muted">{formatHistoryDate(item.createdAt)}</p>
+                    <p className="mt-1 text-xs text-muted">File: {item.sourceFileName || 'Unknown'}</p>
+                    <p className="mt-1 text-xs text-muted">{formatHistoryQuota(item)}</p>
+                    <p className="mt-1 text-xs text-muted">Support ID: {item.supportId || 'N/A'}</p>
+                    {item.options && typeof item.options === 'object' ? (
+                      <p className="mt-1 text-xs text-muted">Options: {Object.keys(item.options).join(', ') || 'None'}</p>
+                    ) : null}
+                    {item.entitlementMismatch ? (
+                      <p className="mt-1 text-xs text-amber-700">Provisioning mismatch: {formatHistoryMismatch(item.entitlementMismatch)}</p>
+                    ) : null}
+                    {item.artifactAvailable && item.pdfUrl ? (
+                      <a className="mt-1 inline-block text-xs font-semibold text-emerald-700 underline underline-offset-2" href={item.pdfUrl}>
+                        Download artifact
+                      </a>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {!historyError && hasMoreHistory && Array.isArray(exportHistory) && exportHistory.length > 0 ? (
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={onLoadMoreHistory}
+                  disabled={isHistoryLoading}
+                  className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isHistoryLoading ? 'Loading…' : 'Load more'}
+                </button>
+              </div>
+            ) : null}
+          </section>
         </div>
       </form>
     </article>

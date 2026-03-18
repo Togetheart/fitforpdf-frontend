@@ -130,9 +130,9 @@ export default function useQuota() {
   async function syncQuotaState() {
     try {
       const response = await fetch('/api/quota', { method: 'GET' });
-      if (!response.ok) return;
+      if (!response.ok) return null;
       const raw = await response.json().catch(() => null);
-      if (!raw || typeof raw !== 'object') return;
+      if (!raw || typeof raw !== 'object') return null;
       const normalized = normalizeQuotaState(raw);
       setPlanType(normalized.planType);
       setFreeExportsLeft(normalized.freeExportsLeft);
@@ -143,9 +143,12 @@ export default function useQuota() {
       setPaywallReason('');
       setPurchaseMessage('');
       setShowBuyCreditsPanel(false);
+      return normalized;
     } catch {
       // keep current quota state when sync fails
+      return null;
     }
+    return null;
   }
 
   function applyQuotaExhaustion(code, payload = {}) {
@@ -186,6 +189,26 @@ export default function useQuota() {
     void syncQuotaState();
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const refresh = () => {
+      void syncQuotaState();
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void syncQuotaState();
+      }
+    };
+
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('focus', refresh);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
   function openBuyCreditsPanel() {
     setPurchaseMessage('');
     setShowBuyCreditsPanel(true);
@@ -216,4 +239,4 @@ export default function useQuota() {
   };
 }
 
-export { QUOTA_STATUS_BY_RENDER_CODE, PRO_PERIOD_LIMIT_DEFAULT };
+export { QUOTA_STATUS_BY_RENDER_CODE, PRO_PERIOD_LIMIT_DEFAULT, getPlanExhausted };

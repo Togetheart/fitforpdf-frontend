@@ -29,9 +29,10 @@ export async function POST(request) {
 
   const url = getUpstreamUrl();
   if (!url) {
-    // Fallback: just log and return success if no upstream configured
-    console.log('[contact-form]', { name, email, message: message.slice(0, 200) });
-    return jsonResponse(200, { ok: true });
+    return jsonResponse(500, {
+      error: 'Missing required environment variable(s)',
+      details: { missing: ['CLEAN_SHEET_API_URL'] },
+    });
   }
 
   try {
@@ -46,8 +47,9 @@ export async function POST(request) {
       headers: { 'content-type': upstream.headers.get('content-type') || 'application/json' },
     });
   } catch (error) {
-    // If upstream fails, still return success (we don't want to lose the contact)
-    console.error('[contact-form] upstream failed:', error);
-    return jsonResponse(200, { ok: true });
+    return jsonResponse(502, {
+      error: 'Upstream request failed',
+      details: { error: error instanceof Error ? error.message : 'unknown' },
+    });
   }
 }

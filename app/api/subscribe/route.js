@@ -29,9 +29,10 @@ export async function POST(request) {
 
   const url = getUpstreamUrl();
   if (!url) {
-    // Fallback: log to stdout so it's captured in deployment logs
-    console.log('[newsletter-subscribe]', { email, ts: new Date().toISOString() });
-    return jsonResponse(200, { ok: true });
+    return jsonResponse(500, {
+      error: 'Missing required environment variable(s)',
+      details: { missing: ['CLEAN_SHEET_API_URL'] },
+    });
   }
 
   try {
@@ -46,9 +47,9 @@ export async function POST(request) {
       headers: { 'content-type': upstream.headers.get('content-type') || 'application/json' },
     });
   } catch (error) {
-    // If upstream fails, still return success
-    console.error('[newsletter-subscribe] upstream failed:', error);
-    console.log('[newsletter-subscribe]', { email, ts: new Date().toISOString() });
-    return jsonResponse(200, { ok: true });
+    return jsonResponse(502, {
+      error: 'Upstream request failed',
+      details: { error: error instanceof Error ? error.message : 'unknown' },
+    });
   }
 }

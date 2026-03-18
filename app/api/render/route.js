@@ -1,4 +1,5 @@
 import { getNeatExportApiKey } from '../../lib/backendKeys.js';
+import { randomUUID } from 'node:crypto';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -82,6 +83,18 @@ function extractRenderMsFromDebugHeader(raw) {
   return null;
 }
 
+function buildRequestId(req) {
+  const explicit = req.headers.get('x-request-id')
+    || req.headers.get('x-correlation-id')
+    || req.headers.get('x-trace-id')
+    || req.headers.get('x-cleansheet-flow-id');
+  if (explicit) {
+    const trimmed = String(explicit).trim();
+    if (trimmed) return trimmed;
+  }
+  return randomUUID();
+}
+
 function emitRenderMetrics({
   upstreamStatus,
   renderMs,
@@ -125,11 +138,16 @@ function extractAnonCookie(cookieHeader) {
   return match || null;
 }
 
-function buildUpstreamHeaders(apiKey, req) {
+function buildUpstreamHeaders(apiKey, req, requestId) {
   const headers = {
     'X-NEATEXPORT-KEY': apiKey,
   };
+  headers['X-Request-Id'] = requestId;
+  headers['X-Trace-Id'] = req.headers.get('x-trace-id') || requestId;
   const flowId = req.headers.get('x-cleansheet-flow-id');
+  const exportIntent = req.headers.get('x-export-intent');
+  const idempotencyKey = req.headers.get('x-idempotency-key');
+
   if (flowId) headers['X-CleanSheet-Flow-Id'] = flowId;
   const branding = req.headers.get('x-fitforpdf-branding');
   if (branding) headers['X-FitForPDF-Branding'] = branding;
@@ -137,6 +155,21 @@ function buildUpstreamHeaders(apiKey, req) {
   if (anonCookie) headers.Cookie = anonCookie;
   const forwardedFor = req.headers.get('x-forwarded-for');
   if (forwardedFor) headers['X-Forwarded-For'] = forwardedFor;
+
+  if (exportIntent) {
+    headers['X-Export-Intent'] = exportIntent;
+  }
+  if (idempotencyKey) {
+    headers['X-Idempotency-Key'] = idempotencyKey;
+  }
+
+  // Backward-compatible default: derive idempotency key from flow id when explicit keys
+  // were not passed, preserving a stable dedupe key for existing clients.
+  if (!exportIntent && !idempotencyKey && flowId) {
+    headers['X-Export-Intent'] = flowId;
+    headers['X-Idempotency-Key'] = flowId;
+  }
+
   return headers;
 }
 
@@ -154,6 +187,8 @@ function copyPassThroughHeaders(from) {
     'x-cleansheet-column-map-rendered',
     'x-cleansheet-column-map-entries',
     'x-render-id',
+    'x-request-id',
+    'x-trace-id',
   ];
   for (const header of passHeaders) {
     const value = from.get(header);
@@ -176,6 +211,7 @@ export async function POST(req) {
   const sourceFilename = req.headers.get('x-fitforpdf-source-filename') || '';
   const clientLocale = req.headers.get('x-locale');
   const targetUrl = buildUpstreamUrl(req.url, upstream, clientLocale);
+  const requestId = buildRequestId(req);
 
   const contentType = req.headers.get('content-type') || '';
   if (!contentType.toLowerCase().includes('multipart/form-data')) {
@@ -183,7 +219,7 @@ export async function POST(req) {
   }
 
   const formData = await req.formData();
-  const upstreamHeaders = buildUpstreamHeaders(apiKey, req);
+  const upstreamHeaders = buildUpstreamHeaders(apiKey, req, requestId);
   const startMs = performance.now();
 
   let upstreamResponse;
@@ -212,6 +248,11 @@ export async function POST(req) {
   const upstreamSetCookie = upstreamResponse.headers.get('set-cookie');
   if (upstreamSetCookie) {
     responseHeaders.set('set-cookie', upstreamSetCookie);
+  }
+
+  responseHeaders.set('X-Request-Id', upstreamResponse.headers.get('x-request-id') || requestId);
+  if (!responseHeaders.get('X-Trace-Id')) {
+    responseHeaders.set('X-Trace-Id', upstreamResponse.headers.get('x-trace-id') || requestId);
   }
 
   responseHeaders.set('X-Render-MS', String(finalRenderMs));

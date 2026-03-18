@@ -55,6 +55,14 @@ function UploadCardHarness({
   planType = 'free',
   remainingInPeriod = null,
   initialOptionsExpanded = false,
+  exportHistory = [],
+  isHistoryLoading = false,
+  historyError = null,
+  onRefreshHistory = () => {},
+  historyStatus = 'all',
+  onHistoryStatusChange = () => {},
+  hasMoreHistory = false,
+  onLoadMoreHistory = () => {},
 }) {
   return function Harness() {
     const [currentFile, setCurrentFile] = useState(file);
@@ -95,6 +103,14 @@ function UploadCardHarness({
         planType={planType}
         remainingInPeriod={remainingInPeriod}
         initialOptionsExpanded={initialOptionsExpanded}
+        exportHistory={exportHistory}
+        isHistoryLoading={isHistoryLoading}
+        historyError={historyError}
+        historyStatus={historyStatus}
+        onHistoryStatusChange={onHistoryStatusChange}
+        hasMoreHistory={hasMoreHistory}
+        onLoadMoreHistory={onLoadMoreHistory}
+        onRefreshHistory={onRefreshHistory}
       />
     );
   };
@@ -115,6 +131,14 @@ function renderUploadCardHarness({
   planType = 'free',
   remainingInPeriod = null,
   initialOptionsExpanded = false,
+  exportHistory = [],
+  isHistoryLoading = false,
+  historyError = null,
+  onRefreshHistory = () => {},
+  historyStatus = 'all',
+  onHistoryStatusChange = () => {},
+  hasMoreHistory = false,
+  onLoadMoreHistory = () => {},
 }) {
   const Harness = UploadCardHarness({
     freeExportsLeft,
@@ -131,9 +155,24 @@ function renderUploadCardHarness({
     planType,
     remainingInPeriod,
     initialOptionsExpanded,
+    exportHistory,
+    isHistoryLoading,
+    historyError,
+    onRefreshHistory,
+    historyStatus,
+    onHistoryStatusChange,
+    hasMoreHistory,
+    onLoadMoreHistory,
   });
   render(<Harness />);
-  return { onBuyCredits, onBrandingChange, onTruncateChange };
+  return {
+    onBuyCredits,
+    onBrandingChange,
+    onTruncateChange,
+    onRefreshHistory,
+    onHistoryStatusChange,
+    onLoadMoreHistory,
+  };
 }
 
 function clearBrandingNudgeSuppression() {
@@ -258,6 +297,96 @@ describe('UploadCard unit behavior', () => {
     expect(dropzone.className).toContain('cursor-pointer');
   });
 
+  test('renders export history timeline fields and mismatch', () => {
+    cleanup();
+    renderUploadCardHarness({
+      exportHistory: [{
+        id: 'job_1',
+        status: 'failed',
+        exportState: 'render_failed_non_retryable',
+        createdAt: '2026-03-18T10:00:00.000Z',
+        sourceFileName: 'finance.csv',
+        quotaConsumed: false,
+        supportId: 'req_abc',
+        options: { brandingEnabled: true, keep_headers: true },
+        entitlementMismatch: 'missing_identity_for_provisioning_check',
+        artifactAvailable: false,
+      }],
+    });
+
+    expect(screen.getByTestId('export-history')).toBeTruthy();
+    expect(screen.getByText('Export history')).toBeTruthy();
+    expect(screen.getByText('Export failed, quota not consumed')).toBeTruthy();
+    expect(screen.getByText('File: finance.csv')).toBeTruthy();
+    expect(screen.getByText('Quota not consumed')).toBeTruthy();
+    expect(screen.getByText('Support ID: req_abc')).toBeTruthy();
+    expect(screen.getByText(/Provisioning mismatch: Payment received, provisioning blocked: missing checkout identity/i)).toBeTruthy();
+  });
+
+  test('refresh history button triggers callback', () => {
+    cleanup();
+    const onRefreshHistory = vi.fn();
+    renderUploadCardHarness({ onRefreshHistory });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }));
+    expect(onRefreshHistory).toHaveBeenCalledTimes(1);
+  });
+
+  test('history status filter triggers callback', () => {
+    cleanup();
+    const onHistoryStatusChange = vi.fn();
+    renderUploadCardHarness({ onHistoryStatusChange });
+
+    fireEvent.change(screen.getByLabelText('History status filter'), {
+      target: { value: 'failed' },
+    });
+
+    expect(onHistoryStatusChange).toHaveBeenCalledWith('failed');
+  });
+
+  test('load more history button triggers callback when next page exists', () => {
+    cleanup();
+    const onLoadMoreHistory = vi.fn();
+    renderUploadCardHarness({
+      hasMoreHistory: true,
+      onLoadMoreHistory,
+      exportHistory: [{
+        id: 'job_3',
+        status: 'done',
+        exportState: 'artifact_available',
+        createdAt: '2026-03-18T12:00:00.000Z',
+        sourceFileName: 'page-1.csv',
+        quotaConsumed: true,
+        supportId: 'req_3',
+      }],
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Load more' }));
+    expect(onLoadMoreHistory).toHaveBeenCalledTimes(1);
+  });
+
+  test('renders ready export row with artifact link', () => {
+    cleanup();
+    renderUploadCardHarness({
+      exportHistory: [{
+        id: 'job_2',
+        status: 'done',
+        exportState: 'artifact_available',
+        createdAt: '2026-03-18T11:00:00.000Z',
+        sourceFileName: 'report.csv',
+        quotaConsumed: true,
+        supportId: 'req_ready',
+        options: { keep_headers: true },
+        artifactAvailable: true,
+        pdfUrl: '/jobs/job_2/pdf?token=abcd&exp=9999999999',
+      }],
+    });
+
+    expect(screen.getByText('Export ready')).toBeTruthy();
+    expect(screen.getByText('Quota consumed')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Download artifact' })).toBeTruthy();
+  });
+
   test('upload card uses transparent glass styling with a single translucent layer', () => {
     const uploadCard = screen.getByTestId('upload-card');
     const cardClass = uploadCard.className;
@@ -303,6 +432,32 @@ describe('UploadCard unit behavior', () => {
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByTestId('upload-options')).toBeNull();
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
+  });
+
+  test('opening options does not call window.scrollBy in jsdom', () => {
+    cleanup();
+    vi.useFakeTimers();
+    const originalScrollBy = window.scrollBy;
+    const scrollBySpy = vi.fn();
+    Object.defineProperty(window, 'scrollBy', {
+      configurable: true,
+      writable: true,
+      value: scrollBySpy,
+    });
+
+    try {
+      renderUploadCardHarness({});
+      fireEvent.click(screen.getByRole('button', { name: 'Advanced options' }));
+      vi.advanceTimersByTime(20);
+      expect(scrollBySpy).not.toHaveBeenCalled();
+    } finally {
+      Object.defineProperty(window, 'scrollBy', {
+        configurable: true,
+        writable: true,
+        value: originalScrollBy,
+      });
+      vi.useRealTimers();
+    }
   });
 
   test('option rows keep bottom-only separators and no top border on first row', () => {
@@ -818,6 +973,31 @@ describe('UploadCard conversion flow on landing page', () => {
     mock.restore();
   });
 
+  test('double click on Generate PDF triggers only one /api/render request while in-flight', async () => {
+    const mock = mockFetch({
+      response: createPdfResponse(),
+      delayMs: 80,
+    });
+
+    render(<LandingPage />);
+
+    fireEvent.change(screen.getByTestId('generate-file-input'), {
+      target: { files: [SAMPLE_FILE] },
+    });
+    const generateButton = screen.getByRole('button', { name: 'Generate PDF' });
+
+    fireEvent.click(generateButton);
+    fireEvent.click(generateButton);
+
+    expect(mock.calls.filter((entry) => String(entry.url).includes('/api/render'))).toHaveLength(1);
+
+    await waitFor(() => {
+      expect(mock.calls.filter((entry) => String(entry.url).includes('/api/render'))).toHaveLength(1);
+    }, { timeout: 1000 });
+
+    mock.restore();
+  });
+
   test('renders exactly three progress steps', () => {
     renderUploadCardHarness({ isLoading: true, conversionProgress: { stepIndex: 0, percent: 12 } });
     const list = screen.getByRole('list', { name: /conversion steps/i });
@@ -998,6 +1178,53 @@ describe('UploadCard conversion flow on landing page', () => {
 
     await waitFor(() => {
       expect(screen.getByText('5 purchased exports remaining.')).toBeTruthy();
+    });
+
+    mock.restore();
+  });
+
+  test('landing refresh history calls /api/jobs endpoint', async () => {
+    const mock = mockFetch({
+      responseFactory: (url) => {
+        const target = String(url);
+        if (target.includes('/api/quota')) {
+          return createQuotaResponse({ plan_type: 'free', free_exports_left: 3 });
+        }
+        if (target.includes('/api/jobs')) {
+          return new Response(JSON.stringify({
+            items: [{
+              id: 'job_history_1',
+              exportState: 'artifact_available',
+              status: 'done',
+              createdAt: '2026-03-18T12:00:00.000Z',
+              sourceFileName: 'history.csv',
+              quotaConsumed: true,
+              supportId: 'req_history_1',
+              artifactAvailable: true,
+              pdfUrl: '/jobs/job_history_1/pdf?token=a&exp=9',
+              options: { keep_headers: true },
+            }],
+            count: 1,
+          }), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          });
+        }
+        return createJsonResponse(404, { error: 'Not found' });
+      },
+    });
+
+    render(<LandingPage />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('export-history')).toBeTruthy();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }));
+
+    await waitFor(() => {
+      const calls = mock.calls.filter((entry) => String(entry.url).includes('/api/jobs'));
+      expect(calls.length).toBeGreaterThanOrEqual(1);
     });
 
     mock.restore();

@@ -7,13 +7,14 @@ import {
   normalizePageBurdenRecommendations,
   recommendationLabel,
 } from '../pageUiLogic.mjs';
-import { QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
+import { getPlanExhausted, QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
 import { useCheckout } from './useCheckout.mjs';
 import { trackUploadStarted, trackDemoFileUsed } from '../lib/analytics.mjs';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
 const CHECKOUT_COMING_SOON_MESSAGE = 'Payments coming soon. Contact us.';
+const HISTORY_PAGE_LIMIT = 10;
 
 // ── Confidence helpers ────────────────────────────────────
 
@@ -125,6 +126,21 @@ function getQuotaErrorCode(response, payload) {
   return headerCode || headerError || payloadCode || null;
 }
 
+function normalizeHistoryStatus(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (!normalized || normalized === 'all') return 'all';
+  if (normalized === 'pending' || normalized === 'running' || normalized === 'done' || normalized === 'failed') {
+    return normalized;
+  }
+  return 'all';
+}
+
+function normalizeCursor(value) {
+  const parsed = Number.parseInt(String(value ?? ''), 10);
+  if (!Number.isFinite(parsed) || parsed < 0) return null;
+  return parsed;
+}
+
 function sleep(ms) {
   return new Promise((resolve) => { setTimeout(resolve, ms); });
 }
@@ -180,7 +196,9 @@ export default function useConversion({ quota }) {
     applyQuotaExhaustion,
     setPaywallReason,
     setPurchaseMessage,
-    freeExportsLimit,
+    planType: quotaPlanType,
+    freeExportsLeft,
+    remainingInPeriod,
   } = quota;
 
   const [file, setFile] = useState(null);
@@ -203,8 +221,14 @@ export default function useConversion({ quota }) {
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [layout, setLayout] = useState({ overview: true, headers: true, footer: true });
   const [renderId, setRenderId] = useState(null);
+  const [exportHistory, setExportHistory] = useState([]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState(null);
+  const [historyStatus, setHistoryStatus] = useState('all');
+  const [historyNextCursor, setHistoryNextCursor] = useState(null);
 
   const progressTimersRef = useRef([]);
+  const renderInFlightRef = useRef(false);
   const [conversionProgress, setConversionProgress] = useState({
     running: false,
     stepIndex: 0,
@@ -249,14 +273,19 @@ export default function useConversion({ quota }) {
     const {
       isFallback = false,
       preserveNotice = false,
+      allowInFlight = false,
       flowIdOverride = null,
       skipProgress = false,
       sourceFile = null,
     } = opts;
+
+    if (!allowInFlight && renderInFlightRef.current) return;
+
     const targetFile = sourceFile || file;
     if (!targetFile) { setError('Select a file'); return; }
 
     const activeFlowId = flowIdOverride || flowId || createFlowId();
+    renderInFlightRef.current = true;
     setError(null);
     if (!preserveNotice) setNotice(null);
     setRenderVerdict(null);
@@ -281,6 +310,8 @@ export default function useConversion({ quota }) {
         body: formData,
         headers: {
           'X-CleanSheet-Flow-Id': activeFlowId,
+          'X-Export-Intent': activeFlowId,
+          'X-Idempotency-Key': activeFlowId,
           'X-FitForPDF-Source-Filename': targetFile.name || '',
         },
       });
@@ -321,7 +352,13 @@ export default function useConversion({ quota }) {
 
         if (mode === 'optimized' && !isFallback) {
           setNotice('Optimized mode unavailable; standard version generated.');
-          await submitRender('normal', { isFallback: true, skipProgress: true, preserveNotice: true, flowIdOverride: activeFlowId });
+          await submitRender('normal', {
+            isFallback: true,
+            skipProgress: true,
+            preserveNotice: true,
+            flowIdOverride: activeFlowId,
+            allowInFlight: true,
+          });
           return;
         }
         throw new Error(data.error || res.statusText || 'Upload failed');
@@ -387,12 +424,30 @@ export default function useConversion({ quota }) {
       if (remainingDelay > 0) await sleep(remainingDelay);
       finishConversionProgress();
       setIsLoading(false);
+      renderInFlightRef.current = false;
     }
+  }
+
+  async function refreshQuotaAndBlockIfNeeded() {
+    if (!isQuotaLocked) return true;
+    const refreshedQuota = await syncQuotaState();
+    const nextPlanType = refreshedQuota?.planType || quotaPlanType || 'free';
+    const nextFreeLeft = refreshedQuota?.freeExportsLeft ?? freeExportsLeft;
+    const nextRemainingInPeriod = nextPlanType === 'pro'
+      ? (refreshedQuota?.remainingInPeriod ?? remainingInPeriod)
+      : (refreshedQuota?.freeExportsLeft ?? freeExportsLeft);
+    return !getPlanExhausted(nextPlanType, nextFreeLeft, nextRemainingInPeriod);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (isQuotaLocked) return;
+    let canExport = true;
+    if (isQuotaLocked) {
+      canExport = await refreshQuotaAndBlockIfNeeded();
+    }
+    if (!canExport) {
+      return;
+    }
     if (file) {
       const ext = (file.name || '').split('.').pop()?.toLowerCase();
       trackUploadStarted({ fileType: ext, fileSize: file.size });
@@ -438,12 +493,14 @@ export default function useConversion({ quota }) {
   async function handleGenerateOptimized() {
     const verdict = confidence?.verdict;
     if (lastRequestMode === 'optimized' && (verdict === 'WARN' || verdict === 'FAIL')) return;
+    if (!(await refreshQuotaAndBlockIfNeeded())) return;
     await submitRender('optimized', { flowIdOverride: flowId || createFlowId() });
   }
 
   async function handleGenerateCompact() {
     const verdict = confidence?.verdict;
     if (lastRequestMode === 'compact' && verdict === 'FAIL') return;
+    if (!(await refreshQuotaAndBlockIfNeeded())) return;
     await submitRender('compact', { flowIdOverride: flowId || createFlowId() });
   }
 
@@ -460,6 +517,75 @@ export default function useConversion({ quota }) {
       }
       return { ...current, [nextKey]: Boolean(nextChecked) };
     });
+  }
+
+  async function refreshExportHistory({ cursor = 0, status = historyStatus, append = false } = {}) {
+    const safeStatus = normalizeHistoryStatus(status);
+    const safeCursor = Number.isFinite(cursor) && cursor >= 0 ? cursor : 0;
+    setIsHistoryLoading(true);
+    setHistoryError(null);
+    try {
+      const params = new URLSearchParams();
+      params.set('limit', String(HISTORY_PAGE_LIMIT));
+      if (safeCursor > 0) {
+        params.set('cursor', String(safeCursor));
+      }
+      if (safeStatus !== 'all') {
+        params.set('status', safeStatus);
+      }
+      const res = await fetch(`/api/jobs?${params.toString()}`, { method: 'GET' });
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        const message = payload && payload.error ? payload.error : `Unable to load export history (${res.status})`;
+        setHistoryError(message);
+        if (!append) {
+          setExportHistory([]);
+          setHistoryNextCursor(null);
+        }
+        return;
+      }
+      const payload = await res.json().catch(() => ({}));
+      const items = Array.isArray(payload?.items) ? payload.items : [];
+      const nextCursor = normalizeCursor(payload?.nextCursor);
+      setHistoryNextCursor(nextCursor);
+      if (append) {
+        setExportHistory((current) => {
+          const seen = new Set(current.map((item) => item && item.id).filter(Boolean));
+          const merged = [...current];
+          for (const item of items) {
+            if (!item || !item.id) {
+              merged.push(item);
+              continue;
+            }
+            if (seen.has(item.id)) continue;
+            seen.add(item.id);
+            merged.push(item);
+          }
+          return merged;
+        });
+      } else {
+        setExportHistory(items);
+      }
+    } catch {
+      setHistoryError('Unable to load export history.');
+      if (!append) {
+        setExportHistory([]);
+        setHistoryNextCursor(null);
+      }
+    } finally {
+      setIsHistoryLoading(false);
+    }
+  }
+
+  async function handleHistoryStatusChange(nextStatus) {
+    const safeStatus = normalizeHistoryStatus(nextStatus);
+    setHistoryStatus(safeStatus);
+    await refreshExportHistory({ cursor: 0, status: safeStatus, append: false });
+  }
+
+  async function loadMoreExportHistory() {
+    if (!Number.isFinite(historyNextCursor) || historyNextCursor < 0) return;
+    await refreshExportHistory({ cursor: historyNextCursor, status: historyStatus, append: true });
   }
 
   async function handleBuyCreditsPack(pack) {
@@ -533,6 +659,15 @@ export default function useConversion({ quota }) {
     // checkout
     handleBuyCreditsPack,
     handleGoProCheckout,
+    // history
+    exportHistory,
+    isHistoryLoading,
+    historyError,
+    historyStatus,
+    hasMoreHistory: Number.isFinite(historyNextCursor) && historyNextCursor >= 0,
+    onHistoryStatusChange: handleHistoryStatusChange,
+    loadMoreExportHistory,
+    refreshExportHistory,
     // internals
     flowId,
     reasonLabel,

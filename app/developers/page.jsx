@@ -29,7 +29,7 @@ const ENDPOINTS = [
   ${BASE_URL}/quota`,
     response: `{
   "plan": "credits",
-  "free": { "limit": 3, "used": 3, "remaining": 0 },
+  "free": { "limit": 50, "used": 0, "remaining": 50 },
   "credits": { "remaining": 8 },
   "pro": { "monthlyCap": 500, "usedInPeriod": 0 }
 }`,

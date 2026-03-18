@@ -106,6 +106,16 @@ describe('credits-purchase-panel shows new PAYG_PACKS prices', () => {
 });
 
 describe('credits-purchase-panel calls onBuyCreditsPack with correct Stripe pack IDs', () => {
+  test('disables pack buttons when conversion is loading', () => {
+    renderWithPanel({ isLoading: true });
+    const panel = screen.getByTestId('credits-purchase-panel');
+    const packButtons = within(panel).getAllByRole('button').filter((btn) =>
+      /\b\d+\s*export(s)?/i.test(btn.textContent || ''),
+    );
+    expect(packButtons.length).toBeGreaterThan(0);
+    packButtons.forEach((btn) => expect(btn).toHaveProperty('disabled', true));
+  });
+
   test('1-export button calls onBuyCreditsPack("credits_1")', () => {
     const { onBuyCreditsPack } = renderWithPanel();
     const panel = screen.getByTestId('credits-purchase-panel');
@@ -166,6 +176,16 @@ describe('upload-paywall shows new PAYG_PACKS prices', () => {
 });
 
 describe('upload-paywall calls onBuyCreditsPack with correct Stripe pack IDs', () => {
+  test('paywall buttons are disabled while conversion is loading', () => {
+    renderWithPaywall({ isLoading: true });
+    const paywall = screen.getByTestId('upload-paywall');
+    const packButtons = within(paywall).getAllByRole('button').filter((btn) =>
+      /\b\d+\s*export(s)?/i.test(btn.textContent || ''),
+    );
+    expect(packButtons.length).toBeGreaterThan(0);
+    packButtons.forEach((btn) => expect(btn).toHaveProperty('disabled', true));
+  });
+
   test('10-export paywall button calls onBuyCreditsPack("credits_10")', () => {
     const { onBuyCreditsPack } = renderWithPaywall();
     const paywall = screen.getByTestId('upload-paywall');
