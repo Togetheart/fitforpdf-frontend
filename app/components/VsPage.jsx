@@ -45,7 +45,7 @@ export default function VsPage({
                   <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)] lg:px-6">
                     {tool}
                   </th>
-                  <th className="bg-cta/[0.04] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-cta lg:px-6">
+                  <th className="bg-[var(--color-bg)] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-cta lg:px-6">
                     fitforpdf
                   </th>
                 </tr>
@@ -63,7 +63,7 @@ export default function VsPage({
                       <span className="mr-1.5 text-red-400/60">&#x2717;</span>
                       {toolVal}
                     </td>
-                    <td className="bg-cta/[0.04] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6">
+                    <td className="bg-[var(--color-bg)] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6">
                       <span className="mr-1.5 text-emerald-500">&#x2713;</span>
                       {fitforpdfVal}
                     </td>

@@ -257,7 +257,7 @@ export default function Page() {
                   <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
                     Excel export
                   </div>
-                  <div className="bg-cta/[0.06] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-cta">
+                  <div className="bg-[var(--color-bg)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-cta">
                     fitforpdf
                   </div>
                 </div>
@@ -270,7 +270,7 @@ export default function Page() {
                     <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-[var(--color-muted)] line-through decoration-[var(--color-border)]">
                       <span className="mr-1.5 text-red-400/60">✗</span>{before}
                     </div>
-                    <div className="bg-cta/[0.06] px-4 py-2.5 font-semibold text-[var(--color-text)]">
+                    <div className="bg-[var(--color-bg)] px-4 py-2.5 font-semibold text-[var(--color-text)]">
                       <span className="mr-1.5 text-emerald-500">✓</span>{after}
                     </div>
                   </div>
