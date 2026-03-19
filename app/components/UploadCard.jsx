@@ -849,18 +849,19 @@ export default function UploadCard({
           {!isQuotaLocked && notice ? <p className="text-sm text-[var(--color-text)]">{notice}</p> : null}
           {!isQuotaLocked && error && <p className="text-sm text-rose-700">{error}</p>}
 
-          <section data-testid="export-history" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 text-left">
-            <div className="mb-3 flex items-center justify-between gap-3">
+          <details data-testid="export-history" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] text-left">
+            <summary className="flex cursor-pointer items-center justify-between gap-3 p-4 select-none">
               <p className="text-sm font-semibold text-[var(--color-text)]">Export history</p>
               <button
                 type="button"
-                onClick={onRefreshHistory}
+                onClick={(e) => { e.preventDefault(); onRefreshHistory(); }}
                 disabled={isHistoryLoading}
                 className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isHistoryLoading ? 'Refreshing…' : 'Refresh'}
               </button>
-            </div>
+            </summary>
+            <div className="px-4 pb-4">
             <div className="mb-3 flex items-center gap-2">
               <label htmlFor="history-status-filter" className="text-xs font-semibold text-muted">Status</label>
               <select
@@ -918,7 +919,8 @@ export default function UploadCard({
                 </button>
               </div>
             ) : null}
-          </section>
+            </div>
+          </details>
         </div>
       </form>
     </article>
