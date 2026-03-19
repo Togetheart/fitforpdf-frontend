@@ -749,8 +749,7 @@ export default function UploadCard({
             </span>
           </div>
 
-          {/* Helper subcopy */}
-          {toolSubcopy ? <p className="text-sm text-muted">{toolSubcopy}</p> : null}
+          {/* Helper subcopy — hidden when quota badge already shows the same info */}
 
           {/* Try demo */}
           <div data-testid="demo-try-row">
