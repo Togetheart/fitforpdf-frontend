@@ -17,7 +17,7 @@ export const LANDING_COPY = {
   heroMicrocopy: 'Used by consultants, finance teams, and SaaS reporting tools.',
   heroMicrocopyFree: 'Free — no account required. Ready in seconds.',
   heroPrimaryCta: 'Generate PDF',
-  heroTrustLine: 'GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored',
+  heroTrustLine: 'Processed in France. Files deleted instantly. No data stored.',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
 
   problemTitle: 'Spreadsheet exports fail in real life.',

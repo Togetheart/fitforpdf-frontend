@@ -96,7 +96,7 @@ export default function SiteFooter() {
           {/* Social links */}
           <div className="flex items-center gap-4">
             <a
-              href="https://linkedin.com/company/fitforpdf"
+              href="https://www.linkedin.com/company/fitforpdf/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"

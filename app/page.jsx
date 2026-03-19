@@ -394,11 +394,6 @@ export default function Page() {
                         <path d="M5 8l2.5 2.5L11 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </span>
-                    {WHO_ICONS[item] && (
-                      <span className="flex-none text-blue-400" aria-hidden="true">
-                        {WHO_ICONS[item]}
-                      </span>
-                    )}
                     {item}
                   </li>
                 ))}

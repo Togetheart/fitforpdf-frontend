@@ -723,23 +723,18 @@ export default function UploadCard({
         <div className="mt-4 flex flex-col items-center gap-3 text-center">
           {/* Quota + Pro badge */}
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <span
-              data-testid="quota-buy-slot"
-              className="flex h-9 w-9 shrink-0 items-center justify-center"
-              aria-hidden={showBuyCredits ? 'false' : 'true'}
-            >
-              {showBuyCredits ? (
-                <button
-                  type="button"
-                  aria-label="Buy credits"
-                  onClick={onBuyCredits}
-                  disabled={isLoading}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] text-muted transition hover:bg-[var(--color-bg-hero)] hover:text-[var(--color-text)]"
-                >
-                  <ShoppingCart aria-hidden="true" className="h-4 w-4" />
-                </button>
-              ) : null}
-            </span>
+            {showBuyCredits ? (
+              <button
+                type="button"
+                data-testid="quota-buy-slot"
+                aria-label="Buy credits"
+                onClick={onBuyCredits}
+                disabled={isLoading}
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] text-muted transition hover:bg-[var(--color-bg-hero)] hover:text-[var(--color-text)]"
+              >
+                <ShoppingCart aria-hidden="true" className="h-4 w-4" />
+              </button>
+            ) : null}
             {showProBanner ? (
               <span data-testid="pro-top-banner" className="text-xs font-semibold text-[var(--color-text)]">
                 Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
@@ -828,10 +823,14 @@ export default function UploadCard({
               </Button>
             </div>
           ) : (
-            <p data-testid="upload-privacy-messages" className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700">
-              <span aria-label="European Union flag">🇪🇺</span>
-              GDPR Compliant · Data processed in France · Files deleted after conversion · No content stored
-            </p>
+            <div data-testid="upload-privacy-messages" className="flex flex-col items-center gap-1 rounded-2xl border border-blue-200/60 bg-blue-50/80 px-5 py-3 text-xs font-medium text-blue-700">
+              <p className="flex items-center gap-1.5">
+                <span aria-label="European Union flag">🇪🇺</span>
+                Processed in France
+              </p>
+              <p>Files deleted immediately after conversion</p>
+              <p>No data stored · No training usage</p>
+            </div>
           )}
 
           {downloadedFileName || shouldShowVerdict ? (
@@ -849,6 +848,7 @@ export default function UploadCard({
           {!isQuotaLocked && notice ? <p className="text-sm text-[var(--color-text)]">{notice}</p> : null}
           {!isQuotaLocked && error && <p className="text-sm text-rose-700">{error}</p>}
 
+          {Array.isArray(exportHistory) && exportHistory.length > 0 && (
           <details data-testid="export-history" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] text-left">
             <summary className="flex cursor-pointer items-center justify-between gap-3 p-4 select-none">
               <p className="text-sm font-semibold text-[var(--color-text)]">Export history</p>
@@ -921,6 +921,7 @@ export default function UploadCard({
             ) : null}
             </div>
           </details>
+          )}
         </div>
       </form>
     </article>
