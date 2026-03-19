@@ -178,6 +178,7 @@ function formatHistoryStatus(item = {}) {
   const state = String(item.exportState || item.status || '').toLowerCase();
   const quotaConsumed = item.quotaConsumed === true;
   if (state === 'artifact_available') return 'Export ready';
+  if (state === 'delivered_inline') return 'Export ready';
   if (state === 'render_running') return 'Rendering PDF';
   if (state === 'render_pending') return 'Export queued';
   if (state === 'render_failed_retryable' || state === 'render_failed_non_retryable') {
