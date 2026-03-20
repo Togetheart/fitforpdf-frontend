@@ -549,7 +549,7 @@ export default function Page() {
                   Integrate in minutes
                 </h3>
                 <p className="mt-2 text-sm text-slate-400">
-                  One API call. Any HTML to pixel-perfect PDF.
+                  One API call. CSV or XLSX in, readable PDF out.
                 </p>
                 <div className="mt-6">
                   <ApiTeaserWidget variant="dark" />

@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from 'react';
 
 const CURL_LINES = [
-  { type: 'comment', text: '# Convert any HTML to a pixel-perfect PDF' },
+  { type: 'comment', text: '# Convert a CSV or XLSX file to a readable PDF' },
   { type: 'command', parts: [
     { cls: 'code-keyword', text: 'curl' },
     { cls: null, text: ' -X ' },
@@ -14,31 +14,32 @@ const CURL_LINES = [
   ]},
   { type: 'flag', parts: [
     { cls: null, text: '  -H ' },
-    { cls: 'code-string', text: '"Authorization: Bearer $API_KEY"' },
+    { cls: 'code-string', text: '"X-FITFORPDF-KEY: $API_KEY"' },
     { cls: null, text: ' \\' },
   ]},
   { type: 'flag', parts: [
-    { cls: null, text: '  -H ' },
-    { cls: 'code-string', text: '"Content-Type: application/json"' },
+    { cls: null, text: '  -F ' },
+    { cls: 'code-string', text: '"file=@customers.csv"' },
     { cls: null, text: ' \\' },
   ]},
   { type: 'flag', parts: [
-    { cls: null, text: '  -d ' },
-    { cls: 'code-string', text: '\'{"url": "https://example.com/invoice"}\'' },
+    { cls: null, text: '  -o ' },
+    { cls: 'code-string', text: 'output.pdf' },
   ]},
 ];
 
 const CURL_RAW = `curl -X POST https://api.fitforpdf.com/v1/render \\
-  -H "Authorization: Bearer $API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{"url": "https://example.com/invoice"}'`;
+  -H "X-FITFORPDF-KEY: $API_KEY" \\
+  -F "file=@customers.csv" \\
+  -o output.pdf`;
 
-const RESPONSE_JSON = `{
-  "status": "success",
-  "pdf_url": "https://api.fitforpdf.com/v1/files/abc123.pdf",
-  "pages": 2,
-  "size_bytes": 184320
-}`;
+const RESPONSE_JSON = `# → output.pdf saved (2 pages, 184 KB)
+#
+# Response headers:
+#   Content-Type: application/pdf
+#   X-Plan: credits
+#   X-Credits-Remaining: 4
+#   X-CleanSheet-Score: 92`;
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
@@ -197,7 +198,7 @@ export default function ApiTeaserWidget({ variant } = {}) {
           <span className="inline-flex items-center rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold text-green-400">
             200 OK
           </span>
-          <span className={`text-xs ${respMuted}`}>application/json</span>
+          <span className={`text-xs ${respMuted}`}>application/pdf</span>
         </div>
         <pre className={`px-4 py-3 text-[13px] leading-relaxed overflow-x-auto font-mono ${codeText}`}>
           <code>
