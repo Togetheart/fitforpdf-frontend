@@ -127,6 +127,15 @@ export default function FitOnePagePage() {
         </div>
       </section>
 
+      <nav className="mb-12 border-t border-[var(--color-border)] pt-8">
+        <h2 className="mb-4 text-lg font-semibold text-[var(--color-text)]">Related guides</h2>
+        <ul className="space-y-2 text-sm">
+          <li><a href="/excel-to-pdf-columns-cut-off" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Fix cut-off columns in Excel PDF export</a></li>
+          <li><a href="/csv-to-structured-pdf" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Convert CSV to structured, readable PDF</a></li>
+          <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF — best practices</a></li>
+        </ul>
+      </nav>
+
       <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-8 text-center">
         <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]">Ready to export your sheet cleanly?</h2>
         <p className="mb-5 text-[var(--color-muted)]">

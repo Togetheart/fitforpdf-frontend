@@ -649,13 +649,19 @@ export default function Page() {
         </div>
         <WallOfLove />
         <div className="flex flex-wrap justify-center gap-2 pt-4">
-          {LANDING_COPY.whoUsesItems.map((item) => (
-            <span
-              key={item}
-              className="rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-1.5 text-xs font-medium text-[var(--color-muted)]"
+          {[
+            { label: 'Consultants', href: '/for-consultants' },
+            { label: 'Finance teams', href: '/for-finance' },
+            { label: 'SaaS reporting tools', href: '/for-saas' },
+            { label: 'Auditors', href: '/for-auditors' },
+          ].map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              className="rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-1.5 text-xs font-medium text-[var(--color-muted)] hover:text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors"
             >
-              {item}
-            </span>
+              {label}
+            </a>
           ))}
         </div>
       </Section>
