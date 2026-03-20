@@ -7,6 +7,7 @@ import StatPill from './ui/StatPill';
 import Card from './Card';
 import { useCheckout } from '../hooks/useCheckout.mjs';
 import { cn } from '../lib/cn.mjs';
+import PromoCodeInput from './PromoCodeInput';
 
 /* ── Pill toggle ───────────────────────────────────────── */
 export function PillToggle({ options, value, onChange, size = 'md' }) {
@@ -445,6 +446,12 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           </p>
 
           {showFreeTier ? <FreeTierCTA /> : null}
+
+          {/* Promo code */}
+          <div className="flex flex-col items-center gap-2 pt-2">
+            <p className="text-xs font-medium text-muted/60 uppercase tracking-[0.06em]">Have a promo code?</p>
+            <PromoCodeInput />
+          </div>
         </div>
       ) : null}
 
@@ -474,6 +481,12 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           </div>
 
           {showFreeTier ? <FreeTierCTA /> : null}
+
+          {/* Promo code */}
+          <div className="flex flex-col items-center gap-2 pt-2">
+            <p className="text-xs font-medium text-muted/60 uppercase tracking-[0.06em]">Have a promo code?</p>
+            <PromoCodeInput />
+          </div>
         </div>
       ) : null}
     </div>
