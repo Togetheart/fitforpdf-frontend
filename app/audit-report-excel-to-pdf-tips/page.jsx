@@ -1,4 +1,5 @@
 import { SEO } from '../siteCopy.mjs';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: SEO.auditPdf.title,
@@ -39,9 +40,41 @@ const faqs = [
   },
 ];
 
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: SEO.auditPdf.title,
+  description: SEO.auditPdf.description,
+  url: `${SEO.siteUrl}/${SEO.auditPdf.slug}`,
+  publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SEO.siteUrl },
+    { '@type': 'ListItem', position: 2, name: SEO.auditPdf.title, item: `${SEO.siteUrl}/${SEO.auditPdf.slug}` },
+  ],
+};
+
 export default function AuditPdfPage() {
   return (
+    <div className="min-h-screen bg-[var(--color-bg-hero)]">
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+      <JsonLd data={articleLd} />
+      <JsonLd data={faqLd} />
+      <JsonLd data={breadcrumbLd} />
       <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
         Exporting audit Excel sheets to PDF: best practices
       </h1>
@@ -101,5 +134,6 @@ export default function AuditPdfPage() {
         </a>
       </section>
     </main>
+    </div>
   );
 }

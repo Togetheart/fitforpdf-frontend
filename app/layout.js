@@ -46,7 +46,7 @@ const softwareAppLd = {
   offers: {
     '@type': 'AggregateOffer',
     lowPrice: '0',
-    highPrice: '29',
+    highPrice: '79',
     priceCurrency: 'USD',
     offerCount: 4,
   },

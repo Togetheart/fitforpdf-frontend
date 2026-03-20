@@ -4,6 +4,7 @@ import SiteShell from '../components/SiteShell';
 export const metadata = {
   title: 'Brand Guidelines — fitforpdf',
   description: 'Design system, colors, typography, and brand assets for fitforpdf.',
+  alternates: { canonical: '/brand' },
 };
 
 /* ─── Color swatches ─────────────────────────────────────────── */

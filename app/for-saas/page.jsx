@@ -4,6 +4,14 @@ export const metadata = {
   title: 'PDF Export for SaaS Products | fitforpdf',
   description:
     'Automate PDF report generation for your SaaS product. fitforpdf turns exported dashboards and data tables into professionally formatted PDFs via API.',
+  alternates: { canonical: '/for-saas' },
+  openGraph: {
+    title: 'PDF Export for SaaS Products | fitforpdf',
+    description:
+      'Automate PDF report generation for your SaaS product. fitforpdf turns data tables into professionally formatted PDFs via API.',
+    url: 'https://www.fitforpdf.com/for-saas',
+  },
+  twitter: { card: 'summary_large_image' },
 };
 
 const PAIN_POINTS = [

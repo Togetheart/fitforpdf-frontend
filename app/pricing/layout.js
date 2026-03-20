@@ -27,10 +27,20 @@ const pricingFaqLd = {
   })),
 };
 
+const pricingBreadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SEO.siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Pricing', item: `${SEO.siteUrl}/pricing` },
+  ],
+};
+
 export default function PricingLayout({ children }) {
   return (
     <>
       <JsonLd data={pricingFaqLd} />
+      <JsonLd data={pricingBreadcrumbLd} />
       {children}
     </>
   );

@@ -5,10 +5,30 @@ import Section from '../components/ui/Section';
 import Accordion from '../components/Accordion';
 import PageHero from '../components/PageHero';
 import AnimatedShieldIcon from '../components/AnimatedShieldIcon';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: `${SEO.privacy.title}`,
   description: SEO.privacy.description,
+};
+
+const privacyFaqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: PRIVACY_PAGE_COPY.faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+const privacyBreadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SEO.siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: `${SEO.siteUrl}/privacy` },
+  ],
 };
 
 /* ─── SVG icons — même style que landing (stroke, no fill) ─ */
@@ -155,6 +175,8 @@ function DontDoRow({ icon, text }) {
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[var(--color-bg-hero)] text-[var(--color-text)]">
+      <JsonLd data={privacyFaqLd} />
+      <JsonLd data={privacyBreadcrumbLd} />
 
       {/* ── Hero — même structure que landing, section privacy ── */}
       <PageHero

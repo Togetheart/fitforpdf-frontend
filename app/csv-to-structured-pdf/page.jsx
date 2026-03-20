@@ -1,4 +1,5 @@
 import { SEO } from '../siteCopy.mjs';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: SEO.csvPdf.title,
@@ -39,9 +40,41 @@ const faqs = [
   },
 ];
 
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: SEO.csvPdf.title,
+  description: SEO.csvPdf.description,
+  url: `${SEO.siteUrl}/${SEO.csvPdf.slug}`,
+  publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SEO.siteUrl },
+    { '@type': 'ListItem', position: 2, name: SEO.csvPdf.title, item: `${SEO.siteUrl}/${SEO.csvPdf.slug}` },
+  ],
+};
+
 export default function CsvPdfPage() {
   return (
+    <div className="min-h-screen bg-[var(--color-bg-hero)]">
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+      <JsonLd data={articleLd} />
+      <JsonLd data={faqLd} />
+      <JsonLd data={breadcrumbLd} />
       <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
         Convert CSV files to a structured, readable PDF
       </h1>
@@ -101,5 +134,6 @@ export default function CsvPdfPage() {
         </a>
       </section>
     </main>
+    </div>
   );
 }

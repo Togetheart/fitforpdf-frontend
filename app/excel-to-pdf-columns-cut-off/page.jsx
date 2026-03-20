@@ -1,4 +1,5 @@
 import { SEO } from '../siteCopy.mjs';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: SEO.excelCutoff.title,
@@ -39,9 +40,41 @@ const faqs = [
   },
 ];
 
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: SEO.excelCutoff.title,
+  description: SEO.excelCutoff.description,
+  url: `${SEO.siteUrl}/${SEO.excelCutoff.slug}`,
+  publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SEO.siteUrl },
+    { '@type': 'ListItem', position: 2, name: SEO.excelCutoff.title, item: `${SEO.siteUrl}/${SEO.excelCutoff.slug}` },
+  ],
+};
+
 export default function ExcelCutoffPage() {
   return (
+    <div className="min-h-screen bg-[var(--color-bg-hero)]">
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+      <JsonLd data={articleLd} />
+      <JsonLd data={faqLd} />
+      <JsonLd data={breadcrumbLd} />
       <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
         Why Excel cuts off columns when exporting to PDF (And how to fix it)
       </h1>
@@ -101,5 +134,6 @@ export default function ExcelCutoffPage() {
         </a>
       </section>
     </main>
+    </div>
   );
 }

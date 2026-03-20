@@ -1,4 +1,5 @@
 import { SEO } from '../siteCopy.mjs';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: SEO.fitOnePage.title,
@@ -39,9 +40,41 @@ const faqs = [
   },
 ];
 
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: SEO.fitOnePage.title,
+  description: SEO.fitOnePage.description,
+  url: `${SEO.siteUrl}/${SEO.fitOnePage.slug}`,
+  publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SEO.siteUrl },
+    { '@type': 'ListItem', position: 2, name: SEO.fitOnePage.title, item: `${SEO.siteUrl}/${SEO.fitOnePage.slug}` },
+  ],
+};
+
 export default function FitOnePagePage() {
   return (
+    <div className="min-h-screen bg-[var(--color-bg-hero)]">
     <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+      <JsonLd data={articleLd} />
+      <JsonLd data={faqLd} />
+      <JsonLd data={breadcrumbLd} />
       <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
         How to fit a large Excel sheet on one PDF page
       </h1>
@@ -107,5 +140,6 @@ export default function FitOnePagePage() {
         </a>
       </section>
     </main>
+    </div>
   );
 }
