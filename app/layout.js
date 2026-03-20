@@ -58,6 +58,16 @@ const organizationLd = {
   name: 'fitforpdf',
   url: SEO.siteUrl,
   logo: `${SEO.siteUrl}/og-image.png`,
+  sameAs: [
+    'https://www.biofor.ai/org/fitforpdf',
+    'https://www.linkedin.com/company/fitforpdf/',
+    'https://x.com/fitforpdf',
+  ],
+  founder: {
+    '@type': 'Person',
+    name: 'Sébastien Neusch',
+    sameAs: ['https://www.biofor.ai/sebastienneusch'],
+  },
   contactPoint: {
     '@type': 'ContactPoint',
     email: 'support@fitforpdf.com',

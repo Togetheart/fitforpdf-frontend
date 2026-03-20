@@ -83,6 +83,9 @@ export default function SiteFooter() {
             >
               Contact
             </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/about">
+              About
+            </a>
           </nav>
         </div>
       </div>
