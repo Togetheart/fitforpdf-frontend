@@ -2,7 +2,7 @@ import Script from 'next/script';
 import './globals.css';
 import SiteShell from './components/SiteShell';
 import ViewTransitions from './components/ViewTransitions';
-import { SEO, HOME_FAQ } from './siteCopy.mjs';
+import { SEO } from './siteCopy.mjs';
 import { JsonLd } from './components/JsonLd';
 
 export const metadata = {
@@ -65,16 +65,6 @@ const organizationLd = {
   },
 };
 
-const faqLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: HOME_FAQ.map((item) => ({
-    '@type': 'Question',
-    name: item.q,
-    acceptedAnswer: { '@type': 'Answer', text: item.a },
-  })),
-};
-
 export default function RootLayout({ children }) {
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
   return (
@@ -109,7 +99,6 @@ export default function RootLayout({ children }) {
         {/* JSON-LD structured data for search engines & AI */}
         <JsonLd data={softwareAppLd} />
         <JsonLd data={organizationLd} />
-        <JsonLd data={faqLd} />
         <ViewTransitions />
         <SiteShell>{children}</SiteShell>
         {clarityId && (

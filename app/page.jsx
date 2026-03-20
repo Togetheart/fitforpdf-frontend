@@ -17,6 +17,7 @@ import PageHero from './components/PageHero';
 import HeroHeadline from './components/HeroHeadline';
 import Button from './components/ui/Button';
 import ProofShowcase from './components/ProofShowcase';
+import { JsonLd } from './components/JsonLd';
 
 import AnimatedShieldIcon from './components/AnimatedShieldIcon';
 import StickyMobileCTA from './components/StickyMobileCTA';
@@ -193,8 +194,19 @@ export default function Page() {
     }
   }
 
+  const homeFaqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: HOME_FAQ.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <JsonLd data={homeFaqLd} />
       {/* Scroll spacer — creates room for Apple-style sticky scroll sequence */}
       <div className="h-[calc(100vh+600px)] sm:h-[calc(100vh+900px)]">
         <PageHero
