@@ -1,13 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Gift, Loader2, Check, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Gift, Loader2, Check } from 'lucide-react';
 import { cn } from '../lib/cn.mjs';
 
 export default function PromoCodeInput({ onSuccess }) {
   const [code, setCode] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [message, setMessage] = useState('');
+
+  // Pre-fill from localStorage (set by ?ref= on landing page)
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('ffp_promo');
+      if (stored && !code) {
+        setCode(stored.toUpperCase());
+      }
+    } catch {}
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -28,6 +38,7 @@ export default function PromoCodeInput({ onSuccess }) {
       if (res.ok && data.ok) {
         setStatus('success');
         setMessage(data.message || `${data.credits_granted} credits added!`);
+        try { localStorage.removeItem('ffp_promo'); } catch {}
         if (onSuccess) onSuccess(data);
       } else {
         setStatus('error');
