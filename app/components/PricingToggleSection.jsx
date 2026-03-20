@@ -372,7 +372,7 @@ export function FreeTierCTA() {
 }
 
 /* ── Full pricing toggle section ───────────────────────── */
-export default function PricingToggleSection({ showFreeTier = true }) {
+export default function PricingToggleSection({ showFreeTier = true, promoCode = null }) {
   const [mode, setMode] = useState('payg');
   const [billing, setBilling] = useState('monthly');
   const checkout = useCheckout();
@@ -450,7 +450,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           {/* Promo code */}
           <div className="flex flex-col items-center gap-2 pt-2">
             <p className="text-xs font-medium text-muted/60 uppercase tracking-[0.06em]">Have a promo code?</p>
-            <PromoCodeInput />
+            <PromoCodeInput initialCode={promoCode} />
           </div>
         </div>
       ) : null}
@@ -485,7 +485,7 @@ export default function PricingToggleSection({ showFreeTier = true }) {
           {/* Promo code */}
           <div className="flex flex-col items-center gap-2 pt-2">
             <p className="text-xs font-medium text-muted/60 uppercase tracking-[0.06em]">Have a promo code?</p>
-            <PromoCodeInput />
+            <PromoCodeInput initialCode={promoCode} />
           </div>
         </div>
       ) : null}

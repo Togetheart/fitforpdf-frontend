@@ -9,8 +9,16 @@ export const metadata = {
   description: SEO.pricing.description,
 };
 
+const REF_TO_PROMO = {
+  microlaunch: 'MICROLAUNCH',
+  free3: 'FREE3',
+};
+
 /* ── Main page ─────────────────────────────────────────── */
-export default function PricingPage() {
+export default async function PricingPage({ searchParams }) {
+  const params = await searchParams;
+  const ref = (params?.ref || '').trim().toLowerCase();
+  const promoFromRef = REF_TO_PROMO[ref] || null;
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
 
@@ -40,7 +48,7 @@ export default function PricingPage() {
         className="py-16 sm:py-24"
         maxWidth="max-w-[1440px]"
       >
-        <PricingToggleSection showFreeTier />
+        <PricingToggleSection showFreeTier promoCode={promoFromRef} />
       </Section>
 
       {/* ── Feature comparison ── */}

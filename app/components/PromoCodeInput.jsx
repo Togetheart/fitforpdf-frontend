@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { Gift, Loader2, Check } from 'lucide-react';
 import { cn } from '../lib/cn.mjs';
 
-export default function PromoCodeInput({ onSuccess }) {
-  const [code, setCode] = useState('');
+export default function PromoCodeInput({ onSuccess, initialCode = null }) {
+  const [code, setCode] = useState(initialCode || '');
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [message, setMessage] = useState('');
 
-  // Pre-fill from localStorage (set by ?ref= on landing page)
+  // Fallback: pre-fill from localStorage if no initialCode prop
   useEffect(() => {
+    if (initialCode) return;
     try {
       const stored = localStorage.getItem('ffp_promo');
       if (stored && !code) {

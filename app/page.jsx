@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   LANDING_COPY,
   LANDING_COPY_KEYS,
@@ -172,24 +172,9 @@ function RoiSliderInline() {
   );
 }
 
-const REF_TO_PROMO = {
-  microlaunch: 'MICROLAUNCH',
-  free3: 'FREE3',
-};
-
 export default function Page() {
   const quota = useQuota();
   const conversion = useConversion({ quota });
-
-  // Capture ?ref= param and store promo code for pricing page
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    const ref = (params.get('ref') || '').trim().toLowerCase();
-    if (ref && REF_TO_PROMO[ref]) {
-      try { localStorage.setItem('ffp_promo', REF_TO_PROMO[ref]); } catch {}
-    }
-  }, []);
 
   function handleHeroGenerateClick(event) {
     if (!event) return;
