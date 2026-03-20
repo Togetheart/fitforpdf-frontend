@@ -568,8 +568,8 @@ export const SEO = {
     description: 'Upload any spreadsheet and instantly get a structured, client-ready PDF with sections, pagination, and column groupings. 3 free exports. No account required.',
   },
   pricing: {
-    title: 'Pricing — Simple & Transparent',
-    description: 'Free exports, pay-as-you-go credits from $2.90, and Pro subscription for unlimited exports. No subscription required.',
+    title: 'fitforpdf Pricing — Excel to PDF Export Plans',
+    description: 'Free exports, pay-as-you-go credits from $4.90, and Pro subscription for unlimited exports. No subscription required.',
   },
   privacy: {
     title: 'Privacy Policy — Your Data, Not Our Business',

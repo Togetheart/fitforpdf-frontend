@@ -1,7 +1,7 @@
 export const metadata = {
-  title: 'Developer API',
+  title: 'fitforpdf API — Excel & CSV to PDF for Developers',
   description:
-    'Send a CSV or XLSX file, get back a client-ready PDF. REST API for automation, agents, and developer workflows. 60 req/min, up to 50 columns.',
+    'REST API to convert wide Excel and CSV tables into structured, readable PDFs. Built for SaaS reporting, CRM exports, and data-heavy workflows. 60 req/min, up to 50 columns.',
   alternates: { canonical: '/developers' },
 };
 

@@ -65,5 +65,83 @@ export default function sitemap() {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+
+    // Comparison pages
+    {
+      url: `${SEO.siteUrl}/vs-puppeteer`,
+      lastModified: pageModDate('vs-puppeteer/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${SEO.siteUrl}/vs-reportlab`,
+      lastModified: pageModDate('vs-reportlab/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${SEO.siteUrl}/vs-wkhtmltopdf`,
+      lastModified: pageModDate('vs-wkhtmltopdf/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+
+    // Audience pages
+    {
+      url: `${SEO.siteUrl}/for-auditors`,
+      lastModified: pageModDate('for-auditors/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${SEO.siteUrl}/for-consultants`,
+      lastModified: pageModDate('for-consultants/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${SEO.siteUrl}/for-finance`,
+      lastModified: pageModDate('for-finance/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${SEO.siteUrl}/for-saas`,
+      lastModified: pageModDate('for-saas/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+
+    // Utility pages
+    {
+      url: `${SEO.siteUrl}/contact`,
+      lastModified: pageModDate('contact/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${SEO.siteUrl}/terms`,
+      lastModified: pageModDate('terms/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${SEO.siteUrl}/mentions-legales`,
+      lastModified: pageModDate('mentions-legales/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${SEO.siteUrl}/brand`,
+      lastModified: pageModDate('brand/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${SEO.siteUrl}/changelog`,
+      lastModified: pageModDate('changelog/page.jsx'),
+      changeFrequency: 'weekly',
+      priority: 0.5,
+    },
   ];
 }
