@@ -44,7 +44,8 @@ const BIOFOR_LINKS = [
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+    <main className="min-h-screen bg-[var(--color-surface)]">
+      <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
       <JsonLd data={breadcrumbLd} />
 
       {/* Header */}
@@ -115,6 +116,7 @@ export default function AboutPage() {
           .
         </p>
       </section>
+      </div>
     </main>
   );
 }
