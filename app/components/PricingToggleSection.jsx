@@ -448,7 +448,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
           {showFreeTier ? <FreeTierCTA /> : null}
 
           {/* Promo code */}
-          <div className="flex flex-col items-center gap-2 pt-2">
+          <div id="promo" className="flex flex-col items-center gap-2 pt-2 scroll-mt-24">
             <p className="text-xs font-medium text-muted/60 uppercase tracking-[0.06em]">Have a promo code?</p>
             <PromoCodeInput initialCode={promoCode} />
           </div>
@@ -483,7 +483,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
           {showFreeTier ? <FreeTierCTA /> : null}
 
           {/* Promo code */}
-          <div className="flex flex-col items-center gap-2 pt-2">
+          <div id="promo" className="flex flex-col items-center gap-2 pt-2 scroll-mt-24">
             <p className="text-xs font-medium text-muted/60 uppercase tracking-[0.06em]">Have a promo code?</p>
             <PromoCodeInput initialCode={promoCode} />
           </div>
