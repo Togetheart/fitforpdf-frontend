@@ -9,7 +9,7 @@ export const metadata = {
     title: 'fitforpdf vs wkhtmltopdf – Spreadsheet to PDF comparison',
     description:
       'Compare fitforpdf and wkhtmltopdf for converting spreadsheets to PDF. Automatic column grouping vs manual HTML-to-PDF configuration.',
-    url: 'https://fitforpdf.com/vs-wkhtmltopdf',
+    url: 'https://www.fitforpdf.com/vs-wkhtmltopdf',
   },
   twitter: {
     card: 'summary_large_image',

@@ -9,7 +9,7 @@ export const metadata = {
     title: 'fitforpdf vs Puppeteer – Spreadsheet to PDF comparison',
     description:
       'Compare fitforpdf and Puppeteer for generating PDFs from spreadsheet data. No headless Chrome needed.',
-    url: 'https://fitforpdf.com/vs-puppeteer',
+    url: 'https://www.fitforpdf.com/vs-puppeteer',
   },
   twitter: {
     card: 'summary_large_image',

@@ -9,7 +9,7 @@ export const metadata = {
     title: 'fitforpdf vs ReportLab – Spreadsheet to PDF comparison',
     description:
       'Compare fitforpdf and ReportLab for spreadsheet-to-PDF conversion. Automatic layout vs verbose Python code.',
-    url: 'https://fitforpdf.com/vs-reportlab',
+    url: 'https://www.fitforpdf.com/vs-reportlab',
   },
   twitter: {
     card: 'summary_large_image',
