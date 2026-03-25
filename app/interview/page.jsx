@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 
 const WELCOME =
-  "Hi! I'm conducting a short research interview about how professionals handle PDF exports from spreadsheets. It'll take about 5–10 minutes, and there are no right or wrong answers — I'm just here to listen.\n\nTo start: what's your role, and what kind of documents do you typically produce for clients or stakeholders?";
+  "Hi! I'm conducting a short research interview about how professionals handle PDF exports from spreadsheets. It'll take about 5 to 10 minutes, and there are no right or wrong answers, I'm just here to listen.\n\nTo start: what's your role, and what kind of documents do you typically produce for clients or stakeholders?";
 
 export default function InterviewPage() {
   const [messages, setMessages] = useState([
@@ -76,7 +76,7 @@ export default function InterviewPage() {
             Research Interview
           </h1>
           <p className="mt-1 text-sm text-[var(--color-muted)]">
-            5–10 min · Anonymous · No pitch
+            5 to 10 min · Anonymous · No pitch
           </p>
         </div>
 
@@ -121,7 +121,7 @@ export default function InterviewPage() {
         {/* Input */}
         {done ? (
           <div className="pb-6 pt-4 text-center text-sm text-[var(--color-muted)]">
-            Interview complete — thank you for your time!
+            Interview complete, thank you for your time!
           </div>
         ) : (
           <div className="sticky bottom-0 flex items-end gap-3 border-t border-[var(--color-border)] bg-[var(--color-surface)] pb-6 pt-3">
