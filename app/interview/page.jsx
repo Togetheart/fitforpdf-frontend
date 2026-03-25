@@ -65,8 +65,8 @@ export default function InterviewPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
-      <div className="mx-auto flex h-screen max-w-[680px] flex-col px-4 sm:px-6">
+    <main className="fixed inset-0 z-[9999] bg-[var(--color-bg)]">
+      <div className="mx-auto flex h-full max-w-[680px] flex-col px-4 sm:px-6">
         {/* Header */}
         <div className="border-b border-[var(--color-border)] pb-3 pt-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">
@@ -124,7 +124,7 @@ export default function InterviewPage() {
             Interview complete — thank you for your time!
           </div>
         ) : (
-          <div className="flex items-end gap-3 pb-6 pt-3">
+          <div className="sticky bottom-0 flex items-end gap-3 border-t border-[var(--color-border)] bg-[var(--color-surface)] pb-6 pt-3">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
