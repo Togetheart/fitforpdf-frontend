@@ -12,6 +12,9 @@ export default function InterviewPage() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [email, setEmail] = useState('');
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -62,6 +65,22 @@ export default function InterviewPage() {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  const saveInterview = async () => {
+    if (!email || !email.includes('@') || saving) return;
+    setSaving(true);
+    try {
+      await fetch('/api/interview/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, transcript: messages }),
+      });
+      setSaved(true);
+    } catch {
+      setSaved(true); // Don't block the user even if save fails
+    }
+    setSaving(false);
   };
 
   return (
@@ -120,8 +139,41 @@ export default function InterviewPage() {
 
         {/* Input */}
         {done ? (
-          <div className="pb-6 pt-4 text-center text-sm text-[var(--color-muted)]">
-            Interview complete, thank you for your time!
+          <div className="pb-6 pt-4">
+            {saved ? (
+              <p className="text-center text-sm text-[var(--color-muted)]">
+                Thank you! We'll be in touch when early access opens.
+              </p>
+            ) : (
+              <div className="mx-auto flex max-w-md flex-col items-center gap-3">
+                <p className="text-center text-sm text-[var(--color-text)]">
+                  Get early access and share your example file:
+                </p>
+                <div className="flex w-full items-center gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && saveInterview()}
+                    placeholder="your@email.com"
+                    className="flex-1 rounded-xl border border-[var(--color-border)] bg-white px-3 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:bg-[#1e293b]"
+                  />
+                  <button
+                    onClick={saveInterview}
+                    disabled={saving || !email.includes('@')}
+                    className="rounded-xl bg-[#0F172A] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {saving ? 'Saving...' : 'Submit'}
+                  </button>
+                </div>
+                <button
+                  onClick={() => setSaved(true)}
+                  className="text-xs text-[var(--color-muted)] underline underline-offset-2 hover:text-[var(--color-text)]"
+                >
+                  Skip
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <div className="sticky bottom-0 flex items-end gap-3 border-t border-[var(--color-border)] bg-[var(--color-surface)] pb-6 pt-3">
