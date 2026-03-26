@@ -30,7 +30,7 @@ function jsonResponse(status, body) {
 }
 
 export async function POST(request) {
-  const apiKey = process.env.INTERVIEW_FIT;
+  const apiKey = process.env.INTERVIEW_FIT || process.env.interview_fit;
   if (!apiKey) {
     return jsonResponse(500, { error: 'Interview service not configured' });
   }
