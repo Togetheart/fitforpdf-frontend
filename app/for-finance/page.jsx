@@ -1,4 +1,5 @@
 import VerticalPage from '../components/VerticalPage';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: 'Excel to PDF for Finance Teams',
@@ -50,15 +51,49 @@ const BENEFITS = [
   },
 ];
 
+const FINANCE_FAQ_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can fitforpdf handle financial reports with 40+ columns?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. fitforpdf automatically splits wide tables into readable sections, preserving all columns across multiple pages with repeated headers.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is the data secure?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. All files are processed in France, deleted immediately after conversion, and no content is stored. GDPR compliant.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does it work with Excel P&L statements?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Profit and loss statements, balance sheets, and any wide financial spreadsheet can be converted into clean, paginated PDFs.',
+      },
+    },
+  ],
+};
+
 export default function ForFinancePage() {
   return (
-    <VerticalPage
-      vertical="For Finance Teams"
-      headline="Financial reports that print perfectly"
-      subheadline="Turn wide Excel financial statements into clean, multi-page PDFs with every column intact."
-      painPoints={PAIN_POINTS}
-      benefits={BENEFITS}
-      ctaText="Try it free"
-    />
+    <>
+      <JsonLd data={FINANCE_FAQ_LD} />
+      <VerticalPage
+        vertical="For Finance Teams"
+        headline="Financial reports that print perfectly"
+        subheadline="Turn wide Excel financial statements into clean, multi-page PDFs with every column intact."
+        painPoints={PAIN_POINTS}
+        benefits={BENEFITS}
+        ctaText="Try it free"
+      />
+    </>
   );
 }

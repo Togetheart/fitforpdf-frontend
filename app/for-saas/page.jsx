@@ -1,4 +1,5 @@
 import VerticalPage from '../components/VerticalPage';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: 'PDF Export for SaaS Products',
@@ -50,15 +51,49 @@ const BENEFITS = [
   },
 ];
 
+const SAAS_FAQ_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can I integrate fitforpdf into my product?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Our REST API lets you render PDFs from Excel, CSV, and database tables programmatically. API plans start at $49/month.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does the API support white-label output?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Paid API plans include white-label output with no fitforpdf branding on generated PDFs.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What file formats are supported?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The API accepts Excel (.xlsx), CSV, and TSV files. Output is always a professionally formatted PDF.',
+      },
+    },
+  ],
+};
+
 export default function ForSaasPage() {
   return (
-    <VerticalPage
-      vertical="For SaaS Companies"
-      headline="PDF exports your users will actually use"
-      subheadline="Plug fitforpdf into your product and ship professional PDF reports without building a rendering engine."
-      painPoints={PAIN_POINTS}
-      benefits={BENEFITS}
-      ctaText="Try the API"
-    />
+    <>
+      <JsonLd data={SAAS_FAQ_LD} />
+      <VerticalPage
+        vertical="For SaaS Companies"
+        headline="PDF exports your users will actually use"
+        subheadline="Plug fitforpdf into your product and ship professional PDF reports without building a rendering engine."
+        painPoints={PAIN_POINTS}
+        benefits={BENEFITS}
+        ctaText="Try the API"
+      />
+    </>
   );
 }
