@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 
 import AnimatedCheckmark from './AnimatedCheckmark';
+import AnimatedShieldIcon from './AnimatedShieldIcon';
 import Button from './ui/Button';
 import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
@@ -379,6 +380,7 @@ export default function UploadCard({
   onTruncateChange,
   onSubmit,
   onDownloadAgain,
+  onCopyShareLink = () => {},
   onTrySample,
   downloadedFileName,
   verdict,
@@ -414,6 +416,8 @@ export default function UploadCard({
   onHistoryStatusChange = () => {},
   hasMoreHistory = false,
   onLoadMoreHistory = () => {},
+  renderId = null,
+  shareState = { status: 'idle', jobId: null },
 }) {
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
   const showProBanner = getPlanTypeLabel(planType) === 'pro' || isPro;
@@ -452,6 +456,8 @@ export default function UploadCard({
   const [showBuyCreditsPanelInternal, setShowBuyCreditsPanelInternal] = React.useState(false);
   const effectiveShowBuyCreditsPanel = showBuyCreditsPanel || showBuyCreditsPanelInternal;
   const isBrandingNudgeSuppressed = React.useCallback(() => getBrandingNudgeSuppressedUntil() > Date.now(), []);
+  const isCurrentShareLoading = shareState?.status === 'loading' && shareState?.jobId === renderId;
+  const isCurrentShareCopied = shareState?.status === 'copied' && shareState?.jobId === renderId;
 
   const trackEvent = (name) => {
     if (typeof onEvent === 'function') onEvent(name);
@@ -821,15 +827,31 @@ export default function UploadCard({
               <Button type="button" variant="primary" className="w-full" data-testid="download-again" onClick={onDownloadAgain} disabled={isLoading}>
                 Download again
               </Button>
+              {renderId ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => onCopyShareLink(renderId, 'render_success')}
+                  disabled={isLoading || isCurrentShareLoading}
+                >
+                  {isCurrentShareLoading ? 'Creating review link…' : isCurrentShareCopied ? 'Review link copied' : 'Copy review link'}
+                </Button>
+              ) : null}
             </div>
           ) : (
-            <div data-testid="upload-privacy-messages" className="flex flex-col items-center gap-1 rounded-2xl border border-blue-200/60 bg-blue-50/80 px-5 py-3 text-xs font-medium text-blue-700">
-              <p className="flex items-center gap-1.5">
-                <span aria-label="European Union flag">🇪🇺</span>
-                Processed in France
+            <div data-testid="upload-privacy-messages" className="flex flex-col items-center gap-2 rounded-2xl border border-emerald-200/80 bg-emerald-50/80 px-5 py-4 text-sm text-emerald-800">
+              <p className="flex items-center gap-2 font-semibold">
+                <AnimatedShieldIcon animateOnMount={false} className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                Your files are never stored
               </p>
-              <p>Files deleted immediately after conversion</p>
-              <p>No data stored · No training usage</p>
+              <div className="flex flex-col items-center gap-0.5 text-xs text-emerald-700">
+                <p className="flex items-center gap-1.5">
+                  <span aria-label="European Union flag">🇪🇺</span>
+                  Processed in France · Deleted immediately after conversion
+                </p>
+                <p>No data stored · No training usage · GDPR compliant</p>
+              </div>
             </div>
           )}
 
@@ -902,6 +924,18 @@ export default function UploadCard({
                       <a className="mt-1 inline-block text-xs font-semibold text-emerald-700 underline underline-offset-2" href={item.pdfUrl}>
                         Download artifact
                       </a>
+                    ) : null}
+                    {item.artifactAvailable && item.id ? (
+                      <div className="mt-2">
+                        <button
+                          type="button"
+                          onClick={() => onCopyShareLink(item.id, 'export_history')}
+                          disabled={shareState?.status === 'loading' && shareState?.jobId === item.id}
+                          className="inline-flex h-8 items-center rounded-full border border-[var(--color-border)] px-3 text-xs font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg)] disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {shareState?.status === 'loading' && shareState?.jobId === item.id ? 'Creating review link…' : shareState?.status === 'copied' && shareState?.jobId === item.id ? 'Review link copied' : 'Copy review link'}
+                        </button>
+                      </div>
                     ) : null}
                   </li>
                 ))}
