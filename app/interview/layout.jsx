@@ -3,6 +3,7 @@ export const metadata = {
   description:
     'Share your experience with PDF exports from spreadsheets. 5-minute anonymous interview.',
   robots: { index: false, follow: false },
+  alternates: { canonical: '/interview' },
 };
 
 export default function InterviewLayout({ children }) {

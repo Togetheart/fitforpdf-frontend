@@ -1,12 +1,12 @@
 import VerticalPage from '../components/VerticalPage';
 
 export const metadata = {
-  title: 'PDF Export for SaaS Products | fitforpdf',
+  title: 'PDF Export for SaaS Products',
   description:
     'Automate PDF report generation for your SaaS product. fitforpdf turns exported dashboards and data tables into professionally formatted PDFs via API.',
   alternates: { canonical: '/for-saas' },
   openGraph: {
-    title: 'PDF Export for SaaS Products | fitforpdf',
+    title: 'PDF Export for SaaS Products',
     description:
       'Automate PDF report generation for your SaaS product. fitforpdf turns data tables into professionally formatted PDFs via API.',
     url: 'https://www.fitforpdf.com/for-saas',

@@ -1,12 +1,12 @@
 import VerticalPage from '../components/VerticalPage';
 
 export const metadata = {
-  title: 'Excel to PDF for Consultants | fitforpdf',
+  title: 'Excel to PDF for Consultants',
   description:
     'Stop manually formatting client deliverables. fitforpdf converts Excel spreadsheets to professional, consistent PDFs with drag-and-drop simplicity.',
   alternates: { canonical: '/for-consultants' },
   openGraph: {
-    title: 'Excel to PDF for Consultants | fitforpdf',
+    title: 'Excel to PDF for Consultants',
     description:
       'Stop manually formatting client deliverables. fitforpdf converts Excel spreadsheets to professional, consistent PDFs.',
     url: 'https://www.fitforpdf.com/for-consultants',

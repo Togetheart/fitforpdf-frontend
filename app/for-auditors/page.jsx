@@ -1,12 +1,12 @@
 import VerticalPage from '../components/VerticalPage';
 
 export const metadata = {
-  title: 'Excel to PDF for Auditors | fitforpdf',
+  title: 'Excel to PDF for Auditors',
   description:
     'Stop losing audit table columns in PDF exports. fitforpdf automatically groups columns, preserves reference data, and produces clean paginated PDFs from wide Excel audit reports.',
   alternates: { canonical: '/for-auditors' },
   openGraph: {
-    title: 'Excel to PDF for Auditors | fitforpdf',
+    title: 'Excel to PDF for Auditors',
     description:
       'Stop losing audit table columns in PDF exports. fitforpdf automatically groups columns and produces clean paginated PDFs.',
     url: 'https://www.fitforpdf.com/for-auditors',

@@ -1,12 +1,12 @@
 import VerticalPage from '../components/VerticalPage';
 
 export const metadata = {
-  title: 'Excel to PDF for Finance Teams | fitforpdf',
+  title: 'Excel to PDF for Finance Teams',
   description:
     'Convert wide financial statements and reports to paginated PDFs without truncated columns. Intelligent splitting, automatic pagination, and overview pages.',
   alternates: { canonical: '/for-finance' },
   openGraph: {
-    title: 'Excel to PDF for Finance Teams | fitforpdf',
+    title: 'Excel to PDF for Finance Teams',
     description:
       'Convert wide financial statements and reports to paginated PDFs without truncated columns.',
     url: 'https://www.fitforpdf.com/for-finance',
