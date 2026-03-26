@@ -147,7 +147,7 @@ export default function InterviewPage() {
             ) : (
               <div className="mx-auto flex max-w-md flex-col items-center gap-3">
                 <p className="text-center text-sm text-[var(--color-text)]">
-                  Get early access and share your example file:
+                  Leave your email to get early access and let us follow up on your feedback:
                 </p>
                 <div className="flex w-full items-center gap-2">
                   <input
