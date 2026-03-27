@@ -262,10 +262,11 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center pt-2">
-              {/* Product image — responsive: 1x on mobile, 2x on desktop */}
+              {/* Product image — responsive: 1x mobile, 2x desktop, WebP with PNG fallback */}
               <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
                 <picture>
-                  <source media="(max-width: 639px)" srcSet="/fitforpdf_product@1x.png" />
+                  <source media="(max-width: 639px)" srcSet="/fitforpdf_product.webp" type="image/webp" />
+                  <source media="(min-width: 640px)" srcSet="/fitforpdf_product@2x.webp" type="image/webp" />
                   <img
                     src="/fitforpdf_product@2x.png"
                     alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
