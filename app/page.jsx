@@ -263,13 +263,13 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center pt-2">
-              <div className="w-full max-w-[600px] rounded-2xl border border-[var(--color-border)] shadow-sm">
+              <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
                 <picture>
                   <source srcSet="/fitforpdf_product@2x.webp" type="image/webp" />
                   <img
                     src="/fitforpdf_product@2x.png"
                     alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                    className="w-full block object-contain"
+                    className="w-full block"
                     loading="eager"
                   />
                 </picture>
@@ -290,30 +290,13 @@ export default function Page() {
 
       {/* Mobile only: product image + Used by ticker (outside sticky hero) */}
       <section
-        className="sm:hidden bg-[var(--color-bg)] pt-2 pb-6 px-4 relative z-10"
-        ref={(el) => {
-          if (!el || el.dataset.mobileImgObs) return;
-          el.dataset.mobileImgObs = '1';
-          el.style.opacity = '0';
-          el.style.transform = 'translateY(20px)';
-          const obs = new IntersectionObserver(
-            ([e]) => {
-              if (!e.isIntersecting) return;
-              el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-              el.style.opacity = '1';
-              el.style.transform = 'translateY(0)';
-              obs.disconnect();
-            },
-            { threshold: 0.2 },
-          );
-          obs.observe(el);
-        }}
+        className="sm:hidden bg-[var(--color-bg)] pt-2 pb-6 px-4 relative z-10 mobile-img-reveal"
       >
         <div className="flex flex-col items-center gap-4">
           <button
             type="button"
             onClick={() => setLightboxOpen(true)}
-            className="block w-full rounded-2xl border border-[var(--color-border)] shadow-sm cursor-zoom-in"
+            className="block w-full overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm cursor-zoom-in"
             aria-label="View full-size product image"
           >
             <picture>
