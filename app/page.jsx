@@ -214,9 +214,9 @@ export default function Page() {
           heroTestId="hero-section"
           variant="home"
           align="center"
-          height="sm:h-screen"
+          height="min-h-screen sm:h-screen"
           title={<HeroHeadline />}
-          contentClassName="items-center justify-center gap-10 text-center h-full !py-6"
+          contentClassName="items-center justify-center gap-6 sm:gap-10 text-center h-full !py-6"
           contentMaxWidthClassName="max-w-content"
           className="py-0 w-full sm:sticky sm:top-0"
         >
