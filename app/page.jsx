@@ -208,17 +208,17 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <JsonLd data={homeFaqLd} />
-      {/* Scroll spacer — creates room for Apple-style sticky scroll sequence */}
-      <div className="h-[calc(100vh+200px)] sm:h-[calc(100vh+1100px)]">
+      {/* Scroll spacer — desktop only for Apple-style sticky scroll sequence */}
+      <div className="sm:h-[calc(100vh+1100px)]">
         <PageHero
           heroTestId="hero-section"
           variant="home"
           align="center"
-          height="h-screen"
+          height="sm:h-screen"
           title={<HeroHeadline />}
           contentClassName="items-center justify-center gap-10 text-center h-full !py-6"
           contentMaxWidthClassName="max-w-content"
-          className="py-0 w-full sticky top-0"
+          className="py-0 w-full sm:sticky sm:top-0"
         >
           {/* Subtitle — stays visible throughout */}
           <p className="hero-headline-line w-full max-w-3xl mx-auto text-lg text-muted">
@@ -290,7 +290,7 @@ export default function Page() {
 
       {/* Mobile only: product image + Used by ticker — scroll-driven reveal like desktop */}
       <div
-        className="sm:hidden pt-2 pb-6 px-4 relative z-10"
+        className="sm:hidden pb-6 px-4 relative z-10"
         style={{ opacity: 0, transform: 'translateY(20px)' }}
         ref={(el) => {
           if (!el || el.dataset.mobileScrollReveal) return;
