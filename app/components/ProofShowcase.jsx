@@ -256,20 +256,24 @@ export default function ProofShowcase() {
     return () => clearInterval(timer);
   }, [isVisible, userPaused, hasAnimated]);
 
-  useEffect(() => {
-    const el = tabRefs.current[activeTab];
-    if (el) {
-      setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
-    }
-  }, [activeTab, activeFormat, config.tabs.length]);
+  // Recalculate indicators on tab change AND on resize
+  const recalcIndicators = useCallback(() => {
+    const tabEl = tabRefs.current[activeTab];
+    if (tabEl) setIndicator({ left: tabEl.offsetLeft, width: tabEl.offsetWidth });
+    const fmtIdx = FORMATS.indexOf(activeFormat);
+    const fmtEl = formatRefs.current[fmtIdx];
+    if (fmtEl) setFormatIndicator({ left: fmtEl.offsetLeft, width: fmtEl.offsetWidth });
+  }, [activeTab, activeFormat]);
 
   useEffect(() => {
-    const idx = FORMATS.indexOf(activeFormat);
-    const el = formatRefs.current[idx];
-    if (el) {
-      setFormatIndicator({ left: el.offsetLeft, width: el.offsetWidth });
-    }
-  }, [activeFormat]);
+    recalcIndicators();
+  }, [recalcIndicators, config.tabs.length]);
+
+  useEffect(() => {
+    const onResize = () => recalcIndicators();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [recalcIndicators]);
 
   const handleTabClick = useCallback((i) => {
     setUserPaused(true);
