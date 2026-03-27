@@ -237,7 +237,7 @@ describe('landing conversion-first structure', () => {
     expect((privacy.textContent || '').includes('Your data. Not our business.')).toBe(true);
     expect((faq.textContent || '').includes('Frequently asked questions')).toBe(true);
     expect(pricingInner?.getAttribute('class') || '').toContain('max-w-wide');
-    expect(faqInner?.getAttribute('class') || '').toContain('max-w-narrow');
+    expect(faqInner?.getAttribute('class') || '').toContain('max-w-content');
     expect(faqAccordion.parentElement?.getAttribute('class') || '').toContain('w-full');
   });
 

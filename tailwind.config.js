@@ -21,11 +21,11 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Satoshi', '-apple-system', 'SF Pro Display', 'Segoe UI', 'sans-serif'],
+        serif: ['var(--font-lora)', 'Georgia', 'serif'],
       },
       maxWidth: {
         wide: '1440px',
-        content: '1360px',
-        narrow: '1240px',
+        content: '1200px',
         tight: '860px',
       },
       borderRadius: {

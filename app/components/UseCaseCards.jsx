@@ -76,7 +76,7 @@ export default function UseCaseCards() {
         </p>
       </div>
 
-      <div ref={gridRef} className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div ref={gridRef} className="flex flex-col gap-5 sm:flex-row sm:flex-wrap lg:flex-nowrap">
         {USE_CASES.map((uc, i) => {
           const Wrapper = uc.href ? 'a' : 'div';
           const linkProps = uc.href ? { href: uc.href } : {};
@@ -86,7 +86,7 @@ export default function UseCaseCards() {
             {...linkProps}
             data-usecase-card
             data-delay={i * 80}
-            className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center sm:text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-blue-300 no-underline"
+            className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center sm:text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-blue-300 no-underline sm:basis-[calc(50%-10px)] lg:flex-1"
           >
             <span className="text-blue-500 inline-block" aria-hidden="true">
               {USE_CASE_ICONS[uc.icon] || null}

@@ -280,7 +280,7 @@ export default function Page() {
         id={LANDING_COPY_KEYS.beforeAfter}
         index={1}
         maxWidth="max-w-wide"
-        className="py-12 sm:py-16 relative z-10"
+        className="py-16 sm:py-20 relative z-10"
         bg="bg-hero"
       >
         <ProofShowcase />
@@ -375,14 +375,14 @@ export default function Page() {
         id="testimonials"
         index={3}
         bg="bg-hero"
-        className="py-12 sm:py-16"
+        className="py-16 sm:py-20"
       >
         <div className="space-y-8">
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">Trusted by teams worldwide</p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">What people say</h2>
           </div>
-          <div className="grid gap-4 sm:grid-cols-3 max-w-tight mx-auto">
+          <div className="flex flex-col gap-4 sm:flex-row max-w-tight mx-auto">
             {[
               {
                 quote: "We stopped fixing Excel exports manually. This saved us hours every week.",
@@ -400,8 +400,8 @@ export default function Page() {
                 context: "Big 4 advisory — quarterly compliance reports",
               },
             ].map((t, i) => (
-              <blockquote key={i} className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6">
-                <p className="text-sm leading-relaxed text-[var(--color-text)] italic">
+              <blockquote key={i} className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 sm:flex-1">
+                <p className="text-lg leading-relaxed text-[var(--color-text)] font-serif italic">
                   &ldquo;{t.quote}&rdquo;
                 </p>
                 <div className="mt-auto">
@@ -460,12 +460,12 @@ export default function Page() {
             <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
               {LANDING_COPY.howItWorksTitle}
             </h2>
-            <div className="grid sm:grid-cols-3 gap-6">
+            <div className="flex flex-col sm:flex-row gap-6">
               {LANDING_COPY.howItWorksSteps.map((step, i) => (
                 <div
                   key={i}
                   data-step-card
-                  className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center space-y-3 will-change-transform"
+                  className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center space-y-3 will-change-transform sm:flex-1"
                   style={{ opacity: 0, transform: 'translateY(30px) scale(0.96)' }}
                 >
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">{i + 1}</span>
@@ -501,10 +501,10 @@ export default function Page() {
         data-testid="apple-grid-section"
       >
         <div className="apple-grid-noise" />
-        <div className="relative z-10 mx-auto max-w-wide px-4 py-16 sm:px-6 sm:py-20 lg:px-10 xl:px-12">
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="relative z-10 mx-auto max-w-wide px-4 py-16 sm:px-6 sm:py-20">
+          <div className="flex flex-col gap-5 lg:flex-row">
             {/* Card 1 — ROI Calculator */}
-            <div className="apple-grid-card flex flex-col p-6 sm:p-8">
+            <div className="apple-grid-card flex flex-col p-6 sm:p-8 lg:flex-1">
               {/* Card header label */}
               <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-600 tracking-wide uppercase">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -539,7 +539,7 @@ export default function Page() {
             </div>
 
             {/* Card 2 — API Teaser */}
-            <div className="apple-grid-card flex flex-col p-6 sm:p-8">
+            <div className="apple-grid-card flex flex-col p-6 sm:p-8 lg:flex-1">
               {/* Card header label */}
               <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-400 tracking-wide uppercase">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -617,8 +617,8 @@ export default function Page() {
         id="home-faq"
         index={9}
         bg="bg-hero"
-        maxWidth="max-w-narrow"
-        className="py-12 sm:py-16"
+        maxWidth="max-w-content"
+        className="py-16 sm:py-20"
         testId="faq-section"
       >
         <div className="space-y-10">

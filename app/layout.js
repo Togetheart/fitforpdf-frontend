@@ -1,6 +1,15 @@
 import Script from 'next/script';
+import { Lora } from 'next/font/google';
 import './globals.css';
 import SiteShell from './components/SiteShell';
+
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-lora',
+});
 import ViewTransitions from './components/ViewTransitions';
 import { SEO } from './siteCopy.mjs';
 import { JsonLd } from './components/JsonLd';
@@ -78,7 +87,7 @@ const organizationLd = {
 export default function RootLayout({ children }) {
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
   return (
-    <html lang="en">
+    <html lang="en" className={lora.variable}>
       <head>
         <link
           rel="preload"
