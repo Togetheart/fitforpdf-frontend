@@ -267,7 +267,7 @@ export default function Page() {
               <button
                 type="button"
                 onClick={() => { if (window.innerWidth < 640) setLightboxOpen(true); }}
-                className="block w-full sm:max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:hover:scale-100 cursor-zoom-in sm:cursor-default"
+                className="block w-full sm:max-w-[600px] rounded-2xl border border-[var(--color-border)] shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:hover:scale-100 cursor-zoom-in sm:cursor-default"
                 aria-label="View full-size product image"
               >
                 <picture>
@@ -276,7 +276,7 @@ export default function Page() {
                   <img
                     src="/fitforpdf_product@2x.png"
                     alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                    className="w-full block"
+                    className="w-full block object-contain"
                     loading="eager"
                   />
                 </picture>
