@@ -53,9 +53,9 @@ export const LANDING_COPY = {
   // BLOC 4 — How it works
   howItWorksTitle: 'Three steps. Done.',
   howItWorksSteps: [
-    { title: 'Upload your Excel or CSV', desc: 'Use the file you already have. No prep work required.' },
-    { title: 'fitforpdf restructures it automatically', desc: 'Your wide, messy export is turned into a readable document layout.' },
-    { title: 'Download a PDF you can actually send', desc: 'Clean, structured, presentable output without the cleanup pass.' },
+    { title: 'Upload your file', desc: '30+ columns, CRM exports, financial reports. Use the file you already have.' },
+    { title: 'Structured sections, automatically', desc: 'Wide columns grouped. Headers repeated. Pages numbered. No manual work.' },
+    { title: 'Ready to send', desc: 'A PDF your client can read, review, and act on. In seconds, not hours.' },
   ],
   howItWorksCta: 'Try it free',
   howItWorksPriceNudge: '3 free exports. Packs from $19.',
@@ -137,6 +137,21 @@ export const LANDING_COPY_KEYS = {
 };
 
 export const HOME_FAQ = [
+  {
+    id: 'time-saved',
+    q: 'How much time does this actually save?',
+    a: 'Most users spend 20 to 45 minutes fixing each export. fitforpdf reduces that to seconds.',
+  },
+  {
+    id: 'worth-it',
+    q: 'Is this worth it for just a few exports?',
+    a: 'Yes. Even one export can take 30 minutes to fix manually. A single clean PDF often pays for itself.',
+  },
+  {
+    id: 'why-not-excel',
+    q: 'Why not just fix it in Excel?',
+    a: "You can, but it's repetitive, fragile, and time-consuming. fitforpdf removes that step entirely.",
+  },
   {
     id: 'reformat',
     q: 'Do I need to reformat my spreadsheet first?',

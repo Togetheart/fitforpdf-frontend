@@ -270,6 +270,24 @@ export default function Page() {
                   loading="eager"
                 />
               </div>
+              {/* Used by ticker */}
+              <div className="mt-4 flex items-center gap-2 text-sm text-muted overflow-hidden max-w-[600px] w-full">
+                <span className="shrink-0 font-semibold text-[var(--color-text)]">Used by</span>
+                <div className="overflow-hidden flex-1">
+                  <div className="used-by-ticker flex gap-8 whitespace-nowrap">
+                    <span>Consultants</span>
+                    <span>Finance teams</span>
+                    <span>Auditors</span>
+                    <span>SaaS reporting tools</span>
+                    <span>Operations teams</span>
+                    <span>Consultants</span>
+                    <span>Finance teams</span>
+                    <span>Auditors</span>
+                    <span>SaaS reporting tools</span>
+                    <span>Operations teams</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </PageHero>

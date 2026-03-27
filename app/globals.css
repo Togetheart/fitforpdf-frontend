@@ -635,3 +635,15 @@
 .lock-icon.lock-closed {
   opacity: 1;
 }
+
+/* ── Used-by ticker (infinite scroll right to left) ── */
+.used-by-ticker {
+  animation: ticker-scroll 20s linear infinite;
+}
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .used-by-ticker { animation: none; }
+}
