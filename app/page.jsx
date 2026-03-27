@@ -827,7 +827,7 @@ export default function Page() {
           <img
             src="/fitforpdf_product@2x.png"
             alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-            className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain"
+            className="w-full max-h-[90vh] rounded-xl object-contain"
             onClick={(e) => e.stopPropagation()}
           />
         </div>
