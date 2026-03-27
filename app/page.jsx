@@ -291,24 +291,25 @@ export default function Page() {
       {/* Mobile only: product image + Used by ticker — scroll-driven reveal like desktop */}
       <div
         className="sm:hidden pb-6 px-4 relative z-10 bg-[var(--color-bg-hero)]"
-        style={{ opacity: 0, transform: 'translateY(16px)' }}
-        ref={(el) => {
-          if (!el || el.dataset.mobileImgInit) return;
-          el.dataset.mobileImgInit = '1';
-          let firstScroll = false;
-          const handler = () => {
-            if (firstScroll) return;
-            firstScroll = true;
-            /* Wait a tiny bit after first scroll so it feels intentional */
-            setTimeout(() => {
-              el.style.animation = 'mobileImgReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-            }, 100);
-            window.removeEventListener('scroll', handler);
-          };
-          window.addEventListener('scroll', handler, { passive: true });
-        }}
       >
-        <div className="flex flex-col items-center gap-4">
+        <div
+          className="flex flex-col items-center gap-4"
+          style={{ opacity: 0, transform: 'translateY(16px)' }}
+          ref={(el) => {
+            if (!el || el.dataset.mobileImgInit) return;
+            el.dataset.mobileImgInit = '1';
+            let firstScroll = false;
+            const handler = () => {
+              if (firstScroll) return;
+              firstScroll = true;
+              setTimeout(() => {
+                el.style.animation = 'mobileImgReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+              }, 100);
+              window.removeEventListener('scroll', handler);
+            };
+            window.addEventListener('scroll', handler, { passive: true });
+          }}
+        >
           <button
             type="button"
             onClick={() => setLightboxOpen(true)}
