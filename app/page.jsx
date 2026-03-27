@@ -318,7 +318,7 @@ export default function Page() {
           <button
             type="button"
             onClick={() => setLightboxOpen(true)}
-            className="block w-full cursor-zoom-in"
+            className="block w-full overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm cursor-zoom-in"
             aria-label="View full-size product image"
           >
             <picture>
