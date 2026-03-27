@@ -367,7 +367,13 @@ export default function ProofShowcase() {
           ref={(el) => {
             if (!el) return;
             const activeBtn = el.querySelector('[aria-selected="true"]');
-            if (activeBtn) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+            if (activeBtn) {
+              /* Horizontal-only scroll — don't move the page vertically */
+              const containerRect = el.getBoundingClientRect();
+              const btnRect = activeBtn.getBoundingClientRect();
+              const scrollLeft = btnRect.left - containerRect.left - (containerRect.width / 2) + (btnRect.width / 2) + el.scrollLeft;
+              el.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            }
           }}
           style={{ backgroundColor: '#0F172A' }}
         >
