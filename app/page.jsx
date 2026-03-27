@@ -447,8 +447,33 @@ export default function Page() {
                 track.style.transform = `translateX(-${current * 100}%)`;
               };
               const interval = setInterval(() => { if (!paused) go(current + 1); }, 4000);
-              el.addEventListener('touchstart', () => { paused = true; }, { passive: true });
-              el.addEventListener('touchend', () => { setTimeout(() => { paused = false; }, 6000); }, { passive: true });
+              /* Swipe support */
+              let startX = 0;
+              let startY = 0;
+              let swiping = false;
+              el.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                swiping = true;
+                paused = true;
+              }, { passive: true });
+              el.addEventListener('touchmove', (e) => {
+                if (!swiping) return;
+                const dx = e.touches[0].clientX - startX;
+                const dy = e.touches[0].clientY - startY;
+                /* If mostly horizontal, prevent vertical scroll */
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+                  e.preventDefault();
+                }
+              }, { passive: false });
+              el.addEventListener('touchend', (e) => {
+                if (!swiping) return;
+                swiping = false;
+                const dx = e.changedTouches[0].clientX - startX;
+                if (dx < -50) go(current + 1);       /* swipe left → next */
+                else if (dx > 50) go((current - 1 + count) % count); /* swipe right → prev */
+                setTimeout(() => { paused = false; }, 6000);
+              }, { passive: true });
               /* Dots */
               const dots = el.querySelectorAll('[data-dot]');
               const updateDots = () => dots.forEach((d, i) => {
