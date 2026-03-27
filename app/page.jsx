@@ -176,6 +176,7 @@ function RoiSliderInline() {
 export default function Page() {
   const quota = useQuota();
   const conversion = useConversion({ quota });
+  const [lightboxOpen, setLightboxOpen] = React.useState(false);
 
   function handleHeroGenerateClick(event) {
     if (!event) return;
@@ -262,12 +263,11 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center pt-2">
-              {/* Product image — small on mobile (tap to enlarge), full on desktop */}
-              <a
-                href="/fitforpdf_product@2x.png"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full max-w-[280px] sm:max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:hover:scale-100"
+              {/* Product image — small on mobile (tap to enlarge in lightbox), full on desktop */}
+              <button
+                type="button"
+                onClick={() => { if (window.innerWidth < 640) setLightboxOpen(true); }}
+                className="block w-full max-w-[280px] sm:max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:hover:scale-100 cursor-zoom-in sm:cursor-default"
                 aria-label="View full-size product image"
               >
                 <picture>
@@ -280,7 +280,7 @@ export default function Page() {
                     loading="eager"
                   />
                 </picture>
-              </a>
+              </button>
               {/* Used by ticker */}
               <div className="sm:mt-4 flex items-center gap-2 text-sm text-muted overflow-hidden max-w-[600px] w-full">
                 <span className="shrink-0 font-semibold text-[var(--color-text)]">Used by</span>
@@ -805,6 +805,33 @@ export default function Page() {
       <FeedbackBar renderId={conversion.renderId} visible={Boolean(conversion.pdfBlob)} />
 
       <StickyMobileCTA />
+
+      {/* Lightbox for product image */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          onClick={() => setLightboxOpen(false)}
+          role="dialog"
+          aria-label="Product image preview"
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition"
+            aria-label="Close"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+          <img
+            src="/fitforpdf_product@2x.png"
+            alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+            className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
