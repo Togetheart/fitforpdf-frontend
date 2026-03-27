@@ -289,14 +289,34 @@ export default function Page() {
       </div>
 
       {/* Mobile only: product image + Used by ticker (outside sticky hero) */}
-      <section
-        className="sm:hidden bg-[var(--color-bg)] pt-2 pb-6 px-4 relative z-10 mobile-img-reveal"
+      <div
+        className="sm:hidden pt-2 pb-6 px-4 relative z-10"
+        data-hero-comparison-mobile
+        style={{ opacity: 0, transform: 'translateY(16px)' }}
+        ref={(el) => {
+          if (!el || el.dataset.mobileReveal) return;
+          el.dataset.mobileReveal = '1';
+          const obs = new IntersectionObserver(
+            ([e]) => {
+              if (!e.isIntersecting) return;
+              requestAnimationFrame(() => {
+                el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+              });
+              obs.disconnect();
+            },
+            { threshold: 0.1 },
+          );
+          /* Delay observer to avoid triggering on initial load */
+          setTimeout(() => obs.observe(el), 500);
+        }}
       >
         <div className="flex flex-col items-center gap-4">
           <button
             type="button"
             onClick={() => setLightboxOpen(true)}
-            className="block w-full overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm cursor-zoom-in"
+            className="block w-full cursor-zoom-in"
             aria-label="View full-size product image"
           >
             <picture>
@@ -304,7 +324,7 @@ export default function Page() {
               <img
                 src="/fitforpdf_product@2x.png"
                 alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                className="w-full block object-contain rounded-2xl"
+                className="w-full block"
                 loading="eager"
               />
             </picture>
@@ -319,7 +339,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Visual demo — moved before the upload for "proof first" flow */}
       <Section
