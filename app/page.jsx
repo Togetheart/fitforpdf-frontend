@@ -303,7 +303,7 @@ export default function Page() {
               if (firstScroll) return;
               firstScroll = true;
               setTimeout(() => {
-                el.style.animation = 'mobileImgReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                el.style.animation = 'mobileImgReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards';
               }, 100);
               window.removeEventListener('scroll', handler);
             };
