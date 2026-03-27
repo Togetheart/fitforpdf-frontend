@@ -58,7 +58,7 @@ export const LANDING_COPY = {
     { title: 'Download a PDF you can actually send', desc: 'Clean, structured, presentable output without the cleanup pass.' },
   ],
   howItWorksCta: 'Try it free',
-  howItWorksPriceNudge: '3 free exports included. Starter pack: 10 exports for $19. Volume: 100 for $79.',
+  howItWorksPriceNudge: '3 free exports. Packs from $19.',
 
   // BLOC 5 — What this replaces
   whatThisReplacesTitle: 'What this replaces',

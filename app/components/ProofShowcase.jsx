@@ -355,17 +355,22 @@ export default function ProofShowcase() {
       <div
         ref={cardRef}
         data-testid="home-preview-card"
-        className="home-preview-float w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 md:p-8 shadow-sm transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
+        className="home-preview-float w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 md:p-8 shadow-sm transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
       >
         {/* Tab buttons — Apple pill style */}
         <div
-          className="w-full overflow-x-auto scrollbar-none rounded-full"
+          className="w-full overflow-x-auto scrollbar-none rounded-full -mx-1 px-1"
+          ref={(el) => {
+            if (!el) return;
+            const activeBtn = el.querySelector('[aria-selected="true"]');
+            if (activeBtn) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+          }}
           style={{ backgroundColor: '#0F172A' }}
         >
           <div
             role="tablist"
             className="relative flex items-center rounded-full p-1"
-            style={{ minWidth: '100%' }}
+            style={{ minWidth: 'max-content' }}
           >
             {/* Sliding indicator — colored pill */}
             <div
@@ -391,7 +396,7 @@ export default function ProofShowcase() {
                 aria-controls="proof-tabpanel"
                 ref={el => tabRefs.current[i] = el}
                 onClick={() => handleTabClick(i)}
-                className="relative z-10 flex-1 text-center rounded-full px-2 py-2.5 sm:px-3 text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
+                className="relative z-10 flex-1 text-center rounded-full px-3 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm font-semibold transition-colors duration-200 whitespace-nowrap"
                 style={{
                   color: i === activeTab
                     ? (TAB_COLORS_HEX[i] === '#FFFFFF' ? '#0F172A' : '#ffffff')
@@ -414,6 +419,7 @@ export default function ProofShowcase() {
           id="proof-tabpanel"
           role="tabpanel"
           aria-labelledby={`proof-tab-${currentTab.id}`}
+          className="min-w-0 w-full overflow-hidden"
           style={{
             opacity: hasAnimated && !transitioning ? 1 : 0,
             transform: transitioning ? 'translateX(8px)' : 'translateX(0)',

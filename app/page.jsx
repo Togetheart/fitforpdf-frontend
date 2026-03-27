@@ -382,7 +382,8 @@ export default function Page() {
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">Trusted by teams worldwide</p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">What people say</h2>
           </div>
-          <div className="flex flex-col gap-4 sm:flex-row max-w-tight mx-auto">
+          {/* Desktop: 3 side by side */}
+          <div className="hidden sm:flex gap-4 max-w-tight mx-auto">
             {[
               {
                 quote: "We stopped fixing Excel exports manually. This saved us hours every week.",
@@ -400,7 +401,7 @@ export default function Page() {
                 context: "Big 4 advisory — quarterly compliance reports",
               },
             ].map((t, i) => (
-              <blockquote key={i} className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 sm:flex-1">
+              <blockquote key={i} className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 flex-1">
                 <p className="text-lg leading-relaxed text-[var(--color-text)] font-serif italic">
                   &ldquo;{t.quote}&rdquo;
                 </p>
@@ -410,6 +411,82 @@ export default function Page() {
                 </div>
               </blockquote>
             ))}
+          </div>
+          {/* Mobile: auto-sliding carousel */}
+          <div
+            className="sm:hidden overflow-hidden pb-6"
+            ref={(el) => {
+              if (!el || el.dataset.carouselInit) return;
+              el.dataset.carouselInit = '1';
+              const track = el.querySelector('[data-carousel-track]');
+              if (!track) return;
+              const cards = track.children;
+              const count = cards.length;
+              let current = 0;
+              let paused = false;
+              const go = (idx) => {
+                current = idx % count;
+                track.style.transform = `translateX(-${current * 100}%)`;
+              };
+              const interval = setInterval(() => { if (!paused) go(current + 1); }, 4000);
+              el.addEventListener('touchstart', () => { paused = true; }, { passive: true });
+              el.addEventListener('touchend', () => { setTimeout(() => { paused = false; }, 6000); }, { passive: true });
+              /* Dots */
+              const dots = el.querySelectorAll('[data-dot]');
+              const updateDots = () => dots.forEach((d, i) => {
+                d.style.opacity = i === current ? '1' : '0.3';
+                d.style.transform = i === current ? 'scale(1.3)' : 'scale(1)';
+              });
+              const ob = new MutationObserver(updateDots);
+              ob.observe(track, { attributes: true, attributeFilter: ['style'] });
+              dots.forEach((d, i) => d.addEventListener('click', () => { go(i); paused = true; setTimeout(() => { paused = false; }, 6000); }));
+              updateDots();
+            }}
+          >
+            <div data-carousel-track className="flex transition-transform duration-700 ease-out">
+              {[
+                {
+                  quote: "We stopped fixing Excel exports manually. This saved us hours every week.",
+                  role: "Head of Operations",
+                  context: "B2B SaaS — CRM exports, 20+ columns",
+                },
+                {
+                  quote: "Our CRM export has 28 columns. fitforpdf turns it into something I can actually send to clients.",
+                  role: "Account Manager",
+                  context: "B2B SaaS — HubSpot/Salesforce exports",
+                },
+                {
+                  quote: "I used to spend 45 minutes reformatting every quarterly report. Now it takes 10 seconds.",
+                  role: "Senior Auditor",
+                  context: "Big 4 advisory — quarterly compliance reports",
+                },
+              ].map((t, i) => (
+                <blockquote key={i} className="w-full shrink-0 px-2">
+                  <div className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6">
+                    <p className="text-lg leading-relaxed text-[var(--color-text)] font-serif italic">
+                      &ldquo;{t.quote}&rdquo;
+                    </p>
+                    <div className="mt-auto">
+                      <p className="text-sm font-semibold text-[var(--color-text)]">{t.role}</p>
+                      <p className="text-xs text-muted">{t.context}</p>
+                    </div>
+                  </div>
+                </blockquote>
+              ))}
+            </div>
+            {/* Dots */}
+            <div className="flex items-center justify-center gap-2 mt-4 w-full">
+              {[0, 1, 2].map((i) => (
+                <button
+                  key={i}
+                  data-dot
+                  type="button"
+                  aria-label={`Testimonial ${i + 1}`}
+                  className="h-2 w-2 rounded-full bg-[var(--color-text)] transition-all duration-300"
+                  style={{ opacity: i === 0 ? 1 : 0.3 }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </Section>
@@ -585,8 +662,25 @@ export default function Page() {
               Stop fighting print settings. Get a presentable structured PDF in seconds.
             </p>
           </div>
-          <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)]">
-            <table className="w-full min-w-[640px] text-sm">
+          {/* Mobile: stacked cards */}
+          <div className="flex flex-col gap-4 sm:hidden">
+            {COMPARISON_ROWS.map(([feature, excel, fitforpdf]) => (
+              <div key={feature} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 space-y-2">
+                <p className="text-sm font-semibold text-[var(--color-text)]">{feature}</p>
+                <div className="flex items-start gap-2 text-sm text-muted">
+                  <span className="shrink-0 text-red-600/60">✗</span>
+                  <span>{excel}</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm font-medium text-[var(--color-text)]">
+                  <span className="shrink-0 text-emerald-700">✓</span>
+                  <span>{fitforpdf}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Desktop: table */}
+          <div className="hidden sm:block overflow-x-auto rounded-2xl border border-[var(--color-border)]">
+            <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
                   <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-muted lg:px-6">Feature</th>
