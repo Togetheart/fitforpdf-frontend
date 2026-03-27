@@ -636,6 +636,11 @@
   opacity: 1;
 }
 
+/* ── Mobile product image reveal ── */
+@keyframes mobileImgReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Used-by ticker (infinite scroll right to left) ── */
 .used-by-ticker {
   animation: ticker-scroll 20s linear infinite;
