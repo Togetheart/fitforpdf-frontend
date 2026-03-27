@@ -288,28 +288,30 @@ export default function Page() {
         </PageHero>
       </div>
 
-      {/* Mobile only: product image + Used by ticker (outside sticky hero) */}
+      {/* Mobile only: product image + Used by ticker — scroll-driven reveal like desktop */}
       <div
         className="sm:hidden pt-2 pb-6 px-4 relative z-10"
-        data-hero-comparison-mobile
-        style={{ opacity: 0, transform: 'translateY(16px)' }}
+        style={{ opacity: 0, transform: 'translateY(20px)' }}
         ref={(el) => {
-          if (!el || el.dataset.mobileReveal) return;
-          el.dataset.mobileReveal = '1';
-          const obs = new IntersectionObserver(
-            ([e]) => {
-              if (!e.isIntersecting) return;
-              requestAnimationFrame(() => {
-                el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-              });
-              obs.disconnect();
-            },
-            { threshold: 0.1 },
-          );
-          /* Delay observer to avoid triggering on initial load */
-          setTimeout(() => obs.observe(el), 500);
+          if (!el || el.dataset.mobileScrollReveal) return;
+          el.dataset.mobileScrollReveal = '1';
+          let ticking = false;
+          const update = () => {
+            const rect = el.getBoundingClientRect();
+            const viewH = window.innerHeight;
+            /* Progress: 0 when bottom of element enters viewport, 1 when element is 40% visible */
+            const progress = Math.max(0, Math.min(1, (viewH - rect.top) / (viewH * 0.4)));
+            /* Smooth cubic ease-out */
+            const ease = 1 - Math.pow(1 - progress, 3);
+            el.style.opacity = String(ease);
+            el.style.transform = `translateY(${(1 - ease) * 20}px)`;
+            ticking = false;
+          };
+          const onScroll = () => {
+            if (!ticking) { requestAnimationFrame(update); ticking = true; }
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          update();
         }}
       >
         <div className="flex flex-col items-center gap-4">
