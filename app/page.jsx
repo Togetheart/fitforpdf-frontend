@@ -262,8 +262,14 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center pt-2">
-              {/* Product image — responsive: 1x mobile, 2x desktop, WebP with PNG fallback */}
-              <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
+              {/* Product image — small on mobile (tap to enlarge), full on desktop */}
+              <a
+                href="/fitforpdf_product@2x.png"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full max-w-[280px] sm:max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:hover:scale-100"
+                aria-label="View full-size product image"
+              >
                 <picture>
                   <source media="(max-width: 639px)" srcSet="/fitforpdf_product.webp" type="image/webp" />
                   <source media="(min-width: 640px)" srcSet="/fitforpdf_product@2x.webp" type="image/webp" />
@@ -274,7 +280,7 @@ export default function Page() {
                     loading="eager"
                   />
                 </picture>
-              </div>
+              </a>
               {/* Used by ticker */}
               <div className="sm:mt-4 flex items-center gap-2 text-sm text-muted overflow-hidden max-w-[600px] w-full">
                 <span className="shrink-0 font-semibold text-[var(--color-text)]">Used by</span>
