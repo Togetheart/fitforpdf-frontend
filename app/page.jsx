@@ -256,23 +256,16 @@ export default function Page() {
             </span>
           </div>
 
-          {/* Comparison reveal — fades in below CTA during scroll phase 2.
-               height:0 + overflow:visible = no layout impact, content renders visually */}
+          {/* Comparison reveal — desktop only: fades in during scroll phase 2 */}
           <div
             data-hero-comparison
+            className="hidden sm:block"
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
-            <div className="flex flex-col items-center pt-2 w-full px-4 sm:px-0">
-              {/* Product image — full width on mobile (tap to enlarge), max-600 on desktop */}
-              <button
-                type="button"
-                onClick={() => { if (window.innerWidth < 640) setLightboxOpen(true); }}
-                className="block w-full sm:max-w-[600px] rounded-2xl border border-[var(--color-border)] shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:hover:scale-100 cursor-zoom-in sm:cursor-default"
-                aria-label="View full-size product image"
-              >
+            <div className="flex flex-col items-center pt-2">
+              <div className="w-full max-w-[600px] rounded-2xl border border-[var(--color-border)] shadow-sm">
                 <picture>
-                  <source media="(max-width: 639px)" srcSet="/fitforpdf_product.webp" type="image/webp" />
-                  <source media="(min-width: 640px)" srcSet="/fitforpdf_product@2x.webp" type="image/webp" />
+                  <source srcSet="/fitforpdf_product@2x.webp" type="image/webp" />
                   <img
                     src="/fitforpdf_product@2x.png"
                     alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
@@ -280,22 +273,13 @@ export default function Page() {
                     loading="eager"
                   />
                 </picture>
-              </button>
-              {/* Used by ticker */}
-              <div className="sm:mt-4 flex items-center gap-2 text-sm text-muted overflow-hidden max-w-[600px] w-full">
+              </div>
+              <div className="mt-4 flex items-center gap-2 text-sm text-muted overflow-hidden max-w-[600px] w-full">
                 <span className="shrink-0 font-semibold text-[var(--color-text)]">Used by</span>
                 <div className="overflow-hidden flex-1">
                   <div className="used-by-ticker flex gap-8 whitespace-nowrap">
-                    <span>Consultants</span>
-                    <span>Finance teams</span>
-                    <span>Auditors</span>
-                    <span>SaaS reporting tools</span>
-                    <span>Operations teams</span>
-                    <span>Consultants</span>
-                    <span>Finance teams</span>
-                    <span>Auditors</span>
-                    <span>SaaS reporting tools</span>
-                    <span>Operations teams</span>
+                    <span>Consultants</span><span>Finance teams</span><span>Auditors</span><span>SaaS reporting tools</span><span>Operations teams</span>
+                    <span>Consultants</span><span>Finance teams</span><span>Auditors</span><span>SaaS reporting tools</span><span>Operations teams</span>
                   </div>
                 </div>
               </div>
@@ -303,6 +287,37 @@ export default function Page() {
           </div>
         </PageHero>
       </div>
+
+      {/* Mobile only: product image + Used by ticker (outside sticky hero) */}
+      <section className="sm:hidden bg-[var(--color-surface)] py-8 px-4 relative z-10">
+        <div className="flex flex-col items-center gap-4">
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(true)}
+            className="block w-full rounded-2xl border border-[var(--color-border)] shadow-sm cursor-zoom-in"
+            aria-label="View full-size product image"
+          >
+            <picture>
+              <source srcSet="/fitforpdf_product.webp" type="image/webp" />
+              <img
+                src="/fitforpdf_product@2x.png"
+                alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+                className="w-full block object-contain rounded-2xl"
+                loading="eager"
+              />
+            </picture>
+          </button>
+          <div className="flex items-center gap-2 text-sm text-muted overflow-hidden w-full">
+            <span className="shrink-0 font-semibold text-[var(--color-text)]">Used by</span>
+            <div className="overflow-hidden flex-1">
+              <div className="used-by-ticker flex gap-8 whitespace-nowrap">
+                <span>Consultants</span><span>Finance teams</span><span>Auditors</span><span>SaaS reporting tools</span><span>Operations teams</span>
+                <span>Consultants</span><span>Finance teams</span><span>Auditors</span><span>SaaS reporting tools</span><span>Operations teams</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Visual demo — moved before the upload for "proof first" flow */}
       <Section
