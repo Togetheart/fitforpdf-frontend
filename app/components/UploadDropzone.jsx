@@ -113,6 +113,13 @@ export default function UploadDropzone({
               <div className="min-w-0">
                 <p className="text-sm font-medium text-[var(--color-text)]">Drop CSV or XLSX here</p>
                 <p className="text-xs text-muted">{DROPZONE_HINT}</p>
+                <p className="mt-0.5 text-xs text-muted/60 flex items-center gap-1">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Processed, then deleted. Nothing is stored.
+                </p>
               </div>
             </div>
           )}

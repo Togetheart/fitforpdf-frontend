@@ -75,10 +75,10 @@ export default function CsvPdfPage() {
       <JsonLd data={articleLd} />
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd} />
-      <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
+      <h1 className="mb-6 text-3xl font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-4xl">
         Convert CSV files to a structured, readable PDF
       </h1>
-      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
+      <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
         Large CSV files are hard to share as PDFs — columns overflow and layout breaks. This guide
         shows how to convert CSV to a clean, structured PDF with proper sections and pagination.
       </p>

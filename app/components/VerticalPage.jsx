@@ -10,6 +10,7 @@ export default function VerticalPage({
   painPoints,
   benefits,
   ctaText = 'Try it free',
+  productImage = '/fitforpdf_product@2x.png',
 }) {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
@@ -21,13 +22,27 @@ export default function VerticalPage({
         subtitle={subheadline}
         height="min-h-[320px] sm:min-h-[400px]"
         align="center"
-        titleClassName="text-[2rem] sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.08] max-w-[22ch] mx-auto"
+        titleClassName="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.08] max-w-[22ch] mx-auto"
         subtitleClassName="max-w-[48ch] mx-auto"
       >
         <Button variant="primary" href="/#upload" className="mt-2">
           {ctaText}
         </Button>
       </PageHero>
+
+      {/* ── Product visual ── */}
+      {productImage && (
+        <Section id="product-visual" bg="bg-hero" className="py-8 sm:py-12">
+          <div className="mx-auto max-w-4xl">
+            <img
+              src={productImage}
+              alt="Excel spreadsheet transformed into a clean, structured PDF by fitforpdf"
+              className="w-full rounded-2xl border border-[var(--color-border)] shadow-lg"
+              loading="lazy"
+            />
+          </div>
+        </Section>
+      )}
 
       {/* ── Pain points ── */}
       <Section id="pain-points" bg="bg-hero">

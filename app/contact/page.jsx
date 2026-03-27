@@ -56,7 +56,7 @@ export default function ContactPage() {
         {status === 'success' ? (
           <div className="mt-10 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-10 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-              <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <svg className="h-6 w-6 text-emerald-700" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
@@ -124,7 +124,7 @@ export default function ContactPage() {
             </div>
 
             {errorMsg && (
-              <p className="rounded-xl bg-red-50 px-4 py-3 text-xs text-red-700">{errorMsg}</p>
+              <p className="rounded-xl bg-red-50 px-4 py-3 text-xs text-red-600">{errorMsg}</p>
             )}
 
             <button

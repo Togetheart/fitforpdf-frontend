@@ -157,7 +157,7 @@ export default function ApiTeaserWidget({ variant } = {}) {
         </div>
 
         {/* Code body */}
-        <pre className={`px-4 py-4 text-[13px] leading-relaxed overflow-x-auto font-mono ${codeText}`}>
+        <pre className={`px-4 py-4 text-sm leading-relaxed overflow-x-auto font-mono ${codeText}`}>
           <code>
             {CURL_LINES.map((line, i) => (
               <CodeLine key={i} line={line} />
@@ -195,12 +195,12 @@ export default function ApiTeaserWidget({ variant } = {}) {
         }`}
       >
         <div className={`flex items-center gap-2 px-4 py-2 border-b ${headerBorder}`}>
-          <span className="inline-flex items-center rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold text-green-400">
+          <span className="inline-flex items-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-bold text-green-400">
             200 OK
           </span>
           <span className={`text-xs ${respMuted}`}>application/pdf</span>
         </div>
-        <pre className={`px-4 py-3 text-[13px] leading-relaxed overflow-x-auto font-mono ${codeText}`}>
+        <pre className={`px-4 py-3 text-sm leading-relaxed overflow-x-auto font-mono ${codeText}`}>
           <code>
             <span className="code-comment">{'// Response'}</span>
             {'\n'}

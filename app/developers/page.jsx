@@ -115,12 +115,12 @@ function CodeBlock({ children }) {
 
   return (
     <div className="group relative">
-      <pre className="overflow-x-auto rounded-xl bg-[#0F172A] p-4 text-[13px] leading-relaxed text-white/90">
+      <pre className="overflow-x-auto rounded-xl bg-[#0F172A] p-4 text-sm leading-relaxed text-white/90">
         <code>{children}</code>
       </pre>
       <button
         onClick={handleCopy}
-        className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-[11px] text-white/50 opacity-0 transition hover:bg-white/20 hover:text-white/80 group-hover:opacity-100"
+        className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-xs text-white/50 opacity-0 transition hover:bg-white/20 hover:text-white/80 group-hover:opacity-100"
       >
         {copied ? 'Copied' : 'Copy'}
       </button>
@@ -135,7 +135,7 @@ function EndpointCard({ endpoint }) {
         <MethodBadge method={endpoint.method} />
         <code className="text-sm font-semibold text-[var(--color-text)]">{endpoint.path}</code>
         {endpoint.auth && (
-          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-[500] text-blue-700">
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-[500] text-blue-700">
             auth required
           </span>
         )}
@@ -147,7 +147,7 @@ function EndpointCard({ endpoint }) {
           <summary className="cursor-pointer text-xs font-[500] text-[var(--color-muted)] transition hover:text-[var(--color-text)]">
             Response
           </summary>
-          <pre className="mt-2 overflow-x-auto rounded-xl bg-[var(--color-bg-hero)] p-4 text-[13px] leading-relaxed text-[var(--color-text)]">
+          <pre className="mt-2 overflow-x-auto rounded-xl bg-[var(--color-bg-hero)] p-4 text-sm leading-relaxed text-[var(--color-text)]">
             <code>{endpoint.response}</code>
           </pre>
         </details>
@@ -316,7 +316,7 @@ function RequestAccessForm() {
               {status === 'submitting' ? 'Submitting\u2026' : 'Request early access'}
             </button>
 
-            <p className="text-center text-[11px] text-[var(--color-muted)]">
+            <p className="text-center text-xs text-[var(--color-muted)]">
               Most requests approved within a few hours.
             </p>
           </form>
@@ -447,7 +447,7 @@ export default function DevelopersPage() {
 
       {/* Quick start */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-10">
-        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Quick start</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-sm font-normal text-white">[-]</code>Quick start</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
           Generate a PDF in one command:
         </p>
@@ -460,10 +460,10 @@ export default function DevelopersPage() {
 
       {/* Authentication */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Authentication</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-sm font-normal text-white">[-]</code>Authentication</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
-          Pass your API key in the <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">X-FITFORPDF-KEY</code> header.
-          Keys are prefixed <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">ffp_live_</code> and
+          Pass your API key in the <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">X-FITFORPDF-KEY</code> header.
+          Keys are prefixed <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">ffp_live_</code> and
           should be kept server-side only.
         </p>
         <CodeBlock>{`curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
@@ -478,7 +478,7 @@ export default function DevelopersPage() {
 
       {/* Endpoints */}
       <section className="mb-12">
-        <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Endpoints</h2>
+        <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-sm font-normal text-white">[-]</code>Endpoints</h2>
         {ENDPOINTS.map((ep) => (
           <EndpointCard key={ep.path} endpoint={ep} />
         ))}
@@ -486,9 +486,9 @@ export default function DevelopersPage() {
 
       {/* Render options */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Render options</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-sm font-normal text-white">[-]</code>Render options</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
-          Pass as a JSON string in the <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">options</code> form field.
+          Pass as a JSON string in the <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">options</code> form field.
         </p>
         <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
           <table className="w-full text-left text-sm">
@@ -503,10 +503,10 @@ export default function DevelopersPage() {
             <tbody className="divide-y divide-[var(--color-border)]">
               {RENDER_OPTIONS.map((opt, i) => (
                 <tr key={opt.key} className={i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/50' : 'bg-transparent'}>
-                  <td className="px-4 py-2"><code className="text-[13px]">{opt.key}</code></td>
+                  <td className="px-4 py-2"><code className="text-sm">{opt.key}</code></td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{opt.type}</td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{opt.values}</td>
-                  <td className="px-4 py-2"><code className="text-[13px]">{opt.def}</code></td>
+                  <td className="px-4 py-2"><code className="text-sm">{opt.def}</code></td>
                 </tr>
               ))}
             </tbody>
@@ -516,9 +516,9 @@ export default function DevelopersPage() {
 
       {/* Response headers */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Response headers</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-sm font-normal text-white">[-]</code>Response headers</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
-          Every <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">/v1/render</code> response includes these headers:
+          Every <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">/v1/render</code> response includes these headers:
         </p>
         <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
           <table className="w-full text-left text-sm">
@@ -531,7 +531,7 @@ export default function DevelopersPage() {
             <tbody className="divide-y divide-[var(--color-border)]">
               {RESPONSE_HEADERS.map((h, i) => (
                 <tr key={h.header} className={i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/50' : 'bg-transparent'}>
-                  <td className="px-4 py-2"><code className="text-[13px]">{h.header}</code></td>
+                  <td className="px-4 py-2"><code className="text-sm">{h.header}</code></td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{h.desc}</td>
                 </tr>
               ))}
@@ -542,13 +542,13 @@ export default function DevelopersPage() {
 
       {/* Rate limiting */}
       <section className="mb-12 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Rate limiting</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-sm font-normal text-white">[-]</code>Rate limiting</h2>
         <p className="text-sm text-[var(--color-muted)]">
           <strong>60 requests per minute</strong> per API key.
           Rate limit state is returned in headers:{' '}
-          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">X-RateLimit-Limit</code>,{' '}
-          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">X-RateLimit-Remaining</code>, and{' '}
-          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-[13px]">Retry-After</code> (on 429).
+          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">X-RateLimit-Limit</code>,{' '}
+          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">X-RateLimit-Remaining</code>, and{' '}
+          <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">Retry-After</code> (on 429).
           Maximum 50 columns and 5,000 rows per request.
         </p>
         <p className="mt-3 text-xs text-[var(--color-muted)]">
@@ -558,7 +558,7 @@ export default function DevelopersPage() {
 
       {/* Error codes */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-8">
-        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-[13px] font-normal text-white">[-]</code>Error codes</h2>
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]"><code aria-hidden="true" className="mr-2 rounded bg-[#0F172A] px-1.5 py-0.5 text-sm font-normal text-white">[-]</code>Error codes</h2>
         <p className="mb-4 text-sm text-[var(--color-muted)]">
           All errors use a standard envelope:
         </p>
@@ -582,7 +582,7 @@ export default function DevelopersPage() {
               {ERROR_CODES.map((e, i) => (
                 <tr key={e.code} className={i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/50' : 'bg-transparent'}>
                   <td className="px-4 py-2 font-[500]">{e.http}</td>
-                  <td className="px-4 py-2"><code className="text-[13px]">{e.code}</code></td>
+                  <td className="px-4 py-2"><code className="text-sm">{e.code}</code></td>
                   <td className="px-4 py-2 text-[var(--color-muted)]">{e.desc}</td>
                 </tr>
               ))}
@@ -657,7 +657,7 @@ export default function DevelopersPage() {
 
           {/* Starter API */}
           <div className="flex flex-col rounded-xl border-2 border-blue-500/30 bg-[var(--color-bg)] p-5 relative">
-            <span className="absolute -top-2.5 right-4 rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-semibold text-white uppercase tracking-wide">Recommended</span>
+            <span className="absolute -top-2.5 right-4 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-semibold text-white uppercase tracking-wide">Recommended</span>
             <p className="text-sm font-semibold text-[var(--color-text)]">Starter API</p>
             <p className="mt-1"><span className="text-2xl font-bold text-[var(--color-text)]">$49</span><span className="text-sm text-[var(--color-muted)]"> / month</span></p>
             <p className="mt-0.5 text-xs text-[var(--color-muted)]">~$0.098 per render</p>

@@ -75,10 +75,10 @@ export default function FitOnePagePage() {
       <JsonLd data={articleLd} />
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd} />
-      <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
+      <h1 className="mb-6 text-3xl font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-4xl">
         How to fit a large Excel sheet on one PDF page
       </h1>
-      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
+      <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
         If your sheet is too wide, Excel&#39;s default export may shrink or cut content. Learn
         manual steps and better automated solutions for large spreadsheets.
       </p>

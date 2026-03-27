@@ -40,7 +40,7 @@ export default function FeatureComparison({
       data-testid="pricing-compare"
       className="space-y-4 p-6"
     >
-      <h2 id="feature-comparison-title" className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight">
+      <h2 id="feature-comparison-title" className="text-3xl sm:text-4xl font-semibold tracking-tight">
         {title}
       </h2>
 

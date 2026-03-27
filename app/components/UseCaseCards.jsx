@@ -68,7 +68,7 @@ export default function UseCaseCards() {
   return (
     <div className="space-y-8">
       <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-[2.5rem]">
+        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Built for real workflows
         </h2>
         <p className="text-[var(--color-muted)]">

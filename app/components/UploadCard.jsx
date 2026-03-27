@@ -25,8 +25,8 @@ const PROGRESS_STEP_STATES = {
     label: 'text-[var(--color-text)] font-medium',
   },
   pending: {
-    circle: 'border border-[var(--color-border)] bg-[var(--color-bg-hero)] text-muted/70',
-    label: 'text-muted/70',
+    circle: 'border border-[var(--color-border)] bg-[var(--color-bg-hero)] text-muted',
+    label: 'text-muted',
   },
 };
 
@@ -657,6 +657,13 @@ export default function UploadCard({
           </Button>}
         </div>
 
+        {/* Quota badge — yellow pill centered */}
+        <div className="flex justify-center mt-3">
+          <span data-testid="quota-pill" className={`inline-flex min-w-0 items-center rounded-full border px-3 py-1 text-xs font-semibold shadow-sm ${freeExportsBadgeClass}`} aria-label="remaining exports">
+            {quotaText}
+          </span>
+        </div>
+
         {/* ── Options dropdown — in document flow below pill ── */}
         {isOptionsExpanded ? (
           <div
@@ -746,9 +753,6 @@ export default function UploadCard({
                 Pro · {Number.isFinite(remainingInPeriod) ? `${remainingInPeriod} exports left this month` : '500 exports/month'}
               </span>
             ) : null}
-            <span data-testid="quota-pill" className={`inline-flex min-w-0 items-center rounded-full border px-3 py-1 text-xs font-semibold shadow-sm ${freeExportsBadgeClass}`} aria-label="remaining exports">
-              {quotaText}
-            </span>
           </div>
 
           {/* Helper subcopy — hidden when quota badge already shows the same info */}
@@ -808,14 +812,14 @@ export default function UploadCard({
                       onClick={() => onBuyCreditsPack(p.stripePackId)}
                       className="group relative flex flex-col items-start gap-0.5 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-left transition hover:border-accent/60 hover:bg-accent/10 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">Best value</span>
+                      <span className="absolute right-2.5 top-2 rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-white">Best value</span>
                       <span className="text-xs font-medium text-muted">{p.exportsLabel}</span>
                       <span className="text-lg font-bold tracking-tight text-accent">{p.priceDisplay}</span>
                     </button>
                   )
                 ))}
               </div>
-              <p className="text-center text-xs text-muted/70">
+              <p className="text-center text-xs text-muted">
                 Need more?{' '}
                 <a href="/contact" className="text-muted underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Contact us for Team/API</a>
               </p>
@@ -823,7 +827,7 @@ export default function UploadCard({
           ) : hasResultBlob ? (
             <div className="flex flex-col items-center gap-3 w-full max-w-[640px]">
               <AnimatedCheckmark size={48} />
-              <p className="text-emerald-600 text-sm font-medium">PDF generated successfully!</p>
+              <p className="text-emerald-700 text-sm font-medium">PDF generated successfully!</p>
               <Button type="button" variant="primary" className="w-full" data-testid="download-again" onClick={onDownloadAgain} disabled={isLoading}>
                 Download again
               </Button>
@@ -840,18 +844,12 @@ export default function UploadCard({
               ) : null}
             </div>
           ) : (
-            <div data-testid="upload-privacy-messages" className="flex flex-col items-center gap-2 rounded-2xl border border-emerald-200/80 bg-emerald-50/80 px-5 py-4 text-sm text-emerald-800">
-              <p className="flex items-center gap-2 font-semibold">
-                <AnimatedShieldIcon animateOnMount={false} className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                Your files are never stored
+            <div data-testid="upload-privacy-messages" className="flex flex-col items-center gap-1 rounded-lg border border-emerald-200/40 bg-emerald-50/40 px-4 py-2 text-center">
+              <p className="text-xs font-semibold text-emerald-700">Uploading client data? We don&apos;t keep it. Ever.</p>
+              <p className="text-xs text-emerald-700 flex items-center gap-1.5">
+                <span aria-label="European Union flag">🇪🇺</span>
+                Processed in France · Deleted immediately · No training usage
               </p>
-              <div className="flex flex-col items-center gap-0.5 text-xs text-emerald-700">
-                <p className="flex items-center gap-1.5">
-                  <span aria-label="European Union flag">🇪🇺</span>
-                  Processed in France · Deleted immediately after conversion
-                </p>
-                <p>No data stored · No training usage · GDPR compliant</p>
-              </div>
             </div>
           )}
 
@@ -859,7 +857,7 @@ export default function UploadCard({
             <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
               {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
               {shouldShowVerdict ? (
-                <span className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-[11px] font-semibold ${verdictStyle.badge}`}>
+                <span className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-xs font-semibold ${verdictStyle.badge}`}>
                   <VerdictIcon aria-hidden="true" className={`h-3.5 w-3.5 ${verdictStyle.icon}`} />
                   {String(verdict).toUpperCase()}
                 </span>

@@ -134,7 +134,7 @@ function PrivacyFeatureCard({ icon, title, description, testId }) {
       <span className="text-emerald-600" aria-hidden="true">{icon}</span>
       <div className="space-y-1.5">
         <h3 className="text-sm font-semibold leading-tight text-[var(--color-text)]">{title}</h3>
-        <p className="text-[13px] leading-relaxed text-muted">{description}</p>
+        <p className="text-sm leading-relaxed text-muted">{description}</p>
       </div>
     </div>
   );
@@ -192,7 +192,7 @@ export default function PrivacyPage() {
             Privacy
           </h1>
         </div>
-        <p className="text-[2.5rem] sm:text-5xl font-semibold leading-[1.06] tracking-tight text-[var(--color-text)] max-w-[20ch]">
+        <p className="text-4xl sm:text-5xl font-semibold leading-[1.06] tracking-tight text-[var(--color-text)] max-w-[20ch]">
           <span className="block">{PRIVACY_PAGE_COPY.pageTitle}</span>
           <span className="block">{PRIVACY_PAGE_COPY.pageTitleAccent}</span>
         </p>
@@ -204,7 +204,7 @@ export default function PrivacyPage() {
       {/* ── File handling — même grid pattern que "Client-ready means" ── */}
       <Section id="privacy-handling" index={1} bg="bg-hero" className="pt-12 pb-20 sm:pt-16 sm:pb-28">
         <div className="text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--color-text)]">
             {PRIVACY_PAGE_COPY.handlingTitle}
           </h2>
         </div>
@@ -262,7 +262,7 @@ export default function PrivacyPage() {
       {/* ── Legal basis + Data location ── */}
       <Section id="privacy-gdpr" index={3} bg="bg-hero" className="py-20 sm:py-28">
         <div className="text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--color-text)]">
             GDPR compliance
           </h2>
         </div>
@@ -321,7 +321,7 @@ export default function PrivacyPage() {
                   <span className="mt-0.5 text-muted/70" aria-hidden="true">{ICONS.server}</span>
                   <div>
                     <p className="text-sm font-semibold text-[var(--color-text)]">{sp.name}</p>
-                    <p className="text-[13px] leading-relaxed text-muted">{sp.role}</p>
+                    <p className="text-sm leading-relaxed text-muted">{sp.role}</p>
                     <p className="text-[12px] text-muted/70">{sp.location}</p>
                   </div>
                 </div>
@@ -357,7 +357,7 @@ export default function PrivacyPage() {
 
       {/* ── FAQ — même pattern exact que landing ── */}
       <Section id="privacy-faq" index={6} bg="bg-hero" className="py-20 sm:py-28">
-        <h2 className="text-center text-3xl sm:text-[2.5rem] font-semibold tracking-tight text-[var(--color-text)]">
+        <h2 className="text-center text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--color-text)]">
           Frequently asked questions
         </h2>
         <div className="divide-y divide-[var(--color-border)]">

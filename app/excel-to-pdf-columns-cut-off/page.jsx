@@ -75,10 +75,10 @@ export default function ExcelCutoffPage() {
       <JsonLd data={articleLd} />
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd} />
-      <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
+      <h1 className="mb-6 text-3xl font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-4xl">
         Why Excel cuts off columns when exporting to PDF (And how to fix it)
       </h1>
-      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
+      <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
         Exporting a wide Excel sheet to PDF often results in cut-off columns. This guide explains
         why it happens and how to fix it — with and without external tools.
       </p>

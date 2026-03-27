@@ -215,28 +215,25 @@ export default function HeroHeadline() {
       <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">{LANDING_COPY.heroPainBadge}</p>
     </div>
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[1.875rem] font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
-      <span className="hero-headline-line block">
-        <span
-          ref={accentRef}
-          data-testid="hero-headline-accent"
-          data-anim={reducedMotion ? 'off' : 'on'}
-          className="hero-accent hero-accent--sections inline-block"
-        >
-          Readable PDFs
-        </span>
-      </span>
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
         <span className="relative inline-flex items-stretch">
-          {/* Left bracket */}
-          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Left bracket — hidden on mobile */}
+          <svg ref={bracketLRef} className="hidden sm:block shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
-          {/* Text container — clips on scroll */}
-          <span ref={containerRef} className="inline-block text-center whitespace-nowrap text-[var(--color-text)]">
-            from wide tables.
+          {/* Text container — clips on scroll, wraps on mobile */}
+          <span ref={containerRef} className="inline-block text-center sm:whitespace-nowrap">
+            <span
+              ref={accentRef}
+              data-testid="hero-headline-accent"
+              data-anim={reducedMotion ? 'off' : 'on'}
+              className="hero-accent hero-accent--sections inline-block"
+            >
+              Upload your spreadsheet.
+            </span>
           </span>
-          {/* Right bracket */}
-          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Right bracket — hidden on mobile */}
+          <svg ref={bracketRRef} className="hidden sm:block shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Full [F] logo — appears at center when brackets close */}
@@ -252,10 +249,13 @@ export default function HeroHeadline() {
             <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="var(--color-text)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M 41,2 L 46,2 L 46,42 L 41,42" fill="none" stroke="var(--color-text)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             <rect x="11" y="8" width="26" height="5" rx="1.5" fill="var(--color-text)" />
-            <rect x="11" y="19" width="18" height="5" rx="1.5" fill="#2563EB" />
-            <rect x="11" y="30" width="11" height="5" rx="1.5" fill="#2563EB" opacity="0.4" />
+            <rect x="11" y="19" width="18" height="5" rx="1.5" fill="var(--color-cta-bg)" />
+            <rect x="11" y="30" width="11" height="5" rx="1.5" fill="var(--color-cta-bg)" opacity="0.4" />
           </svg>
         </span>
+      </span>
+      <span className="hero-headline-line block text-[var(--color-text)]">
+        Get a PDF you can actually send.
       </span>
     </h1>
     </>

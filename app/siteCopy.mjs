@@ -2,34 +2,38 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
   logoText: 'fitforpdf',
-  heroTitle: 'Your spreadsheet.\\nReorganized into readable sections.\\nReady to send.',
-  heroSubheadline: 'Wide tables, automatically split into readable PDF sections.',
-  heroSubheadlineL1: 'Wide tables, automatically split into readable PDF sections.',
-  heroSubheadlineL2a: 'Wide Excel and CSV tables from CRM exports and SaaS reports,',
-  heroSubheadlineL2b: 'automatically split into readable PDF sections.',
+  heroTitle: 'Skip the cleanup.\\nSend it now.',
+  heroSubheadline: 'Cut-off columns. Awkward page breaks. Manual fixes before every send. Upload your Excel or CSV and get a structured, presentable PDF in seconds.',
+  heroSubheadlineL1: 'Cut-off columns. Awkward page breaks. Manual fixes before every send.',
+  heroSubheadlineL2a: 'Skip the cleanup. No more cut-off columns, awkward page breaks,',
+  heroSubheadlineL2b: 'or manual fixes before every send.',
   heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
-  proofTimeSaved: 'Typically saves 30–45 min per export',
+  proofTimeSaved: 'Typically saves 30 to 45 min per export',
   proofSourceLine: 'Typical sources: Excel exports · CSV datasets · SaaS reports',
   heroLabel: 'FITFORPDF',
-  heroPainBadge: 'Your Excel PDFs become unreadable',
-  heroCta: 'Fix your broken Excel PDF',
-  heroMicrocopy: 'Used by consultants, finance teams, and SaaS reporting tools.',
-  heroMicrocopyFree: 'Free — no account required. Ready in seconds.',
+  heroPainBadge: "Your Excel export isn't client-ready. Again.",
+  heroCta: 'Fix your export',
+  heroMicrocopy: '',
+  heroMicrocopyFree: '3 free exports. No account needed. Packs from $19.',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'Processed in France. Files deleted instantly. No data stored.',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
 
-  problemTitle: 'Spreadsheet exports fail in real life.',
+  problemTitle: "The problem isn't exporting. It's everything you do after.",
+  problemBody: "Your spreadsheet exports, but the PDF still isn't ready to send. Columns get cut off. Page breaks land in the wrong places. You shrink fonts, adjust margins, export again, and hope it looks presentable. fitforpdf removes that cleanup step.",
   problemBullets: [
     'Columns are cut.',
     'Text becomes unreadable after zoom.',
     'Manual layout fixes become mandatory.',
   ],
 
-  beforeAfterTitle: 'See how fitforpdf transforms your file.',
-  beforeLabel: 'Source spreadsheet',
-  afterLabel: 'Client-ready PDF',
+  beforeAfterTitle: 'From broken export to presentable PDF',
+  beforeLabel: 'Before sending',
+  beforeAnnotation: 'Cut-off columns · Shrunk text · Bad page breaks',
+  afterLabel: 'After fitforpdf',
+  afterAnnotation: 'All columns preserved · Readable grouped sections · Clean pagination',
+  beforeAfterCaption: 'This is the cleanup step you normally do by hand.',
 
   clientReadyTitle: 'Client-ready means',
   clientReadyFeatures: [
@@ -49,8 +53,24 @@ export const LANDING_COPY = {
     'Jump to any section instantly',
   ],
 
-  toolTitle: 'Generate a client-ready PDF',
-  toolSubcopy: 'Free exports. No account required.',
+  // BLOC 4 — How it works
+  howItWorksTitle: 'Three steps. Done.',
+  howItWorksSteps: [
+    { title: 'Upload your Excel or CSV', desc: 'Use the file you already have. No prep work required.' },
+    { title: 'fitforpdf restructures it automatically', desc: 'Your wide, messy export is turned into a readable document layout.' },
+    { title: 'Download a PDF you can actually send', desc: 'Clean, structured, presentable output without the cleanup pass.' },
+  ],
+  howItWorksCta: 'Try it free',
+  howItWorksPriceNudge: '3 free exports included. Starter pack: 10 exports for $19. Volume: 100 for $79.',
+
+  // BLOC 5 — What this replaces
+  whatThisReplacesTitle: 'What this replaces',
+  whatThisReplacesQuote: "The export often isn't truly client-ready, so there's usually a manual cleanup step before I can send it out.",
+  whatThisReplacesSupportLine: "That's the step fitforpdf removes.",
+  whatThisReplacesList: ['Cut-off columns', 'Awkward page breaks', 'Layout shifts', 'Margin and font-size fixes', 'Re-exporting under pressure'],
+
+  toolTitle: 'Generate a presentable PDF',
+  toolSubcopy: '3 free exports. No account needed.',
 
   credibilityTitle: 'Why this is reliable',
   credibilityBullets: [
@@ -60,9 +80,9 @@ export const LANDING_COPY = {
   ],
   credibilityMicro: "If it looks wrong once, you won't trust it. fitforpdf is built for the first try.",
 
-  pricingPreviewTitle: 'Simple pricing.',
-  pricingPreviewSubline: 'Typical manual formatting: 30–45 min per export. fitforpdf: done in seconds.',
-  pricingPreviewCta: 'See full pricing',
+  pricingPreviewTitle: 'Start free. Upgrade when volume matters.',
+  pricingPreviewSubline: 'Try fitforpdf without creating an account. When you need more files, more automation, or API access, choose the plan that fits your workflow.',
+  pricingPreviewCta: 'See pricing',
 
   privacyStripTitle: 'Privacy-first by default.',
   privacyStripBullets: [
@@ -84,11 +104,11 @@ export const LANDING_COPY = {
     'Students presenting structured datasets',
   ],
 
-  finalCtaTitle: 'Still fixing Excel exports manually?',
-  finalCtaCopy: 'Most teams waste 30–45 minutes per export. Multiply that by every report you send.',
-  finalCtaCopy2: 'Upload one file. Get a client-ready PDF in seconds.',
-  finalCtaLabel: 'Fix your Excel PDF now →',
-  finalCtaPrice: 'From $0.79 per export · Free tier available',
+  finalCtaTitle: "Your export is done. The cleanup shouldn't be.",
+  finalCtaCopy: 'Upload your Excel or CSV and get a PDF that is structured, readable, and ready to send.',
+  finalCtaCopy2: '',
+  finalCtaLabel: 'Fix your export',
+  finalCtaPrice: '',
 
   footerTagline: 'Transform spreadsheets into professional PDFs.',
 
@@ -96,10 +116,10 @@ export const LANDING_COPY = {
   whoThisIsForPerfect: ['CRM exports', 'financial reports', 'analytics tables', 'inventory reports', 'SaaS reporting exports'],
   whoThisIsForNot:     ['invoice templates', 'formatted Excel documents', 'pixel-perfect spreadsheets'],
 
-  apiBlockTitle:   'Render PDFs from your backend',
-  apiBlockCopy:    'Plug fitforpdf into your product. Send tabular data via REST API, get a structured PDF back. Built for SaaS reporting, CRM exports, and database tables.',
-  apiBlockSpecs:   '60 req/min · up to 50 columns · 5,000 rows',
-  apiBlockCta:     'Get your API key',
+  apiBlockTitle:   'Need this in your workflow or product?',
+  apiBlockCopy:    'Use the API to generate clean, readable PDFs from spreadsheet exports automatically.',
+  apiBlockSpecs:   'Built for teams that need the same result at scale.',
+  apiBlockCta:     'Explore the API',
   apiBlockCtaHref: '/developers',
 
   whoUsesTitle: 'Who uses fitforpdf',
@@ -121,24 +141,24 @@ export const LANDING_COPY_KEYS = {
 
 export const HOME_FAQ = [
   {
-    id: 'expire',
-    q: 'Do my "Pay as you go" credits expire?',
-    a: 'No. If you buy a pack of 10 or 100 exports, they remain in your account forever until you use them.',
+    id: 'reformat',
+    q: 'Do I need to reformat my spreadsheet first?',
+    a: 'No. Upload the file you already have.',
   },
   {
-    id: 'subscription',
-    q: 'Is the Starter pack a subscription?',
-    a: 'Absolutely not. The Pay as you go options are strictly one-time payments. We will never auto-charge your card. If you want a recurring plan, check out our Pro subscription.',
+    id: 'filetypes',
+    q: 'What file types can I upload?',
+    a: 'Excel and CSV files.',
   },
   {
-    id: 'branding',
-    q: 'Will my clients see the fitforpdf logo?',
-    a: 'Not if you use a paid export. All paid options (whether one-time credits or the Pro subscription) completely remove our branding so you can send professional, white-label documents.',
+    id: 'oneoff',
+    q: 'Is this for one-off exports or recurring workflows?',
+    a: 'Both. Use the app for quick fixes, the API for automation.',
   },
   {
-    id: 'counts',
-    q: 'What counts as an export?',
-    a: 'A successful PDF generation (HTTP 200 with a PDF response).',
+    id: 'sample',
+    q: 'Can I see an example before trying it?',
+    a: 'Yes. <a href="/sample-output.pdf" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Open a sample PDF</a>.',
   },
   {
     id: 'files',
@@ -286,23 +306,8 @@ export const PRICING_PAGE_COPY = {
   ],
 };
 
-// PAYG packs for the pricing page (used in the Pay-as-you-go view)
+// PAYG packs for the pricing page (Starter first — best value anchor)
 export const PAYG_PACKS = [
-  {
-    id: 'single',
-    title: PRICING_PAGE_COPY.singleTitle,
-    priceLine: PRICING_PAGE_COPY.singleTopline,
-    priceLines: [PRICING_PAGE_COPY.singleTopline],
-    priceDisplay: PRICING_PAGE_COPY.singlePrice,
-    exportsLabel: PRICING_PAGE_COPY.singleExports,
-    description: PRICING_PAGE_COPY.singleDescription,
-    points: PRICING_PAGE_COPY.singleFeatures,
-    actionLabel: 'Buy 1 export',
-    disabled: false,
-    recommended: false,
-    ctaNote: null,
-    stripePackId: 'credits_1',
-  },
   {
     id: 'payg-starter',
     title: PRICING_PAGE_COPY.paygStarterTitle,
@@ -335,6 +340,21 @@ export const PAYG_PACKS = [
     recommended: false,
     ctaNote: null,
     stripePackId: 'credits_100',
+  },
+  {
+    id: 'single',
+    title: PRICING_PAGE_COPY.singleTitle,
+    priceLine: PRICING_PAGE_COPY.singleTopline,
+    priceLines: [PRICING_PAGE_COPY.singleTopline],
+    priceDisplay: PRICING_PAGE_COPY.singlePrice,
+    exportsLabel: PRICING_PAGE_COPY.singleExports,
+    description: PRICING_PAGE_COPY.singleDescription,
+    points: PRICING_PAGE_COPY.singleFeatures,
+    actionLabel: 'Buy 1 export',
+    disabled: false,
+    recommended: false,
+    ctaNote: null,
+    stripePackId: 'credits_1',
   },
 ];
 
@@ -565,11 +585,11 @@ export const SEO = {
   ogImage: 'https://www.fitforpdf.com/og-image.png',
   home: {
     title: 'fitforpdf — Convert Excel & CSV to Structured PDF',
-    description: 'Upload any spreadsheet and instantly get a structured, client-ready PDF with sections, pagination, and column groupings. 3 free exports. No account required.',
+    description: 'Upload any spreadsheet and get a structured, presentable PDF with sections, pagination, and column groupings. 3 free exports. No account needed.',
   },
   pricing: {
     title: 'fitforpdf Pricing — Excel to PDF Export Plans',
-    description: 'Free exports, pay-as-you-go credits from $4.90, and Pro subscription for unlimited exports. No subscription required.',
+    description: '3 free exports. Pay-as-you-go packs from $19. Pro subscription at $29/mo for 500 exports.',
   },
   privacy: {
     title: 'Privacy Policy — Your Data, Not Our Business',

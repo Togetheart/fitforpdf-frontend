@@ -71,11 +71,11 @@ const FEATURE_ICONS = {
 
 const FEATURE_ICON_COLORS = {
   overview:   'text-blue-600',
-  columns:    'text-blue-500',
-  pin:        'text-sky-500',
-  pagination: 'text-blue-400',
-  wand:       'text-sky-400',
-  link:       'text-blue-300',
+  columns:    'text-blue-600',
+  pin:        'text-blue-600',
+  pagination: 'text-blue-600',
+  wand:       'text-blue-600',
+  link:       'text-blue-600',
 };
 
 /* Category icons for "Who this is for" items (16x16, stroke-based) */
@@ -157,16 +157,16 @@ function RoiSliderInline() {
       </div>
       <div className="mt-5 grid grid-cols-3 gap-3">
         <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
-          <p className="text-2xl font-bold text-white tabular-nums">{hours}<span className="text-base font-normal text-slate-400">h</span></p>
-          <p className="mt-0.5 text-[11px] text-slate-500">saved / month</p>
+          <p className="text-2xl font-bold text-white tabular-nums">{hours}<span className="text-base font-normal text-white/60">h</span></p>
+          <p className="mt-0.5 text-xs text-white/60">saved / month</p>
         </div>
         <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
           <p className="text-2xl font-bold text-white tabular-nums">${dollars.toLocaleString()}</p>
-          <p className="mt-0.5 text-[11px] text-slate-500">at $75/hr</p>
+          <p className="mt-0.5 text-xs text-white/60">at $75/hr</p>
         </div>
         <div className="rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 text-center">
-          <p className="text-sm font-semibold text-blue-400">{plan}</p>
-          <p className="mt-0.5 text-[11px] text-slate-500">recommended</p>
+          <p className="text-sm font-semibold text-blue-600">{plan}</p>
+          <p className="mt-0.5 text-xs text-white/60">recommended</p>
         </div>
       </div>
     </>
@@ -208,7 +208,7 @@ export default function Page() {
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <JsonLd data={homeFaqLd} />
       {/* Scroll spacer — creates room for Apple-style sticky scroll sequence */}
-      <div className="h-[calc(100vh+600px)] sm:h-[calc(100vh+900px)]">
+      <div className="h-[calc(100vh+900px)] sm:h-[calc(100vh+1100px)]">
         <PageHero
           heroTestId="hero-section"
           variant="home"
@@ -220,7 +220,7 @@ export default function Page() {
           className="py-0 w-full sticky top-0"
         >
           {/* Subtitle — stays visible throughout */}
-          <p className="hero-headline-line w-full max-w-3xl mx-auto text-lg text-[var(--color-text)]">
+          <p className="hero-headline-line w-full max-w-3xl mx-auto text-lg text-muted">
             {LANDING_COPY.heroSubheadlineL2a}<br />{LANDING_COPY.heroSubheadlineL2b}
           </p>
 
@@ -238,22 +238,20 @@ export default function Page() {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </Button>
-              <Button
-                variant="outline"
-                href="/developers"
-                className="h-12 gap-1.5"
+              <a
+                href="/sample-output.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={CTA_SECONDARY + ' h-12'}
               >
-                Get API
+                See a sample PDF
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
-              </Button>
+              </a>
             </div>
-            <span className="text-xs text-[var(--color-text)]">{LANDING_COPY.heroMicrocopy}</span>
             <span className="text-xs text-[var(--color-muted)]">
               {LANDING_COPY.heroMicrocopyFree}
-              {' · '}
-              <a href="/sample-output.pdf" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">See a sample PDF</a>
             </span>
           </div>
 
@@ -263,32 +261,15 @@ export default function Page() {
             data-hero-comparison
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
-            <div className="flex flex-col items-center gap-4 pt-2">
-              <div className="w-full max-w-[540px] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] text-sm">
-                <div className="grid grid-cols-2 divide-x divide-[var(--color-border)]">
-                  <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
-                    Excel export
-                  </div>
-                  <div className="bg-[var(--color-bg)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-cta">
-                    fitforpdf
-                  </div>
-                </div>
-                {[
-                  ['Cut-off columns',      'Grouped sections'],
-                  ['Tiny unreadable text', 'Full-width readable columns'],
-                  ['Broken page flow',     'Clean pagination'],
-                ].map(([before, after]) => (
-                  <div key={before} className="grid grid-cols-2 divide-x divide-[var(--color-border)] border-t border-[var(--color-border)]">
-                    <div className="bg-[var(--color-bg-hero)] px-4 py-2.5 text-[var(--color-muted)] line-through decoration-[var(--color-border)]">
-                      <span className="mr-1.5 text-red-400/60">✗</span>{before}
-                    </div>
-                    <div className="bg-[var(--color-bg)] px-4 py-2.5 font-semibold text-[var(--color-text)]">
-                      <span className="mr-1.5 text-emerald-500">✓</span>{after}
-                    </div>
-                  </div>
-                ))}
+            <div className="flex flex-col items-center pt-2">
+              <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
+                <img
+                  src="/fitforpdf_product@2x.png"
+                  alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+                  className="w-full block"
+                  loading="eager"
+                />
               </div>
-
             </div>
           </div>
         </PageHero>
@@ -299,7 +280,7 @@ export default function Page() {
         id={LANDING_COPY_KEYS.beforeAfter}
         index={1}
         maxWidth="max-w-wide"
-        className="py-12 sm:py-16"
+        className="py-12 sm:py-16 relative z-10"
         bg="bg-hero"
       >
         <ProofShowcase />
@@ -348,6 +329,7 @@ export default function Page() {
             onTruncateChange={conversion.setTruncateLongText}
             onSubmit={conversion.handleSubmit}
             onDownloadAgain={conversion.handleDownloadAnyway}
+            onCopyShareLink={conversion.handleCopyShareLink}
             onTrySample={conversion.handleTrySample}
             downloadedFileName={Boolean(conversion.pdfBlob) ? conversion.resolvedPdfFilename : null}
             verdict={conversion.renderVerdict}
@@ -376,6 +358,8 @@ export default function Page() {
             hasMoreHistory={conversion.hasMoreHistory}
             onLoadMoreHistory={conversion.loadMoreExportHistory}
             onRefreshHistory={conversion.refreshExportHistory}
+            renderId={conversion.renderId}
+            shareState={conversion.shareState}
           />
         </div>
         <p className="mt-6 text-center text-sm text-muted">
@@ -384,115 +368,75 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Who this is for */}
+      {/* Social proof — 3 key testimonials, compact */}
       <Section
-        id="who-this-is-for"
+        id="testimonials"
         index={3}
         bg="bg-hero"
-      >
-        <div className="space-y-8">
-          <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
-            {LANDING_COPY.whoThisIsForTitle}
-          </h2>
-          <div className="grid sm:grid-cols-2 gap-4 max-w-tight mx-auto">
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-blue-600">Perfect for</p>
-              <ul className="space-y-2.5">
-                {LANDING_COPY.whoThisIsForPerfect.map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-[var(--color-text)]">
-                    <span className="flex-none text-blue-500" aria-hidden="true">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
-                        <path d="M5 8l2.5 2.5L11 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] p-6 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Not designed for</p>
-              <ul className="space-y-2.5">
-                {LANDING_COPY.whoThisIsForNot.map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-muted">
-                    <span className="flex-none text-[var(--color-muted)]" aria-hidden="true">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
-                        <path d="M5.5 10.5l5-5M10.5 10.5l-5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                      </svg>
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* Use cases */}
-      <Section
-        id="use-cases"
-        index={4}
-        bg="bg-hero"
-      >
-        <UseCaseCards />
-      </Section>
-
-      <Section
-        id="comparison"
-        index={5}
-        bg="bg-hero"
+        className="py-12 sm:py-16"
       >
         <div className="space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
-              Excel PDF Export vs fitforpdf
-            </h2>
-            <p className="mt-3 text-base text-muted max-w-xl mx-auto">
-              Stop fighting print settings. Get a client-ready structured PDF in seconds.
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">Trusted by teams worldwide</p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">What people say</h2>
           </div>
-          <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)]">
-            <table
-              className="comp-table-reveal w-full min-w-[640px] text-sm"
-              ref={(el) => {
-                if (!el || el.dataset.observed) return;
-                el.dataset.observed = '1';
-                const obs = new IntersectionObserver(
-                  ([e]) => { if (e.isIntersecting) { el.classList.add('is-visible'); obs.disconnect(); } },
-                  { threshold: 0.2 },
-                );
-                obs.observe(el);
-              }}
-            >
-              <thead>
-                <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)] lg:px-6">Feature</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)] lg:px-6">Excel PDF Export</th>
-                  <th className="bg-cta/[0.06] px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-cta lg:px-6">fitforpdf</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--color-border)]">
-                {COMPARISON_ROWS.map(([feature, excel, fitforpdf], i) => (
-                  <tr
-                    key={feature}
-                    className={`transition-colors hover:bg-[var(--color-bg-hero)] ${i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/60' : ''}`}
-                    style={{ animationDelay: `${i * 80}ms` }}
-                  >
-                    <td className="px-5 py-3.5 text-sm font-medium text-[var(--color-text)] lg:px-6">{feature}</td>
-                    <td className="px-5 py-3.5 text-sm text-[var(--color-muted)] lg:px-6"><span className="mr-1.5 text-red-400/60">✗</span>{excel}</td>
-                    <td className="bg-cta/[0.06] px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6"><span className="mr-1.5 text-emerald-500">✓</span>{fitforpdf}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid gap-4 sm:grid-cols-3 max-w-tight mx-auto">
+            {[
+              {
+                quote: "We stopped fixing Excel exports manually. This saved us hours every week.",
+                role: "Head of Operations",
+                context: "B2B SaaS — CRM exports, 20+ columns",
+              },
+              {
+                quote: "Our CRM export has 28 columns. fitforpdf turns it into something I can actually send to clients.",
+                role: "Account Manager",
+                context: "B2B SaaS — HubSpot/Salesforce exports",
+              },
+              {
+                quote: "I used to spend 45 minutes reformatting every quarterly report. Now it takes 10 seconds.",
+                role: "Senior Auditor",
+                context: "Big 4 advisory — quarterly compliance reports",
+              },
+            ].map((t, i) => (
+              <blockquote key={i} className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6">
+                <p className="text-sm leading-relaxed text-[var(--color-text)] italic">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="mt-auto">
+                  <p className="text-sm font-semibold text-[var(--color-text)]">{t.role}</p>
+                  <p className="text-xs text-muted">{t.context}</p>
+                </div>
+              </blockquote>
+            ))}
           </div>
         </div>
       </Section>
 
-      {/* Pricing plans — full width, above the Apple grid */}
+      {/* How it works — 3 steps */}
+      <Section id="how-it-works" index={4} bg="bg-hero" className="py-12 sm:py-16">
+        <div className="space-y-10">
+          <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+            {LANDING_COPY.howItWorksTitle}
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-6 max-w-tight mx-auto">
+            {LANDING_COPY.howItWorksSteps.map((step, i) => (
+              <div key={i} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center space-y-3">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">{i + 1}</span>
+                <h3 className="text-base font-semibold text-[var(--color-text)]">{step.title}</h3>
+                <p className="text-sm text-muted">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Button variant="accent" href="#generate" onClick={handleHeroGenerateClick}>
+              {LANDING_COPY.howItWorksCta}
+            </Button>
+            <span className="text-xs text-muted">{LANDING_COPY.howItWorksPriceNudge}</span>
+          </div>
+        </div>
+      </Section>
+
+      {/* Pricing plans — full width */}
       <Section
         id={LANDING_COPY_KEYS.pricingPreview}
         index={6}
@@ -514,7 +458,7 @@ export default function Page() {
             {/* Card 1 — ROI Calculator */}
             <div className="apple-grid-card flex flex-col p-6 sm:p-8">
               {/* Card header label */}
-              <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-400 tracking-wide uppercase">
+              <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-600 tracking-wide uppercase">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
                 </svg>
@@ -527,7 +471,7 @@ export default function Page() {
                 </h3>
                 <div className="mt-6">
                   <label className="block">
-                    <span className="text-sm font-medium text-slate-400">
+                    <span className="text-sm font-medium text-white/60">
                       Exports per month
                     </span>
                     <RoiSliderInline />
@@ -560,7 +504,7 @@ export default function Page() {
                 <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   Integrate in minutes
                 </h3>
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-white/60">
                   One API call. CSV or XLSX in, readable PDF out.
                 </p>
                 <div className="mt-6">
@@ -583,39 +527,6 @@ export default function Page() {
       </section>
 
       <Section
-        id={LANDING_COPY_KEYS.privacyStrip}
-        index={8}
-        bg="bg-hero"
-        maxWidth="max-w-narrow"
-        className="py-12 sm:py-16"
-        testId="privacy-section"
-      >
-        <div className="flex flex-col items-center text-center">
-          <div className="flex items-center gap-2">
-            <AnimatedShieldIcon animateOnMount={false} />
-            <span className="text-2xl font-bold tracking-tight text-[var(--color-text)]">Privacy</span>
-          </div>
-          <h2 className="mt-4 text-[2rem] sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)] leading-[1.1]">
-            Your data. Not our business.
-          </h2>
-          <div className="mt-8 space-y-4 text-base leading-relaxed text-muted">
-            <p>Files are deleted immediately after conversion.</p>
-            <p>The generated PDF is available for up to 15 minutes.</p>
-            <p>No file content is stored in logs.</p>
-          </div>
-          <a
-            href="/privacy"
-            className="mt-8 inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]"
-          >
-            {LANDING_COPY.privacyStripCta}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-      </Section>
-
-      <Section
         id="home-faq"
         index={9}
         bg="bg-hero"
@@ -624,7 +535,7 @@ export default function Page() {
         testId="faq-section"
       >
         <div className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
             Frequently asked questions
           </h2>
           <div className="divide-y divide-[var(--color-border)]">
@@ -636,36 +547,6 @@ export default function Page() {
         </div>
       </Section>
 
-      {/* Testimonials — Wall of Love */}
-      <Section
-        id="testimonials"
-        index={10}
-        bg="bg-hero"
-      >
-        <div className="space-y-2 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">Trusted by teams worldwide</p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-[2.5rem]">What people say</h2>
-          <p className="text-[var(--color-muted)]">Real feedback from real workflows.</p>
-        </div>
-        <WallOfLove />
-        <div className="flex flex-wrap justify-center gap-2 pt-4">
-          {[
-            { label: 'Consultants', href: '/for-consultants' },
-            { label: 'Finance teams', href: '/for-finance' },
-            { label: 'SaaS reporting tools', href: '/for-saas' },
-            { label: 'Auditors', href: '/for-auditors' },
-          ].map(({ label, href }) => (
-            <a
-              key={label}
-              href={href}
-              className="rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-1.5 text-xs font-medium text-[var(--color-muted)] hover:text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors"
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-      </Section>
-
       <Section
         id="final-cta"
         index={11}
@@ -674,20 +555,30 @@ export default function Page() {
         testId="final-cta-section"
       >
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl sm:text-[2.5rem] font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
             {LANDING_COPY.finalCtaTitle}
           </h2>
           <p className="mt-4 text-lg text-muted">{LANDING_COPY.finalCtaCopy}</p>
-          <p className="mt-2 text-lg font-medium text-[var(--color-text)]">{LANDING_COPY.finalCtaCopy2}</p>
-          <Button
-            variant="primary"
-            href="#generate"
-            onClick={handleHeroGenerateClick}
-            className="mt-8"
-          >
-            {LANDING_COPY.finalCtaLabel}
-          </Button>
-          <p className="mt-3 text-sm text-muted">{LANDING_COPY.finalCtaPrice}</p>
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <Button
+              variant="primary"
+              href="#generate"
+              onClick={handleHeroGenerateClick}
+            >
+              {LANDING_COPY.finalCtaLabel}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 opacity-70" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Button>
+            <a
+              href="/sample-output.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={CTA_SECONDARY}
+            >
+              See a sample PDF
+            </a>
+          </div>
         </div>
       </Section>
 

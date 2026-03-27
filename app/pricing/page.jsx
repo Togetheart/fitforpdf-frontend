@@ -19,7 +19,7 @@ const PRICING_FAQ_LD = {
       name: 'Is there a free plan?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. You get 3 free exports with no account required. Upload your file and get a client-ready PDF instantly.',
+        text: 'Yes. You get 3 free exports with no account needed. Upload your file and get a presentable PDF instantly.',
       },
     },
     {
@@ -69,12 +69,12 @@ export default async function PricingPage({ searchParams }) {
           {/* Page label */}
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">Pricing</p>
           {/* Headline */}
-          <h1 className="max-w-[20ch] text-[2.5rem] font-semibold leading-[1.06] tracking-tight text-[var(--color-text)] sm:text-5xl">
+          <h1 className="max-w-[20ch] text-4xl font-semibold leading-[1.06] tracking-tight text-[var(--color-text)] sm:text-5xl">
             <span className="block">{PRICING_PAGE_COPY.pageTitle}</span>
             <span className="block">{PRICING_PAGE_COPY.pageTitleAccent}</span>
           </h1>
           {/* Subtitle */}
-          <p className="max-w-[44ch] text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
+          <p className="max-w-[44ch] text-base leading-relaxed text-[var(--color-muted)]">
             {PRICING_PAGE_COPY.pageSubtitle}
           </p>
         </div>
@@ -109,7 +109,7 @@ export default async function PricingPage({ searchParams }) {
       {/* ── FAQ ── */}
       <JsonLd data={PRICING_FAQ_LD} />
       <Section id="pricing-faq" index={3} bg="bg-hero" className="py-20 sm:py-28" maxWidth="max-w-[1200px]">
-        <h2 className="text-center text-3xl sm:text-[2.5rem] font-bold tracking-[-0.018em] text-[var(--color-text)]">
+        <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-[-0.018em] text-[var(--color-text)]">
           {PRICING_PAGE_COPY.faqTitle}
         </h2>
         <div className="divide-y divide-[var(--color-border)]">

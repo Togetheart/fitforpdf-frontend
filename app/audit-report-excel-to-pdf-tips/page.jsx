@@ -75,10 +75,10 @@ export default function AuditPdfPage() {
       <JsonLd data={articleLd} />
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd} />
-      <h1 className="mb-6 text-[2rem] font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-[2.5rem]">
+      <h1 className="mb-6 text-3xl font-semibold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-4xl">
         Exporting audit Excel sheets to PDF: best practices
       </h1>
-      <p className="mb-10 text-[1.0625rem] leading-relaxed text-[var(--color-muted)]">
+      <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
         Audit reports often span dozens of columns and hundreds of rows. Learn how to export them
         to PDF that clients and stakeholders can actually read.
       </p>

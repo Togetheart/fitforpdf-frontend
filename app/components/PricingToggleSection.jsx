@@ -47,7 +47,7 @@ export function PillToggle({ options, value, onChange, size = 'md' }) {
             </span>
             {opt.sub ? (
               <span className={cn(
-                'text-[10px] font-medium leading-tight mt-0.5',
+                'text-xs font-medium leading-tight mt-0.5',
                 isActive ? 'text-blue-300' : 'text-blue-500',
               )}>
                 {opt.sub}
@@ -81,7 +81,7 @@ export function PaygCard({ pack, onBuy, isLoading }) {
       {/* Badge — centered above */}
       {pack.badge ? (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-white shadow-sm whitespace-nowrap">
+          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-white shadow-sm whitespace-nowrap">
             {pack.badge}
           </span>
         </div>
@@ -89,7 +89,7 @@ export function PaygCard({ pack, onBuy, isLoading }) {
 
       {/* Header */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
           {pack.priceLine}
         </p>
         <h3 className={cn(
@@ -105,11 +105,11 @@ export function PaygCard({ pack, onBuy, isLoading }) {
         <div className="flex items-baseline gap-1.5">
           <span className={cn(
             'font-bold tracking-tight leading-none tabular-nums',
-            isFeatured ? 'text-4xl text-[var(--color-text)]' : 'text-[2.2rem] text-[var(--color-text)]',
+            isFeatured ? 'text-4xl text-[var(--color-text)]' : 'text-4xl text-[var(--color-text)]',
           )}>
             {pack.priceDisplay}
           </span>
-          <span className="text-sm font-medium text-muted/70">{pack.exportsLabel}</span>
+          <span className="text-sm font-medium text-muted">{pack.exportsLabel}</span>
         </div>
         {pack.perExport ? (
           <p className="mt-1.5 inline-block rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
@@ -187,7 +187,7 @@ export function ProSubscriptionCard({ billing, onSubscribe, isLoading }) {
 
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
           {PRICING_PAGE_COPY.togglePro}
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
@@ -198,7 +198,7 @@ export function ProSubscriptionCard({ billing, onSubscribe, isLoading }) {
       {/* Price */}
       <div className="mt-5 flex items-baseline gap-1.5">
         <span className="text-4xl font-bold tracking-tight leading-none text-[var(--color-text)] tabular-nums">{price}</span>
-        <span className="text-base font-medium text-muted/70">{period}</span>
+        <span className="text-base font-medium text-muted">{period}</span>
         {isYearly ? (
           <span className="ml-1 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
             {PRICING_PAGE_COPY.proYearlySaving}
@@ -245,7 +245,7 @@ export function ProApiCard() {
     >
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
           API
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
@@ -255,7 +255,7 @@ export function ProApiCard() {
 
       {/* Tagline */}
       <p className="mt-2 text-sm text-muted leading-relaxed">{PRICING_PAGE_COPY.proApiTagline}</p>
-      <p className="mt-0.5 text-xs text-muted/70">{PRICING_PAGE_COPY.proApiSubTagline}</p>
+      <p className="mt-0.5 text-xs text-muted">{PRICING_PAGE_COPY.proApiSubTagline}</p>
 
       {/* Price placeholder */}
       <div className="mt-5">
@@ -280,7 +280,7 @@ export function ProApiCard() {
       {/* CTA */}
       <div className="mt-auto pt-8">
         <p className="mb-0.5 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof}</p>
-        <p className="mb-3 text-center text-xs text-muted/40">{PRICING_PAGE_COPY.proApiSocialProof2}</p>
+        <p className="mb-3 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof2}</p>
         <a
           href={PRICING_PAGE_COPY.proApiCtaHref}
           className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98]"
@@ -309,7 +309,7 @@ export function EnterpriseCard() {
     >
       {/* Title */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
           Enterprise
         </p>
         <h3 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-text)]">
@@ -360,7 +360,7 @@ export function FreeTierCTA() {
       <p className="text-sm font-semibold text-muted">
         {PRICING_PAGE_COPY.freeSafetyTitle}
       </p>
-      <p className="mt-1 text-xs text-muted/70">{PRICING_PAGE_COPY.freeSafetyDesc}</p>
+      <p className="mt-1 text-xs text-muted">{PRICING_PAGE_COPY.freeSafetyDesc}</p>
       <a
         href={PRICING_PAGE_COPY.freeSafetyCtaHref}
         className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-text)] hover:underline transition-colors"
@@ -416,7 +416,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
           {/* PAYG tagline — rule divider style */}
           <div className="flex items-center justify-center gap-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--color-border)] max-w-[80px]" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted/70">
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
               {PRICING_PAGE_COPY.paygTagline}
             </p>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-black/10 max-w-[80px]" />
@@ -435,10 +435,10 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
           </div>
 
           {checkout.error ? (
-            <p className="text-center text-sm text-red-500">{checkout.error}</p>
+            <p className="text-center text-sm text-red-600">{checkout.error}</p>
           ) : null}
 
-          <p className="text-center text-sm text-muted/70">
+          <p className="text-center text-sm text-muted">
             Need higher volume, API access, or team plans?{' '}
             <a href="/contact" className="text-muted underline decoration-dotted hover:text-[var(--color-text)] transition-colors">
               Contact us
@@ -461,7 +461,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
           {/* Taglines */}
           <div className="text-center space-y-1">
             <p className="text-base font-semibold text-[var(--color-text)]">{PRICING_PAGE_COPY.proTagline}</p>
-            <p className="text-sm text-muted/70">{PRICING_PAGE_COPY.proSubTagline}</p>
+            <p className="text-sm text-muted">{PRICING_PAGE_COPY.proSubTagline}</p>
           </div>
 
           {/* Billing toggle — dark pill variant */}

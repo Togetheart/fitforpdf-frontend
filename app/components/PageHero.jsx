@@ -13,7 +13,7 @@ export default function PageHero({
   className = '',
   contentClassName = '',
   contentMaxWidthClassName = 'max-w-[1280px]',
-  titleClassName = 'text-[2rem] sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.08]',
+  titleClassName = 'text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.08]',
   subtitleClassName = '',
   heroTestId = 'page-hero',
   headingTestId,
