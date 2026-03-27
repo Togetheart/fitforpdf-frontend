@@ -289,7 +289,26 @@ export default function Page() {
       </div>
 
       {/* Mobile only: product image + Used by ticker (outside sticky hero) */}
-      <section className="sm:hidden bg-[var(--color-surface)] py-8 px-4 relative z-10">
+      <section
+        className="sm:hidden bg-[var(--color-bg)] pt-2 pb-6 px-4 relative z-10"
+        ref={(el) => {
+          if (!el || el.dataset.mobileImgObs) return;
+          el.dataset.mobileImgObs = '1';
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(20px)';
+          const obs = new IntersectionObserver(
+            ([e]) => {
+              if (!e.isIntersecting) return;
+              el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+              el.style.opacity = '1';
+              el.style.transform = 'translateY(0)';
+              obs.disconnect();
+            },
+            { threshold: 0.2 },
+          );
+          obs.observe(el);
+        }}
+      >
         <div className="flex flex-col items-center gap-4">
           <button
             type="button"
