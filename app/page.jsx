@@ -180,7 +180,7 @@ export default function Page() {
   function handleHeroGenerateClick(event) {
     if (!event) return;
     event.preventDefault();
-    const target = document.getElementById('generate');
+    const target = document.getElementById('tool') || document.getElementById('generate');
     if (!target) return;
     if (typeof target.scrollIntoView === 'function') {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -289,13 +289,14 @@ export default function Page() {
       {/* Upload tool */}
       <section
         id={LANDING_COPY_KEYS.upload}
-        className="upload-section-bg py-12 sm:py-16 relative z-10"
+        className="apple-grid-bg py-16 sm:py-20 relative z-10 scroll-mt-16"
         data-testid={`section-${LANDING_COPY_KEYS.upload}`}
       >
-        <div className="mx-auto max-w-[640px] px-4 sm:px-6">
+        <div className="apple-grid-noise" />
+        <div className="relative z-10 mx-auto max-w-[640px] px-4 sm:px-6">
         <div
           data-testid={LANDING_COPY_KEYS.upload}
-          className="mx-auto w-full relative"
+          className="apple-grid-card mx-auto w-full relative p-6 sm:p-8"
         >
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}
@@ -360,9 +361,10 @@ export default function Page() {
             onRefreshHistory={conversion.refreshExportHistory}
             renderId={conversion.renderId}
             shareState={conversion.shareState}
+            variant="dark"
           />
         </div>
-        <p className="mt-6 text-center text-sm text-muted">
+        <p className="mt-6 text-center text-sm text-white/60">
           {LANDING_COPY.heroTypicalOutput}
         </p>
         </div>
@@ -413,28 +415,74 @@ export default function Page() {
       </Section>
 
       {/* How it works — 3 steps */}
-      <Section id="how-it-works" index={4} bg="bg-hero" className="py-12 sm:py-16">
-        <div className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-            {LANDING_COPY.howItWorksTitle}
-          </h2>
-          <div className="grid sm:grid-cols-3 gap-6 max-w-tight mx-auto">
-            {LANDING_COPY.howItWorksSteps.map((step, i) => (
-              <div key={i} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center space-y-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">{i + 1}</span>
-                <h3 className="text-base font-semibold text-[var(--color-text)]">{step.title}</h3>
-                <p className="text-sm text-muted">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <Button variant="accent" href="#generate" onClick={handleHeroGenerateClick}>
-              {LANDING_COPY.howItWorksCta}
-            </Button>
-            <span className="text-xs text-muted">{LANDING_COPY.howItWorksPriceNudge}</span>
+      {/* BLOC 4 — How it works: scroll-pinned stepper */}
+      <section
+        id="how-it-works"
+        className="relative bg-[var(--color-surface)]"
+        ref={(el) => {
+          if (!el || el.dataset.stepperInit) return;
+          el.dataset.stepperInit = '1';
+          let ticking = false;
+          const cards = el.querySelectorAll('[data-step-card]');
+          const count = cards.length;
+          const update = () => {
+            const rect = el.getBoundingClientRect();
+            const sectionH = el.offsetHeight;
+            const viewH = window.innerHeight;
+            const scrolled = -rect.top;
+            const totalScroll = sectionH - viewH;
+            if (totalScroll <= 0) return;
+            const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
+            cards.forEach((c, i) => {
+              const cardStart = i / count;
+              const cardEnd = (i + 0.6) / count;
+              const t = Math.max(0, Math.min(1, (progress - cardStart) / (cardEnd - cardStart)));
+              /* Smooth easing: cubic ease-out */
+              const ease = 1 - Math.pow(1 - t, 3);
+              c.style.opacity = ease;
+              c.style.transform = `translateY(${(1 - ease) * 24}px) scale(${0.97 + ease * 0.03})`;
+            });
+            ticking = false;
+          };
+          const onScroll = () => {
+            if (!ticking) {
+              requestAnimationFrame(update);
+              ticking = true;
+            }
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          update();
+        }}
+        style={{ height: '250vh' }}
+      >
+        <div className="sticky top-0 flex min-h-screen flex-col items-center justify-center px-4 py-16 sm:py-20">
+          <div className="w-full max-w-tight mx-auto space-y-10">
+            <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+              {LANDING_COPY.howItWorksTitle}
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-6">
+              {LANDING_COPY.howItWorksSteps.map((step, i) => (
+                <div
+                  key={i}
+                  data-step-card
+                  className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center space-y-3 will-change-transform"
+                  style={{ opacity: 0, transform: 'translateY(30px) scale(0.96)' }}
+                >
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">{i + 1}</span>
+                  <h3 className="text-base font-semibold text-[var(--color-text)]">{step.title}</h3>
+                  <p className="text-sm text-muted">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Button variant="accent" href="#generate" onClick={handleHeroGenerateClick}>
+                {LANDING_COPY.howItWorksCta}
+              </Button>
+              <span className="text-xs text-muted">{LANDING_COPY.howItWorksPriceNudge}</span>
+            </div>
           </div>
         </div>
-      </Section>
+      </section>
 
       {/* Pricing plans — full width */}
       <Section
@@ -526,6 +574,45 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Comparison table — SEO + deep scrollers */}
+      <Section id="comparison" index={7} bg="bg-hero">
+        <div className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+              Excel PDF Export vs fitforpdf
+            </h2>
+            <p className="mt-3 text-base text-muted max-w-xl mx-auto">
+              Stop fighting print settings. Get a presentable structured PDF in seconds.
+            </p>
+          </div>
+          <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)]">
+            <table className="w-full min-w-[640px] text-sm">
+              <thead>
+                <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-hero)]">
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-muted lg:px-6">Feature</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-muted lg:px-6">Excel PDF Export</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.08em] text-blue-600 lg:px-6">fitforpdf</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--color-border)]">
+                {COMPARISON_ROWS.map(([feature, excel, fitforpdf], i) => (
+                  <tr key={feature} className={i % 2 === 1 ? 'bg-[var(--color-bg-hero)]/60' : ''}>
+                    <td className="px-5 py-3.5 text-sm font-medium text-[var(--color-text)] lg:px-6">{feature}</td>
+                    <td className="px-5 py-3.5 text-sm text-muted lg:px-6"><span className="mr-1.5 text-red-600/60">✗</span>{excel}</td>
+                    <td className="px-5 py-3.5 text-sm font-semibold text-[var(--color-text)] lg:px-6"><span className="mr-1.5 text-emerald-700">✓</span>{fitforpdf}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Section>
+
+      {/* Use cases */}
+      <Section id="use-cases" index={8} bg="bg-hero">
+        <UseCaseCards />
+      </Section>
+
       <Section
         id="home-faq"
         index={9}
@@ -547,18 +634,25 @@ export default function Page() {
         </div>
       </Section>
 
-      <Section
+      <section
         id="final-cta"
-        index={11}
-        bg="bg-hero"
-        className="py-16 sm:py-20"
-        testId="final-cta-section"
+        data-testid="final-cta-section"
+        className="relative overflow-hidden py-20 sm:py-28"
       >
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-            {LANDING_COPY.finalCtaTitle}
+        {/* Blue wave background image */}
+        <img
+          src="/sneusch_Aerial_view_of_abstract_topographic_landscape_made_en_c6b5be1f-30a1-4261-a956-b2fb5fa4d46e_0.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-[#0a1628]/70" />
+        <div className="relative z-10 mx-auto max-w-2xl text-center px-4">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            Your export is done.<br />The cleanup shouldn&apos;t be.
           </h2>
-          <p className="mt-4 text-lg text-muted">{LANDING_COPY.finalCtaCopy}</p>
+          <p className="mt-4 text-lg text-white/70">{LANDING_COPY.finalCtaCopy}</p>
           <div className="mt-8 flex items-center justify-center gap-3">
             <Button
               variant="primary"
@@ -574,13 +668,13 @@ export default function Page() {
               href="/sample-output.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className={CTA_SECONDARY}
+              className="inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-white/20 bg-white/10 text-white hover:bg-white/20"
             >
               See a sample PDF
             </a>
           </div>
         </div>
-      </Section>
+      </section>
 
       <FeedbackBar renderId={conversion.renderId} visible={Boolean(conversion.pdfBlob)} />
 

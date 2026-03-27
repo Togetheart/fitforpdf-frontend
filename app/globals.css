@@ -618,3 +618,20 @@
     animation: none;
   }
 }
+
+/* ── Lock icon animation (open → closed) ─────────────── */
+.lock-icon .lock-shackle {
+  transform-origin: 100% 100%; /* pivot bottom-right of shackle */
+  transform: translateY(-4px) rotate(-25deg);
+  transition: transform 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lock-icon.lock-closed .lock-shackle {
+  transform: translateY(0) rotate(0deg);
+}
+.lock-icon {
+  opacity: 0.6;
+  transition: opacity 2.5s ease;
+}
+.lock-icon.lock-closed {
+  opacity: 1;
+}

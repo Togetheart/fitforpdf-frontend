@@ -217,8 +217,8 @@ export default function HeroHeadline() {
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[1.875rem] font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
         <span className="relative inline-flex items-stretch">
-          {/* Left bracket — hidden on mobile */}
-          <svg ref={bracketLRef} className="hidden sm:block shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Left bracket */}
+          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Text container — clips on scroll, wraps on mobile */}
@@ -232,8 +232,8 @@ export default function HeroHeadline() {
               Upload your spreadsheet.
             </span>
           </span>
-          {/* Right bracket — hidden on mobile */}
-          <svg ref={bracketRRef} className="hidden sm:block shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Right bracket */}
+          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Full [F] logo — appears at center when brackets close */}

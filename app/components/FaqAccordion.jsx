@@ -21,6 +21,7 @@ export default function FaqAccordion({
           id: item.id || `faq-item-${index + 1}`,
           q: item.q,
           a: item.a,
+          link: item.link || null,
         }))
         .filter((item) => item.q && item.a),
     [items],
@@ -84,6 +85,14 @@ export default function FaqAccordion({
               >
                 <p className="min-h-0 overflow-hidden px-1 pb-1 pt-3 text-sm leading-relaxed text-muted">
                   {item.a}
+                  {item.link ? (
+                    <>
+                      {' '}
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 font-medium text-[var(--color-text)] hover:text-blue-600 transition-colors">
+                        Open →
+                      </a>
+                    </>
+                  ) : null}
                 </p>
               </div>
             </section>

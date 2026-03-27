@@ -28,12 +28,9 @@ export const LANDING_COPY = {
     'Manual layout fixes become mandatory.',
   ],
 
-  beforeAfterTitle: 'From broken export to presentable PDF',
-  beforeLabel: 'Before sending',
-  beforeAnnotation: 'Cut-off columns · Shrunk text · Bad page breaks',
-  afterLabel: 'After fitforpdf',
-  afterAnnotation: 'All columns preserved · Readable grouped sections · Clean pagination',
-  beforeAfterCaption: 'This is the cleanup step you normally do by hand.',
+  beforeAfterTitle: 'See how fitforpdf restructures your file',
+  beforeLabel: 'Source spreadsheet',
+  afterLabel: 'Structured PDF',
 
   clientReadyTitle: 'Client-ready means',
   clientReadyFeatures: [
@@ -158,7 +155,8 @@ export const HOME_FAQ = [
   {
     id: 'sample',
     q: 'Can I see an example before trying it?',
-    a: 'Yes. <a href="/sample-output.pdf" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Open a sample PDF</a>.',
+    a: 'Yes.',
+    link: '/sample-output.pdf',
   },
   {
     id: 'files',
@@ -666,8 +664,8 @@ export const TESTIMONIAL_QUOTES = [
 ];
 
 export const USE_CASES = [
-  { icon: 'audit', title: 'Audit Firms', stat: '300 columns → 5 sections', time: '45min → 10sec' },
-  { icon: 'saas', title: 'SaaS Reporting', stat: 'CRM data → client PDF', time: 'API integration' },
-  { icon: 'finance', title: 'Finance Teams', stat: 'Monthly KPIs → board-ready', time: 'Automated exports' },
-  { icon: 'consulting', title: 'Consultants', stat: 'Analytics → deliverable', time: 'No manual layout' },
+  { icon: 'audit', title: 'Audit Firms', stat: '300 columns → 5 sections', time: '45min → 10sec', href: '/for-auditors' },
+  { icon: 'saas', title: 'SaaS Reporting', stat: 'CRM data → client PDF', time: 'API integration', href: '/for-saas' },
+  { icon: 'finance', title: 'Finance Teams', stat: 'Monthly KPIs → board-ready', time: 'Automated exports', href: '/for-finance' },
+  { icon: 'consulting', title: 'Consultants', stat: 'Analytics → deliverable', time: 'No manual layout', href: '/for-consultants' },
 ];

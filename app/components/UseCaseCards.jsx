@@ -77,14 +77,18 @@ export default function UseCaseCards() {
       </div>
 
       <div ref={gridRef} className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {USE_CASES.map((uc, i) => (
-          <div
+        {USE_CASES.map((uc, i) => {
+          const Wrapper = uc.href ? 'a' : 'div';
+          const linkProps = uc.href ? { href: uc.href } : {};
+          return (
+          <Wrapper
             key={uc.icon}
+            {...linkProps}
             data-usecase-card
             data-delay={i * 80}
-            className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center sm:text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-blue-300 no-underline"
           >
-            <span className="text-blue-500" aria-hidden="true">
+            <span className="text-blue-500 inline-block" aria-hidden="true">
               {USE_CASE_ICONS[uc.icon] || null}
             </span>
             <h3 className="mt-4 text-base font-semibold text-[var(--color-text)]">
@@ -92,8 +96,9 @@ export default function UseCaseCards() {
             </h3>
             <p className="mt-2 text-sm text-muted">{uc.stat}</p>
             <p className="mt-1 text-xs font-medium text-blue-500">{uc.time}</p>
-          </div>
-        ))}
+          </Wrapper>
+          );
+        })}
       </div>
     </div>
   );

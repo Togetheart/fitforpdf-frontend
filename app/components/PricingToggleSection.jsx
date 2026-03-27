@@ -88,7 +88,7 @@ export function PaygCard({ pack, onBuy, isLoading }) {
       ) : null}
 
       {/* Header */}
-      <div>
+      <div className="text-center sm:text-left">
         <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
           {pack.priceLine}
         </p>
@@ -101,8 +101,8 @@ export function PaygCard({ pack, onBuy, isLoading }) {
       </div>
 
       {/* Price block */}
-      <div className="mt-5">
-        <div className="flex items-baseline gap-1.5">
+      <div className="mt-5 text-center sm:text-left">
+        <div className="flex items-baseline gap-1.5 justify-center sm:justify-start">
           <span className={cn(
             'font-bold tracking-tight leading-none tabular-nums',
             isFeatured ? 'text-4xl text-[var(--color-text)]' : 'text-4xl text-[var(--color-text)]',
@@ -122,7 +122,7 @@ export function PaygCard({ pack, onBuy, isLoading }) {
 
       {/* Description */}
       <p className={cn(
-        'mt-3 text-sm leading-relaxed',
+        'mt-3 text-sm leading-relaxed text-center sm:text-left',
         isFeatured ? 'text-muted' : 'text-muted',
       )}>
         {pack.description}
@@ -134,7 +134,7 @@ export function PaygCard({ pack, onBuy, isLoading }) {
       {/* Features */}
       <ul className="flex-1 space-y-2 text-sm">
         {pack.points.map((point) => (
-          <li key={point} className="flex items-center gap-2.5">
+          <li key={point} className="flex items-center gap-2.5 justify-center sm:justify-start">
             <span className={cn(
               'flex h-4 w-4 shrink-0 items-center justify-center rounded-full',
               'bg-[var(--color-bg-hero)]',

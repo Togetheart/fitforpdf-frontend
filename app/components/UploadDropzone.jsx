@@ -71,7 +71,7 @@ export default function UploadDropzone({
         tabIndex={disabled ? -1 : 0}
         aria-label="Upload CSV or XLSX file"
         onKeyDown={handleLabelKeyDown}
-        className={`flex-1 min-w-0 transition ${
+        className={`flex-1 min-w-0 transition flex justify-center sm:justify-start ${
           isDragActive ? 'bg-[var(--color-bg-hero)]' : ''
         } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
       >
@@ -79,7 +79,7 @@ export default function UploadDropzone({
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="flex items-center gap-3 cursor-pointer min-w-0"
+          className="flex flex-col items-center w-full sm:flex-row sm:items-center sm:w-auto gap-3 cursor-pointer min-w-0"
         >
           {file ? (
             <div className="flex items-center gap-2.5 min-w-0">
@@ -108,18 +108,11 @@ export default function UploadDropzone({
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2.5">
+            <div className="flex flex-col items-center text-center gap-1.5 w-full sm:flex-row sm:items-center sm:text-left sm:gap-2.5 sm:w-auto">
               <AnimatedCloudIcon size={20} className="shrink-0 text-blue-500" />
-              <div className="min-w-0">
+              <div className="min-w-0 w-full sm:w-auto">
                 <p className="text-sm font-medium text-[var(--color-text)]">Drop CSV or XLSX here</p>
                 <p className="text-xs text-muted">{DROPZONE_HINT}</p>
-                <p className="mt-0.5 text-xs text-muted/60 flex items-center gap-1">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                  Processed, then deleted. Nothing is stored.
-                </p>
               </div>
             </div>
           )}

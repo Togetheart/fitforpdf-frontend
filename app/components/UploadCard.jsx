@@ -418,7 +418,9 @@ export default function UploadCard({
   onLoadMoreHistory = () => {},
   renderId = null,
   shareState = { status: 'idle', jobId: null },
+  variant = 'light',
 }) {
+  const isDark = variant === 'dark';
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
   const showProBanner = getPlanTypeLabel(planType) === 'pro' || isPro;
   const canUseAdvanced = isAdvancedPlan;
@@ -588,21 +590,68 @@ export default function UploadCard({
     <article
       ref={articleRef}
       data-testid="upload-card"
-      className="relative overflow-hidden rounded-xl bg-white/20 backdrop-blur-[5px] border border-black/10 w-full p-4 sm:p-6 scroll-mt-20"
+      className={`relative overflow-hidden rounded-xl w-full scroll-mt-20 ${isDark ? 'bg-transparent border-0 p-0' : 'bg-white/20 backdrop-blur-[5px] border border-black/10 p-4 sm:p-6'}`}
     >
-      <div
-        aria-hidden="true"
-        data-testid="uploadcard-glass-backdrop"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.75),transparent_52%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.45),transparent_65%)]"
-      />
-      <div
-        aria-hidden="true"
-        data-testid="uploadcard-glass-highlight"
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-20 rounded-xl bg-gradient-to-b from-white/40 to-transparent"
-      />
+      {!isDark && (
+        <>
+          <div
+            aria-hidden="true"
+            data-testid="uploadcard-glass-backdrop"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.75),transparent_52%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.45),transparent_65%)]"
+          />
+          <div
+            aria-hidden="true"
+            data-testid="uploadcard-glass-highlight"
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 h-20 rounded-xl bg-gradient-to-b from-white/40 to-transparent"
+          />
+        </>
+      )}
+      {/* Card header — ROI-style: badge + lock + title */}
+      <div className="mb-4 flex items-center justify-between w-full">
+        <span data-testid="quota-pill" className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-400 tracking-wide" aria-label="remaining exports">
+          {quotaText}
+        </span>
+        {isDark && (
+          <span
+            ref={(el) => {
+              if (!el || el.dataset.lockObserved) return;
+              el.dataset.lockObserved = '1';
+              const pageLoadTime = Date.now();
+              const obs = new IntersectionObserver(
+                ([e]) => {
+                  if (!e.isIntersecting) return;
+                  const elapsed = Date.now() - pageLoadTime;
+                  if (elapsed < 1500) {
+                    /* Page just loaded — wait for user to scroll away and back */
+                    return;
+                  }
+                  setTimeout(() => el.classList.add('lock-closed'), 300);
+                  obs.disconnect();
+                },
+                { threshold: 0.3 },
+              );
+              obs.observe(el);
+            }}
+            className="lock-icon inline-flex items-center gap-1 text-emerald-400 text-xs font-medium"
+            aria-label="Files are secure"
+          >
+            <a href="/privacy" className="underline underline-offset-2 hover:text-emerald-300 transition-colors">No file storage</a>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lock-icon-svg">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path className="lock-shackle" d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </span>
+        )}
+      </div>
+      {isDark && (
+        <h3 className="mb-6 text-xl sm:text-2xl font-bold text-white tracking-tight">
+          Uploading client data? We don&apos;t keep it. Ever.
+        </h3>
+      )}
+
       <form className="relative" onSubmit={onSubmit}>
         {/* ── The Pill ─────────────────────────────── */}
-        <div id="generate" className="scroll-mt-24 upload-pill flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5">
+        <div id="generate" className="scroll-mt-24 upload-pill flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5">
           <UploadDropzone
             inputId="fitforpdf-file-input"
             file={file}
@@ -613,6 +662,8 @@ export default function UploadCard({
             disabled={isLoading}
           />
 
+          {/* Gear + Generate — same row, Generate fills remaining space on mobile */}
+          <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
           {/* Gear button */}
           <div ref={gearRef} className="relative shrink-0">
             <button
@@ -637,7 +688,7 @@ export default function UploadCard({
           {!isQuotaLocked && <Button
             type="submit"
             variant="primary"
-            className="shrink-0 !h-10 !rounded-xl !px-5"
+            className={`shrink-0 flex-1 sm:flex-none !h-10 !rounded-xl !px-5 ${isDark ? '!bg-blue-600 !text-white hover:!bg-blue-500' : ''}`}
             disabled={isLoading || !file}
             onClick={scrollToCard}
           >
@@ -655,14 +706,10 @@ export default function UploadCard({
               </>
             )}
           </Button>}
+          </div>{/* close gear+generate wrapper */}
         </div>
 
-        {/* Quota badge — yellow pill centered */}
-        <div className="flex justify-center mt-3">
-          <span data-testid="quota-pill" className={`inline-flex min-w-0 items-center rounded-full border px-3 py-1 text-xs font-semibold shadow-sm ${freeExportsBadgeClass}`} aria-label="remaining exports">
-            {quotaText}
-          </span>
-        </div>
+        {/* Quota badge removed — now in card header */}
 
         {/* ── Options dropdown — in document flow below pill ── */}
         {isOptionsExpanded ? (
@@ -733,7 +780,7 @@ export default function UploadCard({
         ) : null}
 
         {/* ── Below-pill zone ─────────────────────── */}
-        <div className="mt-4 flex flex-col items-center gap-3 text-center">
+        <div className="mt-4 pb-2 flex flex-col items-center gap-3 text-center">
           {/* Quota + Pro badge */}
           <div className="flex flex-wrap items-center justify-center gap-2">
             {showBuyCredits ? (
@@ -757,16 +804,27 @@ export default function UploadCard({
 
           {/* Helper subcopy — hidden when quota badge already shows the same info */}
 
-          {/* Try demo */}
           <div data-testid="demo-try-row">
-            <Button
-              variant="accent"
-              onClick={onTrySample}
-              disabled={isLoading}
-              data-testid="demo-try-button"
-            >
-              Try with a demo file
-            </Button>
+            {isDark ? (
+              <button
+                type="button"
+                onClick={onTrySample}
+                disabled={isLoading}
+                data-testid="demo-try-button"
+                className="inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50"
+              >
+                Try with a demo file
+              </button>
+            ) : (
+              <Button
+                variant="accent"
+                onClick={onTrySample}
+                disabled={isLoading}
+                data-testid="demo-try-button"
+              >
+                Try with a demo file
+              </Button>
+            )}
           </div>
 
           {/* Progress */}
@@ -843,15 +901,7 @@ export default function UploadCard({
                 </Button>
               ) : null}
             </div>
-          ) : (
-            <div data-testid="upload-privacy-messages" className="flex flex-col items-center gap-1 rounded-lg border border-emerald-200/40 bg-emerald-50/40 px-4 py-2 text-center">
-              <p className="text-xs font-semibold text-emerald-700">Uploading client data? We don&apos;t keep it. Ever.</p>
-              <p className="text-xs text-emerald-700 flex items-center gap-1.5">
-                <span aria-label="European Union flag">🇪🇺</span>
-                Processed in France · Deleted immediately · No training usage
-              </p>
-            </div>
-          )}
+          ) : null}
 
           {downloadedFileName || shouldShowVerdict ? (
             <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
