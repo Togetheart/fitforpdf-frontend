@@ -290,7 +290,7 @@ export default function Page() {
 
       {/* Mobile only: product image + Used by ticker — scroll-driven reveal like desktop */}
       <div
-        className="sm:hidden pb-6 px-4 relative z-10"
+        className="sm:hidden pb-6 px-4 relative z-10 bg-[var(--color-bg-hero)]"
         style={{ opacity: 0, transform: 'translateY(20px)' }}
         ref={(el) => {
           if (!el || el.dataset.mobileScrollReveal) return;
