@@ -262,8 +262,8 @@ export default function Page() {
             data-hero-comparison
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
-            <div className="flex flex-col items-center pt-2">
-              {/* Product image — small on mobile (tap to enlarge in lightbox), full on desktop */}
+            <div className="flex flex-col items-center pt-2 w-full px-4 sm:px-0">
+              {/* Product image — full width on mobile (tap to enlarge), max-600 on desktop */}
               <button
                 type="button"
                 onClick={() => { if (window.innerWidth < 640) setLightboxOpen(true); }}
