@@ -209,7 +209,7 @@ export default function Page() {
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <JsonLd data={homeFaqLd} />
       {/* Scroll spacer — creates room for Apple-style sticky scroll sequence */}
-      <div className="h-[calc(100vh+900px)] sm:h-[calc(100vh+1100px)]">
+      <div className="h-[calc(100vh+200px)] sm:h-[calc(100vh+1100px)]">
         <PageHero
           heroTestId="hero-section"
           variant="home"
