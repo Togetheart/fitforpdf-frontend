@@ -262,14 +262,17 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center pt-2">
-              {/* Product image — hidden on mobile (text baked in image doesn't scale) */}
-              <div className="hidden sm:block w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
-                <img
-                  src="/fitforpdf_product@2x.png"
-                  alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                  className="w-full block"
-                  loading="eager"
-                />
+              {/* Product image — responsive: 1x on mobile, 2x on desktop */}
+              <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
+                <picture>
+                  <source media="(max-width: 639px)" srcSet="/fitforpdf_product@1x.png" />
+                  <img
+                    src="/fitforpdf_product@2x.png"
+                    alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+                    className="w-full block"
+                    loading="eager"
+                  />
+                </picture>
               </div>
               {/* Used by ticker */}
               <div className="sm:mt-4 flex items-center gap-2 text-sm text-muted overflow-hidden max-w-[600px] w-full">
