@@ -535,75 +535,53 @@ export default function Page() {
         </div>
       </Section>
 
-      {/* How it works — 3 steps */}
-      {/* BLOC 4 — How it works: scroll-pinned stepper */}
-      <section
-        id="how-it-works"
-        className="relative bg-[var(--color-surface)]"
-        ref={(el) => {
-          if (!el || el.dataset.stepperInit) return;
-          el.dataset.stepperInit = '1';
-          let ticking = false;
-          const cards = el.querySelectorAll('[data-step-card]');
-          const count = cards.length;
-          const update = () => {
-            const rect = el.getBoundingClientRect();
-            const sectionH = el.offsetHeight;
-            const viewH = window.innerHeight;
-            const scrolled = -rect.top;
-            const totalScroll = sectionH - viewH;
-            if (totalScroll <= 0) return;
-            const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
-            cards.forEach((c, i) => {
-              const cardStart = i / count;
-              const cardEnd = (i + 0.6) / count;
-              const t = Math.max(0, Math.min(1, (progress - cardStart) / (cardEnd - cardStart)));
-              /* Smooth easing: cubic ease-out */
-              const ease = 1 - Math.pow(1 - t, 3);
-              c.style.opacity = ease;
-              c.style.transform = `translateY(${(1 - ease) * 24}px) scale(${0.97 + ease * 0.03})`;
-            });
-            ticking = false;
-          };
-          const onScroll = () => {
-            if (!ticking) {
-              requestAnimationFrame(update);
-              ticking = true;
-            }
-          };
-          window.addEventListener('scroll', onScroll, { passive: true });
-          update();
-        }}
-        style={{ height: '250vh' }}
-      >
-        <div className="sticky top-0 flex min-h-screen flex-col items-center justify-center px-4 py-16 sm:py-20">
-          <div className="w-full max-w-tight mx-auto space-y-10">
-            <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
-              {LANDING_COPY.howItWorksTitle}
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-6">
-              {LANDING_COPY.howItWorksSteps.map((step, i) => (
-                <div
-                  key={i}
-                  data-step-card
-                  className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center space-y-3 will-change-transform sm:flex-1"
-                  style={{ opacity: 0, transform: 'translateY(30px) scale(0.96)' }}
-                >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">{i + 1}</span>
-                  <h3 className="text-base font-semibold text-[var(--color-text)]">{step.title}</h3>
-                  <p className="text-sm text-muted">{step.desc}</p>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <Button variant="accent" href="#generate" onClick={handleHeroGenerateClick}>
-                {LANDING_COPY.howItWorksCta}
-              </Button>
-              <span className="text-xs text-muted">{LANDING_COPY.howItWorksPriceNudge}</span>
-            </div>
+      {/* BLOC 4 — How it works: staggered reveal on scroll */}
+      <Section id="how-it-works" index={4} bg="bg-hero" className="py-16 sm:py-20">
+        <div className="space-y-10">
+          <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+            {LANDING_COPY.howItWorksTitle}
+          </h2>
+          <div
+            className="flex flex-col sm:flex-row gap-6 max-w-tight mx-auto"
+            ref={(el) => {
+              if (!el || el.dataset.stepsObserved) return;
+              el.dataset.stepsObserved = '1';
+              const cards = el.querySelectorAll('[data-step-card]');
+              if (!cards.length) return;
+              cards.forEach((c) => { c.style.opacity = '0'; c.style.transform = 'translateY(24px) scale(0.97)'; });
+              const obs = new IntersectionObserver(
+                ([e]) => {
+                  if (!e.isIntersecting) return;
+                  cards.forEach((c, idx) => {
+                    setTimeout(() => {
+                      c.style.transition = 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
+                      c.style.opacity = '1';
+                      c.style.transform = 'translateY(0) scale(1)';
+                    }, idx * 200);
+                  });
+                  obs.disconnect();
+                },
+                { threshold: 0.15 },
+              );
+              obs.observe(el);
+            }}
+          >
+            {LANDING_COPY.howItWorksSteps.map((step, i) => (
+              <div key={i} data-step-card className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-center space-y-3 sm:flex-1">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">{i + 1}</span>
+                <h3 className="text-base font-semibold text-[var(--color-text)]">{step.title}</h3>
+                <p className="text-sm text-muted">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Button variant="accent" href="#generate" onClick={handleHeroGenerateClick}>
+              {LANDING_COPY.howItWorksCta}
+            </Button>
+            <span className="text-xs text-muted">{LANDING_COPY.howItWorksPriceNudge}</span>
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* Pricing plans — full width */}
       <Section
