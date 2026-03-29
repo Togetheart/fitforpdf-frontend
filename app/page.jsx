@@ -216,7 +216,7 @@ export default function Page() {
           align="center"
           height="h-[100svh] sm:h-screen"
           title={<HeroHeadline />}
-          contentClassName="items-center justify-start pt-[15vh] sm:justify-center sm:pt-0 gap-4 sm:gap-10 text-center h-full !py-4 sm:!py-6"
+          contentClassName="items-center justify-center gap-4 sm:gap-10 text-center h-full !py-4 sm:!py-6"
           contentMaxWidthClassName="max-w-content"
           className="py-0 w-full sm:sticky sm:top-0"
         >
