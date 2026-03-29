@@ -214,14 +214,14 @@ export default function Page() {
           heroTestId="hero-section"
           variant="home"
           align="center"
-          height="sm:h-screen"
+          height="h-[100svh] sm:h-screen"
           title={<HeroHeadline />}
-          contentClassName="items-center justify-center gap-6 sm:gap-10 text-center h-full !pt-20 !pb-6 sm:!py-6"
+          contentClassName="items-center justify-start pt-[15vh] sm:justify-center sm:pt-0 gap-4 sm:gap-10 text-center h-full !py-4 sm:!py-6"
           contentMaxWidthClassName="max-w-content"
           className="py-0 w-full sm:sticky sm:top-0"
         >
           {/* Subtitle — stays visible throughout */}
-          <p className="hero-headline-line w-full max-w-3xl mx-auto text-lg text-muted">
+          <p className="hero-headline-line w-full max-w-3xl mx-auto text-base sm:text-lg text-muted">
             {LANDING_COPY.heroSubheadlineL2a}<br />{LANDING_COPY.heroSubheadlineL2b}
           </p>
 

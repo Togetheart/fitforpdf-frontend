@@ -214,7 +214,7 @@ export default function HeroHeadline() {
     <div className="hero-headline-line flex justify-center mb-4">
       <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">{LANDING_COPY.heroPainBadge}</p>
     </div>
-    <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-2 leading-[1.15] tracking-tight text-[1.875rem] font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
+    <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-1 sm:space-y-2 leading-[1.15] tracking-tight text-2xl font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
         <span className="relative inline-flex items-stretch">
           {/* Left bracket */}
