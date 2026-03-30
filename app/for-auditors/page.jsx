@@ -1,4 +1,5 @@
 import VerticalPage from '../components/VerticalPage';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: 'Excel to PDF for Auditors',
@@ -50,9 +51,52 @@ const BENEFITS = [
   },
 ];
 
+const BREADCRUMB_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.fitforpdf.com' },
+    { '@type': 'ListItem', position: 2, name: 'For Auditors', item: 'https://www.fitforpdf.com/for-auditors' },
+  ],
+};
+
+const AUDITORS_FAQ_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can fitforpdf handle audit reports with dozens of columns?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. fitforpdf automatically splits wide tables into readable sections, grouping columns logically and preserving reference columns on every page.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Are reference columns preserved across pages?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Key identifier columns like entity names and account references are automatically repeated on every continuation page.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is my audit data secure?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Files are processed in France, deleted immediately after conversion, and no content is stored. GDPR compliant.',
+      },
+    },
+  ],
+};
+
 export default function ForAuditorsPage() {
   return (
-    <VerticalPage
+    <>
+      <JsonLd data={BREADCRUMB_LD} />
+      <JsonLd data={AUDITORS_FAQ_LD} />
+      <VerticalPage
       vertical="For Auditors"
       headline="Audit reports that actually fit on the page"
       subheadline="Convert wide Excel audit tables to clean, paginated PDFs without losing a single column."
@@ -60,5 +104,6 @@ export default function ForAuditorsPage() {
       benefits={BENEFITS}
       ctaText="Try it free"
     />
+    </>
   );
 }

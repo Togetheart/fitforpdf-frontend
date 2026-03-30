@@ -7,6 +7,16 @@ export const metadata = {
   description:
     'About FitForPDF — PDF rendering infrastructure for wide business tables. Built by Sébastien Neusch.',
   alternates: { canonical: '/about' },
+  openGraph: {
+    title: 'About — fitforpdf',
+    description: 'PDF rendering infrastructure for wide business tables. Built by Sébastien Neusch.',
+    url: 'https://www.fitforpdf.com/about',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About — fitforpdf',
+    description: 'PDF rendering infrastructure for wide business tables. Built by Sébastien Neusch.',
+  },
 };
 
 const breadcrumbLd = {

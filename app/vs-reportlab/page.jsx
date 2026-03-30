@@ -1,4 +1,5 @@
 import VsPage from '../components/VsPage';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: 'fitforpdf vs ReportLab – Spreadsheet to PDF comparison',
@@ -45,14 +46,26 @@ const PROS_AND_CONS = {
   ],
 };
 
+const BREADCRUMB_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.fitforpdf.com' },
+    { '@type': 'ListItem', position: 2, name: 'fitforpdf vs ReportLab', item: 'https://www.fitforpdf.com/vs-reportlab' },
+  ],
+};
+
 export default function VsReportlabPage() {
   return (
-    <VsPage
+    <>
+      <JsonLd data={BREADCRUMB_LD} />
+      <VsPage
       tool="ReportLab"
       toolDescription="ReportLab is a Python library for programmatic PDF generation with fine-grained layout control. fitforpdf replaces hundreds of lines of table-splitting code with a single API call."
       comparisonRows={COMPARISON_ROWS}
       prosAndCons={PROS_AND_CONS}
       ctaText="Try fitforpdf free"
     />
+    </>
   );
 }

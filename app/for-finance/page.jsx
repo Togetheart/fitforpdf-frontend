@@ -51,6 +51,15 @@ const BENEFITS = [
   },
 ];
 
+const BREADCRUMB_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.fitforpdf.com' },
+    { '@type': 'ListItem', position: 2, name: 'For Finance Teams', item: 'https://www.fitforpdf.com/for-finance' },
+  ],
+};
+
 const FINANCE_FAQ_LD = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -85,6 +94,7 @@ const FINANCE_FAQ_LD = {
 export default function ForFinancePage() {
   return (
     <>
+      <JsonLd data={BREADCRUMB_LD} />
       <JsonLd data={FINANCE_FAQ_LD} />
       <VerticalPage
         vertical="For Finance Teams"

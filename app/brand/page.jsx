@@ -5,6 +5,16 @@ export const metadata = {
   title: 'Brand Guidelines — fitforpdf',
   description: 'Design system, colors, typography, and brand assets for fitforpdf.',
   alternates: { canonical: '/brand' },
+  openGraph: {
+    title: 'Brand Guidelines — fitforpdf',
+    description: 'Design system, colors, typography, and brand assets for fitforpdf.',
+    url: 'https://www.fitforpdf.com/brand',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Brand Guidelines — fitforpdf',
+    description: 'Design system, colors, typography, and brand assets for fitforpdf.',
+  },
 };
 
 /* ─── Color swatches ─────────────────────────────────────────── */

@@ -7,6 +7,16 @@ export const metadata = {
     canonical: '/mentions-legales',
     languages: { 'fr': '/mentions-legales' },
   },
+  openGraph: {
+    title: 'Legal Notice — fitforpdf',
+    description: 'Legal notice for fitforpdf.',
+    url: 'https://www.fitforpdf.com/mentions-legales',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Legal Notice — fitforpdf',
+    description: 'Legal notice for fitforpdf.',
+  },
 };
 
 function Clause({ title, children }) {

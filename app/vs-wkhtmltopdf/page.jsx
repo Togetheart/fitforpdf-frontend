@@ -1,4 +1,5 @@
 import VsPage from '../components/VsPage';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: 'fitforpdf vs wkhtmltopdf – Spreadsheet to PDF comparison',
@@ -45,14 +46,26 @@ const PROS_AND_CONS = {
   ],
 };
 
+const BREADCRUMB_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.fitforpdf.com' },
+    { '@type': 'ListItem', position: 2, name: 'fitforpdf vs wkhtmltopdf', item: 'https://www.fitforpdf.com/vs-wkhtmltopdf' },
+  ],
+};
+
 export default function VsWkhtmltopdfPage() {
   return (
-    <VsPage
+    <>
+      <JsonLd data={BREADCRUMB_LD} />
+      <VsPage
       tool="wkhtmltopdf"
       toolDescription="wkhtmltopdf converts HTML to PDF using a WebKit engine. It is open-source but deprecated. fitforpdf is purpose-built for tabular data with automatic column grouping and pagination."
       comparisonRows={COMPARISON_ROWS}
       prosAndCons={PROS_AND_CONS}
       ctaText="Try fitforpdf free"
     />
+    </>
   );
 }

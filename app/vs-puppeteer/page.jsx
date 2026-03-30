@@ -1,4 +1,5 @@
 import VsPage from '../components/VsPage';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: 'fitforpdf vs Puppeteer – Spreadsheet to PDF comparison',
@@ -14,8 +15,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'fitforpdf vs Puppeteer',
-    description:
-      'Compare fitforpdf and Puppeteer for generating PDFs from spreadsheets.',
+    description: 'Compare fitforpdf and Puppeteer for generating PDFs from spreadsheets.',
   },
 };
 
@@ -45,14 +45,26 @@ const PROS_AND_CONS = {
   ],
 };
 
+const BREADCRUMB_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.fitforpdf.com' },
+    { '@type': 'ListItem', position: 2, name: 'fitforpdf vs Puppeteer', item: 'https://www.fitforpdf.com/vs-puppeteer' },
+  ],
+};
+
 export default function VsPuppeteerPage() {
   return (
-    <VsPage
+    <>
+      <JsonLd data={BREADCRUMB_LD} />
+      <VsPage
       tool="Puppeteer"
       toolDescription="Puppeteer drives a headless Chrome browser to render HTML as PDF. It is flexible but heavy. fitforpdf is a lightweight, table-aware alternative with zero infrastructure."
       comparisonRows={COMPARISON_ROWS}
       prosAndCons={PROS_AND_CONS}
       ctaText="Try fitforpdf free"
     />
+    </>
   );
 }

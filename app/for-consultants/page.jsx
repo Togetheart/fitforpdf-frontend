@@ -1,4 +1,5 @@
 import VerticalPage from '../components/VerticalPage';
+import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
   title: 'Excel to PDF for Consultants',
@@ -50,9 +51,52 @@ const BENEFITS = [
   },
 ];
 
+const BREADCRUMB_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.fitforpdf.com' },
+    { '@type': 'ListItem', position: 2, name: 'For Consultants', item: 'https://www.fitforpdf.com/for-consultants' },
+  ],
+};
+
+const CONSULTANTS_FAQ_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can fitforpdf produce consistent PDFs across my team?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Every PDF follows the same clean structure regardless of who on your team generates it. No manual formatting differences.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What happens when the data changes?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Upload the updated file and get a new PDF immediately. No re-formatting needed — the layout adapts automatically.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do I need to reformat my spreadsheet before uploading?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. Upload the file you already have. fitforpdf handles column grouping, pagination, and layout automatically.',
+      },
+    },
+  ],
+};
+
 export default function ForConsultantsPage() {
   return (
-    <VerticalPage
+    <>
+      <JsonLd data={BREADCRUMB_LD} />
+      <JsonLd data={CONSULTANTS_FAQ_LD} />
+      <VerticalPage
       vertical="For Consultants"
       headline="Client deliverables, formatted in seconds"
       subheadline="Convert Excel spreadsheets to polished PDFs without touching a single column width."
@@ -60,5 +104,6 @@ export default function ForConsultantsPage() {
       benefits={BENEFITS}
       ctaText="Try it free"
     />
+    </>
   );
 }
