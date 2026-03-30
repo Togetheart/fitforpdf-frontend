@@ -178,6 +178,17 @@ export default function Page() {
   const conversion = useConversion({ quota });
   const [lightboxOpen, setLightboxOpen] = React.useState(false);
 
+  /* Store promo code from ?ref= param (betalist, microlaunch, etc.) */
+  React.useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const ref = (params.get('ref') || '').trim().toLowerCase();
+      const REF_TO_PROMO = { microlaunch: 'MICROLAUNCH', betalist: 'BETALIST5', free3: 'FREE3' };
+      const promo = REF_TO_PROMO[ref];
+      if (promo) localStorage.setItem('ffp_promo', promo);
+    } catch {}
+  }, []);
+
   function handleHeroGenerateClick(event) {
     if (!event) return;
     event.preventDefault();

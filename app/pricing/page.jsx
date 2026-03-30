@@ -51,6 +51,7 @@ const PRICING_FAQ_LD = {
 
 const REF_TO_PROMO = {
   microlaunch: 'MICROLAUNCH',
+  betalist: 'BETALIST5',
   free3: 'FREE3',
 };
 
