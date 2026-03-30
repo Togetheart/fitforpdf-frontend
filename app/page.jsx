@@ -775,6 +775,7 @@ export default function Page() {
       {/* Use cases */}
       <Section id="use-cases" index={8} bg="bg-hero">
         <UseCaseCards />
+        <p className="mt-6 text-center text-sm text-muted">{LANDING_COPY.whoThisIsForNote}</p>
       </Section>
 
       <Section

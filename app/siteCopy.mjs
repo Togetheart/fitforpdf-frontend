@@ -112,6 +112,7 @@ export const LANDING_COPY = {
   whoThisIsForTitle:   'Designed for wide business tables',
   whoThisIsForPerfect: ['CRM exports', 'financial reports', 'analytics tables', 'inventory reports', 'SaaS reporting exports'],
   whoThisIsForNot:     ['invoice templates', 'formatted Excel documents', 'pixel-perfect spreadsheets'],
+  whoThisIsForNote:    'fitforpdf is built for raw data exports, not pre-formatted documents.',
 
   apiBlockTitle:   'Need this in your workflow or product?',
   apiBlockCopy:    'Use the API to generate clean, readable PDFs from spreadsheet exports automatically.',
