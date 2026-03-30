@@ -42,6 +42,7 @@ function UploadCardHarness({
   freeExportsLeft = 3,
   onSubmit = () => {},
   onBuyCredits = () => {},
+  onCopyShareLink = () => {},
   showBuyCreditsForTwo = false,
   file = null,
   isLoading = false,
@@ -63,6 +64,8 @@ function UploadCardHarness({
   onHistoryStatusChange = () => {},
   hasMoreHistory = false,
   onLoadMoreHistory = () => {},
+  renderId = null,
+  shareState = { status: 'idle', jobId: null },
 }) {
   return function Harness() {
     const [currentFile, setCurrentFile] = useState(file);
@@ -91,6 +94,7 @@ function UploadCardHarness({
         }}
         onSubmit={onSubmit}
         onDownloadAgain={() => {}}
+        onCopyShareLink={onCopyShareLink}
         onTrySample={() => {}}
         downloadedFileName={null}
         verdict={null}
@@ -111,6 +115,8 @@ function UploadCardHarness({
         hasMoreHistory={hasMoreHistory}
         onLoadMoreHistory={onLoadMoreHistory}
         onRefreshHistory={onRefreshHistory}
+        renderId={renderId}
+        shareState={shareState}
       />
     );
   };
@@ -120,9 +126,12 @@ function renderUploadCardHarness({
   freeExportsLeft = 5,
   onSubmit = () => {},
   onBuyCredits = () => {},
+  onCopyShareLink = () => {},
   showBuyCreditsForTwo = false,
+  file = null,
   isLoading = false,
   conversionProgress = null,
+  hasResultBlob = false,
   onBrandingChange = () => {},
   onTruncateChange = () => {},
   isPro = false,
@@ -139,14 +148,19 @@ function renderUploadCardHarness({
   onHistoryStatusChange = () => {},
   hasMoreHistory = false,
   onLoadMoreHistory = () => {},
+  renderId = null,
+  shareState = { status: 'idle', jobId: null },
 }) {
   const Harness = UploadCardHarness({
     freeExportsLeft,
     onSubmit,
     onBuyCredits,
+    onCopyShareLink,
     showBuyCreditsForTwo,
+    file,
     isLoading,
     conversionProgress,
+    hasResultBlob,
     onBrandingChange,
     onTruncateChange,
     isPro,
@@ -163,10 +177,13 @@ function renderUploadCardHarness({
     onHistoryStatusChange,
     hasMoreHistory,
     onLoadMoreHistory,
+    renderId,
+    shareState,
   });
   render(<Harness />);
   return {
     onBuyCredits,
+    onCopyShareLink,
     onBrandingChange,
     onTruncateChange,
     onRefreshHistory,
@@ -971,6 +988,19 @@ describe('UploadCard conversion flow on landing page', () => {
     }, { timeout: 4000 });
 
     mock.restore();
+  });
+
+  test('success state share button calls handler with current render id', () => {
+    cleanup();
+    const onCopyShareLink = vi.fn();
+    renderUploadCardHarness({
+      onCopyShareLink,
+      hasResultBlob: true,
+      renderId: 'job-share-landing',
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Copy review link' }));
+    expect(onCopyShareLink).toHaveBeenCalledWith('job-share-landing', 'render_success');
   });
 
   test('double click on Generate PDF triggers only one /api/render request while in-flight', async () => {

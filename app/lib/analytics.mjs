@@ -2,8 +2,7 @@
  * PostHog event helpers — frontend only.
  *
  * Backend render events stay in Supabase (render_events table).
- * This module covers the 4 user-behaviour events:
- *   upload_started, demo_file_used, payment_started, payment_completed
+ * This module covers the user-behaviour events captured on the web app.
  */
 function capture(event, properties) {
   if (typeof window === 'undefined') return;
@@ -31,4 +30,11 @@ export function trackPaymentStarted({ plan, pack }) {
 
 export function trackPaymentCompleted({ plan, pack }) {
   capture('payment_completed', { plan, pack });
+}
+
+export function trackShareLinkCopied({ surface, jobId }) {
+  capture('share_link_copied', {
+    surface,
+    job_id: jobId,
+  });
 }

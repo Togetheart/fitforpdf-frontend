@@ -62,6 +62,25 @@ function ConversionHarness({ quota }) {
   );
 }
 
+function ShareHarness({ quota }) {
+  const conversion = useConversion({ quota });
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          void conversion.handleCopyShareLink('job-share-hook', 'render_success');
+        }}
+      >
+        Copy review link
+      </button>
+      <div data-testid="notice">{conversion.notice || ''}</div>
+      <div data-testid="error">{conversion.error || ''}</div>
+    </div>
+  );
+}
+
 beforeEach(() => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
@@ -124,7 +143,7 @@ describe('useConversion frontend quota lock handling', () => {
         status: 500,
         headers: { 'content-type': 'application/json' },
       },
-    );
+    ));
 
     const syncQuotaState = vi.fn(async () => createQuotaSnapshot({
       planType: 'free',
@@ -153,5 +172,70 @@ describe('useConversion frontend quota lock handling', () => {
 
     expect(syncQuotaState).toHaveBeenCalledTimes(1);
     fetchMock.restore();
+  });
+
+  test('copies secure review link and tracks the share event after a successful render', async () => {
+    const originalClipboard = window.navigator.clipboard;
+    const clipboardWriteText = vi.fn(async () => {});
+    Object.defineProperty(window.navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: clipboardWriteText },
+    });
+    Object.defineProperty(window, 'posthog', {
+      configurable: true,
+      value: { capture: vi.fn() },
+    });
+
+    const fetchMock = mockFetch(({ url }) => {
+      if (String(url).includes('/api/jobs/job-share-hook/share')) {
+        return new Response(JSON.stringify({
+          shareUrl: 'https://www.fitforpdf.com/s/job-share-hook?token=abc123&exp=9999999999',
+          expiresAt: '2026-03-26T12:15:00.000Z',
+        }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      return new Response(JSON.stringify({ error: 'unexpected' }), {
+        status: 500,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+
+    const quota = {
+      isQuotaLocked: false,
+      syncQuotaState: vi.fn(async () => createQuotaSnapshot({
+        planType: 'free',
+        freeExportsLeft: 2,
+        remainingInPeriod: null,
+      })),
+      applyQuotaExhaustion: vi.fn(),
+      setPaywallReason: vi.fn(),
+      setPurchaseMessage: vi.fn(),
+      planType: 'free',
+      freeExportsLeft: 3,
+      remainingInPeriod: null,
+      freeExportsLimit: 3,
+    };
+
+    try {
+      render(<ShareHarness quota={quota} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Copy review link' }));
+
+      await waitFor(() => {
+        expect(clipboardWriteText).toHaveBeenCalledWith('https://www.fitforpdf.com/s/job-share-hook?token=abc123&exp=9999999999');
+      });
+      expect(window.posthog.capture).toHaveBeenCalledWith('share_link_copied', {
+        surface: 'render_success',
+        job_id: 'job-share-hook',
+      });
+      expect(screen.getByTestId('notice').textContent).toContain('Review link copied.');
+    } finally {
+      Object.defineProperty(window.navigator, 'clipboard', {
+        configurable: true,
+        value: originalClipboard,
+      });
+      fetchMock.restore();
+    }
   });
 });

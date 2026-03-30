@@ -220,12 +220,12 @@ export default function Page() {
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <JsonLd data={homeFaqLd} />
       {/* Scroll spacer — desktop only for Apple-style sticky scroll sequence */}
-      <div className="sm:h-[calc(100vh+1100px)]">
+      <div className="h-[80svh] sm:h-[calc(100vh+1100px)]">
         <PageHero
           heroTestId="hero-section"
           variant="home"
           align="center"
-          height="min-h-[100svh] sm:h-screen"
+          height="h-[80svh] sm:h-screen"
           title={<HeroHeadline />}
           contentClassName="items-center justify-center gap-4 sm:gap-10 text-center h-full !pt-4 !pb-4 sm:!py-6"
           contentMaxWidthClassName="max-w-content"

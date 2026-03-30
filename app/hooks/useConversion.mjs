@@ -9,7 +9,11 @@ import {
 } from '../pageUiLogic.mjs';
 import { getPlanExhausted, QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
 import { useCheckout } from './useCheckout.mjs';
-import { trackUploadStarted, trackDemoFileUsed } from '../lib/analytics.mjs';
+import {
+  trackUploadStarted,
+  trackDemoFileUsed,
+  trackShareLinkCopied,
+} from '../lib/analytics.mjs';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
@@ -186,6 +190,39 @@ function getFilenameFromContentDisposition(contentDisposition, fallback) {
   catch { return raw.replace(/^\"|\"$/g, '').trim() || fallback; }
 }
 
+async function copyText(text) {
+  const value = String(text || '').trim();
+  if (!value) return false;
+
+  const browserNavigator = (
+    typeof window !== 'undefined' && window.navigator
+      ? window.navigator
+      : (typeof navigator !== 'undefined' ? navigator : null)
+  );
+
+  if (browserNavigator && browserNavigator.clipboard && typeof browserNavigator.clipboard.writeText === 'function') {
+    await browserNavigator.clipboard.writeText(value);
+    return true;
+  }
+
+  if (typeof document === 'undefined') return false;
+  const input = document.createElement('textarea');
+  input.value = value;
+  input.setAttribute('readonly', 'readonly');
+  input.style.position = 'fixed';
+  input.style.opacity = '0';
+  document.body.appendChild(input);
+  input.focus();
+  input.select();
+  let copied = false;
+  try {
+    copied = typeof document.execCommand === 'function' && document.execCommand('copy');
+  } finally {
+    document.body.removeChild(input);
+  }
+  return copied;
+}
+
 // ── Hook ──────────────────────────────────────────────────
 
 export default function useConversion({ quota }) {
@@ -226,6 +263,7 @@ export default function useConversion({ quota }) {
   const [historyError, setHistoryError] = useState(null);
   const [historyStatus, setHistoryStatus] = useState('all');
   const [historyNextCursor, setHistoryNextCursor] = useState(null);
+  const [shareState, setShareState] = useState({ status: 'idle', jobId: null });
 
   const progressTimersRef = useRef([]);
   const renderInFlightRef = useRef(false);
@@ -292,6 +330,7 @@ export default function useConversion({ quota }) {
     setRenderId(null);
     setFailureRecommendations([]);
     setColumnMapDebug(null);
+    setShareState({ status: 'idle', jobId: null });
     setIsLoading(true);
     setFlowId(activeFlowId);
     if (!skipProgress) startConversionProgress();
@@ -460,6 +499,7 @@ export default function useConversion({ quota }) {
   function handleFileSelect(nextFile) {
     setRenderVerdict(null);
     setRenderId(null);
+    setShareState({ status: 'idle', jobId: null });
     setFile(nextFile);
     if (nextFile) { setError(null); setNotice(null); }
     setPdfBlob(null);
@@ -486,6 +526,7 @@ export default function useConversion({ quota }) {
     setPdfBlob(null);
     setRenderVerdict(null);
     setRenderId(null);
+    setShareState({ status: 'idle', jobId: null });
     setError(null);
     setNotice(null);
   }
@@ -602,6 +643,41 @@ export default function useConversion({ quota }) {
     if (result?.error) setPurchaseMessage(result.error);
   }
 
+  async function handleCopyShareLink(targetJobId = renderId, surface = 'render_success') {
+    const jobId = String(targetJobId || '').trim();
+    if (!jobId) {
+      setError('Share link unavailable for this export.');
+      return;
+    }
+
+    setShareState({ status: 'loading', jobId });
+    try {
+      const res = await fetch(`/api/jobs/${encodeURIComponent(jobId)}/share`, {
+        method: 'POST',
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(payload?.error || 'Unable to create review link.');
+      }
+      const shareUrl = String(payload?.shareUrl || '').trim();
+      if (!shareUrl) {
+        throw new Error('Unable to create review link.');
+      }
+      const copied = await copyText(shareUrl);
+      if (!copied) {
+        throw new Error('Unable to copy review link.');
+      }
+
+      trackShareLinkCopied({ surface, jobId });
+      setError(null);
+      setNotice('Review link copied. Anyone with it can open the PDF until it expires.');
+      setShareState({ status: 'copied', jobId });
+    } catch (err) {
+      setShareState({ status: 'error', jobId });
+      setError(err instanceof Error ? err.message : 'Unable to copy review link.');
+    }
+  }
+
   const verdict = confidence?.verdict;
   const stillRiskAfterOptimized = lastRequestMode === 'optimized' && (verdict === 'WARN' || verdict === 'FAIL');
   const stillRiskAfterCompact = lastRequestMode === 'compact' && verdict === 'FAIL';
@@ -632,6 +708,7 @@ export default function useConversion({ quota }) {
     handleGenerateOptimized,
     handleGenerateCompact,
     handleDownloadAnyway,
+    handleCopyShareLink,
     // result
     pdfBlob,
     renderId,
@@ -668,6 +745,7 @@ export default function useConversion({ quota }) {
     onHistoryStatusChange: handleHistoryStatusChange,
     loadMoreExportHistory,
     refreshExportHistory,
+    shareState,
     // internals
     flowId,
     reasonLabel,
