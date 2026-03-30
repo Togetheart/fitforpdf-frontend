@@ -100,6 +100,55 @@ export default function AboutPage() {
         </ul>
       </section>
 
+      {/* Product */}
+      <section className="border-t border-[var(--color-border)] pt-8 mb-10">
+        <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]">
+          Product
+        </h2>
+        <ul className="space-y-2">
+          <li>
+            <a href="/pricing" className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta">
+              Pricing
+            </a>
+          </li>
+          <li>
+            <a href="/developers" className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta">
+              API documentation
+            </a>
+          </li>
+          <li>
+            <a href="/for-finance" className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta">
+              For finance teams
+            </a>
+          </li>
+          <li>
+            <a href="/for-consultants" className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta">
+              For consultants
+            </a>
+          </li>
+          <li>
+            <a href="/for-auditors" className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta">
+              For auditors
+            </a>
+          </li>
+          <li>
+            <a href="/for-saas" className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta">
+              For SaaS products
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://chatgpt.com/g/g-69cab3c8703c819198473179392510ca-fitforpdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta"
+            >
+              Ask the fitforpdf GPT
+            </a>
+          </li>
+        </ul>
+      </section>
+
       {/* Contact */}
       <section className="border-t border-[var(--color-border)] pt-8">
         <h2 className="mb-4 text-xl font-semibold text-[var(--color-text)]">

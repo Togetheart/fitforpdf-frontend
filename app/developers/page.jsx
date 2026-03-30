@@ -735,6 +735,35 @@ export default function DevelopersPage() {
         </div>
       </section>
 
+      {/* Compare with other tools */}
+      <section className="mb-14 border-t border-[var(--color-border)] pt-10">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+          Compare
+        </p>
+        <h2 className="mb-6 text-xl font-bold leading-tight text-[var(--color-text)]">
+          How fitforpdf compares to other tools
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <a href="/vs-puppeteer" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-4 transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+            <p className="text-sm font-semibold text-[var(--color-text)]">vs Puppeteer</p>
+            <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">No headless Chrome needed</p>
+          </a>
+          <a href="/vs-wkhtmltopdf" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-4 transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+            <p className="text-sm font-semibold text-[var(--color-text)]">vs wkhtmltopdf</p>
+            <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">Table-aware, not generic HTML</p>
+          </a>
+          <a href="/vs-reportlab" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-4 transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+            <p className="text-sm font-semibold text-[var(--color-text)]">vs ReportLab</p>
+            <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">No Python code required</p>
+          </a>
+        </div>
+        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+          <a href="/for-saas" className="text-sm text-[var(--color-muted)] underline underline-offset-4 decoration-1 transition hover:text-[var(--color-text)]">For SaaS products</a>
+          <a href="/for-finance" className="text-sm text-[var(--color-muted)] underline underline-offset-4 decoration-1 transition hover:text-[var(--color-text)]">For finance teams</a>
+          <a href="/pricing" className="text-sm text-[var(--color-muted)] underline underline-offset-4 decoration-1 transition hover:text-[var(--color-text)]">App pricing</a>
+        </div>
+      </section>
+
       {/* Integrate in minutes callout */}
       <div className="mb-6 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">

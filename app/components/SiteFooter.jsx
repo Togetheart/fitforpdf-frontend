@@ -6,7 +6,7 @@ import NewsletterForm from './NewsletterForm';
 export default function SiteFooter() {
   return (
     <footer data-testid="site-footer" className="border-t border-[var(--color-border)] bg-[var(--color-bg)]">
-      <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:px-10 xl:px-12 2xl:grid-cols-4">
+      <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-10 xl:px-12 2xl:grid-cols-5">
         <div className="space-y-3">
           <a href="/" className="flex items-center gap-2 opacity-60 transition hover:opacity-100">
             <AnimatedLogo className="h-7 w-7" />
@@ -48,6 +48,24 @@ export default function SiteFooter() {
         </div>
 
         <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Use cases</p>
+          <nav className="flex flex-col gap-1.5">
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/for-finance">
+              For finance teams
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/for-consultants">
+              For consultants
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/for-auditors">
+              For auditors
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/for-saas">
+              For SaaS products
+            </a>
+          </nav>
+        </div>
+
+        <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Resources</p>
           <nav className="flex flex-col gap-1.5">
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/excel-to-pdf-columns-cut-off">
@@ -61,6 +79,15 @@ export default function SiteFooter() {
             </a>
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/audit-report-excel-to-pdf-tips">
               Audit report export tips
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/vs-puppeteer">
+              vs Puppeteer
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/vs-wkhtmltopdf">
+              vs wkhtmltopdf
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/vs-reportlab">
+              vs ReportLab
             </a>
           </nav>
         </div>

@@ -74,6 +74,38 @@ export default async function PricingPage({ searchParams }) {
           />
         </div>
       </Section>
+
+      {/* ── Crosslinks ── */}
+      <Section id="explore" index={4} bg="bg-hero" className="py-16 sm:py-20" maxWidth="max-w-[1200px]">
+        <div className="space-y-6 text-center">
+          <h2 className="text-2xl font-semibold tracking-tight text-[var(--color-text)] sm:text-3xl">
+            Explore fitforpdf
+          </h2>
+          <div className="flex flex-wrap justify-center gap-3">
+            <a href="/developers" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-5 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+              API documentation →
+            </a>
+            <a href="/for-finance" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-5 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+              For finance teams →
+            </a>
+            <a href="/for-consultants" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-5 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+              For consultants →
+            </a>
+            <a href="/for-auditors" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-5 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+              For auditors →
+            </a>
+            <a href="/for-saas" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-5 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-text)]/20 hover:shadow-sm">
+              For SaaS products →
+            </a>
+          </div>
+          <p className="text-sm text-[var(--color-muted)]">
+            Need a custom plan?{' '}
+            <a href="/contact" className="font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta">
+              Contact us
+            </a>
+          </p>
+        </div>
+      </Section>
     </div>
   );
 }

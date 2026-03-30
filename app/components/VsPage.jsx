@@ -5,6 +5,14 @@ import PageHero from './PageHero';
 import Section from './ui/Section';
 import Button from './ui/Button';
 
+const ALL_COMPARISONS = [
+  { label: 'fitforpdf vs Puppeteer', href: '/vs-puppeteer' },
+  { label: 'fitforpdf vs wkhtmltopdf', href: '/vs-wkhtmltopdf' },
+  { label: 'fitforpdf vs ReportLab', href: '/vs-reportlab' },
+];
+
+const LINK_STYLE = 'text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta';
+
 export default function VsPage({
   tool,
   toolDescription,
@@ -12,6 +20,7 @@ export default function VsPage({
   prosAndCons,
   ctaText = 'Try fitforpdf free',
 }) {
+  const otherComparisons = ALL_COMPARISONS.filter((c) => !c.label.includes(tool));
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       {/* Hero */}
@@ -126,8 +135,33 @@ export default function VsPage({
         </div>
       </Section>
 
+      {/* See also — other comparisons & links */}
+      <Section id="see-also" index={2} bg="bg-hero">
+        <div className="space-y-6">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text)]">
+            Other comparisons
+          </h2>
+          <div className="flex flex-wrap justify-center gap-3">
+            {otherComparisons.map((c) => (
+              <a
+                key={c.href}
+                href={c.href}
+                className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-5 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-text)]/20 hover:shadow-sm"
+              >
+                {c.label} →
+              </a>
+            ))}
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2">
+            <a href="/developers" className={LINK_STYLE}>API documentation</a>
+            <a href="/pricing" className={LINK_STYLE}>Pricing</a>
+            <a href="/for-saas" className={LINK_STYLE}>For SaaS products</a>
+          </div>
+        </div>
+      </Section>
+
       {/* Final CTA */}
-      <Section id="vs-cta" index={2} bg="bg-hero" className="py-16 sm:py-20">
+      <Section id="vs-cta" index={3} bg="bg-hero" className="py-16 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
             Ready to switch?

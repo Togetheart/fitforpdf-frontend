@@ -3,6 +3,15 @@ import PageHero from './PageHero';
 import Section from './ui/Section';
 import Button from './ui/Button';
 
+const ALL_VERTICALS = [
+  { label: 'Finance teams', href: '/for-finance' },
+  { label: 'Consultants', href: '/for-consultants' },
+  { label: 'Auditors', href: '/for-auditors' },
+  { label: 'SaaS products', href: '/for-saas' },
+];
+
+const LINK_STYLE = 'text-sm font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta';
+
 export default function VerticalPage({
   vertical,
   headline,
@@ -12,6 +21,9 @@ export default function VerticalPage({
   ctaText = 'Try it free',
   productImage = '/fitforpdf_product@2x.png',
 }) {
+  // Derive current path from vertical label to exclude self from related links
+  const currentHref = ALL_VERTICALS.find((v) => vertical.includes(v.label.split(' ')[0]))?.href;
+  const relatedVerticals = ALL_VERTICALS.filter((v) => v.href !== currentHref);
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       {/* ── Hero ── */}
@@ -86,6 +98,30 @@ export default function VerticalPage({
             </li>
           ))}
         </ul>
+      </Section>
+
+      {/* ── Related use cases ── */}
+      <Section id="related" bg="bg-hero">
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            Related use cases
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {relatedVerticals.map((v) => (
+              <a
+                key={v.href}
+                href={v.href}
+                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-text)]/20 hover:shadow-sm"
+              >
+                {v.label} →
+              </a>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
+            <a href="/pricing" className={LINK_STYLE}>See pricing</a>
+            <a href="/developers" className={LINK_STYLE}>API documentation</a>
+          </div>
+        </div>
       </Section>
 
       {/* ── Final CTA ── */}
