@@ -214,9 +214,9 @@ export default function Page() {
           heroTestId="hero-section"
           variant="home"
           align="center"
-          height="h-[100svh] sm:h-screen"
+          height="h-auto sm:h-screen"
           title={<HeroHeadline />}
-          contentClassName="items-center justify-center gap-4 sm:gap-10 text-center h-full !py-4 sm:!py-6"
+          contentClassName="items-center justify-center gap-4 sm:gap-10 text-center h-full !pt-16 !pb-4 sm:!py-6"
           contentMaxWidthClassName="max-w-content"
           className="py-0 w-full sm:sticky sm:top-0"
         >
@@ -290,7 +290,7 @@ export default function Page() {
 
       {/* Mobile only: product image + Used by ticker — scroll-driven reveal like desktop */}
       <div
-        className="sm:hidden pb-6 px-4 relative z-10 bg-[var(--color-bg-hero)]"
+        className="sm:hidden pb-6 px-4 -mt-8 relative z-10 bg-[var(--color-bg-hero)]"
       >
         <div
           className="flex flex-col items-center gap-4"
