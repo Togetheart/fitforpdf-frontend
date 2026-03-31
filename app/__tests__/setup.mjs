@@ -52,6 +52,12 @@ if (typeof globalThis.cancelAnimationFrame !== 'function') {
   globalThis.cancelAnimationFrame = window.cancelAnimationFrame;
 }
 
+// JSDOM does not implement Element.scrollTo. Components like ProofShowcase
+// call el.scrollTo() which crashes in tests without this stub.
+if (typeof window !== 'undefined' && !Element.prototype.scrollTo) {
+  Element.prototype.scrollTo = function () {};
+}
+
 // JSDOM does not implement IntersectionObserver. Provide a no-op stub so
 // components using it (SiteHeader scroll detection, SocialProofStrip dock
 // logic, etc.) can mount without crashing during tests.
