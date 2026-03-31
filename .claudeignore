@@ -1,0 +1,9 @@
+node_modules/
+.next/
+public/proof/
+sitemap_live.xml
+sitemap_urls.txt
+sitemap_urls2.txt
+urls_from_awk.txt
+FitForPDF-Competitive-Brief-March2026.md
+SEO-AUDIT-fitforpdf.md
