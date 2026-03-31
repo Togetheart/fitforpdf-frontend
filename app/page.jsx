@@ -18,6 +18,7 @@ import HeroHeadline from './components/HeroHeadline';
 import Button from './components/ui/Button';
 import ProofShowcase from './components/ProofShowcase';
 import { JsonLd } from './components/JsonLd';
+import Image from 'next/image';
 
 import AnimatedShieldIcon from './components/AnimatedShieldIcon';
 import StickyMobileCTA from './components/StickyMobileCTA';
@@ -275,15 +276,14 @@ export default function Page() {
           >
             <div className="flex flex-col items-center pt-2">
               <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
-                <picture>
-                  <source srcSet="/fitforpdf_product@2x.webp" type="image/webp" />
-                  <img
-                    src="/fitforpdf_product@2x.png"
-                    alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                    className="w-full block"
-                    loading="eager"
-                  />
-                </picture>
+                <Image
+                  src="/fitforpdf_product@2x.png"
+                  alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+                  width={1200}
+                  height={800}
+                  className="w-full block"
+                  priority
+                />
               </div>
             </div>
           </div>
@@ -331,15 +331,14 @@ export default function Page() {
             className="block w-full overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm cursor-zoom-in"
             aria-label="View full-size product image"
           >
-            <picture>
-              <source srcSet="/fitforpdf_product.webp" type="image/webp" />
-              <img
-                src="/fitforpdf_product@2x.png"
-                alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                className="w-full block"
-                loading="eager"
-              />
-            </picture>
+            <Image
+              src="/fitforpdf_product@2x.png"
+              alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+              width={1200}
+              height={800}
+              className="w-full block"
+              priority
+            />
           </button>
           <div className="flex items-center gap-2 text-sm text-muted overflow-hidden w-full">
             <span className="shrink-0 font-semibold text-[var(--color-text)]">Used by</span>
@@ -816,12 +815,12 @@ export default function Page() {
         className="relative overflow-hidden py-20 sm:py-28"
       >
         {/* Blue wave background image */}
-        <img
+        <Image
           src="/sneusch_Aerial_view_of_abstract_topographic_landscape_made_en_c6b5be1f-30a1-4261-a956-b2fb5fa4d46e_0.png"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="lazy"
+          fill
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-[#0a1628]/70" />
         <div className="relative z-10 mx-auto max-w-2xl text-center px-4">
@@ -874,12 +873,15 @@ export default function Page() {
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
-          <img
-            src="/fitforpdf_product@2x.png"
-            alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-            className="w-full max-h-[90vh] rounded-xl object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="relative w-full max-h-[90vh] aspect-[3/2]" onClick={(e) => e.stopPropagation()}>
+            <Image
+              src="/fitforpdf_product@2x.png"
+              alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+              fill
+              className="rounded-xl object-contain"
+              sizes="100vw"
+            />
+          </div>
         </div>
       )}
     </div>
