@@ -688,7 +688,7 @@ export default function UploadCard({
           {!isQuotaLocked && <Button
             type="submit"
             variant="primary"
-            className={`shrink-0 flex-1 sm:flex-none !h-10 !rounded-xl !px-5 ${isDark ? '!bg-blue-600 !text-white hover:!bg-blue-500' : ''}`}
+            className={`shrink-0 flex-1 sm:flex-none h-10 rounded-xl px-5 ${isDark ? 'bg-blue-600 text-white hover:bg-blue-500' : ''}`}
             disabled={isLoading || !file}
             onClick={scrollToCard}
           >

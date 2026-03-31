@@ -107,6 +107,7 @@ export async function POST(req) {
         pack,
         success_url: successUrl,
         cancel_url: cancelUrl,
+        ...(idempotencyKey ? { idempotencyKey } : {}),
       }),
     });
   } catch (error) {

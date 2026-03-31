@@ -204,7 +204,7 @@ const TAB_COLORS_HEX = [
   '#2563EB',   // Section A — blue
   '#22C55E',   // Section B — green
   '#F59E0B',   // Section C — amber
-  '#EF4444',   // Section D — red
+  'rgb(239,68,68)',   // Section D — red (Tailwind red-500)
   '#8B5CF6',   // Section E — violet
 ];
 
