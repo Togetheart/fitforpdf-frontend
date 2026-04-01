@@ -7,5 +7,11 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['app/__tests__/*.test.jsx'],
     setupFiles: ['app/__tests__/setup.mjs'],
+    poolOptions: {
+      threads: {
+        maxThreads: 2,
+        minThreads: 1,
+      },
+    },
   },
 });

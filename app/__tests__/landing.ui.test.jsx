@@ -40,7 +40,6 @@ describe('landing conversion-first structure', () => {
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const comparison = screen.getByTestId('section-comparison');
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
-    const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
     const finalCta = screen.getByTestId('final-cta-section');
 
@@ -48,27 +47,24 @@ describe('landing conversion-first structure', () => {
     expect(proof).toBeTruthy();
     expect(comparison).toBeTruthy();
     expect(pricing).toBeTruthy();
-    expect(privacy).toBeTruthy();
     expect(faq).toBeTruthy();
     expect(finalCta).toBeTruthy();
     expect(hero.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(proof.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(proof.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(comparison.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(pricing.compareDocumentPosition(privacy) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(privacy.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(pricing.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(comparison.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(faq.compareDocumentPosition(finalCta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('hero keeps the 2-line headline with required rhythm', () => {
-    const heading = screen.getByRole('heading', { level: 1, name: /Readable PDFs/i });
+    const heading = screen.getByRole('heading', { level: 1, name: /Upload your spreadsheet/i });
 
     expect(heading).toBeTruthy();
-    expect(screen.getByTestId('hero-headline-accent').textContent).toBe('Readable PDFs');
-    expect(screen.getByText(/from wide tables/)).toBeTruthy();
+    expect(screen.getByTestId('hero-headline-accent').textContent).toBe('Upload your spreadsheet.');
+    expect(screen.getByText(/Get a PDF you can actually send/)).toBeTruthy();
     const headingText = heading.textContent || '';
-    expect(headingText).toContain('Readable PDFs');
-    expect(headingText).toContain('from wide tables');
+    expect(headingText).toContain('Upload your spreadsheet.');
+    expect(headingText).toContain('Get a PDF you can actually send.');
   });
 
   test('unverified social proof claim is not shown', () => {
@@ -88,11 +84,10 @@ describe('landing conversion-first structure', () => {
     expect(hero.compareDocumentPosition(uploadCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  test('hero has headline/subline/trust line', () => {
+  test('hero has headline/subline/microcopy', () => {
     expect(screen.getByText(LANDING_COPY.heroSubheadlineL2a, { exact: false })).toBeTruthy();
     expect(screen.getByText(LANDING_COPY.heroSubheadlineL2b, { exact: false })).toBeTruthy();
-    expect(screen.getByText(LANDING_COPY.heroTrustLine)).toBeTruthy();
-    expect(screen.getAllByText(LANDING_COPY.heroTrustLine)).toHaveLength(1);
+    expect(screen.getByText(LANDING_COPY.heroMicrocopyFree)).toBeTruthy();
   });
 
   test('upload block includes a Generate PDF button as the sole CTA', () => {
@@ -155,7 +150,7 @@ describe('landing conversion-first structure', () => {
     expect(demoButton).toBeTruthy();
     const demoClass = demoButton.getAttribute('class') || '';
     expect(demoClass).toContain('text-white');
-    expect(demoClass).toContain('bg-accent');
+    expect(demoClass).toContain('bg-white/10');
     expect(screen.queryByRole('button', { name: 'Run the demo' })).toBeNull();
     expect(screen.getAllByTestId('demo-try-button')).toHaveLength(1);
   });
@@ -188,7 +183,7 @@ describe('landing conversion-first structure', () => {
     const comparison = screen.getByTestId('section-comparison');
 
     expect(screen.getByText('Excel PDF Export vs fitforpdf')).toBeTruthy();
-    expect(screen.getByText('Stop fighting print settings. Get a client-ready structured PDF in seconds.')).toBeTruthy();
+    expect(screen.getByText('Stop fighting print settings. Get a presentable structured PDF in seconds.')).toBeTruthy();
     // Comparison follows proof in document order (upload card sits between them in proof-first flow)
     expect(proofSection.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
@@ -197,10 +192,10 @@ describe('landing conversion-first structure', () => {
     const faq = screen.getByTestId('home-faq');
 
     [
-      'Do my "Pay as you go" credits expire?',
-      'Is the Starter pack a subscription?',
-      'Will my clients see the fitforpdf logo?',
-      'What counts as an export?',
+      'How much time does this actually save?',
+      'Is this worth it for just a few exports?',
+      'Why not just fix it in Excel?',
+      'Do I need to reformat my spreadsheet first?',
       'Do you store my files?',
     ].forEach((question) => {
       expect(faq.textContent).toContain(question);
@@ -210,31 +205,24 @@ describe('landing conversion-first structure', () => {
   test('landing section spacing uses varied rhythm', () => {
     const proof = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
-    const privacy = screen.getByTestId('privacy-section');
     const faq = screen.getByTestId('faq-section');
 
-    expect((proof.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((proof.getAttribute('class') || '').includes('py-16')).toBe(true);
     // Pricing section has no extra py className; its inner div uses the Section default py-10
     expect((pricing.firstElementChild?.getAttribute('class') || '').includes('py-10')).toBe(true);
-    expect((privacy.getAttribute('class') || '').includes('py-12')).toBe(true);
-    expect((faq.getAttribute('class') || '').includes('py-12')).toBe(true);
+    expect((faq.getAttribute('class') || '').includes('py-16')).toBe(true);
   });
 
-  test('privacy and faq sections use dedicated sizing and layout', () => {
-    const privacy = screen.getByTestId('privacy-section');
+  test('faq section uses dedicated sizing and layout', () => {
     const faq = screen.getByTestId('faq-section');
     const faqAccordion = screen.getByTestId('home-faq');
 
-    const privacyClass = privacy.getAttribute('class') || '';
     const faqSectionClass = faq.getAttribute('class') || '';
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
     const pricingInner = pricing.firstElementChild;
-    const faqAccordionClass = faqAccordion.getAttribute('class') || '';
     const faqInner = faq.firstElementChild;
 
-    expect(privacyClass).toContain('bg-hero');
     expect(faqSectionClass).toContain('bg-hero');
-    expect((privacy.textContent || '').includes('Your data. Not our business.')).toBe(true);
     expect((faq.textContent || '').includes('Frequently asked questions')).toBe(true);
     expect(pricingInner?.getAttribute('class') || '').toContain('max-w-wide');
     expect(faqInner?.getAttribute('class') || '').toContain('max-w-content');

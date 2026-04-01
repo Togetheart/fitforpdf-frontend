@@ -6,11 +6,12 @@ import PricingPage from '../pricing/page.jsx';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 
-beforeEach(() => {
+beforeEach(async () => {
+  const resolved = await PricingPage({ searchParams: Promise.resolve({}) });
   render(
     <>
       <SiteHeader />
-      <PricingPage />
+      {resolved}
       <SiteFooter />
     </>,
   );

@@ -193,9 +193,9 @@ describe('quota-driven plan state and paywall flows', () => {
     render(<LandingPage />);
 
     await waitFor(() => {
-      expect(screen.getAllByText('3 free exports. No account required.').length).toBeGreaterThan(0);
       expect(screen.getByTestId('quota-pill').textContent).toContain('Free · 3 exports left');
     });
+    // toolSubcopy is no longer rendered visually in UploadCard
     expect(screen.queryByText('5 free exports. No account required.')).toBeNull();
 
     mock.restore();
@@ -362,7 +362,7 @@ describe('quota-driven plan state and paywall flows', () => {
     await waitFor(() => {
       expect(screen.getByTestId('quota-pill').textContent).toMatch(/Free · 0 exports left/i);
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
-      expect(screen.getByTestId('quota-buy-slot').querySelector('button[aria-label="Buy credits"]')).toBeTruthy();
+      expect(screen.getByTestId('quota-buy-slot').getAttribute('aria-label')).toBe('Buy credits');
     });
 
     mock.restore();
@@ -405,10 +405,14 @@ describe('quota-driven plan state and paywall flows', () => {
 
     fireEvent.change(fileInput, fileSelect);
 
-    const uploadCard = screen.getByTestId('upload-card');
-    const form = uploadCard.querySelector('form');
-    expect(form).toBeTruthy();
-    fireEvent.submit(form);
+    // Wait for file to be set in state before submitting
+    await waitFor(() => {
+      const generateBtn = screen.queryByRole('button', { name: 'Generate PDF' });
+      expect(generateBtn).toBeTruthy();
+      expect(generateBtn.disabled).toBe(false);
+    }, { timeout: 2000 });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
 
     if (expectPaywallAfter) {
       await waitFor(() => {
@@ -422,10 +426,10 @@ describe('quota-driven plan state and paywall flows', () => {
       expect(screen.getByText('Download again')).toBeTruthy();
     }, { timeout: 4000 });
 
-      await waitFor(() => {
-        expect(mock.calls.filter((call) => String(call.url).includes('/api/render')).length)
-          .toBe(beforeRenderCalls + 1);
-      }, { timeout: 2000 });
+    await waitFor(() => {
+      expect(mock.calls.filter((call) => String(call.url).includes('/api/render')).length)
+        .toBe(beforeRenderCalls + 1);
+    }, { timeout: 2000 });
 
     await waitFor(() => {
       expect(screen.getByTestId('quota-pill').textContent).toContain(remainingLabel);

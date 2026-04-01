@@ -74,10 +74,11 @@ describe('shared site shell navigation', () => {
     expect(footer.querySelector('img[alt="fitforpdf"]')).toBeTruthy();
   });
 
-  test('pricing has shared header/footer links and single instances', () => {
+  test('pricing has shared header/footer links and single instances', async () => {
+    const resolved = await PricingPage({ searchParams: Promise.resolve({}) });
     render(
       <SiteShell>
-        <PricingPage />
+        {resolved}
       </SiteShell>,
     );
 

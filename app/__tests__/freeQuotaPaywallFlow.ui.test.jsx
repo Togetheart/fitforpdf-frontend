@@ -222,7 +222,10 @@ describe('free plan strict quota journey', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
-      expect(screen.queryByLabelText('Buy credits')).toBeTruthy();
+      // quota-buy-slot IS the button with aria-label="Buy credits"
+      const buySlot = screen.queryByTestId('quota-buy-slot');
+      expect(buySlot).toBeTruthy();
+      expect(buySlot.getAttribute('aria-label')).toBe('Buy credits');
       expect(screen.getByText(/0\s*exports\s*left/i)).toBeTruthy();
     });
 
@@ -247,12 +250,13 @@ describe('free plan strict quota journey', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Buy credits')).toBeTruthy();
+      const buySlot = screen.getByTestId('quota-buy-slot');
+      expect(buySlot.getAttribute('aria-label')).toBe('Buy credits');
       expect(screen.queryByText(/free_quota_exhausted/i)).toBeNull();
       expect(screen.queryByText(/^Error$/i)).toBeNull();
     });
 
-    expect(screen.queryByTestId('quota-buy-slot')?.querySelector('button[aria-label="Buy credits"]')).toBeTruthy();
+    expect(screen.getByTestId('quota-buy-slot').getAttribute('aria-label')).toBe('Buy credits');
     expect(getRemaining()).toBe(0);
     expect(mock.getRenderCallCount()).toBe(3);
     expect(mock.getQuotaCallCount()).toBeGreaterThanOrEqual(4);

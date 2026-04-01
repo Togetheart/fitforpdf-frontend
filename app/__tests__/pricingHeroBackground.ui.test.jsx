@@ -29,13 +29,15 @@ afterEach(() => {
 });
 
 describe('pricing page hero section', () => {
-  test('pricing page renders without errors', () => {
-    render(<PricingPage />);
+  test('pricing page renders without errors', async () => {
+    const resolved = await PricingPage({ searchParams: Promise.resolve({}) });
+    render(<>{resolved}</>);
     expect(document.body).toBeTruthy();
   });
 
-  test('pricing page has a simple hero section with h1 heading', () => {
-    render(<PricingPage />);
+  test('pricing page has a simple hero section with h1 heading', async () => {
+    const resolved = await PricingPage({ searchParams: Promise.resolve({}) });
+    render(<>{resolved}</>);
 
     const h1 = screen.getByRole('heading', { level: 1 });
     expect(h1).toBeTruthy();
@@ -46,8 +48,9 @@ describe('pricing page hero section', () => {
     expect(screen.queryByTestId('page-hero')).toBeNull();
   });
 
-  test('pricing page renders PAYG cards, comparison, and FAQ', () => {
-    render(<PricingPage />);
+  test('pricing page renders PAYG cards, comparison, and FAQ', async () => {
+    const resolved = await PricingPage({ searchParams: Promise.resolve({}) });
+    render(<>{resolved}</>);
 
     const cards = screen.getAllByTestId('payg-plan-card');
     expect(cards).toHaveLength(3);

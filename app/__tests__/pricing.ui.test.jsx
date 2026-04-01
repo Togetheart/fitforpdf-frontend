@@ -27,12 +27,13 @@ function configureMatchMedia({ mobile = false, reduceMotion = false } = {}) {
   });
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   configureMatchMedia({ mobile: false, reduceMotion: false });
+  const resolved = await PricingPage({ searchParams: Promise.resolve({}) });
   render(
     <>
       <SiteHeader />
-      <PricingPage />
+      {resolved}
       <SiteFooter />
     </>,
   );

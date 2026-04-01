@@ -46,14 +46,15 @@ afterEach(() => {
 });
 
 describe('global app backdrop', () => {
-  test('renders app backdrop on every page', () => {
+  test('renders app backdrop on every page', async () => {
     renderWithShell(<LandingPage />);
     const homeBackdrop = screen.getByTestId('app-backdrop');
     expect(homeBackdrop).toBeTruthy();
     expect(homeBackdrop.getAttribute('aria-hidden')).toBe('true');
 
     cleanup();
-    renderWithShell(<PricingPage />);
+    const resolvedPricing = await PricingPage({ searchParams: Promise.resolve({}) });
+    renderWithShell(resolvedPricing);
     expect(screen.getByTestId('app-backdrop')).toBeTruthy();
 
     cleanup();
@@ -71,8 +72,9 @@ describe('global app backdrop', () => {
     expect(heroBackdrop).toBeTruthy();
   });
 
-  test('pricing and privacy use only the global backdrop in focus layer level', () => {
-    renderWithShell(<PricingPage />);
+  test('pricing and privacy use only the global backdrop in focus layer level', async () => {
+    const resolvedPricing = await PricingPage({ searchParams: Promise.resolve({}) });
+    renderWithShell(resolvedPricing);
 
     expect(screen.getByTestId('app-backdrop')).toBeTruthy();
     expect(screen.queryByTestId('hero-bg-layer-1')).toBeNull();

@@ -4,8 +4,9 @@ import { cleanup, render, screen } from '@testing-library/react';
 
 import PricingPage from '../pricing/page.jsx';
 
-beforeEach(() => {
-  render(<PricingPage />);
+beforeEach(async () => {
+  const resolved = await PricingPage({ searchParams: Promise.resolve({}) });
+  render(<>{resolved}</>);
 });
 
 afterEach(() => {

@@ -31,16 +31,16 @@ afterEach(() => {
 });
 
 describe('HeroHeadline accent animation', () => {
-  test('renders "Readable PDFs" as gradient accent and second line as plain text', () => {
+  test('renders "Upload your spreadsheet." as gradient accent and second line as plain text', () => {
     render(<HeroHeadline />);
 
     const accent = screen.getByTestId('hero-headline-accent');
     expect(accent).toBeTruthy();
-    expect(accent.textContent).toBe('Readable PDFs');
+    expect(accent.textContent).toBe('Upload your spreadsheet.');
     expect(accent.className).toContain('hero-accent');
     expect(accent.className).toContain('hero-accent--sections');
 
-    const secondLine = screen.getByText(/from wide tables/);
+    const secondLine = screen.getByText(/Get a PDF you can actually send/);
     expect(secondLine).toBeTruthy();
     expect(secondLine.className).not.toContain('hero-accent');
     expect(secondLine.className).not.toContain('hero-accent--sections');
