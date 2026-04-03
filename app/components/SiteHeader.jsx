@@ -60,6 +60,9 @@ export default function SiteHeader() {
 
           {/* Desktop nav — hidden on mobile */}
           <nav className="hidden sm:flex items-center gap-6 text-sm text-[var(--color-muted)]">
+            <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/examples">
+              Examples
+            </a>
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/pricing">
               Pricing
             </a>
@@ -110,6 +113,13 @@ export default function SiteHeader() {
         )}
       >
         <nav className="flex flex-col gap-1">
+          <a
+            href="/examples"
+            onClick={closeMenu}
+            className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
+          >
+            Examples
+          </a>
           <a
             href="/pricing"
             onClick={closeMenu}

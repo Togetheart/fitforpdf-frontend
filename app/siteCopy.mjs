@@ -629,6 +629,11 @@ export const SEO = {
     description: 'Best practices for exporting audit Excel reports to PDF that clients can read — including tools like fitforpdf for structured output.',
     slug: 'audit-report-excel-to-pdf-tips',
   },
+  examples: {
+    title: 'Real PDF Examples from Public Datasets — fitforpdf',
+    description: 'See real PDFs generated from French government open data. Wide datasets with 20+ columns automatically structured into readable, paginated PDFs.',
+    slug: 'examples',
+  },
 };
 
 export const TESTIMONIAL_QUOTES = [

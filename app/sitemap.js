@@ -112,6 +112,14 @@ export default function sitemap() {
       priority: 0.6,
     },
 
+    // Examples
+    {
+      url: `${SEO.siteUrl}/examples`,
+      lastModified: pageModDate('examples/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+
     // About
     {
       url: `${SEO.siteUrl}/about`,
