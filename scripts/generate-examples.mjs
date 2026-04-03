@@ -39,8 +39,8 @@ function loadEnv() {
 }
 loadEnv();
 
-const API_URL = process.env.CLEANSHEET_API_URL || process.env.BACKEND_URL;
-const API_KEY = process.env.CLEANSHEET_API_KEY || process.env.API_KEY;
+const API_URL = process.env.CLEAN_SHEET_API_URL || process.env.CLEANSHEET_API_URL || process.env.BACKEND_URL;
+const API_KEY = process.env.NEATEXPORT_API_KEY || process.env.CLEANSHEET_API_KEY || process.env.API_KEY;
 
 if (!API_URL || !API_KEY) {
   console.error('Missing CLEANSHEET_API_URL / CLEANSHEET_API_KEY. Set them in .env.local or env vars.');
@@ -50,48 +50,40 @@ if (!API_URL || !API_KEY) {
 /* ─── Dataset config ─── */
 const DATASETS = [
   {
-    slug: 'budget-communal-2024',
-    title: 'Municipal Budgets 2024',
+    slug: 'irve-bornes-recharge',
+    title: 'Electric Vehicle Charging Stations',
     source: 'data.gouv.fr',
-    sourceUrl: 'https://www.data.gouv.fr/fr/datasets/balances-comptables-des-communes/',
-    csvUrl: 'https://www.data.gouv.fr/fr/datasets/r/5e5e12f6-2e42-4068-8e64-a6040e2672c7',
-    maxRows: 400,
+    sourceUrl: 'https://www.data.gouv.fr/fr/datasets/irve-statique-engie-vianeo/',
+    csvUrl: 'https://static.data.gouv.fr/resources/irve-statique-engie-vianeo-all-janvier2025-csv/20251204-125624/data.csv',
+    maxRows: 200,
     descriptionTemplate: (rows, cols) =>
-      `Annual French municipal budget data — ${cols} financial columns covering revenues, expenses, and balance sheets across ${rows} municipalities.`,
+      `French EV charging station network — ${cols} columns covering location, operator, connector types, power output, and accessibility across ${rows} stations.`,
   },
   {
-    slug: 'elections-legislatives-2024',
-    title: 'Legislative Election Results 2024',
+    slug: 'elections-europeennes-2024',
+    title: 'European Election Results 2024',
     source: 'data.gouv.fr',
-    sourceUrl: 'https://www.data.gouv.fr/fr/datasets/elections-legislatives-des-30-juin-et-7-juillet-2024-resultats-definitifs-du-1er-tour/',
-    csvUrl: 'https://www.data.gouv.fr/fr/datasets/r/27a20e76-d54e-4c70-b3b0-16d5c73e738f',
-    maxRows: 600,
+    sourceUrl: 'https://www.data.gouv.fr/fr/datasets/resultats-elections-europeennes-2024/',
+    csvUrl: 'https://static.data.gouv.fr/resources/resultats-elections-europeennes-2024-2/20240722-082537/resultats-elections-europeennes-2024.csv',
+    maxRows: 200,
     descriptionTemplate: (rows, cols) =>
-      `First-round legislative election results — ${cols} columns with candidate names, votes, and turnout per constituency.`,
+      `2024 European Parliament election results — ${cols} columns with votes per party, turnout, abstention rates, and blank/null ballots across ${rows} municipalities.`,
   },
   {
-    slug: 'etablissements-sante-finess',
-    title: 'Health Facilities Directory (FINESS)',
+    slug: 'annuaire-etablissements-scolaires',
+    title: 'School Directory (Orléans Métropole)',
     source: 'data.gouv.fr',
-    sourceUrl: 'https://www.data.gouv.fr/fr/datasets/finess-extraction-du-fichier-des-etablissements/',
-    csvUrl: 'https://www.data.gouv.fr/fr/datasets/r/2ce43ade-8d2c-4d1d-81da-ca06c82abc68',
-    maxRows: 500,
+    sourceUrl: 'https://www.data.gouv.fr/fr/datasets/annuaire-des-etablissements-scolaires-orleans-metropole/',
+    csvUrl: 'https://data.orleans-metropole.fr/api/explore/v2.1/catalog/datasets/om-referentiel-annuaire-education/exports/csv?use_labels=true',
+    maxRows: 265,
     descriptionTemplate: (rows, cols) =>
-      `Directory of French health facilities — ${cols} columns including type, capacity, address, and regulatory status.`,
-  },
-  {
-    slug: 'sirene-entreprises',
-    title: 'Business Registry (SIRENE extract)',
-    source: 'data.gouv.fr',
-    sourceUrl: 'https://www.data.gouv.fr/fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret/',
-    csvUrl: 'https://www.data.gouv.fr/fr/datasets/r/0651fb76-bcf3-4f6a-a38d-bc04fa708576',
-    maxRows: 400,
-    descriptionTemplate: (rows, cols) =>
-      `French business registry extract — ${cols} columns of company data including legal form, activity codes, workforce, and addresses.`,
+      `School directory for Orléans metropolitan area — ${cols} columns including school type, status, address, academic zone, and geographic coordinates across ${rows} establishments.`,
   },
 ];
 
 /* ─── Helpers ─── */
+
+const MAX_COLUMNS = 50;
 
 async function fetchCsv(url, maxRows) {
   console.log(`  Fetching CSV from ${url}`);
@@ -100,14 +92,24 @@ async function fetchCsv(url, maxRows) {
 
   const text = await resp.text();
   const lines = text.split('\n').filter((l) => l.trim());
-  const header = lines[0];
-  const columns = header.split(/[,;\t]/).length;
+  const sep = lines[0].includes(';') ? ';' : ',';
+  const totalColumns = lines[0].split(sep).length;
+
+  // Limit columns if needed (backend rejects > ~55 cols)
+  let columns = totalColumns;
+  let processedLines = lines;
+  if (totalColumns > MAX_COLUMNS) {
+    console.log(`  Trimming from ${totalColumns} to ${MAX_COLUMNS} columns`);
+    processedLines = lines.map((line) => line.split(sep).slice(0, MAX_COLUMNS).join(sep));
+    columns = MAX_COLUMNS;
+  }
 
   // Limit rows (header + maxRows data rows)
-  const limited = [header, ...lines.slice(1, maxRows + 1)].join('\n');
-  const rows = Math.min(lines.length - 1, maxRows);
+  const header = processedLines[0];
+  const limited = [header, ...processedLines.slice(1, maxRows + 1)].join('\n');
+  const rows = Math.min(processedLines.length - 1, maxRows);
 
-  console.log(`  ${rows} rows × ${columns} columns (limited from ${lines.length - 1} rows)`);
+  console.log(`  ${rows} rows × ${columns} columns (limited from ${lines.length - 1} rows × ${totalColumns} cols)`);
   return { csv: limited, rows, columns };
 }
 
@@ -116,9 +118,13 @@ async function renderPdf(csvContent, filename) {
   const formData = new FormData();
   formData.append('file', new Blob([csvContent], { type: 'text/csv' }), filename);
 
-  const resp = await fetch(`${API_URL}/render`, {
+  const renderUrl = new URL(`${API_URL.replace(/\/$/, '')}/render`);
+  renderUrl.searchParams.set('locale', 'en');
+  renderUrl.searchParams.set('columnMap', 'auto');
+
+  const resp = await fetch(renderUrl, {
     method: 'POST',
-    headers: { 'x-api-key': API_KEY },
+    headers: { 'X-NEATEXPORT-KEY': API_KEY },
     body: formData,
   });
 
