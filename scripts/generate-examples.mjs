@@ -16,9 +16,10 @@
  *   CLEANSHEET_API_KEY  — API key   (default: from .env.local)
  */
 
-import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
+import { writeFileSync, readFileSync, mkdirSync, existsSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -178,6 +179,83 @@ ${entries.join(',\n')},
   console.log(`\n✅ Updated ${DATA_FILE}`);
 }
 
+/* ─── Screenshot ─── */
+
+let _browser = null;
+let _httpServer = null;
+let _serverPort = 0;
+
+async function ensureBrowser() {
+  if (_browser) return _browser;
+  const { chromium } = await import('playwright');
+  // Use system Chrome (has built-in PDF viewer, unlike headless shell)
+  _browser = await chromium.launch({ channel: 'chrome', headless: true });
+  return _browser;
+}
+
+async function ensureServer() {
+  if (_httpServer) return _serverPort;
+  const http = await import('http');
+  const { createReadStream, statSync } = await import('fs');
+
+  _httpServer = http.createServer((req, res) => {
+    const filePath = req.url.slice(1); // strip leading /
+    try {
+      const stat = statSync(filePath);
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Length': stat.size,
+        'Content-Disposition': 'inline',
+      });
+      createReadStream(filePath).pipe(res);
+    } catch {
+      res.writeHead(404);
+      res.end('Not found');
+    }
+  });
+
+  await new Promise((resolve) => {
+    _httpServer.listen(0, '127.0.0.1', () => {
+      _serverPort = _httpServer.address().port;
+      resolve();
+    });
+  });
+  return _serverPort;
+}
+
+async function closeBrowserAndServer() {
+  if (_browser) { await _browser.close(); _browser = null; }
+  if (_httpServer) { _httpServer.close(); _httpServer = null; }
+}
+
+async function screenshotPdf(pdfPath, outDir) {
+  console.log(`  Taking screenshot...`);
+  try {
+    const browser = await ensureBrowser();
+    const port = await ensureServer();
+    const page = await browser.newPage();
+    await page.setViewportSize({ width: 1200, height: 900 });
+
+    // Serve PDF via HTTP so Chromium renders it inline
+    const url = `http://127.0.0.1:${port}/${pdfPath}`;
+    await page.goto(url, { waitUntil: 'networkidle', timeout: 20000 });
+    await page.waitForTimeout(3000);
+
+    const pngPath = join(outDir, '_screenshot.png');
+    await page.screenshot({ path: pngPath, type: 'png' });
+    await page.close();
+
+    // Copy PNG as overview images (named .webp for consistency, browsers handle PNG data fine)
+    const { copyFileSync } = await import('fs');
+    copyFileSync(pngPath, join(outDir, 'overview.webp'));
+    copyFileSync(pngPath, join(outDir, 'overview@2x.webp'));
+    unlinkSync(pngPath);
+    console.log(`  Screenshots saved`);
+  } catch (err) {
+    console.log(`  ⚠ Screenshot failed: ${err.message}`);
+  }
+}
+
 /* ─── Main ─── */
 
 async function processDataset(dataset) {
@@ -200,12 +278,8 @@ async function processDataset(dataset) {
   writeFileSync(pdfPath, pdfBuffer);
   console.log(`  Saved PDF to ${pdfPath}`);
 
-  // 5. Screenshot (placeholder message — requires Playwright)
-  const overviewPath = join(outDir, 'overview.webp');
-  if (!existsSync(overviewPath) || readFileSync(overviewPath).length < 1000) {
-    console.log(`  ⚠ Screenshot not generated — run with Playwright for real screenshots`);
-    console.log(`    Placeholder image kept at ${overviewPath}`);
-  }
+  // 5. Screenshot via Playwright
+  await screenshotPdf(pdfPath, outDir);
 
   return {
     slug: dataset.slug,
@@ -258,6 +332,7 @@ async function main() {
     }
   }
 
+  await closeBrowserAndServer();
   console.log(`\nDone. ${results.length}/${targets.length} examples generated.`);
 }
 
