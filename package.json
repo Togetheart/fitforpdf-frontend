@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start -p 3001",
     "smoke:web": "node scripts/smoke-web.mjs",
+    "smoke:checkout": "node --test app/__tests__/checkoutSmoke.test.mjs",
     "examples:generate": "node scripts/generate-examples.mjs"
   },
   "dependencies": {
