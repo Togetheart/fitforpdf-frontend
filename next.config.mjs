@@ -7,18 +7,6 @@ const nextConfig = {
   // without being 308-redirected by Next.js
   skipTrailingSlashRedirect: true,
 
-  // Force permanent redirects for non-www → www
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'fitforpdf.com' }],
-        destination: 'https://www.fitforpdf.com/:path*',
-        permanent: true, // 308 permanent redirect
-      },
-    ];
-  },
-
   // Reverse proxy for PostHog — bypasses ad-blockers
   async rewrites() {
     return [
