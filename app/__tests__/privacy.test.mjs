@@ -46,3 +46,19 @@ test('privacy policy contains infrastructure and legal trust lines', () => {
 test('privacy policy includes contact', () => {
   assert.equal(privacyText().includes('support@fitforpdf.com') || privacyText().includes('contact'), true);
 });
+
+test('privacy policy makes explicit "no LLM / no AI provider" statement', () => {
+  const text = privacyText();
+  // At least one explicit mention that data does NOT go to any LLM provider
+  const hasLlmDisclaimer =
+    text.includes('no llm') ||
+    text.includes('no openai') ||
+    text.includes('no ai provider') ||
+    text.includes('deterministic');
+  assert.equal(hasLlmDisclaimer, true, 'Privacy page must explicitly state that no LLM/AI provider is used');
+});
+
+test('privacy FAQ contains an AI/LLM question', () => {
+  const faqIds = PRIVACY_PAGE_COPY.faq.map((item) => item.id);
+  assert.equal(faqIds.includes('ai-llm'), true, 'Privacy FAQ must include an ai-llm entry');
+});

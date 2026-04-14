@@ -17,7 +17,7 @@ export const LANDING_COPY = {
   heroMicrocopy: '',
   heroMicrocopyFree: '3 free exports. No account needed. Packs from $19.',
   heroPrimaryCta: 'Generate PDF',
-  heroTrustLine: 'Processed in France. Files deleted instantly. No data stored.',
+  heroTrustLine: 'Processed in France. Files deleted instantly. No AI, no data stored.',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
 
   problemTitle: "The problem isn't exporting. It's everything you do after.",
@@ -492,7 +492,7 @@ export const PRIVACY_PAGE_COPY = {
   pageTitle: 'Your data.',
   pageTitleAccent: 'Not our business.',
   pageSubtitle: 'fitforpdf processes files — it does not store them.',
-  microLine: 'No accounts. No tracking of file contents.',
+  microLine: '100% deterministic pipeline. No LLMs, no AI providers, no data leaves the EU.',
 
   handlingTitle: 'How file handling works',
   files: {
@@ -516,9 +516,9 @@ export const PRIVACY_PAGE_COPY = {
 
   dontDoTitle: "What we don't do",
   dontDo: [
-    'No AI processing. No model training.',
-    'We do not read your documents.',
-    'We do not resell your data.',
+    'No LLM calls. No OpenAI, Anthropic, Google — your data never leaves our server.',
+    'We do not read your documents. No human or model training.',
+    'We do not resell your data. Ever.',
   ],
 
   infrastructureTitle: 'Infrastructure',
@@ -567,6 +567,11 @@ export const PRIVACY_PAGE_COPY = {
   ],
   faq: [
     {
+      id: 'ai-llm',
+      q: 'Do you use AI or LLMs to process my files?',
+      a: 'No. The processing pipeline is 100% deterministic — a CSV parser, structural heuristics, and a PDF renderer. We make zero API calls to OpenAI, Anthropic, Google, or any other AI provider. Your file content never leaves our OVH server in France.',
+    },
+    {
       id: 'retention',
       q: 'How long do you keep files?',
       a: 'Input files are deleted immediately after conversion. The generated PDF is available for 15 minutes, then automatically deleted.',
@@ -607,7 +612,7 @@ export const SEO = {
   },
   privacy: {
     title: 'Privacy Policy — Your Data, Not Our Business',
-    description: 'fitforpdf deletes all files immediately after processing. No content stored in logs. GDPR compliant. Data processed in France.',
+    description: 'fitforpdf uses a 100% deterministic pipeline — no LLMs, no OpenAI, no Anthropic. Files deleted immediately after processing. GDPR compliant. Data processed in France.',
   },
   excelCutoff: {
     title: 'Fix Cut-Off Columns in Excel PDF Export',
