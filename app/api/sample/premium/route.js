@@ -8,7 +8,7 @@ function badGateway(message) {
 }
 
 async function getLocalSampleCsv() {
-  const localPath = path.join(process.cwd(), 'public', 'enterprise-invoices-demo.csv');
+  const localPath = path.join(process.cwd(), 'public', 'CSV', 'enterprise-invoices-demo.csv');
   try {
     const text = await readFile(localPath, 'utf8');
     if (!text || !text.trim()) return null;
