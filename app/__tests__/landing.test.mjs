@@ -57,3 +57,30 @@ test('free exports text does not belong to hero section', () => {
   assert.equal(toolSection.freeQuotaText.includes('Free:'), true);
   assert.equal(toolSection.freeQuotaText.includes('exports left'), true);
 });
+
+test('hero microcopy keeps free tier + pricing anchor', () => {
+  const copy = LANDING_COPY.heroMicrocopyFree;
+  assert.equal(typeof copy, 'string');
+  assert.equal(copy.length > 0, true);
+  assert.equal(/free/i.test(copy), true, 'Hero microcopy must mention the free tier');
+  assert.equal(/\$/.test(copy), true, 'Hero microcopy must mention pricing ($)');
+});
+
+test('hero trust tagline carries the no-LLM signal on first fold', () => {
+  // Two-line Apple-style microcopy: the second line ("heroTrustTagline") is the
+  // trust/privacy signal flagged by Mathieu (2026-04-14). "No LLM" is the
+  // accented phrase and must remain visible on the landing.
+  const tagline = LANDING_COPY.heroTrustTagline;
+  const accent = LANDING_COPY.heroTrustAccent;
+  assert.equal(typeof tagline, 'string');
+  assert.equal(typeof accent, 'string');
+  assert.equal(/no llm/i.test(tagline), true, 'Trust tagline must contain "No LLM"');
+  assert.equal(accent.toLowerCase(), 'no llm', 'Trust accent must be "No LLM"');
+  // The accent must be the prefix of the tagline (so page.jsx can safely
+  // slice it off to render the accent in semibold + foreground color).
+  assert.equal(
+    tagline.startsWith(accent),
+    true,
+    'Trust tagline must start with the accent phrase so the JSX split is safe',
+  );
+});

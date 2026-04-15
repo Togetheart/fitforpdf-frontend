@@ -19,6 +19,11 @@ export const LANDING_COPY = {
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'Processed in France. Files deleted instantly. No AI, no data stored.',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
+  // Apple-style trust tagline — second line under the hero microcopy.
+  // "No LLM" is rendered in semibold + foreground color in page.jsx to give
+  // it a typographic accent without a pill/box. See Mathieu feedback 2026-04-14.
+  heroTrustTagline: 'No LLM. Files deleted instantly. EU-hosted.',
+  heroTrustAccent: 'No LLM',
 
   problemTitle: "The problem isn't exporting. It's everything you do after.",
   problemBody: "Your spreadsheet exports, but the PDF still isn't ready to send. Columns get cut off. Page breaks land in the wrong places. You shrink fonts, adjust margins, export again, and hope it looks presentable. fitforpdf removes that cleanup step.",
