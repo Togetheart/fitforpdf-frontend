@@ -84,7 +84,7 @@ describe('home demo proof block', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /Upload your spreadsheet/,
+        name: /Make your export client-ready/,
       }),
     ).toBeTruthy();
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();

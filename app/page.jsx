@@ -267,28 +267,8 @@ export default function Page() {
               <span className="text-xs text-[var(--color-muted)]">
                 {LANDING_COPY.heroMicrocopyFree}
               </span>
-              <span className="inline-flex items-center gap-1.5 text-xs text-[var(--color-muted)]">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-emerald-600"
-                  aria-hidden="true"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
-                <span>
-                  <span className="font-semibold text-[var(--color-text)]">
-                    {LANDING_COPY.heroTrustAccent}
-                  </span>
-                  {LANDING_COPY.heroTrustTagline.slice(LANDING_COPY.heroTrustAccent.length)}
-                </span>
+              <span className="text-xs text-[var(--color-muted)]">
+                {LANDING_COPY.heroFileCompat}
               </span>
             </div>
           </div>

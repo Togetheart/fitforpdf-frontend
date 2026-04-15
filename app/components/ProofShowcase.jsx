@@ -176,7 +176,7 @@ const FORMAT_CONFIGS = {
     sourceLink: '/CSV/enterprise-invoices-demo.csv',
     sourceLinkLabel: 'Download source CSV ↗',
     tabs: CSV_TABS,
-    outputLabel: 'Client-ready PDF',
+    outputLabel: 'Ready to send',
     statLine: '16 columns. Automatically split into 5 readable sections.',
   },
   xlsx: {
@@ -191,7 +191,7 @@ const FORMAT_CONFIGS = {
     sourceLink: null,
     sourceLinkLabel: null,
     tabs: XLSX_TABS,
-    outputLabel: 'Client-ready PDF',
+    outputLabel: 'Ready to send',
     statLine: '9 columns. Automatically split into 5 readable sections.',
   },
 };
@@ -447,6 +447,8 @@ export default function ProofShowcase() {
             initialPosition={35}
             className="shadow-[0_2px_20px_rgba(0,0,0,0.06)]"
             onInteract={() => setUserPaused(true)}
+            beforeLabel={config.inputLabel}
+            afterLabel={config.outputLabel}
           />
         </div>
 

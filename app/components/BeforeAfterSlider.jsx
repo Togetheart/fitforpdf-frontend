@@ -10,6 +10,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
  *  - beforeSrc / beforeAlt: "before" image (Excel/CSV source)
  *  - afterSrc / afterAlt: "after" image (PDF result)
  *  - initialPosition: 0–100, default 35 (show mostly the "after" side)
+ *  - beforeLabel / afterLabel: pill labels shown over the slider
  */
 export default function BeforeAfterSlider({
   beforeSrc,
@@ -21,6 +22,8 @@ export default function BeforeAfterSlider({
   initialPosition = 35,
   className = '',
   onInteract,
+  beforeLabel = 'Source spreadsheet',
+  afterLabel = 'Ready to send',
 }) {
   const containerRef = useRef(null);
   const [position, setPosition] = useState(initialPosition);
@@ -165,7 +168,7 @@ export default function BeforeAfterSlider({
           transition: 'opacity 200ms',
         }}
       >
-        Source spreadsheet
+        {beforeLabel}
       </div>
       <div
         className="absolute right-3 top-3 z-10 rounded-full bg-[#2563EB] px-3 py-1 text-xs font-semibold text-white shadow-sm"
@@ -174,7 +177,7 @@ export default function BeforeAfterSlider({
           transition: 'opacity 200ms',
         }}
       >
-        Client-ready PDF
+        {afterLabel}
       </div>
     </div>
   );

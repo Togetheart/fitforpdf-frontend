@@ -57,14 +57,14 @@ describe('landing conversion-first structure', () => {
   });
 
   test('hero keeps the 2-line headline with required rhythm', () => {
-    const heading = screen.getByRole('heading', { level: 1, name: /Upload your spreadsheet/i });
+    const heading = screen.getByRole('heading', { level: 1, name: /Make your export client-ready/i });
 
     expect(heading).toBeTruthy();
-    expect(screen.getByTestId('hero-headline-accent').textContent).toBe('Upload your spreadsheet.');
-    expect(screen.getByText(/Get a PDF you can actually send/)).toBeTruthy();
+    expect(screen.getByTestId('hero-headline-accent').textContent).toBe(LANDING_COPY.heroHeadlineL1);
+    expect(screen.getByText(/Without the cleanup/)).toBeTruthy();
     const headingText = heading.textContent || '';
-    expect(headingText).toContain('Upload your spreadsheet.');
-    expect(headingText).toContain('Get a PDF you can actually send.');
+    expect(headingText).toContain(LANDING_COPY.heroHeadlineL1);
+    expect(headingText).toContain(LANDING_COPY.heroHeadlineL2);
   });
 
   test('unverified social proof claim is not shown', () => {
@@ -126,7 +126,10 @@ describe('landing conversion-first structure', () => {
     expect(proofCard).toBeTruthy();
     expect(proofCard).toBeTruthy();
     expect(within(proofCard).getByText('Source spreadsheet')).toBeTruthy();
-    expect(within(proofCard).getByText('Client-ready PDF')).toBeTruthy();
+    // Proof card output label is 'Ready to send' — liberates 'client-ready'
+    // as the exclusive signature of the H1 headline (2026-04-15 V4).
+    expect(within(proofCard).getByText('Ready to send')).toBeTruthy();
+    expect(within(proofCard).queryByText('Client-ready PDF')).toBeNull();
   });
 
   test('starter plan remains the highlighted pay-as-you-go option', () => {
@@ -160,7 +163,7 @@ describe('landing conversion-first structure', () => {
     expect((previewCard.className || '').includes('home-preview-float')).toBe(true);
     // Default format is XLSX
     expect(within(previewCard).getByText('Source spreadsheet')).toBeTruthy();
-    expect(within(previewCard).getByText('Client-ready PDF')).toBeTruthy();
+    expect(within(previewCard).getByText('Ready to send')).toBeTruthy();
     // XLSX format selected by default — one of the images should contain '/Excel/'
     const proofImages = previewCard.querySelectorAll('img');
     const hasExcelImage = Array.from(proofImages).some((img) => (img.getAttribute('src') || '').includes('/Excel/'));
@@ -174,7 +177,7 @@ describe('landing conversion-first structure', () => {
     expect(previewCard).toBeTruthy();
     expect(proofSection).toBeTruthy();
     expect(proofSection.contains(previewCard)).toBe(true);
-    expect(previewCard.textContent).toContain('Client-ready PDF');
+    expect(previewCard.textContent).toContain('Ready to send');
     expect(previewCard.textContent).toContain('Source spreadsheet');
   });
 

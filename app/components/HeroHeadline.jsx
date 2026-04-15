@@ -13,6 +13,7 @@ export default function HeroHeadline() {
   const bracketRRef = useRef(null);
   const containerRef = useRef(null);
   const fBarsRef = useRef(null);
+  const eyebrowRef = useRef(null);
   const initialWidthRef = useRef(null);
 
   const hasWindow = typeof window !== 'undefined';
@@ -63,6 +64,7 @@ export default function HeroHeadline() {
     const bL = bracketLRef.current;
     const bR = bracketRRef.current;
     const fBars = fBarsRef.current;
+    const eyebrow = eyebrowRef.current;
     if (!bL || !bR || !fBars) return;
 
     // External elements driven by phase 2
@@ -76,6 +78,7 @@ export default function HeroHeadline() {
     bL.style.transform = '';
     bR.style.transform = '';
     fBars.style.opacity = '0';
+    if (eyebrow) eyebrow.style.opacity = '';
 
     if (comparison) {
       comparison.style.opacity = '0';
@@ -112,7 +115,14 @@ export default function HeroHeadline() {
         bL.style.opacity = '';
         bR.style.opacity = '';
         fBars.style.opacity = '0';
+        if (eyebrow) eyebrow.style.opacity = '';
       } else {
+        // clipPath squeeze: text is clipped to a shrinking central window
+        // as the brackets slide inward. The "mid-letter" frame only shows
+        // in frozen screenshots — in live 60fps animation each frame is
+        // ~16ms and not perceptible. Linear opacity alternatives created
+        // worse visible bugs (empty-bracket state or bracket/text overlap)
+        // so we kept the original clipPath approach (V4.2, 2026-04-15).
         const clip = current * 50;
         text.style.clipPath = `inset(0 ${clip}% 0 ${clip}%)`;
         bL.style.transform = `translateX(${half * current}px)`;
@@ -123,6 +133,11 @@ export default function HeroHeadline() {
         fBars.style.opacity = String(logoT);
         bL.style.opacity = String(1 - logoT);
         bR.style.opacity = String(1 - logoT);
+
+        // Eyebrow fades alongside phase 1 — avoids a lonely muted trust
+        // line hanging in mid-air once the headline is gone. Linear fade
+        // matching bracket travel (1 - current).
+        if (eyebrow) eyebrow.style.opacity = String(Math.max(0, 1 - current));
       }
 
       // ─── Phase 2: comparison reveal ───────────────────────────────────
@@ -191,6 +206,7 @@ export default function HeroHeadline() {
       bL.style.opacity = '';
       bR.style.opacity = '';
       fBars.style.opacity = '0';
+      if (eyebrow) eyebrow.style.opacity = '';
       if (comparison) {
         comparison.style.opacity = '0';
         comparison.style.transform = '';
@@ -211,8 +227,27 @@ export default function HeroHeadline() {
 
   return (
     <>
-    <div className="hero-headline-line flex justify-center mb-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">{LANDING_COPY.heroPainBadge}</p>
+    <div ref={eyebrowRef} className="hero-headline-line flex justify-center mb-4 will-change-[opacity]">
+      <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-muted)]">
+        {(() => {
+          // Split the eyebrow around the accent phrase so the accent can
+          // sit anywhere in the string (V4.2 moved "No LLM" to the middle).
+          const full = LANDING_COPY.heroTrustEyebrow;
+          const accent = LANDING_COPY.heroTrustEyebrowAccent;
+          const idx = full.toLowerCase().indexOf(accent.toLowerCase());
+          if (idx < 0) return full;
+          const before = full.slice(0, idx);
+          const match = full.slice(idx, idx + accent.length);
+          const after = full.slice(idx + accent.length);
+          return (
+            <>
+              {before}
+              <span className="font-semibold text-[var(--color-text)]">{match}</span>
+              {after}
+            </>
+          );
+        })()}
+      </p>
     </div>
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-1 sm:space-y-2 leading-[1.15] tracking-tight text-2xl font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
@@ -229,7 +264,7 @@ export default function HeroHeadline() {
               data-anim={reducedMotion ? 'off' : 'on'}
               className="hero-accent hero-accent--sections inline-block"
             >
-              Upload your spreadsheet.
+              {LANDING_COPY.heroHeadlineL1}
             </span>
           </span>
           {/* Right bracket */}
@@ -255,7 +290,7 @@ export default function HeroHeadline() {
         </span>
       </span>
       <span className="hero-headline-line block text-[var(--color-text)]">
-        Get a PDF you can actually send.
+        {LANDING_COPY.heroHeadlineL2}
       </span>
     </h1>
     </>

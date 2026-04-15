@@ -4,6 +4,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import * as gsap from 'gsap';
 
 import HeroHeadline from '../components/HeroHeadline';
+import { LANDING_COPY } from '../siteCopy.mjs';
 
 function configureMatchMedia(reduceMotion = false) {
   Object.defineProperty(window, 'matchMedia', {
@@ -31,16 +32,16 @@ afterEach(() => {
 });
 
 describe('HeroHeadline accent animation', () => {
-  test('renders "Upload your spreadsheet." as gradient accent and second line as plain text', () => {
+  test('renders heroHeadlineL1 as gradient accent and heroHeadlineL2 as plain text', () => {
     render(<HeroHeadline />);
 
     const accent = screen.getByTestId('hero-headline-accent');
     expect(accent).toBeTruthy();
-    expect(accent.textContent).toBe('Upload your spreadsheet.');
+    expect(accent.textContent).toBe(LANDING_COPY.heroHeadlineL1);
     expect(accent.className).toContain('hero-accent');
     expect(accent.className).toContain('hero-accent--sections');
 
-    const secondLine = screen.getByText(/Get a PDF you can actually send/);
+    const secondLine = screen.getByText(LANDING_COPY.heroHeadlineL2);
     expect(secondLine).toBeTruthy();
     expect(secondLine.className).not.toContain('hero-accent');
     expect(secondLine.className).not.toContain('hero-accent--sections');
