@@ -61,6 +61,24 @@ const softwareAppLd = {
   },
 };
 
+// WebSite with SearchAction — helps Google associate "fitforpdf" as a
+// searchable brand name and enables the sitelinks search box in SERPs.
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'fitforpdf',
+  alternateName: ['FitForPDF', 'Fit For PDF'],
+  url: SEO.siteUrl,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SEO.siteUrl}/?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
 const organizationLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -117,6 +135,7 @@ export default function RootLayout({ children }) {
       <body className="bg-[var(--color-bg)] text-[var(--color-text)]">
         {/* JSON-LD structured data for search engines & AI */}
         <JsonLd data={softwareAppLd} />
+        <JsonLd data={websiteLd} />
         <JsonLd data={organizationLd} />
         <ViewTransitions />
         <SiteShell>{children}</SiteShell>
