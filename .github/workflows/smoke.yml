@@ -54,7 +54,7 @@ jobs:
       - name: Web smoke tests (frontend proxy)
         run: npm run smoke:web
         env:
-          BASE_URL: ${{ secrets.SMOKE_FRONTEND_URL }}
+          BASE_URL: https://www.fitforpdf.com
 
       # ── Notify on failure ──
       - name: Alert on failure
