@@ -11,6 +11,7 @@ const lora = Lora({
   variable: '--font-lora',
 });
 import ViewTransitions from './components/ViewTransitions';
+import { Analytics } from '@vercel/analytics/react';
 import { SEO } from './siteCopy.mjs';
 import { JsonLd } from './components/JsonLd';
 
@@ -139,6 +140,7 @@ export default function RootLayout({ children }) {
         <JsonLd data={organizationLd} />
         <ViewTransitions />
         <SiteShell>{children}</SiteShell>
+        <Analytics />
         {clarityId && (
           <Script
             id="microsoft-clarity"
