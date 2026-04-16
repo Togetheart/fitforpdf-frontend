@@ -228,6 +228,7 @@ export async function POST(req) {
       method: 'POST',
       headers: upstreamHeaders,
       body: formData,
+      signal: AbortSignal.timeout(55000),
     });
   } catch (error) {
     return jsonError(502, 'Upstream request failed', {

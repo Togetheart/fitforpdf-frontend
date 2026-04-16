@@ -397,7 +397,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
           : null;
     const packId = pack?.stripePackId || fallbackPackId;
     if (!packId) return;
-    checkout.openCheckout(packId);
+    checkout.openCreditsPack(packId);
   }
 
   return (

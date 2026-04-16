@@ -41,6 +41,7 @@ export const metadata = {
   },
   icons: {
     icon: '/fitforpdf-icon.svg',
+    apple: '/fitforpdf-icon.svg',
   },
 };
 

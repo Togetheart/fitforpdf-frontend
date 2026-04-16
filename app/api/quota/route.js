@@ -49,16 +49,33 @@ export async function GET(req) {
     });
   }
 
+  const MAX_ATTEMPTS = 2;
+  const RETRY_DELAY_MS = 600;
+  const TIMEOUT_MS = 8000;
+
   let upstreamResponse;
-  try {
-    upstreamResponse = await fetch(quotaUrl, {
-      method: 'GET',
-      headers: buildHeaders(req),
-    });
-  } catch (error) {
+  let lastError;
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    try {
+      upstreamResponse = await fetch(quotaUrl, {
+        method: 'GET',
+        headers: buildHeaders(req),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      });
+      break;
+    } catch (error) {
+      lastError = error;
+      console.error(`[api/quota] attempt ${attempt + 1}/${MAX_ATTEMPTS} failed:`, error?.message || 'unknown');
+      if (attempt < MAX_ATTEMPTS - 1) {
+        await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
+      }
+    }
+  }
+
+  if (!upstreamResponse) {
     return jsonResponse(502, {
       error: 'Upstream request failed',
-      details: { error: error instanceof Error ? error.message : 'unknown' },
+      details: { error: lastError instanceof Error ? lastError.message : 'unknown' },
     });
   }
 
