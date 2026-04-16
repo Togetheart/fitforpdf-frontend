@@ -1,0 +1,62 @@
+name: Smoke tests (production)
+
+on:
+  # Run after every production deploy via Vercel deployment status
+  deployment_status:
+
+  # Manual trigger from GitHub UI
+  workflow_dispatch:
+
+  # Safety net: run every 6 hours to catch backend regressions
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  smoke:
+    name: Smoke tests (live)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    # Only run on successful production deployments (skip preview deploys)
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'deployment_status' &&
+       github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      # ── Core smoke: health + sample CSV + upload -> PDF ──
+      - name: Core smoke tests
+        run: npm run smoke:core
+        env:
+          SMOKE_BACKEND_URL: ${{ secrets.SMOKE_BACKEND_URL }}
+          NEATEXPORT_API_KEY: ${{ secrets.NEATEXPORT_API_KEY }}
+
+      # ── Checkout smoke: all Stripe packs + pro plans ──
+      - name: Checkout smoke tests
+        run: npm run smoke:checkout
+        env:
+          SMOKE_BACKEND_URL: ${{ secrets.SMOKE_BACKEND_URL }}
+          NEATEXPORT_API_KEY: ${{ secrets.NEATEXPORT_API_KEY }}
+
+      # ── Web smoke: full frontend proxy render flow ──
+      - name: Web smoke tests (frontend proxy)
+        run: npm run smoke:web
+        env:
+          BASE_URL: ${{ secrets.SMOKE_FRONTEND_URL }}
+
+      # ── Notify on failure ──
+      - name: Alert on failure
+        if: failure()
+        run: echo "Smoke tests failed - backend or checkout may be down"
