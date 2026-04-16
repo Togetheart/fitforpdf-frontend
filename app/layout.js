@@ -11,7 +11,7 @@ const lora = Lora({
   variable: '--font-lora',
 });
 import ViewTransitions from './components/ViewTransitions';
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 import { SEO } from './siteCopy.mjs';
 import { JsonLd } from './components/JsonLd';
 
