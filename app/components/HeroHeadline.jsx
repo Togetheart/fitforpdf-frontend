@@ -228,24 +228,23 @@ export default function HeroHeadline() {
   return (
     <>
     <div ref={eyebrowRef} className="hero-headline-line flex justify-center mb-4 will-change-[opacity]">
-      <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-muted)]">
+      <p className="text-xs font-medium uppercase tracking-[0.14em]">
         {(() => {
-          // Split the eyebrow around the accent phrase so the accent can
-          // sit anywhere in the string (V4.2 moved "No LLM" to the middle).
-          const full = LANDING_COPY.heroTrustEyebrow;
-          const accent = LANDING_COPY.heroTrustEyebrowAccent;
-          const idx = full.toLowerCase().indexOf(accent.toLowerCase());
-          if (idx < 0) return full;
-          const before = full.slice(0, idx);
-          const match = full.slice(idx, idx + accent.length);
-          const after = full.slice(idx + accent.length);
-          return (
-            <>
-              {before}
-              <span className="font-semibold text-[var(--color-text)]">{match}</span>
-              {after}
-            </>
-          );
+          // Each pillar gets a color from the [F] logo palette (top→bottom
+          // = left→right): dark text, accent blue, accent blue at 50%.
+          // This mirrors the three horizontal bars inside the logo mark.
+          const PILLAR_CLASSES = [
+            'font-semibold text-[var(--color-text)]',           // NO LLM — top bar (dark)
+            'text-[var(--color-cta-bg)]',                       // ZERO STORAGE — mid bar (accent)
+            'text-[var(--color-cta-bg)] opacity-50',            // EU-HOSTED — bottom bar (accent faded)
+          ];
+          const pillars = LANDING_COPY.heroTrustEyebrow.split(' · ');
+          return pillars.map((pillar, i) => (
+            <span key={i}>
+              {i > 0 && <span className="text-[var(--color-muted)]"> · </span>}
+              <span className={PILLAR_CLASSES[i] || 'text-[var(--color-muted)]'}>{pillar}</span>
+            </span>
+          ));
         })()}
       </p>
     </div>

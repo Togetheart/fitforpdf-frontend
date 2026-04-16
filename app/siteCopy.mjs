@@ -3,13 +3,13 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 export const LANDING_COPY = {
   logoText: 'fitforpdf',
   heroTitle: 'Skip the cleanup.\\nSend it now.',
-  heroSubheadline: 'Wide tables. Cut-off columns. Broken page breaks. FitForPDF fixes all three, in one click.',
+  heroSubheadline: 'Wide tables. Cut-off columns. Broken page breaks. FitForPDF fixes all three: in one click.',
   heroSubheadlineL1: 'Wide tables. Cut-off columns. Broken page breaks.',
   // Staccato pain line (L2a) + solution line (L2b). Language validated by
   // Magdalena (2026-03-22): "cut-off columns", "awkward page breaks" and
   // Abhinav (2026-04-15): "wide Excel tables become unreadable".
   heroSubheadlineL2a: 'Wide tables. Cut-off columns. Broken page breaks.',
-  heroSubheadlineL2b: 'FitForPDF fixes all three, in one click.',
+  heroSubheadlineL2b: 'FitForPDF fixes all three: in one click.',
   heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
   proofTimeSaved: 'Typically saves 30 to 45 min per export',
