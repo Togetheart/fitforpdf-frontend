@@ -357,6 +357,26 @@ export default function Page() {
         </div>
       </div>
 
+      {/* Featured on — BetaList badge */}
+      <div className="w-full py-6 relative z-10 bg-[var(--color-bg-hero)] flex items-center justify-center">
+        <a
+          href="https://betalist.com/startups/fitforpdf?utm_campaign=badge-fitforpdf&utm_medium=badge&utm_source=badge-featured"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="fitforpdf featured on BetaList"
+          className="inline-block transition-opacity hover:opacity-80"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://betalist.com/badges/featured?id=154574&theme=dark"
+            alt="fitforpdf - Upload your spreadsheet and get a PDF you can actually send | BetaList"
+            width="188"
+            height="54"
+            loading="lazy"
+          />
+        </a>
+      </div>
+
       {/* Visual demo — moved before the upload for "proof first" flow */}
       <Section
         id={LANDING_COPY_KEYS.beforeAfter}

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0F172A;
+        font-family: 'Inter', system-ui, sans-serif;
+      }
+
+      /* ── Scene backgrounds ── */
+      .scene {
+        position: absolute;
+        top: 0; left: 0;
+        width: 1920px;
+        height: 1080px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      /* ── Scene 1: Pain ── */
+      #scene-pain {
+        background: #FAF8F5;
+      }
+      .pain-label {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #2563EB;
+        margin-bottom: 32px;
+      }
+      .pain-title {
+        font-size: 64px;
+        font-weight: 800;
+        color: #0F172A;
+        text-align: center;
+        line-height: 1.2;
+        max-width: 1200px;
+      }
+      .pain-bullets {
+        display: flex;
+        gap: 48px;
+        margin-top: 48px;
+      }
+      .pain-bullet {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 26px;
+        font-weight: 500;
+        color: #64748B;
+      }
+      .pain-bullet .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #EF4444;
+        flex-shrink: 0;
+      }
+
+      /* ── Scene 2: Brand reveal ── */
+      #scene-brand {
+        background: #0F172A;
+      }
+      .brand-name {
+        font-size: 96px;
+        font-weight: 800;
+        color: #FFFFFF;
+        letter-spacing: -2px;
+      }
+      .brand-name span {
+        color: #3B82F6;
+      }
+      .brand-tagline {
+        font-size: 36px;
+        font-weight: 500;
+        color: #94A3B8;
+        margin-top: 24px;
+        text-align: center;
+        line-height: 1.4;
+      }
+
+      /* ── Scene 3: How it works ── */
+      #scene-steps {
+        background: #FFFFFF;
+      }
+      .steps-title {
+        font-size: 44px;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 64px;
+      }
+      .steps-row {
+        display: flex;
+        gap: 64px;
+        align-items: flex-start;
+      }
+      .step-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 360px;
+        text-align: center;
+      }
+      .step-number {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #2563EB;
+        color: #FFFFFF;
+        font-size: 32px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+      .step-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 12px;
+      }
+      .step-desc {
+        font-size: 20px;
+        color: #64748B;
+        line-height: 1.5;
+      }
+      .step-arrow {
+        font-size: 48px;
+        color: #CBD5E1;
+        margin-top: 24px;
+        align-self: center;
+      }
+
+      /* ── Scene 4: Trust ── */
+      #scene-trust {
+        background: #F8FAFC;
+      }
+      .trust-row {
+        display: flex;
+        gap: 80px;
+        margin-bottom: 48px;
+      }
+      .trust-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .trust-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: #EFF6FF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      }
+      .trust-label {
+        font-size: 24px;
+        font-weight: 600;
+        color: #0F172A;
+      }
+      .trust-sub {
+        font-size: 32px;
+        font-weight: 500;
+        color: #64748B;
+        margin-top: 16px;
+      }
+
+      /* ── Scene 5: CTA ── */
+      #scene-cta {
+        background: #0F172A;
+      }
+      .cta-headline {
+        font-size: 56px;
+        font-weight: 800;
+        color: #FFFFFF;
+        text-align: center;
+        line-height: 1.3;
+        margin-bottom: 32px;
+      }
+      .cta-button {
+        background: #2563EB;
+        color: #FFFFFF;
+        font-size: 28px;
+        font-weight: 700;
+        padding: 20px 56px;
+        border-radius: 14px;
+        display: inline-block;
+      }
+      .cta-micro {
+        font-size: 22px;
+        color: #64748B;
+        margin-top: 20px;
+      }
+      .cta-url {
+        font-size: 26px;
+        font-weight: 600;
+        color: #3B82F6;
+        margin-top: 32px;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="15"
+      data-width="1920"
+      data-height="1080"
+    >
+
+      <!-- ═══ SCENE 1: Pain (0–3s) ═══ -->
+      <div id="scene-pain" class="clip scene" data-start="0" data-duration="3.5" data-track-index="1">
+        <div class="pain-label" id="pain-label">THE PROBLEM</div>
+        <div class="pain-title" id="pain-title">
+          Your export looks great in Excel.<br/>The PDF? Not so much.
+        </div>
+        <div class="pain-bullets" id="pain-bullets">
+          <div class="pain-bullet" id="pb1"><div class="dot"></div>Wide tables cut off</div>
+          <div class="pain-bullet" id="pb2"><div class="dot"></div>Columns disappear</div>
+          <div class="pain-bullet" id="pb3"><div class="dot"></div>Page breaks everywhere</div>
+        </div>
+      </div>
+
+      <!-- ═══ SCENE 2: Brand reveal (3–6s) ═══ -->
+      <div id="scene-brand" class="clip scene" data-start="3" data-duration="3.5" data-track-index="2">
+        <div class="brand-name" id="brand-name">fit<span>for</span>pdf</div>
+        <div class="brand-tagline" id="brand-tagline">
+          Make your export client-ready.<br/>Without the cleanup.
+        </div>
+      </div>
+
+      <!-- ═══ SCENE 3: How it works (6–10s) ═══ -->
+      <div id="scene-steps" class="clip scene" data-start="6" data-duration="4.5" data-track-index="3">
+        <div class="steps-title" id="steps-title">Three steps. Done.</div>
+        <div class="steps-row">
+          <div class="step-card" id="step1">
+            <div class="step-number">1</div>
+            <div class="step-title">Upload</div>
+            <div class="step-desc">Drop your Excel or CSV. Any number of columns.</div>
+          </div>
+          <div class="step-arrow" id="arrow1">&#8594;</div>
+          <div class="step-card" id="step2">
+            <div class="step-number">2</div>
+            <div class="step-title">Structure</div>
+            <div class="step-desc">Sections, headers, page numbers. Automatic.</div>
+          </div>
+          <div class="step-arrow" id="arrow2">&#8594;</div>
+          <div class="step-card" id="step3">
+            <div class="step-number">3</div>
+            <div class="step-title">Send</div>
+            <div class="step-desc">A PDF your client can actually read.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ SCENE 4: Trust (10–12.5s) ═══ -->
+      <div id="scene-trust" class="clip scene" data-start="10" data-duration="2.5" data-track-index="4">
+        <div class="trust-row" id="trust-row">
+          <div class="trust-item" id="trust1">
+            <div class="trust-icon">&#128274;</div>
+            <div class="trust-label">No LLM</div>
+          </div>
+          <div class="trust-item" id="trust2">
+            <div class="trust-icon">&#128465;</div>
+            <div class="trust-label">Zero storage</div>
+          </div>
+          <div class="trust-item" id="trust3">
+            <div class="trust-icon">&#127466;&#127482;</div>
+            <div class="trust-label">EU-hosted</div>
+          </div>
+        </div>
+        <div class="trust-sub" id="trust-sub">Files processed and deleted instantly. No data stored.</div>
+      </div>
+
+      <!-- ═══ SCENE 5: CTA (12–15s) ═══ -->
+      <div id="scene-cta" class="clip scene" data-start="12" data-duration="3" data-track-index="5">
+        <div class="cta-headline" id="cta-headline">
+          Try it free.<br/>3 exports. No account.
+        </div>
+        <div class="cta-button" id="cta-button">Generate PDF</div>
+        <div class="cta-micro" id="cta-micro">Packs from $19 &middot; Pro plans available</div>
+        <div class="cta-url" id="cta-url">fitforpdf.com</div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      /* ── Scene 1: Pain (0–3s) ── */
+      tl.from('#pain-label', { opacity: 0, y: -20, duration: 0.5 }, 0.2);
+      tl.from('#pain-title', { opacity: 0, y: 30, duration: 0.7 }, 0.4);
+      tl.from('#pb1', { opacity: 0, x: -30, duration: 0.4 }, 1.2);
+      tl.from('#pb2', { opacity: 0, x: -30, duration: 0.4 }, 1.5);
+      tl.from('#pb3', { opacity: 0, x: -30, duration: 0.4 }, 1.8);
+
+      /* ── Scene 2: Brand reveal (3–6s) ── */
+      tl.from('#brand-name', { opacity: 0, scale: 0.8, duration: 0.8, ease: 'back.out(1.7)' }, 3.2);
+      tl.from('#brand-tagline', { opacity: 0, y: 20, duration: 0.6 }, 4.0);
+
+      /* ── Scene 3: Steps (6–10s) ── */
+      tl.from('#steps-title', { opacity: 0, y: -20, duration: 0.5 }, 6.2);
+      tl.from('#step1', { opacity: 0, y: 40, duration: 0.5 }, 6.8);
+      tl.from('#arrow1', { opacity: 0, duration: 0.3 }, 7.2);
+      tl.from('#step2', { opacity: 0, y: 40, duration: 0.5 }, 7.4);
+      tl.from('#arrow2', { opacity: 0, duration: 0.3 }, 7.8);
+      tl.from('#step3', { opacity: 0, y: 40, duration: 0.5 }, 8.0);
+
+      /* ── Scene 4: Trust (10–12.5s) ── */
+      tl.from('#trust1', { opacity: 0, y: 30, duration: 0.4 }, 10.2);
+      tl.from('#trust2', { opacity: 0, y: 30, duration: 0.4 }, 10.5);
+      tl.from('#trust3', { opacity: 0, y: 30, duration: 0.4 }, 10.8);
+      tl.from('#trust-sub', { opacity: 0, duration: 0.5 }, 11.2);
+
+      /* ── Scene 5: CTA (12–15s) ── */
+      tl.from('#cta-headline', { opacity: 0, y: 30, duration: 0.6 }, 12.2);
+      tl.from('#cta-button', { opacity: 0, scale: 0.9, duration: 0.5, ease: 'back.out(1.7)' }, 12.8);
+      tl.from('#cta-micro', { opacity: 0, duration: 0.4 }, 13.3);
+      tl.from('#cta-url', { opacity: 0, y: 10, duration: 0.4 }, 13.6);
+
+      window.__timelines['main'] = tl;
+    </script>
+  </body>
+</html>
