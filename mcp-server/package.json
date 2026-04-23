@@ -1,0 +1,41 @@
+{
+  "name": "@fitforpdf/mcp",
+  "version": "0.1.0",
+  "description": "MCP server for FitForPDF — deterministic PDF rendering for AI agents.",
+  "type": "module",
+  "bin": {
+    "fitforpdf-mcp": "./index.mjs"
+  },
+  "main": "./handler.mjs",
+  "exports": {
+    ".": "./handler.mjs",
+    "./bin": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "handler.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test handler.test.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "pdf",
+    "fitforpdf",
+    "agent",
+    "tool"
+  ],
+  "author": "FitForPDF",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Togetheart/fitforpdf-frontend",
+    "directory": "mcp-server"
+  }
+}
