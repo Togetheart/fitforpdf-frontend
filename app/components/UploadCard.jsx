@@ -13,6 +13,7 @@ import Button from './ui/Button';
 import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
 import { PAYG_PACKS } from '../siteCopy.mjs';
+import { recommendationLabel } from '../pageUiLogic.mjs';
 
 const PROGRESS_STEPS = ['Uploading', 'Structuring (column grouping)', 'Generating PDF'];
 const PROGRESS_STEP_STATES = {
@@ -419,6 +420,10 @@ export default function UploadCard({
   renderId = null,
   shareState = { status: 'idle', jobId: null },
   variant = 'light',
+  failKind = 'none',
+  failureRecommendations = [],
+  pageBurdenCopy = null,
+  onRetryCompact = () => {},
 }) {
   const isDark = variant === 'dark';
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
@@ -912,6 +917,40 @@ export default function UploadCard({
                   {String(verdict).toUpperCase()}
                 </span>
               ) : null}
+            </div>
+          ) : null}
+
+          {failKind === 'page_burden' && pageBurdenCopy ? (
+            <div
+              data-testid="page-burden-block"
+              role="alert"
+              className="flex flex-col gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-left"
+            >
+              <div className="space-y-1">
+                <p className="text-base font-semibold text-amber-900">
+                  {pageBurdenCopy.title}
+                </p>
+                {pageBurdenCopy.description ? (
+                  <p className="text-sm text-amber-900/80">{pageBurdenCopy.description}</p>
+                ) : null}
+              </div>
+              {Array.isArray(failureRecommendations) && failureRecommendations.length > 0 ? (
+                <ul className="list-disc space-y-1 pl-5 text-sm text-amber-900/90">
+                  {failureRecommendations.map((token) => (
+                    <li key={token}>{recommendationLabel(token)}</li>
+                  ))}
+                </ul>
+              ) : null}
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="accent"
+                  onClick={onRetryCompact}
+                  disabled={isLoading}
+                >
+                  {pageBurdenCopy.primaryCta || 'Generate compact version'}
+                </Button>
+              </div>
             </div>
           ) : null}
 
