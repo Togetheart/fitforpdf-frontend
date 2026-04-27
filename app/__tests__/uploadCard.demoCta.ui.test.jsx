@@ -75,4 +75,53 @@ describe('UploadCard — try-your-file CTA after demo', () => {
       fireEvent.click(screen.getByTestId('try-your-file-cta'));
     }).not.toThrow();
   });
+
+  /* Demo state UX redesign — single-decision interface.
+   * In wasDemoLastUpload state, we want the user's only loud option to be
+   * "now upload your file". The big celebration, Download Again primary
+   * button, share link, and feedback prompt all distract from that. */
+  describe('demo state hides distracting result widgets', () => {
+    test('hides the big "PDF generated successfully!" celebration', () => {
+      render(<UploadCard {...baseProps()} />);
+      expect(screen.queryByText(/pdf generated successfully/i)).toBeNull();
+    });
+
+    test('hides the prominent "Download again" primary button', () => {
+      render(<UploadCard {...baseProps()} />);
+      expect(screen.queryByTestId('download-again')).toBeNull();
+    });
+
+    test('hides the "Copy review link" button (sharing demo data is meaningless)', () => {
+      render(<UploadCard {...baseProps({ renderId: 'rid_42' })} />);
+      expect(screen.queryByText(/copy review link/i)).toBeNull();
+      expect(screen.queryByText(/creating review link/i)).toBeNull();
+    });
+
+    test('still offers a discrete way to download the demo PDF', () => {
+      const onDownloadAgain = vi.fn();
+      render(<UploadCard {...baseProps({ onDownloadAgain })} />);
+      const link = screen.getByTestId('demo-download-link');
+      expect(link.textContent.toLowerCase()).toMatch(/download.*demo/);
+      fireEvent.click(link);
+      expect(onDownloadAgain).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('regular (non-demo) success state is unchanged', () => {
+    test('still shows "PDF generated successfully!" + Download again + Copy review link', () => {
+      render(<UploadCard {...baseProps({
+        wasDemoLastUpload: false,
+        renderId: 'rid_real',
+        downloadedFileName: 'real-export.pdf',
+      })} />);
+      expect(screen.getByText(/pdf generated successfully/i)).toBeTruthy();
+      expect(screen.getByTestId('download-again')).toBeTruthy();
+      expect(screen.getByText(/copy review link/i)).toBeTruthy();
+    });
+
+    test('does NOT render the demo download link in regular flow', () => {
+      render(<UploadCard {...baseProps({ wasDemoLastUpload: false })} />);
+      expect(screen.queryByTestId('demo-download-link')).toBeNull();
+    });
+  });
 });

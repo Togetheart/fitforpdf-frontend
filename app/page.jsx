@@ -891,7 +891,10 @@ export default function Page() {
         </div>
       </section>
 
-      <FeedbackBar renderId={conversion.renderId} visible={Boolean(conversion.pdfBlob)} />
+      <FeedbackBar
+        renderId={conversion.renderId}
+        visible={Boolean(conversion.pdfBlob) && !conversion.wasDemoLastUpload}
+      />
 
       <StickyMobileCTA />
 

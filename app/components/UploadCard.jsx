@@ -811,7 +811,7 @@ export default function UploadCard({
 
           {/* Helper subcopy — hidden when quota badge already shows the same info */}
 
-          <div data-testid="demo-try-row">
+          <div data-testid="demo-try-row" hidden={wasDemoLastUpload}>
             {isDark ? (
               <button
                 type="button"
@@ -889,6 +889,23 @@ export default function UploadCard({
                 <a href="/contact" className="text-muted underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Contact us for Team/API</a>
               </p>
             </section>
+          ) : hasResultBlob && wasDemoLastUpload ? (
+            /* Demo success state — single-decision UI. The only loud action
+             * is "Now try with your file"; everything else fades into a
+             * compact strip and a discreet text link. The full demo→upload
+             * CTA card is rendered below in the shared layout. */
+            <div className="flex w-full max-w-[640px] flex-col gap-2">
+              <div
+                data-testid="demo-success-strip"
+                className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-300"
+              >
+                <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className="font-medium">Demo ready</span>
+                {downloadedFileName ? (
+                  <span className="truncate text-emerald-300/70">· {downloadedFileName}</span>
+                ) : null}
+              </div>
+            </div>
           ) : hasResultBlob ? (
             <div className="flex flex-col items-center gap-3 w-full max-w-[640px]">
               <AnimatedCheckmark size={48} />
@@ -910,7 +927,7 @@ export default function UploadCard({
             </div>
           ) : null}
 
-          {downloadedFileName || shouldShowVerdict ? (
+          {!wasDemoLastUpload && (downloadedFileName || shouldShowVerdict) ? (
             <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
               {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
               {shouldShowVerdict ? (
@@ -959,26 +976,49 @@ export default function UploadCard({
           {wasDemoLastUpload && (downloadedFileName || hasResultBlob) ? (
             <div
               data-testid="try-your-file-cta-block"
-              className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-5 text-left sm:flex-row sm:items-center sm:justify-between"
+              className="flex w-full max-w-[640px] flex-col items-center gap-4 text-center"
             >
-              <div>
-                <p className="text-base font-semibold text-blue-900">
-                  Looks good. Now try with your file.
+              <div className="space-y-1">
+                <p className="text-base font-semibold text-white">
+                  Now run it on your file.
                 </p>
-                <p className="mt-1 text-sm text-blue-900/80">
-                  This is the demo. Upload your real Excel/CSV to see the same magic on your data.
+                <p className="text-sm text-white/60">
+                  That was our sample data. Upload your Excel or CSV to see the same on your numbers.
                 </p>
               </div>
               <Button
                 type="button"
                 data-testid="try-your-file-cta"
-                variant="accent"
+                variant="primary"
                 onClick={onTryYourFile}
                 disabled={isLoading}
-                className="shrink-0"
+                className="w-full"
               >
                 Try with your file
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="ml-1.5 opacity-70"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </Button>
+              <button
+                type="button"
+                data-testid="demo-download-link"
+                onClick={onDownloadAgain}
+                disabled={isLoading}
+                className="text-xs text-white/50 underline-offset-2 transition-colors hover:text-white/80 hover:underline disabled:opacity-50"
+              >
+                Or download the demo PDF
+              </button>
             </div>
           ) : null}
 
