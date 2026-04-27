@@ -424,6 +424,8 @@ export default function UploadCard({
   failureRecommendations = [],
   pageBurdenCopy = null,
   onRetryCompact = () => {},
+  wasDemoLastUpload = false,
+  onTryYourFile = () => {},
 }) {
   const isDark = variant === 'dark';
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
@@ -951,6 +953,32 @@ export default function UploadCard({
                   {pageBurdenCopy.primaryCta || 'Generate compact version'}
                 </Button>
               </div>
+            </div>
+          ) : null}
+
+          {wasDemoLastUpload && (downloadedFileName || hasResultBlob) ? (
+            <div
+              data-testid="try-your-file-cta-block"
+              className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-5 text-left sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <p className="text-base font-semibold text-blue-900">
+                  Looks good. Now try with your file.
+                </p>
+                <p className="mt-1 text-sm text-blue-900/80">
+                  This is the demo. Upload your real Excel/CSV to see the same magic on your data.
+                </p>
+              </div>
+              <Button
+                type="button"
+                data-testid="try-your-file-cta"
+                variant="accent"
+                onClick={onTryYourFile}
+                disabled={isLoading}
+                className="shrink-0"
+              >
+                Try with your file
+              </Button>
             </div>
           ) : null}
 
