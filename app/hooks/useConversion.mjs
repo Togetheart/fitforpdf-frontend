@@ -560,6 +560,10 @@ export default function useConversion({ quota }) {
    * "the file picker is open" in one click. */
   function handleSwitchToRealUpload() {
     handleRemoveFile();
+    /* Reset the UI flag so the upload pill / hero / cart reappear, but keep
+     * the tracking ref true — the next handleSubmit still counts as a
+     * demo-to-upload conversion until the user actually generates. */
+    setWasDemoLastUpload(false);
     if (typeof document === 'undefined') return;
     setTimeout(() => {
       const input = document.querySelector('[data-testid="generate-file-input"]');

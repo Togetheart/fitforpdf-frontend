@@ -107,6 +107,29 @@ describe('UploadCard — try-your-file CTA after demo', () => {
     });
   });
 
+  describe('demo state collapses the upload chrome (no decision noise)', () => {
+    test('hides the security H1 ("Uploading client data?...") in dark variant', () => {
+      render(<UploadCard {...baseProps({ variant: 'dark', freeExportsLeft: 1 })} />);
+      expect(screen.queryByText(/uploading client data/i)).toBeNull();
+    });
+
+    test('hides the file input pill (drop zone + filename + gear)', () => {
+      render(<UploadCard {...baseProps()} />);
+      expect(screen.queryByTestId('options-accordion-toggle')).toBeNull();
+      expect(screen.queryByTestId('generate-file-input')).toBeNull();
+    });
+
+    test('hides the redundant "Generate PDF" submit button', () => {
+      render(<UploadCard {...baseProps()} />);
+      expect(screen.queryByText(/generate pdf/i)).toBeNull();
+    });
+
+    test('hides the buy-credits cart icon even when freeExportsLeft <= 1', () => {
+      render(<UploadCard {...baseProps({ freeExportsLeft: 1 })} />);
+      expect(screen.queryByTestId('quota-buy-slot')).toBeNull();
+    });
+  });
+
   describe('regular (non-demo) success state is unchanged', () => {
     test('still shows "PDF generated successfully!" + Download again + Copy review link', () => {
       render(<UploadCard {...baseProps({

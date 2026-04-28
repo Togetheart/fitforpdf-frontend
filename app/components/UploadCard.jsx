@@ -650,15 +650,20 @@ export default function UploadCard({
           </span>
         )}
       </div>
-      {isDark && (
+      {isDark && !wasDemoLastUpload && (
         <h3 className="mb-6 text-xl sm:text-2xl font-bold text-white tracking-tight">
           Uploading client data? We don&apos;t keep it. Ever.
         </h3>
       )}
 
       <form className="relative" onSubmit={onSubmit}>
-        {/* ── The Pill ─────────────────────────────── */}
-        <div id="generate" className="scroll-mt-24 upload-pill flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5">
+        {/* ── The Pill — unmounted on the demo result state to keep a
+             single decision visible (Try with your file). ───────────── */}
+        {!wasDemoLastUpload && (
+        <div
+          id="generate"
+          className="scroll-mt-24 upload-pill flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5"
+        >
           <UploadDropzone
             inputId="fitforpdf-file-input"
             file={file}
@@ -715,6 +720,7 @@ export default function UploadCard({
           </Button>}
           </div>{/* close gear+generate wrapper */}
         </div>
+        )}
 
         {/* Quota badge removed — now in card header */}
 
@@ -788,7 +794,8 @@ export default function UploadCard({
 
         {/* ── Below-pill zone ─────────────────────── */}
         <div className="mt-4 pb-2 flex flex-col items-center gap-3 text-center">
-          {/* Quota + Pro badge */}
+          {/* Quota + Pro badge — unmounted in demo result state */}
+          {!wasDemoLastUpload && (
           <div className="flex flex-wrap items-center justify-center gap-2">
             {showBuyCredits ? (
               <button
@@ -808,6 +815,7 @@ export default function UploadCard({
               </span>
             ) : null}
           </div>
+          )}
 
           {/* Helper subcopy — hidden when quota badge already shows the same info */}
 
@@ -980,10 +988,10 @@ export default function UploadCard({
             >
               <div className="space-y-1">
                 <p className="text-base font-semibold text-white">
-                  Now run it on your file.
+                  Now run it on yours.
                 </p>
                 <p className="text-sm text-white/60">
-                  That was our sample data. Upload your Excel or CSV to see the same on your numbers.
+                  Same magic, your data.
                 </p>
               </div>
               <Button
