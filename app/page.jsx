@@ -464,6 +464,12 @@ export default function Page() {
             renderId={conversion.renderId}
             shareState={conversion.shareState}
             variant="dark"
+            failKind={conversion.failKind}
+            failureRecommendations={conversion.failureRecommendations}
+            pageBurdenCopy={conversion.pageBurdenCopy}
+            onRetryCompact={conversion.handleGenerateCompact}
+            wasDemoLastUpload={conversion.wasDemoLastUpload}
+            onTryYourFile={conversion.handleSwitchToRealUpload}
           />
         </div>
         <p className="mt-6 text-center text-sm text-white/60">
@@ -876,7 +882,10 @@ export default function Page() {
         </div>
       </section>
 
-      <FeedbackBar renderId={conversion.renderId} visible={Boolean(conversion.pdfBlob)} />
+      <FeedbackBar
+        renderId={conversion.renderId}
+        visible={Boolean(conversion.pdfBlob) && !conversion.wasDemoLastUpload}
+      />
 
       <StickyMobileCTA />
 

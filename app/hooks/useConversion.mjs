@@ -12,6 +12,8 @@ import { useCheckout } from './useCheckout.mjs';
 import {
   trackUploadStarted,
   trackDemoFileUsed,
+  trackDemoPdfShown,
+  trackUploadAfterDemo,
   trackShareLinkCopied,
 } from '../lib/analytics.mjs';
 
@@ -264,9 +266,16 @@ export default function useConversion({ quota }) {
   const [historyStatus, setHistoryStatus] = useState('all');
   const [historyNextCursor, setHistoryNextCursor] = useState(null);
   const [shareState, setShareState] = useState({ status: 'idle', jobId: null });
+  /* Demo → upload funnel tracking (see app/lib/analytics.mjs).
+   * `true` after a successful demo render and until the next real upload. */
+  const [wasDemoLastUpload, setWasDemoLastUpload] = useState(false);
 
   const progressTimersRef = useRef([]);
   const renderInFlightRef = useRef(false);
+  /* Mirror of wasDemoLastUpload for synchronous reads inside async event
+   * handlers — React state can be stale if handleSubmit runs in the same
+   * tick as the demo flag was set. */
+  const wasDemoLastUploadRef = useRef(false);
   const [conversionProgress, setConversionProgress] = useState({
     running: false,
     stepIndex: 0,
@@ -490,6 +499,14 @@ export default function useConversion({ quota }) {
     if (file) {
       const ext = (file.name || '').split('.').pop()?.toLowerCase();
       trackUploadStarted({ fileType: ext, fileSize: file.size });
+      /* If a demo render was the last visible output, this real upload
+       * marks a successful demo → upload conversion. Fire it once and
+       * clear the flag. */
+      if (wasDemoLastUploadRef.current) {
+        trackUploadAfterDemo({ fileType: ext, fileSize: file.size });
+        wasDemoLastUploadRef.current = false;
+        setWasDemoLastUpload(false);
+      }
     }
     const nextFlowId = createFlowId();
     setFlowId(nextFlowId);
@@ -516,6 +533,11 @@ export default function useConversion({ quota }) {
       const nextFlowId = createFlowId();
       setFlowId(nextFlowId);
       await submitRender('compact', { flowIdOverride: nextFlowId, sourceFile: sample });
+      /* Demo render is done — mark the session and emit the funnel event.
+       * The flag stays true until a real upload (handleSubmit) clears it. */
+      wasDemoLastUploadRef.current = true;
+      setWasDemoLastUpload(true);
+      trackDemoPdfShown();
     } catch (err) {
       setError(err.message || 'Unable to load demo file');
     }
@@ -529,6 +551,26 @@ export default function useConversion({ quota }) {
     setShareState({ status: 'idle', jobId: null });
     setError(null);
     setNotice(null);
+  }
+
+  /* Single-action helper for the post-demo "Try with your file" CTA.
+   * Clears the demo state (file + pdfBlob + verdict) so the empty
+   * dropzone reappears, then programmatically opens the OS file picker
+   * on the next tick. The user goes from "I just saw the demo" to
+   * "the file picker is open" in one click. */
+  function handleSwitchToRealUpload() {
+    handleRemoveFile();
+    /* Reset the UI flag so the upload pill / hero / cart reappear, but keep
+     * the tracking ref true — the next handleSubmit still counts as a
+     * demo-to-upload conversion until the user actually generates. */
+    setWasDemoLastUpload(false);
+    if (typeof document === 'undefined') return;
+    setTimeout(() => {
+      const input = document.querySelector('[data-testid="generate-file-input"]');
+      if (input && typeof input.click === 'function') {
+        input.click();
+      }
+    }, 50);
   }
 
   async function handleGenerateOptimized() {
@@ -705,6 +747,7 @@ export default function useConversion({ quota }) {
     conversionProgress,
     handleSubmit,
     handleTrySample,
+    handleSwitchToRealUpload,
     handleGenerateOptimized,
     handleGenerateCompact,
     handleDownloadAnyway,
@@ -717,6 +760,7 @@ export default function useConversion({ quota }) {
     resolvedPdfFilename,
     lastRequestMode,
     failureRecommendations,
+    wasDemoLastUpload,
     showDetails,
     setShowDetails,
     // debug

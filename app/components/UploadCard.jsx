@@ -13,6 +13,7 @@ import Button from './ui/Button';
 import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
 import { PAYG_PACKS } from '../siteCopy.mjs';
+import { recommendationLabel } from '../pageUiLogic.mjs';
 
 const PROGRESS_STEPS = ['Uploading', 'Structuring (column grouping)', 'Generating PDF'];
 const PROGRESS_STEP_STATES = {
@@ -419,6 +420,12 @@ export default function UploadCard({
   renderId = null,
   shareState = { status: 'idle', jobId: null },
   variant = 'light',
+  failKind = 'none',
+  failureRecommendations = [],
+  pageBurdenCopy = null,
+  onRetryCompact = () => {},
+  wasDemoLastUpload = false,
+  onTryYourFile = () => {},
 }) {
   const isDark = variant === 'dark';
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
@@ -643,15 +650,20 @@ export default function UploadCard({
           </span>
         )}
       </div>
-      {isDark && (
+      {isDark && !wasDemoLastUpload && (
         <h3 className="mb-6 text-xl sm:text-2xl font-bold text-white tracking-tight">
           Uploading client data? We don&apos;t keep it. Ever.
         </h3>
       )}
 
       <form className="relative" onSubmit={onSubmit}>
-        {/* ── The Pill ─────────────────────────────── */}
-        <div id="generate" className="scroll-mt-24 upload-pill flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5">
+        {/* ── The Pill — unmounted on the demo result state to keep a
+             single decision visible (Try with your file). ───────────── */}
+        {!wasDemoLastUpload && (
+        <div
+          id="generate"
+          className="scroll-mt-24 upload-pill flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5"
+        >
           <UploadDropzone
             inputId="fitforpdf-file-input"
             file={file}
@@ -708,6 +720,7 @@ export default function UploadCard({
           </Button>}
           </div>{/* close gear+generate wrapper */}
         </div>
+        )}
 
         {/* Quota badge removed — now in card header */}
 
@@ -781,7 +794,8 @@ export default function UploadCard({
 
         {/* ── Below-pill zone ─────────────────────── */}
         <div className="mt-4 pb-2 flex flex-col items-center gap-3 text-center">
-          {/* Quota + Pro badge */}
+          {/* Quota + Pro badge — unmounted in demo result state */}
+          {!wasDemoLastUpload && (
           <div className="flex flex-wrap items-center justify-center gap-2">
             {showBuyCredits ? (
               <button
@@ -801,10 +815,11 @@ export default function UploadCard({
               </span>
             ) : null}
           </div>
+          )}
 
           {/* Helper subcopy — hidden when quota badge already shows the same info */}
 
-          <div data-testid="demo-try-row">
+          <div data-testid="demo-try-row" hidden={wasDemoLastUpload}>
             {isDark ? (
               <button
                 type="button"
@@ -882,6 +897,23 @@ export default function UploadCard({
                 <a href="/contact" className="text-muted underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Contact us for Team/API</a>
               </p>
             </section>
+          ) : hasResultBlob && wasDemoLastUpload ? (
+            /* Demo success state — single-decision UI. The only loud action
+             * is "Now try with your file"; everything else fades into a
+             * compact strip and a discreet text link. The full demo→upload
+             * CTA card is rendered below in the shared layout. */
+            <div className="flex w-full max-w-[640px] flex-col gap-2">
+              <div
+                data-testid="demo-success-strip"
+                className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-300"
+              >
+                <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className="font-medium">Demo ready</span>
+                {downloadedFileName ? (
+                  <span className="truncate text-emerald-300/70">· {downloadedFileName}</span>
+                ) : null}
+              </div>
+            </div>
           ) : hasResultBlob ? (
             <div className="flex flex-col items-center gap-3 w-full max-w-[640px]">
               <AnimatedCheckmark size={48} />
@@ -903,7 +935,7 @@ export default function UploadCard({
             </div>
           ) : null}
 
-          {downloadedFileName || shouldShowVerdict ? (
+          {!wasDemoLastUpload && (downloadedFileName || shouldShowVerdict) ? (
             <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
               {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
               {shouldShowVerdict ? (
@@ -912,6 +944,89 @@ export default function UploadCard({
                   {String(verdict).toUpperCase()}
                 </span>
               ) : null}
+            </div>
+          ) : null}
+
+          {failKind === 'page_burden' && pageBurdenCopy ? (
+            <div
+              data-testid="page-burden-block"
+              role="alert"
+              className="flex flex-col gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-left"
+            >
+              <div className="space-y-1">
+                <p className="text-base font-semibold text-amber-900">
+                  {pageBurdenCopy.title}
+                </p>
+                {pageBurdenCopy.description ? (
+                  <p className="text-sm text-amber-900/80">{pageBurdenCopy.description}</p>
+                ) : null}
+              </div>
+              {Array.isArray(failureRecommendations) && failureRecommendations.length > 0 ? (
+                <ul className="list-disc space-y-1 pl-5 text-sm text-amber-900/90">
+                  {failureRecommendations.map((token) => (
+                    <li key={token}>{recommendationLabel(token)}</li>
+                  ))}
+                </ul>
+              ) : null}
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="accent"
+                  onClick={onRetryCompact}
+                  disabled={isLoading}
+                >
+                  {pageBurdenCopy.primaryCta || 'Generate compact version'}
+                </Button>
+              </div>
+            </div>
+          ) : null}
+
+          {wasDemoLastUpload && (downloadedFileName || hasResultBlob) ? (
+            <div
+              data-testid="try-your-file-cta-block"
+              className="flex w-full max-w-[640px] flex-col items-center gap-4 text-center"
+            >
+              <div className="space-y-1">
+                <p className="text-base font-semibold text-white">
+                  Now run it on yours.
+                </p>
+                <p className="text-sm text-white/60">
+                  Same magic, your data.
+                </p>
+              </div>
+              <Button
+                type="button"
+                data-testid="try-your-file-cta"
+                variant="primary"
+                onClick={onTryYourFile}
+                disabled={isLoading}
+                className="w-full"
+              >
+                Try with your file
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="ml-1.5 opacity-70"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Button>
+              <button
+                type="button"
+                data-testid="demo-download-link"
+                onClick={onDownloadAgain}
+                disabled={isLoading}
+                className="text-xs text-white/50 underline-offset-2 transition-colors hover:text-white/80 hover:underline disabled:opacity-50"
+              >
+                Or download the demo PDF
+              </button>
             </div>
           ) : null}
 

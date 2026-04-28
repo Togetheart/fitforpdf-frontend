@@ -380,6 +380,111 @@ export default function DevelopersPage() {
         </a>
       </section>
 
+      {/* For AI agents */}
+      <section
+        data-testid="developers-agents-section"
+        id="for-ai-agents"
+        className="mb-14 border-t border-[var(--color-border)] pt-10"
+      >
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
+          For AI agents
+        </p>
+        <h2 className="mb-4 text-xl font-bold leading-tight text-[var(--color-text)]">
+          Agent-native PDF rendering
+        </h2>
+        <p className="mb-6 text-sm leading-relaxed text-[var(--color-muted)]">
+          Deterministic, reproducible, and LLM-free. Discover the tool via the
+          manifest, then call <code className="font-mono text-[var(--color-text)]">/api/agent/render</code>
+          {' '}with a JSON body containing <code className="font-mono text-[var(--color-text)]">file_url</code>.
+          No multipart boilerplate. Response is JSON with a base64 PDF plus the render verdict.
+        </p>
+
+        <div className="mb-6 flex flex-wrap gap-3 text-sm">
+          <a
+            href="/.well-known/ai-plugin.json"
+            className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 font-mono text-xs text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]"
+          >
+            /.well-known/ai-plugin.json
+          </a>
+          <a
+            href="/api/openapi.json"
+            className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 font-mono text-xs text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]"
+          >
+            /api/openapi.json
+          </a>
+        </div>
+
+        <p className="mb-2 text-sm font-semibold text-[var(--color-text)]">Claude (Anthropic SDK)</p>
+        <div data-testid="agent-snippet-claude">
+          <CodeBlock>{`import Anthropic from "@anthropic-ai/sdk";
+const client = new Anthropic();
+
+const tools = [{
+  name: "render_pdf",
+  description: "Render a client-ready PDF from a CSV or XLSX file URL.",
+  input_schema: {
+    type: "object",
+    required: ["file_url"],
+    properties: {
+      file_url: { type: "string" },
+      mode: { type: "string", enum: ["normal", "compact", "optimized"] }
+    }
+  }
+}];
+
+// When Claude decides to call render_pdf, hit:
+// POST https://www.fitforpdf.com/api/agent/render
+// Header: X-FITFORPDF-KEY: ffp_live_...
+// Body:   { "file_url": "...", "mode": "normal" }`}</CodeBlock>
+        </div>
+
+        <p className="mb-2 mt-6 text-sm font-semibold text-[var(--color-text)]">OpenAI function calling</p>
+        <div data-testid="agent-snippet-openai">
+          <CodeBlock>{`import OpenAI from "openai";
+const openai = new OpenAI();
+
+const tools = [{
+  type: "function",
+  function: {
+    name: "render_pdf",
+    description: "Render a client-ready PDF from a CSV/XLSX URL.",
+    parameters: {
+      type: "object",
+      required: ["file_url"],
+      properties: {
+        file_url: { type: "string" },
+        mode: { type: "string", enum: ["normal", "compact", "optimized"] }
+      }
+    }
+  }
+}];
+
+const response = await openai.chat.completions.create({
+  model: "gpt-4o",
+  tools,
+  messages: [{ role: "user", content: "Turn this export into a PDF" }]
+});`}</CodeBlock>
+        </div>
+
+        <p className="mb-2 mt-6 text-sm font-semibold text-[var(--color-text)]">LangChain (Python)</p>
+        <div data-testid="agent-snippet-langchain">
+          <CodeBlock>{`from langchain_core.tools import tool
+import httpx, os
+
+@tool
+def render_pdf(file_url: str, mode: str = "normal") -> dict:
+    """Render a client-ready PDF from a CSV/XLSX URL."""
+    r = httpx.post(
+        "https://www.fitforpdf.com/api/agent/render",
+        json={"file_url": file_url, "mode": mode},
+        headers={"X-FITFORPDF-KEY": os.environ["FITFORPDF_KEY"]},
+        timeout=60,
+    )
+    r.raise_for_status()
+    return r.json()  # { pdf_base64, pages, verdict, score, render_id }`}</CodeBlock>
+        </div>
+      </section>
+
       {/* Why fitforpdf exists */}
       <section className="mb-14 border-t border-[var(--color-border)] pt-10">
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
