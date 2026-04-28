@@ -469,16 +469,7 @@ export default function Page() {
             pageBurdenCopy={conversion.pageBurdenCopy}
             onRetryCompact={conversion.handleGenerateCompact}
             wasDemoLastUpload={conversion.wasDemoLastUpload}
-            onTryYourFile={() => {
-              /* Scroll back to the upload dropzone so the user can drop their
-               * own file. Closes the demo → upload conversion gap. */
-              const dropzone = document.querySelector('[data-testid="upload-dropzone"]')
-                || document.getElementById('tool')
-                || document.getElementById('generate');
-              if (dropzone && typeof dropzone.scrollIntoView === 'function') {
-                dropzone.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            }}
+            onTryYourFile={conversion.handleSwitchToRealUpload}
           />
         </div>
         <p className="mt-6 text-center text-sm text-white/60">

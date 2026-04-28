@@ -179,6 +179,74 @@ describe('useConversion — demo → upload tracking', () => {
     restoreFetch();
   }, 12000);
 
+  test('handleSwitchToRealUpload clears demo state and opens the file picker', async () => {
+    const restoreFetch = mockFetch([
+      ['/api/sample/premium', sampleCsvResponse],
+      ['/api/quota', quotaResponse],
+      ['/render', pdfResponse],
+    ]);
+    const ph = mockPostHog();
+
+    /* Stub the file input click so we can assert it was triggered. */
+    const inputClicks = [];
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.setAttribute('data-testid', 'generate-file-input');
+    fileInput.click = () => inputClicks.push('clicked');
+    document.body.appendChild(fileInput);
+
+    function SwitchHarness() {
+      const conversion = useConversion({
+        quota: {
+          planType: 'free',
+          freeExportsLeft: 3,
+          remainingInPeriod: 0,
+          /* Stubbed quota plumbing so submitRender's await syncQuotaState()
+           * resolves cleanly and reaches setPdfBlob(blob). */
+          syncQuotaState: async () => ({ planType: 'free', freeExportsLeft: 2 }),
+          isQuotaLocked: false,
+          applyQuotaExhaustion: () => '',
+          setPaywallReason: () => {},
+          setPurchaseMessage: () => {},
+        },
+      });
+      return (
+        <div>
+          <button onClick={() => void conversion.handleTrySample()}>try-demo</button>
+          <button onClick={() => conversion.handleSwitchToRealUpload()}>switch</button>
+          <div data-testid="file">{conversion.file?.name || 'none'}</div>
+          <div data-testid="blob">{conversion.pdfBlob ? 'yes' : 'no'}</div>
+          <div data-testid="was-demo">{String(conversion.wasDemoLastUpload || false)}</div>
+        </div>
+      );
+    }
+
+    render(<SwitchHarness />);
+    /* Run the demo first; wait for wasDemoLastUpload=true which fires
+     * after submitRender resolves AND pdfBlob is set. */
+    await act(async () => { fireEvent.click(screen.getByText('try-demo')); });
+    await waitFor(
+      () => expect(screen.getByTestId('was-demo').textContent).toBe('true'),
+      { timeout: 4000 },
+    );
+    expect(screen.getByTestId('file').textContent).toBe('enterprise-invoices-demo.csv');
+    expect(screen.getByTestId('blob').textContent).toBe('yes');
+
+    /* Now hit the switch */
+    await act(async () => { fireEvent.click(screen.getByText('switch')); });
+
+    /* State should be cleared */
+    expect(screen.getByTestId('file').textContent).toBe('none');
+    expect(screen.getByTestId('blob').textContent).toBe('no');
+
+    /* And the file picker click should have been triggered (deferred) */
+    await waitFor(() => expect(inputClicks.length).toBe(1), { timeout: 1000 });
+
+    document.body.removeChild(fileInput);
+    ph.restore();
+    restoreFetch();
+  }, 12000);
+
   test('upload_after_demo does NOT fire for a normal upload without a prior demo', async () => {
     const restoreFetch = mockFetch([
       ['/api/quota', quotaResponse],

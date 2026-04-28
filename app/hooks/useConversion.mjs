@@ -553,6 +553,22 @@ export default function useConversion({ quota }) {
     setNotice(null);
   }
 
+  /* Single-action helper for the post-demo "Try with your file" CTA.
+   * Clears the demo state (file + pdfBlob + verdict) so the empty
+   * dropzone reappears, then programmatically opens the OS file picker
+   * on the next tick. The user goes from "I just saw the demo" to
+   * "the file picker is open" in one click. */
+  function handleSwitchToRealUpload() {
+    handleRemoveFile();
+    if (typeof document === 'undefined') return;
+    setTimeout(() => {
+      const input = document.querySelector('[data-testid="generate-file-input"]');
+      if (input && typeof input.click === 'function') {
+        input.click();
+      }
+    }, 50);
+  }
+
   async function handleGenerateOptimized() {
     const verdict = confidence?.verdict;
     if (lastRequestMode === 'optimized' && (verdict === 'WARN' || verdict === 'FAIL')) return;
@@ -727,6 +743,7 @@ export default function useConversion({ quota }) {
     conversionProgress,
     handleSubmit,
     handleTrySample,
+    handleSwitchToRealUpload,
     handleGenerateOptimized,
     handleGenerateCompact,
     handleDownloadAnyway,
