@@ -48,6 +48,55 @@ export function trackUploadAfterDemo(context = {}) {
   });
 }
 
+/**
+ * Fired on every completed render (success OR failure with confidence).
+ *
+ * Captures every dimension we have so we can later run the diagnostic
+ * "is XLSX scoring worse than CSV at equivalent file sizes?" — answering
+ * the parser-bug hypothesis vs the selection-bias hypothesis.
+ *
+ * Properties are emitted in snake_case to match the existing convention
+ * (`file_type`, `file_size`).
+ *
+ * Missing fields are stripped so PostHog doesn't store noise like
+ * "wrap_pressure": null on every event from a backend that doesn't
+ * surface it yet.
+ */
+export function trackRenderCompleted(metrics = {}) {
+  const {
+    fileType,
+    fileSize,
+    mode,
+    score,
+    verdict,
+    colCount,
+    rowCount,
+    pageCount,
+    wrapPressure,
+    overflowCells,
+    renderMs,
+    reasons,
+    isDemo,
+  } = metrics || {};
+
+  const properties = {};
+  if (fileType !== undefined) properties.file_type = fileType;
+  if (fileSize !== undefined) properties.file_size = fileSize;
+  if (mode !== undefined) properties.mode = mode;
+  if (score !== undefined) properties.score = score;
+  if (verdict !== undefined) properties.verdict = verdict;
+  if (colCount !== undefined && colCount !== null) properties.col_count = colCount;
+  if (rowCount !== undefined && rowCount !== null) properties.row_count = rowCount;
+  if (pageCount !== undefined && pageCount !== null) properties.page_count = pageCount;
+  if (wrapPressure !== undefined && wrapPressure !== null) properties.wrap_pressure = wrapPressure;
+  if (overflowCells !== undefined && overflowCells !== null) properties.overflow_cells = overflowCells;
+  if (renderMs !== undefined && renderMs !== null) properties.render_ms = renderMs;
+  if (Array.isArray(reasons)) properties.reasons = reasons;
+  if (isDemo !== undefined) properties.is_demo = isDemo;
+
+  capture('render_completed', properties);
+}
+
 export function trackPaymentStarted({ plan, pack }) {
   capture('payment_started', { plan, pack });
 }
