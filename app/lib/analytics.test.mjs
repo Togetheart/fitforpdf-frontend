@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   trackDemoFileUsed,
   trackDemoPdfShown,
+  trackRenderCompleted,
   trackUploadAfterDemo,
   trackUploadStarted,
 } from './analytics.mjs';
@@ -81,4 +82,65 @@ test('helpers are no-ops when posthog SDK is absent on window', () => {
   assert.doesNotThrow(() => trackDemoPdfShown());
   assert.doesNotThrow(() => trackUploadAfterDemo({}));
   globalThis.window = original;
+});
+
+/* ── trackRenderCompleted ──────────────────────────────────
+ * Diagnostic event for the XLSX-vs-CSV quality gap. We need every
+ * metric the backend returned so we can group by (file_type, size_bucket)
+ * and confirm — or invalidate — the parser-bug hypothesis.
+ */
+test('trackRenderCompleted captures render_completed with every metric in snake_case', () => {
+  const { calls, restore } = withMockPostHog();
+  trackRenderCompleted({
+    fileType: 'xlsx',
+    fileSize: 31900,
+    mode: 'normal',
+    score: 78.4,
+    verdict: 'WARN',
+    colCount: 6,
+    rowCount: 95,
+    pageCount: 37,
+    wrapPressure: 0.81,
+    overflowCells: 0,
+    renderMs: 1603,
+    reasons: ['high_wrap_rate'],
+    isDemo: false,
+  });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'render_completed');
+  const p = calls[0].properties;
+  assert.equal(p.file_type, 'xlsx');
+  assert.equal(p.file_size, 31900);
+  assert.equal(p.mode, 'normal');
+  assert.equal(p.score, 78.4);
+  assert.equal(p.verdict, 'WARN');
+  assert.equal(p.col_count, 6);
+  assert.equal(p.row_count, 95);
+  assert.equal(p.page_count, 37);
+  assert.equal(p.wrap_pressure, 0.81);
+  assert.equal(p.overflow_cells, 0);
+  assert.equal(p.render_ms, 1603);
+  assert.deepEqual(p.reasons, ['high_wrap_rate']);
+  assert.equal(p.is_demo, false);
+  restore();
+});
+
+test('trackRenderCompleted tolerates missing optional fields (only file_type required for usefulness)', () => {
+  const { calls, restore } = withMockPostHog();
+  trackRenderCompleted({ fileType: 'csv', verdict: 'OK', score: 100 });
+  assert.equal(calls.length, 1);
+  const p = calls[0].properties;
+  assert.equal(p.file_type, 'csv');
+  assert.equal(p.score, 100);
+  assert.equal(p.verdict, 'OK');
+  // Missing fields should not be sent as undefined strings
+  assert.ok(!('col_count' in p) || p.col_count == null);
+  assert.ok(!('wrap_pressure' in p) || p.wrap_pressure == null);
+  restore();
+});
+
+test('trackRenderCompleted is a no-op outside the browser', () => {
+  const restore = withoutWindow();
+  assert.doesNotThrow(() => trackRenderCompleted({ fileType: 'xlsx', score: 78 }));
+  restore();
 });

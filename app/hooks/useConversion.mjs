@@ -13,6 +13,7 @@ import {
   trackUploadStarted,
   trackDemoFileUsed,
   trackDemoPdfShown,
+  trackRenderCompleted,
   trackUploadAfterDemo,
   trackShareLinkCopied,
 } from '../lib/analytics.mjs';
@@ -452,6 +453,29 @@ export default function useConversion({ quota }) {
         mode,
         rows: confidenceData?.metrics?.rowCount ?? debugMetricsData?.rowCount ?? null,
         cols: confidenceData?.metrics?.columnCount ?? debugMetricsData?.columnCount ?? null,
+      });
+
+      /* Funnel diagnostic — captures every dimension we have so we can later
+       * group by (file_type, size_bucket) and answer the XLSX-vs-CSV gap.
+       * Backend may publish wrap_pressure under either snake_case or camelCase
+       * in x-cleansheet-debug-metrics, so we read defensively. */
+      const ext = (targetFile.name || '').split('.').pop()?.toLowerCase();
+      const renderMsHeader = res.headers.get('x-render-ms');
+      const renderMsParsed = renderMsHeader ? Number(renderMsHeader) : null;
+      trackRenderCompleted({
+        fileType: ext,
+        fileSize: targetFile.size,
+        mode,
+        score: confidenceData?.score ?? null,
+        verdict: confidenceData?.verdict ?? 'OK',
+        colCount: confidenceData?.metrics?.columnCount ?? debugMetricsData?.columnCount ?? null,
+        rowCount: confidenceData?.metrics?.rowCount ?? debugMetricsData?.rowCount ?? null,
+        pageCount: debugMetricsData?.pageCount ?? debugMetricsData?.page_count ?? null,
+        wrapPressure: debugMetricsData?.wrapPressure ?? debugMetricsData?.wrap_pressure ?? null,
+        overflowCells: debugMetricsData?.overflowCells ?? debugMetricsData?.overflow_cells ?? null,
+        renderMs: Number.isFinite(renderMsParsed) ? renderMsParsed : null,
+        reasons: reasonCodes,
+        isDemo: targetFile.name === 'enterprise-invoices-demo.csv',
       });
 
       if (!confidenceData) {
