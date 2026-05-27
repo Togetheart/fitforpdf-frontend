@@ -194,22 +194,39 @@ export default function Page() {
   function handleHeroGenerateClick(event) {
     if (!event) return;
     event.preventDefault();
-    // Prioritise #generate (the actual upload pill — file picker + Generate
-    // button) over the wrapper section #tool. The wrapper adds 400+px of
-    // padding + quota pill + heading before the form: scrolling there leaves
-    // the user staring at chrome instead of the input they need to act on.
-    const target = document.getElementById('generate') || document.getElementById('tool');
+    if (typeof window === 'undefined') return;
+    // Why a corrective second scroll:
+    //   Sections between the hero and the upload pill use GSAP ScrollTrigger
+    //   to fade-in (opacity 0 → 1, y:24 → 0) when entering the viewport.
+    //   These animations fire DURING the smooth scroll and shift the layout,
+    //   so a single scrollIntoView often lands above/below the target by
+    //   100-300px. We do a first smooth scroll, wait for GSAP to settle
+    //   (~700ms reveal duration), then re-measure and correct if needed.
+    function getTarget() {
+      return document.getElementById('generate') || document.getElementById('tool');
+    }
+    function absY(el) {
+      // Sum offsetTop up the offsetParent chain — more stable than
+      // getBoundingClientRect during animations.
+      let y = 0;
+      let cur = el;
+      while (cur) { y += cur.offsetTop; cur = cur.offsetParent; }
+      // 24px breathing room above the target.
+      return Math.max(0, y - 24);
+    }
+    const target = getTarget();
     if (!target) return;
-    if (typeof target.scrollIntoView === 'function') {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
-      const top = typeof target.getBoundingClientRect === 'function'
-        ? target.getBoundingClientRect().top + window.pageYOffset - 24
-        : 0;
-      window.scrollTo({ top, behavior: 'smooth' });
-    }
+    window.scrollTo({ top: absY(target), behavior: 'smooth' });
+    // After the first scroll + GSAP reveal complete (~900ms total), re-measure
+    // and gently correct if the target moved. No-op if we're already close.
+    window.setTimeout(() => {
+      const t = getTarget();
+      if (!t) return;
+      const desired = absY(t);
+      if (Math.abs(window.pageYOffset - desired) > 40) {
+        window.scrollTo({ top: desired, behavior: 'smooth' });
+      }
+    }, 900);
   }
 
   const homeFaqLd = {
@@ -407,11 +424,11 @@ export default function Page() {
           is preserved; only the framing changed. */}
       <section
         id={LANDING_COPY_KEYS.upload}
-        className="bg-[var(--color-bg-hero)] relative z-10 py-10 sm:py-14 scroll-mt-16"
+        className="bg-[var(--color-bg-hero)] relative z-10 py-8 sm:py-12 scroll-mt-16"
         data-testid={`section-${LANDING_COPY_KEYS.upload}`}
       >
         <div className="mx-auto max-w-[860px] px-4 sm:px-6">
-          <div className="apple-grid-bg relative overflow-hidden rounded-[28px] px-5 py-12 sm:px-10 sm:py-16 shadow-[0_24px_60px_-20px_rgba(12,18,34,0.5)]">
+          <div className="apple-grid-bg relative overflow-hidden rounded-[24px] px-5 py-7 sm:px-9 sm:py-9 shadow-[0_18px_44px_-18px_rgba(12,18,34,0.45)]">
             <div className="apple-grid-noise" />
             {/* Soft inner top highlight — adds depth + signals "premium card" */}
             <div
