@@ -124,15 +124,38 @@ WebP at 1600px max width. Expected: 2.3 MB → ~150–300 KB.
 
 ## 📋 Suggested follow-up plan (ranked by impact / effort)
 
-| # | Action | Effort | Bundle impact | LCP impact |
-|---|---|---|---|---|
-| 1 | Re-encode 2 hero PNGs to WebP @ 1600px | 15 min | – | **-1.5s LCP** (final CTA bg + WallOfLove) |
-| 2 | Replace GSAP in `Section.jsx` with IO + CSS | 1 h | **-25 KB** | **-200 ms TBT** (less JS to parse) |
-| 3 | Replace GSAP in `AnimatedLogo`, `HeroHeadline`, `SpreadsheetCellsBackdrop` with CSS | 2 h | **-37 KB** (full gsap removal) | **-100 ms TBT** |
-| 4 | Audit Satoshi font loading | 15 min | – | small CLS gain |
-| 5 | Defer PostHog + Clarity 2 s post-load | 30 min | – | better First Input Delay |
+| # | Action | Effort | Bundle impact | LCP impact | Status |
+|---|---|---|---|---|---|
+| 1 | Re-encode 2 hero PNGs to WebP @ 1600px | 15 min | – | **-1.5s LCP** | ✅ done (commit 59449e2 + later) |
+| 2 | Replace GSAP in `Section.jsx` with IO + CSS | 1 h | **-25 KB** ScrollTrigger | **-200 ms TBT** | ✅ done |
+| 3 | Replace GSAP in `AnimatedLogo`, `HeroHeadline`, `SpreadsheetCellsBackdrop` with CSS | 2 h | **-37 KB** (full gsap removal) | **-100 ms TBT** | ⏸ pending |
+| 4 | Audit Satoshi font loading | 15 min | – | small CLS gain | ⏸ pending |
+| 5 | Defer PostHog + Clarity post-load | partial | – | better FID | ✅ done (hostname-gated + modules trimmed in 59449e2) |
+| 6 | Server Components split of home page | 8 h | TBT save varies | minor | ❌ low ROI |
 
-Expected combined: LCP **4.18 s → ~2.5 s**, Lighthouse score **72 → 90+**.
+### Why we did NOT do #6 (Server Components split)
+
+External audit recommended splitting `app/page.jsx` into Server Components
++ client islands. After tracing the imports, the home page renders:
+
+- `UploadCard` — client (state-heavy)
+- `LeadCaptureModal` — client (Portal + state)
+- `HeroHeadline` — client (GSAP morph)
+- `ProofShowcase` — client (tabs + format toggle + state)
+- `WallOfLove` — client (carousel state)
+- `ApiTeaserWidget` — client
+- `RoiCalculator` — client (slider state)
+- `StickyMobileCTA` — client (scroll listener)
+- `Section` wrapper — client (IntersectionObserver — required after #2)
+
+~95% of the visible above-the-fold content is genuinely interactive and
+needs client hydration. Splitting would only let us move ~2 KB of pure
+JSX to the server tier — not worth the refactor risk + Section
+re-architecture.
+
+If we want real TBT gains, the better path is item #3 (drop the
+remaining 3 GSAP-based components → ~37 KB bundle cut) — which is
+strictly less invasive.
 
 ## Why this audit matters
 

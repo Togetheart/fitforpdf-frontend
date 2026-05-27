@@ -343,7 +343,11 @@ export default function DevelopersPage() {
             high-engagement page (8.5 pages/visitor — see mobile audit). */}
         <div className="mb-8 relative h-48 sm:h-56 overflow-hidden rounded-2xl">
           <Image
-            src="/brand-origami.png"
+            // brand-origami.webp = 58K vs .png 1.4MB (24× smaller).
+            // next/image still picks the best variant for the client based on
+            // the request, but serving the smaller source short-circuits
+            // re-encoding cost on the Vercel image pipeline.
+            src="/brand-origami.webp"
             alt=""
             aria-hidden="true"
             fill

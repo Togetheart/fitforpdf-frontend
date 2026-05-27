@@ -106,7 +106,10 @@ export default function WallOfLove() {
               aria-hidden="true"
             >
               <img
-                src="/og-image.png"
+                // og-image.webp = 276K vs .png 2.3MB (8× smaller).
+                // The .png is kept in /public for the OG meta tag (Twitter
+                // crawler legacy) — only in-DOM uses got the WebP swap.
+                src="/og-image.webp"
                 alt=""
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 style={{ minHeight: '160px', maxHeight: '220px' }}

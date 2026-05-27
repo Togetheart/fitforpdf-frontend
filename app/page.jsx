@@ -874,7 +874,7 @@ export default function Page() {
       >
         {/* Blue wave background image */}
         <Image
-          src="/sneusch_Aerial_view_of_abstract_topographic_landscape_made_en_c6b5be1f-30a1-4261-a956-b2fb5fa4d46e_0.png"
+          src="/cta-background.webp"
           alt=""
           aria-hidden="true"
           fill
