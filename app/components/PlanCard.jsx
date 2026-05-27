@@ -15,20 +15,8 @@ function isNegativePoint(point) {
   );
 }
 
-// "Stretched link" pattern: the visible CTA button at the bottom of the card
-// renders an invisible ::after layer that covers the entire `position: relative`
-// <Card>. Result: clicking anywhere on the card triggers the same action as
-// clicking the button. Accessible (one button, one tab stop), no JS overlap,
-// preserves hover/focus states on the button itself.
-//
-// Caveat: text selection inside the card is blocked by the stretched ::after.
-// Acceptable trade-off for pricing cards (decision-driven, not read-driven).
-const STRETCHED_CLASS =
-  "after:absolute after:inset-0 after:content-[''] after:rounded-2xl";
-
 function renderAction(plan) {
   if (plan.disabled) {
-    // Disabled cards stay un-stretched — no full-card click target.
     return (
       <Button
         type="button"
@@ -48,7 +36,6 @@ function renderAction(plan) {
         type="button"
         variant={plan.recommended ? 'primary' : 'outline'}
         onClick={plan.onAction}
-        className={STRETCHED_CLASS}
       >
         {plan.actionLabel}
       </Button>
@@ -57,25 +44,50 @@ function renderAction(plan) {
 
   if (plan.actionType === 'link') {
     return (
-      <Button
-        variant={plan.recommended ? 'primary' : 'outline'}
-        href={plan.actionHref}
-        className={STRETCHED_CLASS}
-      >
+      <Button variant={plan.recommended ? 'primary' : 'outline'} href={plan.actionHref}>
         {plan.actionLabel}
       </Button>
     );
   }
 
   return (
-    <Button
-      type="button"
-      variant={plan.recommended ? 'primary' : 'outline'}
-      href={plan.actionHref}
-      className={STRETCHED_CLASS}
-    >
+    <Button type="button" variant={plan.recommended ? 'primary' : 'outline'} href={plan.actionHref}>
       {plan.actionLabel}
     </Button>
+  );
+}
+
+/**
+ * Full-card click intercept: an invisible <button> or <a> stretched over the
+ * entire (position:relative) <Card>, placed last in the DOM so it stacks
+ * above static content. tabIndex=-1 keeps a single tab stop on the visible
+ * CTA. Used instead of the ::after pseudo-element pattern because pseudos
+ * on <button> are unreliable cross-browser.
+ */
+function renderCardOverlay(plan) {
+  if (plan.disabled) return null;
+  if (typeof plan.onAction === 'function') {
+    return (
+      <button
+        type="button"
+        onClick={plan.onAction}
+        tabIndex={-1}
+        aria-hidden="true"
+        data-testid="card-stretched-overlay"
+        className="absolute inset-0 cursor-pointer rounded-2xl bg-transparent"
+      />
+    );
+  }
+  // href-based action: use <a> so cmd/ctrl-click + middle-click "open in
+  // new tab" work as expected.
+  return (
+    <a
+      href={plan.actionHref}
+      tabIndex={-1}
+      aria-hidden="true"
+      data-testid="card-stretched-overlay"
+      className="absolute inset-0 cursor-pointer rounded-2xl"
+    />
   );
 }
 
@@ -190,9 +202,20 @@ export default function PlanCard({
         </ul>
       ) : null}
 
-      {/* CTA */}
-      {showAction ? <div className="mt-6">{renderAction(plan)}</div> : null}
-      {plan.ctaNote ? <p className="mt-2.5 text-center text-xs text-muted/70">{plan.ctaNote}</p> : null}
+      {/* CTA — wrapped in relative z-10 so the visible button stays
+          clickable on top of the full-card overlay below. */}
+      {showAction ? (
+        <div className="relative z-10 mt-6">{renderAction(plan)}</div>
+      ) : null}
+      {plan.ctaNote ? (
+        <p className="relative z-10 mt-2.5 text-center text-xs text-muted/70">
+          {plan.ctaNote}
+        </p>
+      ) : null}
+
+      {/* Full-card click intercept — LAST in DOM so it stacks above static
+          content without z-index gymnastics. Skipped when no CTA shown. */}
+      {showAction ? renderCardOverlay(plan) : null}
     </Card>
   );
 }

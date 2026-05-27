@@ -154,20 +154,15 @@ export function PaygCard({ pack, onBuy, isLoading }) {
         ))}
       </ul>
 
-      {/* CTA — uses the "stretched link" pattern (after:absolute inset-0)
-          so the entire card becomes a click target. The button stays the
-          visible CTA + the only tab stop. */}
-      <div className="mt-6">
+      {/* CTA — visible button, z-10 so it stays clickable above the
+          full-card overlay below. */}
+      <div className="relative z-10 mt-6">
         <button
           type="button"
           onClick={onBuy}
           disabled={Boolean(isDisabled) || Boolean(isLoading)}
-          // NB: NO `relative` on the button itself — we want the ::after to
-          // stretch over the Card (closest positioned ancestor), not the
-          // button. The Card has `position: relative` already.
           className={cn(
             'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
-            !isDisabled && "after:absolute after:inset-0 after:content-['']",
             isFeatured
               ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50'
               : 'border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] disabled:cursor-not-allowed disabled:opacity-50',
@@ -177,6 +172,23 @@ export function PaygCard({ pack, onBuy, isLoading }) {
           {pack.actionLabel}
         </button>
       </div>
+
+      {/* Full-card click intercept. Last in DOM so it stacks above static
+          content (price, features, etc.) without needing z-index. The
+          visible CTA above gets `relative z-10` to stay clickable on top.
+          tabIndex=-1 keeps only one tab stop on the visible button.
+          Replaces the previous after:absolute pseudo-element pattern, which
+          is unreliable on <button> across browsers (replaced-element quirk). */}
+      {!isDisabled && !isLoading ? (
+        <button
+          type="button"
+          onClick={onBuy}
+          tabIndex={-1}
+          aria-hidden="true"
+          data-testid="card-stretched-overlay"
+          className="absolute inset-0 cursor-pointer rounded-2xl bg-transparent"
+        />
+      ) : null}
     </Card>
   );
 }
@@ -234,20 +246,28 @@ export function ProSubscriptionCard({ billing, onSubscribe, isLoading }) {
         ))}
       </ul>
 
-      {/* CTA — stretched-link makes the whole card clickable. */}
-      <div className="mt-auto pt-8">
+      {/* CTA — visible button, z-10 above the overlay below. */}
+      <div className="relative z-10 mt-auto pt-8">
         <button
           type="button"
           onClick={onSubscribe}
           disabled={isLoading}
-          className={cn(
-            "w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50",
-            !isLoading && "after:absolute after:inset-0 after:content-['']",
-          )}
+          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {PRICING_PAGE_COPY.proCtaLabel}
         </button>
       </div>
+
+      {/* Full-card click intercept (see PaygCard for rationale). */}
+      {!isLoading ? (
+        <button
+          type="button"
+          onClick={onSubscribe}
+          tabIndex={-1}
+          aria-hidden="true"
+          className="absolute inset-0 cursor-pointer rounded-2xl bg-transparent"
+        />
+      ) : null}
     </Card>
   );
 }
@@ -296,17 +316,26 @@ export function ProApiCard() {
         ))}
       </ul>
 
-      {/* CTA */}
-      <div className="mt-auto pt-8">
+      {/* CTA — visible link, z-10 above the overlay below. */}
+      <div className="relative z-10 mt-auto pt-8">
         <p className="mb-0.5 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof}</p>
         <p className="mb-3 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof2}</p>
         <a
           href={PRICING_PAGE_COPY.proApiCtaHref}
-          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98] after:absolute after:inset-0 after:content-['']"
+          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98]"
         >
           {PRICING_PAGE_COPY.proApiCtaLabel}
         </a>
       </div>
+
+      {/* Full-card click overlay. Use <a> so a plain click + new-tab
+          modifiers (cmd/ctrl-click, middle-click) work as expected. */}
+      <a
+        href={PRICING_PAGE_COPY.proApiCtaHref}
+        tabIndex={-1}
+        aria-hidden="true"
+        className="absolute inset-0 cursor-pointer rounded-2xl"
+      />
     </Card>
   );
 }
@@ -362,15 +391,23 @@ export function EnterpriseCard() {
         ))}
       </ul>
 
-      {/* CTA */}
-      <div className="mt-auto pt-8">
+      {/* CTA — visible link, z-10 above the overlay below. */}
+      <div className="relative z-10 mt-auto pt-8">
         <a
           href="/contact"
-          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98] after:absolute after:inset-0 after:content-['']"
+          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98]"
         >
           Contact us
         </a>
       </div>
+
+      {/* Full-card click overlay (see ProApiCard). */}
+      <a
+        href="/contact"
+        tabIndex={-1}
+        aria-hidden="true"
+        className="absolute inset-0 cursor-pointer rounded-2xl"
+      />
     </Card>
   );
 }
