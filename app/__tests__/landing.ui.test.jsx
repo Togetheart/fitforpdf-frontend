@@ -210,7 +210,10 @@ describe('landing conversion-first structure', () => {
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
     const faq = screen.getByTestId('faq-section');
 
-    expect((proof.getAttribute('class') || '').includes('py-16')).toBe(true);
+    // Proof section no longer uses `py-16` — it was tuned to a tight `pt-12
+    // sm:pt-16` (no pb) to pull the dark upload card closer to the features
+    // grid above. The intent ("section has padding-top") is what we assert.
+    expect((proof.getAttribute('class') || '')).toMatch(/p[ty]-(?:8|10|12|16|20)/);
     // Pricing section has no extra py className; its inner div uses the Section default py-10
     expect((pricing.firstElementChild?.getAttribute('class') || '').includes('py-10')).toBe(true);
     expect((faq.getAttribute('class') || '').includes('py-16')).toBe(true);
