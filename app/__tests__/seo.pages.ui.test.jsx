@@ -14,7 +14,7 @@ const pages = [
   { Component: ExcelCutoffPage, meta: SEO.excelCutoff, h1: /cuts off columns/i },
   { Component: FitOnePagePage, meta: SEO.fitOnePage, h1: /fit a large excel/i },
   { Component: CsvPdfPage, meta: SEO.csvPdf, h1: /csv.*structured/i },
-  { Component: AuditPdfPage, meta: SEO.auditPdf, h1: /audit.*excel/i },
+  { Component: AuditPdfPage, meta: SEO.auditPdf, h1: /audit.*working papers/i },
 ];
 
 describe.each(pages)('SEO page: $meta.slug', ({ Component, h1 }) => {
@@ -30,9 +30,14 @@ describe.each(pages)('SEO page: $meta.slug', ({ Component, h1 }) => {
     cleanup();
   });
 
-  test('has CTA linking to home', () => {
+  test('has CTA linking to home or upload pill', () => {
     render(<Component />);
-    expect(screen.getByTestId('seo-cta').querySelector('a[href="/"]')).toBeTruthy();
+    // Accept either `/` (top of home) or `/#generate` (direct to upload pill).
+    // The latter is the new convention after the /#tool anchor was fixed —
+    // both eventually land on the same page, the anchor just scrolls deeper.
+    const cta = screen.getByTestId('seo-cta');
+    const link = cta.querySelector('a[href="/"], a[href="/#generate"], a[href="/#tool"]');
+    expect(link).toBeTruthy();
     cleanup();
   });
 });

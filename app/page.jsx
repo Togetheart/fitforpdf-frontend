@@ -26,6 +26,7 @@ import UseCaseCards from './components/UseCaseCards';
 import WallOfLove from './components/WallOfLove';
 import ApiTeaserWidget from './components/ApiTeaserWidget';
 import RoiCalculator from './components/RoiCalculator';
+import LeadCaptureModal from './components/LeadCaptureModal';
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
 
@@ -477,6 +478,16 @@ export default function Page() {
         </p>
         </div>
       </section>
+
+      {/* Soft email capture after a successful render.
+          Suppressed for 30d after first show (submit or skip). Wired here
+          rather than in UploadCard so the modal lives at page level (z-index
+          + escape-key handling). Backend storage stub at /api/leads. */}
+      <LeadCaptureModal
+        trigger={Boolean(conversion.pdfBlob)}
+        renderId={conversion.renderId}
+        source="render_success"
+      />
 
       {/* Social proof — 3 key testimonials, compact */}
       <Section

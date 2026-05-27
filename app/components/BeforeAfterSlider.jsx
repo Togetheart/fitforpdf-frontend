@@ -107,13 +107,17 @@ export default function BeforeAfterSlider({
         if (e.key === 'ArrowRight') setPosition((p) => Math.min(100, p + 2));
       }}
     >
-      {/* After image (bottom layer — full width) */}
+      {/* After image (bottom layer — full width).
+          Lazy-loaded: this slider is the 3rd section on the landing page (well
+          below the fold). LCP audit fix. */}
       <img
         src={afterSrc}
         srcSet={afterSrcSet}
         alt={afterAlt}
         className="block h-auto w-full"
         draggable={false}
+        loading="lazy"
+        decoding="async"
       />
 
       {/* Before image (top layer — clipped, slightly dimmed for contrast) */}
@@ -130,6 +134,8 @@ export default function BeforeAfterSlider({
           alt={beforeAlt}
           className="block h-full w-full object-cover object-left-top"
           draggable={false}
+          loading="lazy"
+          decoding="async"
         />
       </div>
 

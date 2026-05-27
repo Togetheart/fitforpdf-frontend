@@ -284,7 +284,7 @@ export const PRICING_PAGE_COPY = {
   freeFeature: 'fitforpdf branding included',
   freeFeatureAlt: 'Account-free',
   freeCtaLabel: 'Start free',
-  freeCtaHref: '/#upload',
+  freeCtaHref: '/#generate',
   freeSafetyTitle: 'Just want to test the waters?',
   freeSafetyDesc: '3 free exports. fitforpdf watermark included. No account needed.',
   freeSafetyCtaLabel: 'Upload a file for free →',

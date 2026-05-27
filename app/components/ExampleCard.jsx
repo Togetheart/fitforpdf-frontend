@@ -69,7 +69,7 @@ export default function ExampleCard({
           <Button variant="outline" href={pdfHref} target="_blank" rel="noopener noreferrer" className="text-xs px-4">
             View PDF
           </Button>
-          <Button variant="primary" href="/#tool" className="text-xs px-4">
+          <Button variant="primary" href="/#generate" className="text-xs px-4">
             Try with your data
             <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
           </Button>

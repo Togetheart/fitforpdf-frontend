@@ -59,18 +59,27 @@ export default function SiteHeader() {
           </a>
 
           {/* Desktop nav — hidden on mobile */}
+          {/* `API` is promoted left-most + decorated with a "Free" pill because
+              /developers had the highest pages/visitor of the site (8.5) but
+              was buried in the nav. Direct-API audience deserves discovery. */}
           <nav className="hidden sm:flex items-center gap-6 text-sm text-[var(--color-muted)]">
+            <a
+              className="group inline-flex items-center gap-1.5 transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1"
+              href="/developers"
+            >
+              API
+              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+                Free
+              </span>
+            </a>
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/pricing">
               Pricing
-            </a>
-            <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/developers">
-              API
             </a>
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/contact">
               Contact
             </a>
             <ThemeToggle />
-            <Button variant="primary" href="/#tool" className="px-4 text-xs h-9">
+            <Button variant="primary" href="/#generate" className="px-4 text-xs h-9">
               Try free
             </Button>
           </nav>
@@ -111,18 +120,21 @@ export default function SiteHeader() {
       >
         <nav className="flex flex-col gap-1">
           <a
+            href="/developers"
+            onClick={closeMenu}
+            className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
+          >
+            <span>API</span>
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+              Free
+            </span>
+          </a>
+          <a
             href="/pricing"
             onClick={closeMenu}
             className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
           >
             Pricing
-          </a>
-          <a
-            href="/developers"
-            onClick={closeMenu}
-            className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
-          >
-            API
           </a>
           <a
             href="/contact"
@@ -135,7 +147,7 @@ export default function SiteHeader() {
             <ThemeToggle />
             <Button
               variant="primary"
-              href="/#tool"
+              href="/#generate"
               className="flex-1 ml-3"
               onClick={closeMenu}
             >

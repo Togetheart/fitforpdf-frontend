@@ -1,4 +1,5 @@
 import { SEO } from './siteCopy.mjs';
+import { SEO_ARTICLES } from './lib/seoArticles.mjs';
 import fs from 'fs';
 import path from 'path';
 
@@ -65,6 +66,16 @@ export default function sitemap() {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+
+    // Long-tail SEO articles (cloned from /excel-to-pdf-columns-cut-off — the
+    // only page that brings organic Google traffic at 0% bounce). Each article
+    // lives in app/lib/seoArticles.mjs and renders via app/components/SeoArticle.
+    ...SEO_ARTICLES.map((article) => ({
+      url: `${SEO.siteUrl}/${article.slug}`,
+      lastModified: pageModDate(`${article.slug}/page.jsx`),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    })),
 
     // Comparison pages
     {

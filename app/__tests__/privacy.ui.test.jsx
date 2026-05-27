@@ -123,13 +123,11 @@ describe('privacy page UI', () => {
 
   test('header nav links are present', () => {
     const headerNav = screen.getAllByRole('navigation')[0];
-    const headerLinks = headerNav.querySelectorAll('a');
-    expect(Array.from(headerLinks).find((link) => link.textContent?.trim() === 'Pricing')?.getAttribute('href')).toBe(
-      '/pricing',
-    );
-    expect(Array.from(headerLinks).find((link) => link.textContent?.trim() === 'API')?.getAttribute('href')).toBe(
-      '/developers',
-    );
+    const headerLinks = Array.from(headerNav.querySelectorAll('a'));
+    // Use href-based lookup — resilient to inline pills/badges in the link
+    // text (the API link now carries a "Free" pill).
+    expect(headerLinks.find((link) => link.getAttribute('href') === '/pricing')).toBeTruthy();
+    expect(headerLinks.find((link) => link.getAttribute('href') === '/developers')).toBeTruthy();
   });
 
   test('footer remains present', () => {

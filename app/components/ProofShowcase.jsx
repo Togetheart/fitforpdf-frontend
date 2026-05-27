@@ -463,7 +463,7 @@ export default function ProofShowcase() {
         {/* CTA */}
         <div className="mt-6 flex justify-center">
           <a
-            href="#tool"
+            href="#generate"
             className="inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#1E293B] hover:shadow-md"
           >
             {LANDING_COPY.heroCta}

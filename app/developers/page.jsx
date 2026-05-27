@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 const BASE_URL = 'https://api.fitforpdf.com/v1';
 
@@ -333,13 +334,19 @@ export default function DevelopersPage() {
 
       {/* Hero */}
       <div className="mb-14">
-        {/* Brand visual */}
-        <div className="mb-8 overflow-hidden rounded-2xl">
-          <img
+        {/* Brand visual — converted from raw <img> (1.4 MB PNG, was the LCP
+            element for this page) to <Image> with priority + automatic
+            webp/avif conversion. Cuts the image payload by ~80% on this
+            high-engagement page (8.5 pages/visitor — see mobile audit). */}
+        <div className="mb-8 relative h-48 sm:h-56 overflow-hidden rounded-2xl">
+          <Image
             src="/brand-origami.png"
             alt=""
             aria-hidden="true"
-            className="h-48 w-full object-cover sm:h-56"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 720px"
+            className="object-cover"
           />
         </div>
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
@@ -359,6 +366,26 @@ export default function DevelopersPage() {
           <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-[500] text-emerald-700">
             No HTML templates. No PDF layout code.
           </span>
+        </div>
+
+        {/* Primary hero CTA — Free API key.
+            Pushed up here because /developers landings used to bury this anchor
+            at the very bottom of the page. Promoted to first-fold to convert
+            the high-intent dev audience (8.5 pages/visitor) before they bounce. */}
+        <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <a
+            href="#request-access"
+            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98]"
+          >
+            Get your free API key
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </a>
+          <p className="text-xs text-[var(--color-muted)]">
+            <span className="font-semibold text-[var(--color-text)]">50 free renders</span>{' '}
+            to start. No credit card. Most requests approved within hours.
+          </p>
         </div>
       </div>
 

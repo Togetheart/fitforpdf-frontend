@@ -111,3 +111,20 @@ export function trackShareLinkCopied({ surface, jobId }) {
     job_id: jobId,
   });
 }
+
+// ── Lead capture (post-render soft email gate) ────────────────────
+// Wired by app/components/LeadCaptureModal.jsx. Lets us measure the funnel:
+// lead_modal_shown → (lead_captured | lead_skipped). Source tags the surface
+// so we can A/B-test alternative trigger points (download, share, etc.).
+
+export function trackLeadModalShown({ source, renderId }) {
+  capture('lead_modal_shown', { source, render_id: renderId });
+}
+
+export function trackLeadCaptured({ source, renderId }) {
+  capture('lead_captured', { source, render_id: renderId });
+}
+
+export function trackLeadSkipped({ source, renderId }) {
+  capture('lead_skipped', { source, render_id: renderId });
+}

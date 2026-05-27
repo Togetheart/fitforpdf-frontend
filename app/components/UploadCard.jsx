@@ -707,7 +707,9 @@ export default function UploadCard({
             {isLoading ? (
               <>
                 <Loader2 aria-hidden="true" className="mr-1.5 h-4 w-4 animate-spin" />
-                <span className="hidden sm:inline">Generating…</span>
+                {/* Always show label, including on mobile — silent spinners
+                    cause anxiety. Mobile-audit fix. */}
+                <span>Generating…</span>
               </>
             ) : (
               <>

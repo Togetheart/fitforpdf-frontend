@@ -18,7 +18,10 @@ export default function UploadDropzone({
   onFileSelect,
   onFileSelected,
   onRemoveFile,
-  accept = '.csv,.xlsx',
+  // Include MIME types alongside extensions: iOS Safari's file picker filters
+  // by MIME on some flows (Files app, Mail attachment picker) and would
+  // otherwise gray out valid .xlsx/.csv files. Mobile-audit fix.
+  accept = '.csv,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   disabled = false,
 }) {
   const [isDragActive, setIsDragActive] = useState(false);
@@ -99,7 +102,9 @@ export default function UploadDropzone({
                   }
                 }}
                 disabled={disabled}
-                className="shrink-0 rounded-full p-0.5 text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] transition disabled:opacity-50"
+                // Bumped from p-0.5 to p-2: hit target was ~18px (below iOS HIG 44px).
+                // Mobile-audit fix.
+                className="shrink-0 rounded-full p-2 text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] transition disabled:opacity-50"
                 aria-label="Remove"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -111,8 +116,14 @@ export default function UploadDropzone({
             <div className="flex flex-col items-center text-center gap-1.5 w-full sm:flex-row sm:items-center sm:text-left sm:gap-2.5 sm:w-auto">
               <AnimatedCloudIcon size={20} className="shrink-0 text-blue-500" />
               <div className="min-w-0 w-full sm:w-auto">
-                <p className="text-sm font-medium text-[var(--color-text)]">Drop CSV or XLSX here</p>
-                <p className="text-xs text-muted">{DROPZONE_HINT}</p>
+                {/* Mobile-aware copy: "Drop here" is misleading on touch — show
+                    "Tap to choose file" instead. Picked up the gap during the
+                    mobile-funnel audit (29% mobile visitors, 9× fewer pages). */}
+                <p className="text-sm font-medium text-[var(--color-text)]">
+                  <span className="sm:hidden">Tap to choose a CSV or XLSX file</span>
+                  <span className="hidden sm:inline">Drop CSV or XLSX here</span>
+                </p>
+                <p className="text-xs text-muted hidden sm:block">{DROPZONE_HINT}</p>
               </div>
             </div>
           )}

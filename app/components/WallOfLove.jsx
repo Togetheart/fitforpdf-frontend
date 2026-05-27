@@ -110,6 +110,8 @@ export default function WallOfLove() {
                 alt=""
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 style={{ minHeight: '160px', maxHeight: '220px' }}
+                loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/60 to-transparent" />
               <p className="absolute bottom-4 left-5 text-sm font-semibold text-white/90 tracking-wide">

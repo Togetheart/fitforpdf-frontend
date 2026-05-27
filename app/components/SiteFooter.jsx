@@ -2,6 +2,14 @@ import React from 'react';
 import { LANDING_COPY } from '../siteCopy.mjs';
 import AnimatedLogo from './AnimatedLogo';
 import NewsletterForm from './NewsletterForm';
+import { makeUtm, UTM_SOURCE, UTM_MEDIUM, UTM_CAMPAIGN } from '../lib/utm.mjs';
+
+// Tag every outbound link in the footer with utm_medium=social, utm_campaign=footer
+// so PostHog/Clarity stop reporting these clicks as "Direct" on return visits.
+const footerUtm = makeUtm({
+  medium: UTM_MEDIUM.social,
+  campaign: UTM_CAMPAIGN.footer,
+});
 
 export default function SiteFooter() {
   return (
@@ -16,7 +24,7 @@ export default function SiteFooter() {
           <p className="text-xs text-[var(--color-muted)]">
             Made by{' '}
             <a
-              href={LANDING_COPY.footerMakerHref}
+              href={footerUtm(LANDING_COPY.footerMakerHref, { source: UTM_SOURCE.linkedin })}
               target="_blank"
               rel="noopener noreferrer"
               className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1"
@@ -29,7 +37,7 @@ export default function SiteFooter() {
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Product</p>
           <nav className="flex flex-col gap-1.5">
-            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/#tool">
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/#generate">
               Try free
             </a>
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/pricing">
@@ -126,7 +134,7 @@ export default function SiteFooter() {
           {/* Social links */}
           <div className="flex items-center gap-4">
             <a
-              href="https://www.linkedin.com/company/fitforpdf/"
+              href={footerUtm('https://www.linkedin.com/company/fitforpdf/', { source: UTM_SOURCE.linkedin })}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
@@ -137,7 +145,7 @@ export default function SiteFooter() {
               </svg>
             </a>
             <a
-              href="https://x.com/fitforpdf"
+              href={footerUtm('https://x.com/fitforpdf', { source: UTM_SOURCE.twitter })}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="X (Twitter)"

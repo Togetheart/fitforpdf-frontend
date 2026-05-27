@@ -32,11 +32,13 @@ function ensureMatchMedia() {
 function headerLinks(headerRoot) {
   const header = screen.getByTestId(headerRoot);
   const links = Array.from(header.querySelectorAll('a'));
-  const getByText = (text) => links.find((link) => link.textContent?.trim() === text);
+  // Use href-based lookup so this helper is resilient to inline badges/pills
+  // added to the link text (e.g. the "Free" pill next to the API link).
+  const getByHref = (href) => links.find((link) => link.getAttribute('href') === href);
 
   return {
-    pricing: getByText('Pricing'),
-    api: getByText('API'),
+    pricing: getByHref('/pricing'),
+    api: getByHref('/developers'),
   };
 }
 
