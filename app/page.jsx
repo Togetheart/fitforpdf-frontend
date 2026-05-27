@@ -194,7 +194,11 @@ export default function Page() {
   function handleHeroGenerateClick(event) {
     if (!event) return;
     event.preventDefault();
-    const target = document.getElementById('tool') || document.getElementById('generate');
+    // Prioritise #generate (the actual upload pill — file picker + Generate
+    // button) over the wrapper section #tool. The wrapper adds 400+px of
+    // padding + quota pill + heading before the form: scrolling there leaves
+    // the user staring at chrome instead of the input they need to act on.
+    const target = document.getElementById('generate') || document.getElementById('tool');
     if (!target) return;
     if (typeof target.scrollIntoView === 'function') {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -378,21 +382,29 @@ export default function Page() {
         </a>
       </div>
 
-      {/* Visual demo — moved before the upload for "proof first" flow */}
-      <Section
+      {/* Visual demo — moved before the upload for "proof first" flow.
+          NOTE: bypasses the generic <Section> wrapper because Section's
+          baked-in `py-10 sm:py-14` on its inner div added 100+px of unwanted
+          trailing whitespace after ProofShowcase. We render the section
+          directly with tight bottom padding so the dark upload section sits
+          immediately below the features grid (was a 367px white void). */}
+      <section
         id={LANDING_COPY_KEYS.beforeAfter}
-        index={1}
-        maxWidth="max-w-wide"
-        className="py-16 sm:py-20 relative z-10"
-        bg="bg-hero"
+        data-testid={`section-${LANDING_COPY_KEYS.beforeAfter}`}
+        className="bg-[var(--color-bg-hero)] relative z-10 pt-12 sm:pt-16"
       >
-        <ProofShowcase />
-      </Section>
+        <div className="mx-auto flex w-full flex-col gap-8 max-w-wide px-4 sm:px-6 lg:px-10 xl:px-12">
+          <ProofShowcase />
+        </div>
+      </section>
 
-      {/* Upload tool */}
+      {/* Upload tool — cut top padding to tighten the visual gap between the
+          features grid above and the dark upload pill. The color transition
+          (bg-hero → apple-grid-bg) already separates the two sections; the
+          extra 64px of top padding made the white "void" feel too large. */}
       <section
         id={LANDING_COPY_KEYS.upload}
-        className="apple-grid-bg py-16 sm:py-20 relative z-10 scroll-mt-16"
+        className="apple-grid-bg pt-6 pb-16 sm:pt-8 sm:pb-20 relative z-10 scroll-mt-16"
         data-testid={`section-${LANDING_COPY_KEYS.upload}`}
       >
         <div className="apple-grid-noise" />

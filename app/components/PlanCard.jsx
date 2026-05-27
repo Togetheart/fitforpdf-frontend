@@ -15,8 +15,20 @@ function isNegativePoint(point) {
   );
 }
 
+// "Stretched link" pattern: the visible CTA button at the bottom of the card
+// renders an invisible ::after layer that covers the entire `position: relative`
+// <Card>. Result: clicking anywhere on the card triggers the same action as
+// clicking the button. Accessible (one button, one tab stop), no JS overlap,
+// preserves hover/focus states on the button itself.
+//
+// Caveat: text selection inside the card is blocked by the stretched ::after.
+// Acceptable trade-off for pricing cards (decision-driven, not read-driven).
+const STRETCHED_CLASS =
+  "after:absolute after:inset-0 after:content-[''] after:rounded-2xl";
+
 function renderAction(plan) {
   if (plan.disabled) {
+    // Disabled cards stay un-stretched — no full-card click target.
     return (
       <Button
         type="button"
@@ -36,6 +48,7 @@ function renderAction(plan) {
         type="button"
         variant={plan.recommended ? 'primary' : 'outline'}
         onClick={plan.onAction}
+        className={STRETCHED_CLASS}
       >
         {plan.actionLabel}
       </Button>
@@ -44,14 +57,23 @@ function renderAction(plan) {
 
   if (plan.actionType === 'link') {
     return (
-      <Button variant={plan.recommended ? 'primary' : 'outline'} href={plan.actionHref}>
+      <Button
+        variant={plan.recommended ? 'primary' : 'outline'}
+        href={plan.actionHref}
+        className={STRETCHED_CLASS}
+      >
         {plan.actionLabel}
       </Button>
     );
   }
 
   return (
-    <Button type="button" variant={plan.recommended ? 'primary' : 'outline'} href={plan.actionHref}>
+    <Button
+      type="button"
+      variant={plan.recommended ? 'primary' : 'outline'}
+      href={plan.actionHref}
+      className={STRETCHED_CLASS}
+    >
       {plan.actionLabel}
     </Button>
   );
@@ -92,6 +114,10 @@ export default function PlanCard({
       data-featured={isFeatured ? 'true' : 'false'}
       className={cn(
         'relative flex flex-col overflow-visible p-6 transition-all duration-150',
+        // Clickability hint: whole card is now a click target (via the
+        // stretched-link pattern on the CTA button). Disabled plans
+        // intentionally don't get the hover/cursor treatment.
+        !plan.disabled && 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md',
         isFeatured
           ? `md:${featuredScaleClass} border-2 border-[var(--color-border)] feature-card-hover`
           : 'feature-card-hover',

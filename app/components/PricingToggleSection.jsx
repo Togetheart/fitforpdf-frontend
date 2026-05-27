@@ -71,6 +71,9 @@ export function PaygCard({ pack, onBuy, isLoading }) {
       data-testid="payg-plan-card"
       className={cn(
         'feature-card-hover relative flex flex-col overflow-visible',
+        // Whole-card click target (stretched-link pattern on the CTA button).
+        // Skipped for disabled packs to avoid "click does nothing" frustration.
+        !isDisabled && 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
         isFeatured
           ? 'md:scale-[1.04] bg-[var(--color-bg)] p-7'
           : 'p-6',
@@ -151,14 +154,20 @@ export function PaygCard({ pack, onBuy, isLoading }) {
         ))}
       </ul>
 
-      {/* CTA */}
+      {/* CTA — uses the "stretched link" pattern (after:absolute inset-0)
+          so the entire card becomes a click target. The button stays the
+          visible CTA + the only tab stop. */}
       <div className="mt-6">
         <button
           type="button"
           onClick={onBuy}
           disabled={Boolean(isDisabled) || Boolean(isLoading)}
+          // NB: NO `relative` on the button itself — we want the ::after to
+          // stretch over the Card (closest positioned ancestor), not the
+          // button. The Card has `position: relative` already.
           className={cn(
             'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
+            !isDisabled && "after:absolute after:inset-0 after:content-['']",
             isFeatured
               ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50'
               : 'border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] disabled:cursor-not-allowed disabled:opacity-50',
@@ -181,7 +190,11 @@ export function ProSubscriptionCard({ billing, onSubscribe, isLoading }) {
   return (
     <Card
       as="article"
-      className="relative flex w-full flex-col overflow-visible p-8 bg-[var(--color-bg)]"
+      className={cn(
+        'relative flex w-full flex-col overflow-visible p-8 bg-[var(--color-bg)]',
+        // Whole-card click via stretched-link on CTA below.
+        'cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
+      )}
       style={{ border: '1px solid var(--color-border)' }}
     >
 
@@ -221,13 +234,16 @@ export function ProSubscriptionCard({ billing, onSubscribe, isLoading }) {
         ))}
       </ul>
 
-      {/* CTA */}
+      {/* CTA — stretched-link makes the whole card clickable. */}
       <div className="mt-auto pt-8">
         <button
           type="button"
           onClick={onSubscribe}
           disabled={isLoading}
-          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
+          className={cn(
+            "w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50",
+            !isLoading && "after:absolute after:inset-0 after:content-['']",
+          )}
         >
           {PRICING_PAGE_COPY.proCtaLabel}
         </button>
@@ -241,7 +257,10 @@ export function ProApiCard() {
   return (
     <Card
       as="article"
-      className="relative flex w-full flex-col overflow-visible p-8 border border-[var(--color-border)] bg-[var(--color-bg)]/70"
+      className={cn(
+        'relative flex w-full flex-col overflow-visible p-8 border border-[var(--color-border)] bg-[var(--color-bg)]/70',
+        'cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
+      )}
     >
       {/* Title */}
       <div>
@@ -283,7 +302,7 @@ export function ProApiCard() {
         <p className="mb-3 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof2}</p>
         <a
           href={PRICING_PAGE_COPY.proApiCtaHref}
-          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98]"
+          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98] after:absolute after:inset-0 after:content-['']"
         >
           {PRICING_PAGE_COPY.proApiCtaLabel}
         </a>
@@ -305,7 +324,10 @@ export function EnterpriseCard() {
   return (
     <Card
       as="article"
-      className="relative flex w-full flex-col overflow-visible p-8 border border-[var(--color-border)] bg-[var(--color-bg)]/70"
+      className={cn(
+        'relative flex w-full flex-col overflow-visible p-8 border border-[var(--color-border)] bg-[var(--color-bg)]/70',
+        'cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
+      )}
     >
       {/* Title */}
       <div>
@@ -344,7 +366,7 @@ export function EnterpriseCard() {
       <div className="mt-auto pt-8">
         <a
           href="/contact"
-          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98]"
+          className="flex w-full items-center justify-center rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] transition-all duration-150 active:scale-[0.98] after:absolute after:inset-0 after:content-['']"
         >
           Contact us
         </a>
