@@ -398,17 +398,27 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Upload tool — cut top padding to tighten the visual gap between the
-          features grid above and the dark upload pill. The color transition
-          (bg-hero → apple-grid-bg) already separates the two sections; the
-          extra 64px of top padding made the white "void" feel too large. */}
+      {/* Upload tool — restructured: the dark navy area is no longer a
+          full-bleed section but a CONTAINED card floating on the page bg.
+          Why: a full-width dark slab created an abrupt edge-to-edge color
+          cut + no breathing room. As a contained card it reads as
+          "the focal element" with intent, margins, and rounded corners.
+          The apple-grid-bg + apple-grid-noise + apple-grid-card aesthetic
+          is preserved; only the framing changed. */}
       <section
         id={LANDING_COPY_KEYS.upload}
-        className="apple-grid-bg pt-6 pb-16 sm:pt-8 sm:pb-20 relative z-10 scroll-mt-16"
+        className="bg-[var(--color-bg-hero)] relative z-10 py-10 sm:py-14 scroll-mt-16"
         data-testid={`section-${LANDING_COPY_KEYS.upload}`}
       >
-        <div className="apple-grid-noise" />
-        <div className="relative z-10 mx-auto max-w-[640px] px-4 sm:px-6">
+        <div className="mx-auto max-w-[860px] px-4 sm:px-6">
+          <div className="apple-grid-bg relative overflow-hidden rounded-[28px] px-5 py-12 sm:px-10 sm:py-16 shadow-[0_24px_60px_-20px_rgba(12,18,34,0.5)]">
+            <div className="apple-grid-noise" />
+            {/* Soft inner top highlight — adds depth + signals "premium card" */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
+            />
+            <div className="relative z-10 mx-auto max-w-[640px]">
         <div
           data-testid={LANDING_COPY_KEYS.upload}
           className="apple-grid-card mx-auto w-full relative p-6 sm:p-8"
@@ -488,7 +498,9 @@ export default function Page() {
         <p className="mt-6 text-center text-sm text-white/60">
           {LANDING_COPY.heroTypicalOutput}
         </p>
-        </div>
+            </div>{/* close max-w-[640px] inner */}
+          </div>{/* close apple-grid-bg dark card */}
+        </div>{/* close max-w-[860px] outer */}
       </section>
 
       {/* Soft email capture after a successful render.
