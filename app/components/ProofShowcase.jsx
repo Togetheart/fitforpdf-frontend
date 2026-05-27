@@ -460,29 +460,10 @@ export default function ProofShowcase() {
           </p>
         </div>
 
-        {/* CTA — uses programmatic scroll instead of href="#generate" so the
-            browser's native scroll-to-hash doesn't race with our smooth scroll
-            (which compensates for GSAP reveal layout shifts). */}
-        <div className="mt-6 flex justify-center">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const target = document.getElementById('generate');
-              if (!target || typeof window === 'undefined') return;
-              let y = 0; let cur = target;
-              while (cur) { y += cur.offsetTop; cur = cur.offsetParent; }
-              window.scrollTo({ top: Math.max(0, y - 80), behavior: 'smooth' });
-            }}
-            className="inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#1E293B] hover:shadow-md"
-          >
-            {LANDING_COPY.heroCta}
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 8h10M9 4l4 4-4 4" />
-            </svg>
-          </button>
-        </div>
+        {/* CTA removed (2026-05-27): the in-demo "Fix your export" button
+            was redundant with the hero/howItWorks/finalCta CTAs and caused
+            scroll-target confusion when users clicked it before the upload
+            section came into view. Cleaner funnel without it. */}
 
         {/* Feature strip */}
         <div
