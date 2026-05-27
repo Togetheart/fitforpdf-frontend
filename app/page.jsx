@@ -27,6 +27,7 @@ import WallOfLove from './components/WallOfLove';
 import ApiTeaserWidget from './components/ApiTeaserWidget';
 import RoiCalculator from './components/RoiCalculator';
 import LeadCaptureModal from './components/LeadCaptureModal';
+import { scrollToTarget } from './lib/scrollToTarget.mjs';
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
 
@@ -196,36 +197,12 @@ export default function Page() {
       event.preventDefault();
       event.stopPropagation();
     }
-    if (typeof window === 'undefined') return;
-    // Offset = sticky header height (~64px) + small breathing room (16px).
-    // Without this, the upload pill lands UNDER the sticky header, which
-    // looks (and feels) like the scroll missed the target.
-    const HEADER_OFFSET = 80;
-    function getTarget() {
-      return document.getElementById('generate') || document.getElementById('tool');
-    }
-    function absY(el) {
-      // Sum offsetTop up the offsetParent chain — more stable than
-      // getBoundingClientRect during GSAP reveal animations.
-      let y = 0;
-      let cur = el;
-      while (cur) { y += cur.offsetTop; cur = cur.offsetParent; }
-      return Math.max(0, y - HEADER_OFFSET);
-    }
-    const target = getTarget();
-    if (!target) return;
-    window.scrollTo({ top: absY(target), behavior: 'smooth' });
-    // Corrective second scroll: GSAP ScrollTrigger reveals (opacity/translate)
-    // fire mid-scroll and shift the layout. After ~900ms (GSAP 0.7s reveal +
-    // margin), re-measure and gently correct only if we drifted > 40px.
-    window.setTimeout(() => {
-      const t = getTarget();
-      if (!t) return;
-      const desired = absY(t);
-      if (Math.abs(window.pageYOffset - desired) > 40) {
-        window.scrollTo({ top: desired, behavior: 'smooth' });
-      }
-    }, 900);
+    // All scroll math + corrective-pass logic lives in scrollToTarget so
+    // every CTA on the page (hero, how-it-works, final-cta, sticky mobile)
+    // shares the same robust implementation. See lib/scrollToTarget.mjs
+    // for why we use getBoundingClientRect (sticky/transform ancestors)
+    // and how the corrective pass is cancelled on user scroll.
+    scrollToTarget(['generate', 'tool']);
   }
 
   const homeFaqLd = {
