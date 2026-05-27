@@ -192,33 +192,32 @@ export default function Page() {
   }, []);
 
   function handleHeroGenerateClick(event) {
-    if (!event) return;
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     if (typeof window === 'undefined') return;
-    // Why a corrective second scroll:
-    //   Sections between the hero and the upload pill use GSAP ScrollTrigger
-    //   to fade-in (opacity 0 → 1, y:24 → 0) when entering the viewport.
-    //   These animations fire DURING the smooth scroll and shift the layout,
-    //   so a single scrollIntoView often lands above/below the target by
-    //   100-300px. We do a first smooth scroll, wait for GSAP to settle
-    //   (~700ms reveal duration), then re-measure and correct if needed.
+    // Offset = sticky header height (~64px) + small breathing room (16px).
+    // Without this, the upload pill lands UNDER the sticky header, which
+    // looks (and feels) like the scroll missed the target.
+    const HEADER_OFFSET = 80;
     function getTarget() {
       return document.getElementById('generate') || document.getElementById('tool');
     }
     function absY(el) {
       // Sum offsetTop up the offsetParent chain — more stable than
-      // getBoundingClientRect during animations.
+      // getBoundingClientRect during GSAP reveal animations.
       let y = 0;
       let cur = el;
       while (cur) { y += cur.offsetTop; cur = cur.offsetParent; }
-      // 24px breathing room above the target.
-      return Math.max(0, y - 24);
+      return Math.max(0, y - HEADER_OFFSET);
     }
     const target = getTarget();
     if (!target) return;
     window.scrollTo({ top: absY(target), behavior: 'smooth' });
-    // After the first scroll + GSAP reveal complete (~900ms total), re-measure
-    // and gently correct if the target moved. No-op if we're already close.
+    // Corrective second scroll: GSAP ScrollTrigger reveals (opacity/translate)
+    // fire mid-scroll and shift the layout. After ~900ms (GSAP 0.7s reveal +
+    // margin), re-measure and gently correct only if we drifted > 40px.
     window.setTimeout(() => {
       const t = getTarget();
       if (!t) return;
@@ -264,7 +263,6 @@ export default function Page() {
             <div className="flex items-center gap-3">
               <Button
                 variant="accent"
-                href="#generate"
                 onClick={handleHeroGenerateClick}
                 className="h-12 px-8"
               >
@@ -716,7 +714,7 @@ export default function Page() {
             ))}
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Button variant="accent" href="#generate" onClick={handleHeroGenerateClick}>
+            <Button variant="accent" onClick={handleHeroGenerateClick}>
               {LANDING_COPY.howItWorksCta}
             </Button>
             <span className="text-xs text-muted">{LANDING_COPY.howItWorksPriceNudge}</span>
@@ -914,7 +912,6 @@ export default function Page() {
           <div className="mt-8 flex items-center justify-center gap-3">
             <Button
               variant="primary"
-              href="#generate"
               onClick={handleHeroGenerateClick}
             >
               {LANDING_COPY.finalCtaLabel}
