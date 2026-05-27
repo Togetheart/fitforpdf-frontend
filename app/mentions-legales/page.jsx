@@ -30,7 +30,7 @@ function Clause({ title, children }) {
 
 export default function MentionsLegalesPage() {
   return (
-    <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+    <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
 
       {/* Header */}
       <div className="mb-12">
@@ -112,6 +112,6 @@ export default function MentionsLegalesPage() {
 
       <p className="mt-4 text-xs text-[var(--color-muted)]/50">Last updated: March 2025</p>
 
-    </main>
+    </div>
   );
 }

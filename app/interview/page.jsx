@@ -84,7 +84,7 @@ export default function InterviewPage() {
   };
 
   return (
-    <main className="fixed inset-0 z-[9999] bg-[var(--color-bg)]">
+    <div className="fixed inset-0 z-[9999] bg-[var(--color-bg)]">
       <div className="mx-auto flex h-full max-w-[680px] flex-col px-4 sm:px-6">
         {/* Header */}
         <div className="border-b border-[var(--color-border)] pb-3 pt-6">
@@ -195,6 +195,6 @@ export default function InterviewPage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

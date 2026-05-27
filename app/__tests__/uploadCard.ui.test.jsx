@@ -459,8 +459,9 @@ describe('UploadCard unit behavior', () => {
     const optionsToggle = screen.getByRole('button', { name: 'Advanced options' });
 
     expect(optionsToggle.getAttribute('aria-expanded')).toBe('false');
-    expect(optionsToggle.className).toContain('h-9');
-    expect(optionsToggle.className).toContain('w-9');
+    // h-11/w-11 = 44px (iOS HIG min tap target). Was h-9/w-9 = 36px.
+    expect(optionsToggle.className).toContain('h-11');
+    expect(optionsToggle.className).toContain('w-11');
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
     expect(screen.queryByTestId('upload-options')).toBeNull();
 

@@ -84,13 +84,15 @@ export default function SiteHeader() {
             </Button>
           </nav>
 
-          {/* Hamburger — visible on mobile only */}
+          {/* Hamburger — visible on mobile only. h-11 w-11 = 44px hit target
+              (iOS HIG minimum). Was h-9 w-9 = 36px. */}
           <button
             type="button"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
+            aria-controls="mobile-nav-panel"
             onClick={() => setMenuOpen((o) => !o)}
-            className="sm:hidden flex h-9 w-9 items-center justify-center rounded-lg text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
+            className="sm:hidden flex h-11 w-11 items-center justify-center rounded-lg text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -108,6 +110,12 @@ export default function SiteHeader() {
         aria-hidden="true"
       />
       <div
+        id="mobile-nav-panel"
+        // `inert` + aria-hidden when closed: removes the panel from the
+        // accessibility tree + focus order. Without this the links are
+        // still discoverable by tab/SR even when visually hidden.
+        inert={menuOpen ? undefined : ''}
+        aria-hidden={menuOpen ? undefined : 'true'}
         className={cn(
           'fixed left-0 right-0 top-0 z-40 sm:hidden',
           'bg-[var(--color-bg)]/95 backdrop-blur-xl pt-20 pb-6 px-6',

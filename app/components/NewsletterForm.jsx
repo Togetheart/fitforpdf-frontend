@@ -41,6 +41,8 @@ export default function NewsletterForm() {
     <form onSubmit={handleSubmit} className="flex w-full max-w-sm items-center gap-2">
       <input
         type="email"
+        inputMode="email"
+        autoComplete="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Your email"

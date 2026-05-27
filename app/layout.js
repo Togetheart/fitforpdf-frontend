@@ -131,7 +131,31 @@ export default function RootLayout({ children }) {
   })();
 `}</Script>
         <Script id="posthog-snippet" strategy="afterInteractive">
-          {`!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('phc_VugqXLKg2IhTsgi8ram73QMs4QV0GljLSlqQrZwBdh1',{api_host:'https://eu.i.posthog.com',defaults:'2026-01-30'})`}
+          {`(function(){
+  // Hostname gate — never init on localhost/preview. Stops dev sessions
+  // (and the Aug 2026 issue where localhost:3001 was showing up in our
+  // PostHog "Referring domain" report) from polluting prod analytics.
+  var host = (typeof location !== 'undefined' ? location.hostname : '').toLowerCase();
+  if (!host || /^(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0)$/.test(host) || host.endsWith('.local') || /\\.vercel\\.app$/.test(host)) {
+    window.posthog = { capture: function(){}, identify: function(){}, opt_out_capturing: function(){}, _stub: true };
+    return;
+  }
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  // Config: disable modules we don't actively use to cut bundle size +
+  // request volume. We DO use autocapture + session_recording (Clarity-like
+  // behaviour replays) so they stay on. Surveys/feature-flags/heatmaps:
+  // not used today → off.
+  posthog.init('phc_VugqXLKg2IhTsgi8ram73QMs4QV0GljLSlqQrZwBdh1', {
+    api_host: 'https://eu.i.posthog.com',
+    defaults: '2026-01-30',
+    disable_surveys: true,
+    capture_heatmaps: false,
+    enable_recording_console_log: false,
+    advanced_disable_feature_flags: true,
+    advanced_disable_feature_flags_on_first_load: true,
+    autocapture: { dom_event_allowlist: ['click', 'submit', 'change'] }
+  });
+})();`}
         </Script>
       </head>
       <body className="bg-[var(--color-bg)] text-[var(--color-text)]">
@@ -147,7 +171,13 @@ export default function RootLayout({ children }) {
             id="microsoft-clarity"
             strategy="afterInteractive"
           >
-            {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${clarityId}")`}
+            {`(function(){
+  // Skip Clarity on localhost / preview deployments — same rationale as
+  // the PostHog hostname gate above (avoid dev sessions polluting prod).
+  var host = (typeof location !== 'undefined' ? location.hostname : '').toLowerCase();
+  if (!host || /^(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0)$/.test(host) || host.endsWith('.local') || /\\.vercel\\.app$/.test(host)) return;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${clarityId}");
+})();`}
           </Script>
         )}
       </body>

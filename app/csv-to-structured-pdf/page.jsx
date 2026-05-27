@@ -71,7 +71,7 @@ const breadcrumbLd = {
 export default function CsvPdfPage() {
   return (
     <div className="min-h-screen bg-[var(--color-bg-hero)]">
-    <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+    <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
       <JsonLd data={articleLd} />
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd} />
@@ -142,7 +142,7 @@ export default function CsvPdfPage() {
           Generate your first PDF — free
         </a>
       </section>
-    </main>
+    </div>
     </div>
   );
 }

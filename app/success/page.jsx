@@ -154,7 +154,7 @@ export default function SuccessPage() {
   }, []);
 
   return (
-    <main
+    <div
       style={{
         minHeight: '100vh',
         padding: '2rem',
@@ -186,6 +186,6 @@ export default function SuccessPage() {
           Return to fitforpdf
         </a>
       </section>
-    </main>
+    </div>
   );
 }

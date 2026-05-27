@@ -92,7 +92,7 @@ const breadcrumbLd = {
 export default function AuditPdfPage() {
   return (
     <div className="min-h-screen bg-[var(--color-bg-hero)]">
-      <main className="mx-auto max-w-[760px] px-4 py-20 sm:px-6">
+      <div className="mx-auto max-w-[760px] px-4 py-20 sm:px-6">
         <JsonLd data={articleLd} />
         <JsonLd data={howToLd} />
         <JsonLd data={faqLd} />
@@ -271,7 +271,7 @@ export default function AuditPdfPage() {
             Generate your first audit PDF — free
           </a>
         </section>
-      </main>
+      </div>
     </div>
   );
 }

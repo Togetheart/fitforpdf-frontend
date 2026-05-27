@@ -86,7 +86,7 @@ const aboutPageLd = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
+    <div className="min-h-screen bg-[var(--color-surface)]">
       <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
         <JsonLd data={breadcrumbLd} />
         <JsonLd data={aboutPageLd} />
@@ -282,6 +282,6 @@ export default function AboutPage() {
           </ul>
         </nav>
       </div>
-    </main>
+    </div>
   );
 }

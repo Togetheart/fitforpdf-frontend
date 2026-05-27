@@ -267,6 +267,7 @@ function RequestAccessForm() {
                 id="ra-name"
                 name="name"
                 type="text"
+                autoComplete="name"
                 required
                 minLength={2}
                 value={form.name}
@@ -283,6 +284,8 @@ function RequestAccessForm() {
                 id="ra-email"
                 name="email"
                 type="email"
+                inputMode="email"
+                autoComplete="email"
                 required
                 value={form.email}
                 onChange={handleChange}
@@ -329,7 +332,7 @@ function RequestAccessForm() {
 
 export default function DevelopersPage() {
   return (
-    <main className="min-h-screen bg-[var(--color-bg-hero)]">
+    <div className="min-h-screen bg-[var(--color-bg-hero)]">
     <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
 
       {/* Hero */}
@@ -909,6 +912,6 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
       {/* Request access */}
       <RequestAccessForm />
     </div>
-    </main>
+    </div>
   );
 }

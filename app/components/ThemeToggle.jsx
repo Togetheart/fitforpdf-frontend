@@ -22,7 +22,8 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-black/5"
+      // h-11 w-11 = 44px (iOS HIG min tap target). Was h-8 w-8 = 32px.
+      className="flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-black/5"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {theme === 'light' ? (

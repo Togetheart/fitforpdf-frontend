@@ -54,7 +54,7 @@ export default function SeoArticle({ article }) {
 
   return (
     <div className="min-h-screen bg-[var(--color-bg-hero)]">
-      <main className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
+      <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
         <JsonLd data={articleLd} />
         {faqLd ? <JsonLd data={faqLd} /> : null}
         <JsonLd data={breadcrumbLd} />
@@ -142,7 +142,7 @@ export default function SeoArticle({ article }) {
             {article.cta.label}
           </a>
         </section>
-      </main>
+      </div>
     </div>
   );
 }

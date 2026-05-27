@@ -39,7 +39,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-hero)]">
+    <div className="min-h-screen bg-[var(--color-bg-hero)]">
       <div className="mx-auto max-w-[520px] px-4 py-20 sm:px-6">
 
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
@@ -83,6 +83,7 @@ export default function ContactPage() {
                 id="contact-name"
                 name="name"
                 type="text"
+                autoComplete="name"
                 required
                 minLength={2}
                 value={form.name}
@@ -99,6 +100,8 @@ export default function ContactPage() {
                 id="contact-email"
                 name="email"
                 type="email"
+                inputMode="email"
+                autoComplete="email"
                 required
                 value={form.email}
                 onChange={handleChange}
@@ -137,6 +140,6 @@ export default function ContactPage() {
           </form>
         )}
       </div>
-    </main>
+    </div>
   );
 }

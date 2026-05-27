@@ -684,7 +684,8 @@ export default function UploadCard({
               aria-expanded={isOptionsExpanded}
               aria-controls="upload-options"
               onClick={() => { setIsOptionsExpanded((c) => !c); scrollToCard(); }}
-              className={`inline-flex h-9 w-9 items-center justify-center rounded-full border transition text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] ${isOptionsExpanded ? 'border-accent/30 bg-[var(--color-bg-hero)] text-[var(--color-text)]' : 'border-[var(--color-border)]'}`}
+              // h-11 w-11 = 44px hit target (iOS HIG min). Was h-9 w-9 = 36px.
+              className={`inline-flex h-11 w-11 items-center justify-center rounded-full border transition text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hero)] ${isOptionsExpanded ? 'border-accent/30 bg-[var(--color-bg-hero)] text-[var(--color-text)]' : 'border-[var(--color-border)]'}`}
               aria-label="Advanced options"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
