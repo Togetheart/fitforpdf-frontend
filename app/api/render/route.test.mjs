@@ -594,6 +594,153 @@ test('POST /api/render synthesizes request id when missing and returns it', asyn
   restoreEnv();
 });
 
+/* ── Header contract (CEO-validated plan, May 2026) ──────────────
+ * The post-render result panel relies on these headers reaching the
+ * browser. They must survive the proxy unmodified:
+ *   - x-render-id   → ties Supabase render rows to PostHog events
+ *   - x-cleansheet-score / verdict / reasons → drives result UI
+ *   - x-render-ms / x-score-ms / x-total-ms → timings already covered
+ * Also: the public V1 API surfaces the same data under X-FitForPDF-*.
+ * The proxy must accept those as aliases so we can swap upstream
+ * without breaking the front.
+ */
+test('POST /api/render passes upstream x-render-id through unchanged', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-render-id': 'r_2026_abc_xyz',
+    },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-render-id'), 'r_2026_abc_xyz');
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render aliases upstream x-request-id into x-render-id when render id is missing', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-request-id': 'req_v1_current_backend',
+    },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-request-id'), 'req_v1_current_backend');
+  assert.equal(res.headers.get('x-render-id'), 'req_v1_current_backend');
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render passes upstream x-cleansheet score/verdict/reasons through', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-cleansheet-score': '92',
+      'x-cleansheet-verdict': 'OK',
+      'x-cleansheet-reasons': 'min_font_low,high_wrap_rate',
+    },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-cleansheet-score'), '92');
+  assert.equal(res.headers.get('x-cleansheet-verdict'), 'OK');
+  assert.equal(res.headers.get('x-cleansheet-reasons'), 'min_font_low,high_wrap_rate');
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render aliases X-FitForPDF-* response headers into x-cleansheet-*', async () => {
+  /* If the upstream evolves to the V1 API (X-FitForPDF-Score / Verdict /
+   * Reasons), the front must keep working without code changes. The proxy
+   * mirrors them into the legacy header names. */
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-fitforpdf-score': '88',
+      'x-fitforpdf-verdict': 'WARN',
+      'x-fitforpdf-reasons': 'high_wrap_rate',
+      'x-fitforpdf-render-id': 'r_v1_abc',
+    },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  // Original V1 headers still exposed
+  assert.equal(res.headers.get('x-fitforpdf-score'), '88');
+  assert.equal(res.headers.get('x-fitforpdf-verdict'), 'WARN');
+  // Aliased into x-cleansheet-* so existing front parser keeps working
+  assert.equal(res.headers.get('x-cleansheet-score'), '88');
+  assert.equal(res.headers.get('x-cleansheet-verdict'), 'WARN');
+  assert.equal(res.headers.get('x-cleansheet-reasons'), 'high_wrap_rate');
+  assert.equal(res.headers.get('x-render-id'), 'r_v1_abc');
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render prefers explicit x-cleansheet-* over X-FitForPDF-* when both are present', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-cleansheet-score': '92',
+      'x-cleansheet-verdict': 'OK',
+      'x-fitforpdf-score': '11',
+      'x-fitforpdf-verdict': 'FAIL',
+    },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-cleansheet-score'), '92');
+  assert.equal(res.headers.get('x-cleansheet-verdict'), 'OK');
+  fetchMock.restore();
+  restoreEnv();
+});
+
 test('GET /api/render is not allowed', async () => {
   const res = await GET();
   const json = await res.json();

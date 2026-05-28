@@ -199,7 +199,7 @@ export const HOME_FAQ = [
   {
     id: 'sample',
     q: 'Can I see an example before trying it?',
-    a: 'Yes.',
+    a: 'Yes. Open the sample PDF before uploading your own file.',
     link: '/sample-output.pdf',
   },
   {
@@ -631,8 +631,12 @@ export const SEO = {
   siteUrl: 'https://www.fitforpdf.com',
   ogImage: 'https://www.fitforpdf.com/og-image.png',
   home: {
-    title: 'fitforpdf — Convert Excel & CSV to Structured PDF',
-    description: 'Upload any spreadsheet and get a structured, presentable PDF with sections, pagination, and column groupings. 3 free exports. No account needed.',
+    title: 'fitforpdf — Client-Ready PDFs from Excel & CSV',
+    description: 'Turn wide Excel and CSV exports into client-ready PDFs with sections, pagination, and column grouping. 3 free exports. No account needed.',
+  },
+  developers: {
+    title: 'fitforpdf API — Client-Ready PDFs from Excel & CSV',
+    description: 'REST API to turn wide Excel and CSV tables into client-ready, structured PDFs for SaaS reporting, CRM exports, and data-heavy workflows.',
   },
   pricing: {
     title: 'fitforpdf Pricing — Excel to PDF Export Plans',
@@ -666,6 +670,22 @@ export const SEO = {
     title: 'Real PDF Examples from Public Datasets — fitforpdf',
     description: 'See real PDFs generated from French government open data. Wide datasets with 20+ columns automatically structured into readable, paginated PDFs.',
     slug: 'examples',
+  },
+  forAuditors: {
+    title: 'Client-Ready Audit PDFs from Excel',
+    description: 'Convert wide Excel audit reports into client-ready PDFs with grouped columns, preserved references, and clean pagination.',
+  },
+  forConsultants: {
+    title: 'Client-Ready PDFs for Consultants',
+    description: 'Stop manually formatting client deliverables. Turn Excel and CSV exports into consistent, professional PDFs in seconds.',
+  },
+  forFinance: {
+    title: 'Client-Ready PDF Reports for Finance Teams',
+    description: 'Turn wide financial spreadsheets into client-ready PDF reports with every column readable and every page clearly structured.',
+  },
+  forSaas: {
+    title: 'Client-Ready PDF Reports for SaaS Products',
+    description: 'Automate client-ready PDF report generation for your SaaS product from exported dashboards, CSV datasets, and data tables.',
   },
 };
 

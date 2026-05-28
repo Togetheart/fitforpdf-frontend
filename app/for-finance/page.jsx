@@ -1,15 +1,14 @@
 import VerticalPage from '../components/VerticalPage';
 import { JsonLd } from '../components/JsonLd';
+import { SEO } from '../siteCopy.mjs';
 
 export const metadata = {
-  title: 'Excel to PDF for Finance Teams',
-  description:
-    'Convert wide financial statements and reports to paginated PDFs without truncated columns. Intelligent splitting, automatic pagination, and overview pages.',
+  title: SEO.forFinance.title,
+  description: SEO.forFinance.description,
   alternates: { canonical: '/for-finance' },
   openGraph: {
-    title: 'Excel to PDF for Finance Teams',
-    description:
-      'Convert wide financial statements and reports to paginated PDFs without truncated columns.',
+    title: SEO.forFinance.title,
+    description: SEO.forFinance.description,
     url: 'https://www.fitforpdf.com/for-finance',
   },
   twitter: { card: 'summary_large_image' },

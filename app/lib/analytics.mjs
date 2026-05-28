@@ -128,3 +128,43 @@ export function trackLeadCaptured({ source, renderId }) {
 export function trackLeadSkipped({ source, renderId }) {
   capture('lead_skipped', { source, render_id: renderId });
 }
+
+// ── Post-render conversion funnel ────────────────────────────────
+// The result screen is where real intent shows up: did the user
+// actually download, click pricing/contact, or start a second
+// render? Each helper carries render_id + flow_id so PostHog can
+// stitch the loop together.
+
+function buildPostRenderProps({ renderId, flowId, isDemo, verdict, score, fileType } = {}) {
+  const properties = {};
+  if (renderId !== undefined) properties.render_id = renderId;
+  if (flowId !== undefined) properties.flow_id = flowId;
+  if (isDemo !== undefined) properties.is_demo = isDemo;
+  if (verdict !== undefined) properties.verdict = verdict;
+  if (score !== undefined && score !== null) properties.score = score;
+  if (fileType !== undefined) properties.file_type = fileType;
+  return properties;
+}
+
+export function trackDownloadClicked(context = {}) {
+  capture('download_clicked', buildPostRenderProps(context));
+}
+
+export function trackDownloadCompleted(context = {}) {
+  capture('download_completed', buildPostRenderProps(context));
+}
+
+export function trackPostRenderPricingClicked(context = {}) {
+  capture('post_render_pricing_clicked', buildPostRenderProps(context));
+}
+
+export function trackPostRenderContactClicked(context = {}) {
+  capture('post_render_contact_clicked', buildPostRenderProps(context));
+}
+
+export function trackSecondRealRenderStarted({ previousRenderId, flowId } = {}) {
+  const properties = {};
+  if (previousRenderId !== undefined) properties.previous_render_id = previousRenderId;
+  if (flowId !== undefined) properties.flow_id = flowId;
+  capture('second_real_render_started', properties);
+}

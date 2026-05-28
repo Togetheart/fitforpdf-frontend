@@ -107,12 +107,15 @@ describe('home demo proof block', () => {
     expect(buttons).toHaveLength(1);
   });
 
-  test('demo helper content is present', () => {
+  test('demo helper is present but visually secondary', () => {
     const demoButton = screen.getByTestId('demo-try-button');
     const uploadCard = screen.getByTestId('upload-card');
 
     expect(uploadCard).toBeTruthy();
-    expect(demoButton.textContent).toContain('Try with a demo file');
+    expect(demoButton.textContent).toContain('See an example first');
+    const demoClass = demoButton.getAttribute('class') || '';
+    expect(demoClass).toContain('text-white/55');
+    expect(demoClass).not.toContain('bg-white/10');
     expect(screen.queryByText('120 rows · 15 columns · invoices')).toBeNull();
   });
 

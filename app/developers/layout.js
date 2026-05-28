@@ -1,28 +1,27 @@
 import { JsonLd } from '../components/JsonLd';
+import { SEO } from '../siteCopy.mjs';
 
 export const metadata = {
-  title: 'fitforpdf API — Excel & CSV to PDF for Developers',
-  description:
-    'REST API to convert wide Excel and CSV tables into structured, readable PDFs. Built for SaaS reporting, CRM exports, and data-heavy workflows. 60 req/min, up to 50 columns.',
+  title: SEO.developers.title,
+  description: SEO.developers.description,
   alternates: { canonical: '/developers' },
   openGraph: {
-    title: 'fitforpdf API — Excel & CSV to PDF for Developers',
-    description: 'REST API to convert wide Excel and CSV tables into structured, readable PDFs. Built for SaaS reporting and data-heavy workflows.',
+    title: SEO.developers.title,
+    description: SEO.developers.description,
     url: 'https://www.fitforpdf.com/developers',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'fitforpdf API — Excel & CSV to PDF for Developers',
-    description: 'REST API to convert wide Excel and CSV tables into structured, readable PDFs.',
+    title: SEO.developers.title,
+    description: SEO.developers.description,
   },
 };
 
 const techArticleLd = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'fitforpdf API — Excel & CSV to PDF for Developers',
-  description:
-    'REST API to convert wide Excel and CSV tables into structured, readable PDFs. Built for SaaS reporting, CRM exports, and data-heavy workflows.',
+  headline: SEO.developers.title,
+  description: SEO.developers.description,
   url: 'https://www.fitforpdf.com/developers',
   author: { '@type': 'Organization', name: 'fitforpdf', url: 'https://www.fitforpdf.com' },
   publisher: { '@type': 'Organization', name: 'fitforpdf', url: 'https://www.fitforpdf.com' },

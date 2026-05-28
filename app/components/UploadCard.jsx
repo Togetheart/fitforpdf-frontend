@@ -239,6 +239,36 @@ function getVerdictIcon(verdict) {
   return AlertCircle;
 }
 
+function getPostRenderStatus(verdict) {
+  if (verdict === 'WARN') {
+    return {
+      heading: 'PDF ready — quick check recommended',
+      detail: 'Download it and confirm the layout is acceptable before sending.',
+      tone: 'warn',
+      panelClass: 'border-white/10 bg-white/5',
+      iconClass: 'border-amber-300/25 bg-amber-300/10 text-amber-200',
+    };
+  }
+
+  if (verdict === 'FAIL') {
+    return {
+      heading: 'PDF generated — review before sending',
+      detail: 'Open the PDF and confirm the layout before sending.',
+      tone: 'warn',
+      panelClass: 'border-rose-300/25 bg-rose-400/10',
+      iconClass: 'border-rose-300/25 bg-rose-300/10 text-rose-200',
+    };
+  }
+
+  return {
+    heading: 'Your client-ready PDF is ready',
+    detail: null,
+    tone: 'ok',
+    panelClass: 'border-emerald-500/20 bg-emerald-500/5',
+    iconClass: 'border-emerald-300/25 bg-emerald-300/10 text-emerald-200',
+  };
+}
+
 function SettingRow({
   title,
   description,
@@ -318,6 +348,162 @@ function getLayoutNudgeCopy(key) {
   };
 }
 
+/* ── Post-render result panel ─────────────────────────────────────
+ * The commercial moment. After a successful render we no longer
+ * auto-download the PDF — the user must see "your file is ready"
+ * with a verdict / score / shape, then a loud Download button and
+ * the secondary CTAs that prove intent (render another, pricing,
+ * contact). All clicks land in PostHog via the analytics helpers
+ * wired through useConversion. */
+function PostRenderPanel({
+  isLoading,
+  verdict,
+  confidence,
+  debugMetrics,
+  downloadedFileName,
+  onDownloadAgain,
+  onRenderAnother,
+  onPostRenderPricingClick,
+  onPostRenderContactClick,
+}) {
+  const score = Number.isFinite(confidence?.score) ? confidence.score : null;
+  const verdictUpper = verdict ? String(verdict).toUpperCase() : null;
+  const rowCount = Number.isFinite(confidence?.metrics?.rowCount)
+    ? confidence.metrics.rowCount
+    : (Number.isFinite(debugMetrics?.rowCount) ? debugMetrics.rowCount : null);
+  const colCount = Number.isFinite(confidence?.metrics?.columnCount)
+    ? confidence.metrics.columnCount
+    : (Number.isFinite(debugMetrics?.columnCount) ? debugMetrics.columnCount : null);
+  const pageCount = Number.isFinite(debugMetrics?.pageCount)
+    ? debugMetrics.pageCount
+    : (Number.isFinite(debugMetrics?.page_count) ? debugMetrics.page_count : null);
+
+  const status = getPostRenderStatus(verdictUpper);
+  const isWarn = verdictUpper === 'WARN';
+  const visibleVerdict = isWarn ? null : verdictUpper;
+  const visibleScore = isWarn ? null : score;
+  const shouldShowSummary = !isWarn
+    && (visibleVerdict || visibleScore != null || rowCount != null || colCount != null || pageCount != null);
+
+  return (
+    <section
+      data-testid="post-render-panel"
+      aria-live="polite"
+      className={`flex w-full max-w-[720px] flex-col gap-5 rounded-2xl border p-5 sm:p-6 ${status.panelClass}`}
+    >
+      <header className="flex flex-col items-center gap-2 text-center">
+        {status.tone === 'ok' ? (
+          <AnimatedCheckmark size={44} />
+        ) : (
+          <span
+            data-testid="post-render-status-icon"
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-full border ${status.iconClass}`}
+          >
+            <AlertCircle aria-hidden="true" className="h-4 w-4" />
+          </span>
+        )}
+        <p className="text-base font-semibold text-white">
+          {status.heading}
+        </p>
+        {status.detail ? (
+          <p data-testid="post-render-status-detail" className="max-w-md text-xs leading-5 text-white/60">
+            {status.detail}
+          </p>
+        ) : null}
+        {downloadedFileName ? (
+          <p className="truncate text-xs text-white/60">Ready: {downloadedFileName}</p>
+        ) : null}
+      </header>
+
+      {shouldShowSummary ? (
+        <dl
+          data-testid="post-render-summary"
+          className="flex flex-wrap items-center justify-center gap-2 text-left"
+        >
+          {visibleVerdict ? (
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
+              <dt className="text-[10px] uppercase tracking-wide text-white/50">Verdict</dt>
+              <dd className="text-xs font-semibold text-white">{visibleVerdict}</dd>
+            </div>
+          ) : null}
+          {visibleScore != null ? (
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
+              <dt className="text-[10px] uppercase tracking-wide text-white/50">Score</dt>
+              <dd className="text-xs font-semibold text-white">{visibleScore}/100</dd>
+            </div>
+          ) : null}
+          {pageCount != null ? (
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
+              <dt className="text-[10px] uppercase tracking-wide text-white/50">Pages</dt>
+              <dd className="text-xs font-semibold text-white">{pageCount}</dd>
+            </div>
+          ) : null}
+          {rowCount != null && colCount != null ? (
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
+              <dt className="text-[10px] uppercase tracking-wide text-white/50">Shape</dt>
+              <dd className="text-xs font-semibold text-white">{rowCount}×{colCount}</dd>
+            </div>
+          ) : null}
+        </dl>
+      ) : null}
+
+      <div className="flex flex-col gap-2">
+        <Button
+          type="button"
+          variant="primary"
+          className="w-full"
+          data-testid="download-again"
+          onClick={onDownloadAgain}
+          disabled={isLoading}
+        >
+          Download PDF
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="mx-auto h-9 w-auto min-w-[220px] border-white/15 bg-white/10 px-5 text-white/75 hover:bg-white/15 hover:text-white"
+          data-testid="render-another"
+          onClick={onRenderAnother}
+          disabled={isLoading}
+        >
+          Render another file
+        </Button>
+      </div>
+
+      <div
+        data-testid="post-render-intent"
+        className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left"
+      >
+        <p className="text-sm text-white/80">
+          Need this every week? Recurring or batch reports?
+        </p>
+        <div className="flex items-center justify-center gap-3 sm:justify-end">
+          <a
+            href="/pricing"
+            data-testid="post-render-pricing"
+            onClick={() => onPostRenderPricingClick()}
+            className="text-sm font-semibold text-emerald-200 underline-offset-2 hover:underline"
+          >
+            View pricing
+          </a>
+          <a
+            href="/contact"
+            data-testid="post-render-contact"
+            onClick={() => onPostRenderContactClick()}
+            className="text-sm font-medium text-white/50 underline-offset-2 hover:text-white/80 hover:underline"
+          >
+            Talk to us
+          </a>
+        </div>
+      </div>
+
+      <p className="text-center text-[11px] text-white/40">
+        No storage · No LLM · Files processed ephemerally.
+      </p>
+    </section>
+  );
+}
+
 export default function UploadCard({
   toolTitle,
   toolSubcopy,
@@ -380,6 +566,11 @@ export default function UploadCard({
   onRetryCompact = () => {},
   wasDemoLastUpload = false,
   onTryYourFile = () => {},
+  onRenderAnother = () => {},
+  onPostRenderPricingClick = () => {},
+  onPostRenderContactClick = () => {},
+  confidence = null,
+  debugMetrics = null,
 }) {
   const isDark = variant === 'dark';
   const isAdvancedPlan = getPlanTypeLabel(planType) !== 'free' || isPro;
@@ -420,6 +611,9 @@ export default function UploadCard({
   const effectiveShowBuyCreditsPanel = showBuyCreditsPanel || showBuyCreditsPanelInternal;
   const isCurrentShareLoading = shareState?.status === 'loading' && shareState?.jobId === renderId;
   const isCurrentShareCopied = shareState?.status === 'copied' && shareState?.jobId === renderId;
+  const isRegularResult = hasResultBlob && !wasDemoLastUpload;
+  const shouldShowDemoTry = !file && !hasResultBlob && !wasDemoLastUpload;
+  const currentFileName = file?.name || downloadedFileName;
 
   const trackEvent = (name) => {
     if (typeof onEvent === 'function') onEvent(name);
@@ -616,7 +810,7 @@ export default function UploadCard({
           </span>
         )}
       </div>
-      {isDark && !wasDemoLastUpload && (
+      {isDark && !wasDemoLastUpload && !isRegularResult && (
         <h3 className="mb-6 text-xl sm:text-2xl font-bold text-white tracking-tight">
           Uploading client data? We don&apos;t keep it. Ever.
         </h3>
@@ -625,9 +819,8 @@ export default function UploadCard({
       <form className="relative" onSubmit={onSubmit}>
         {/* ── The Pill — unmounted on the demo result state to keep a
              single decision visible (Try with your file). ───────────── */}
-        {!wasDemoLastUpload && (
+        {!wasDemoLastUpload && !isRegularResult && (
         <div
-          id="generate"
           className="scroll-mt-24 upload-pill flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5"
         >
           <UploadDropzone
@@ -690,6 +883,17 @@ export default function UploadCard({
           </div>{/* close gear+generate wrapper */}
         </div>
         )}
+
+        {isRegularResult ? (
+          <div
+            data-testid="current-file-strip"
+            className="scroll-mt-24 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/60"
+          >
+            <CheckCircle2 aria-hidden="true" className="h-4 w-4 shrink-0 text-emerald-300" />
+            <span>Current file:</span>
+            <span className="truncate font-medium text-white/80">{currentFileName || 'rendered export'}</span>
+          </div>
+        ) : null}
 
         {/* Quota badge removed — now in card header */}
 
@@ -774,9 +978,10 @@ export default function UploadCard({
                 aria-label="Buy credits"
                 onClick={onBuyCredits}
                 disabled={isLoading}
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] text-muted transition hover:bg-[var(--color-bg-hero)] hover:text-[var(--color-text)]"
+                className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] px-3 text-sm font-semibold text-muted transition hover:bg-[var(--color-bg-hero)] hover:text-[var(--color-text)]"
               >
                 <ShoppingCart aria-hidden="true" className="h-4 w-4" />
+                <span>Buy credits</span>
               </button>
             ) : null}
             {showProBanner ? (
@@ -789,28 +994,31 @@ export default function UploadCard({
 
           {/* Helper subcopy — hidden when quota badge already shows the same info */}
 
-          <div data-testid="demo-try-row" hidden={wasDemoLastUpload}>
+          {shouldShowDemoTry ? (
+          <div data-testid="demo-try-row">
             {isDark ? (
               <button
                 type="button"
                 onClick={onTrySample}
                 disabled={isLoading}
                 data-testid="demo-try-button"
-                className="inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50"
+                className="inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-semibold text-white/55 underline-offset-4 transition duration-150 hover:text-white hover:underline disabled:opacity-50"
               >
-                Try with a demo file
+                See an example first
               </button>
             ) : (
-              <Button
-                variant="accent"
+              <button
+                type="button"
                 onClick={onTrySample}
                 disabled={isLoading}
                 data-testid="demo-try-button"
+                className="inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-semibold text-muted underline-offset-4 transition duration-150 hover:text-[var(--color-text)] hover:underline disabled:opacity-50"
               >
-                Try with a demo file
-              </Button>
+                See an example first
+              </button>
             )}
           </div>
+          ) : null}
 
           {/* Progress */}
           {isLoading && conversionProgress ? (
@@ -828,7 +1036,7 @@ export default function UploadCard({
           ) : null}
 
           {/* Paywall */}
-          {isQuotaLocked ? (
+          {isQuotaLocked && !hasResultBlob ? (
             <section data-testid="upload-paywall" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 space-y-4">
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-[var(--color-text)]">You've used your free exports.</p>
@@ -885,29 +1093,22 @@ export default function UploadCard({
               </div>
             </div>
           ) : hasResultBlob ? (
-            <div className="flex flex-col items-center gap-3 w-full max-w-[640px]">
-              <AnimatedCheckmark size={48} />
-              <p className="text-emerald-700 text-sm font-medium">PDF generated successfully!</p>
-              <Button type="button" variant="primary" className="w-full" data-testid="download-again" onClick={onDownloadAgain} disabled={isLoading}>
-                Download again
-              </Button>
-              {renderId ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => onCopyShareLink(renderId, 'render_success')}
-                  disabled={isLoading || isCurrentShareLoading}
-                >
-                  {isCurrentShareLoading ? 'Creating review link…' : isCurrentShareCopied ? 'Review link copied' : 'Copy review link'}
-                </Button>
-              ) : null}
-            </div>
+            <PostRenderPanel
+              isLoading={isLoading}
+              verdict={verdict}
+              confidence={confidence}
+              debugMetrics={debugMetrics}
+              downloadedFileName={downloadedFileName}
+              onDownloadAgain={onDownloadAgain}
+              onRenderAnother={onRenderAnother}
+              onPostRenderPricingClick={onPostRenderPricingClick}
+              onPostRenderContactClick={onPostRenderContactClick}
+            />
           ) : null}
 
-          {!wasDemoLastUpload && (downloadedFileName || shouldShowVerdict) ? (
+          {!hasResultBlob && !wasDemoLastUpload && (downloadedFileName || shouldShowVerdict) ? (
             <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-              {downloadedFileName ? <p>Downloaded: {downloadedFileName}</p> : null}
+              {downloadedFileName ? <p>Ready: {downloadedFileName}</p> : null}
               {shouldShowVerdict ? (
                 <span className={`inline-flex h-7 items-center gap-1 rounded-full border px-2 text-xs font-semibold ${verdictStyle.badge}`}>
                   <VerdictIcon aria-hidden="true" className={`h-3.5 w-3.5 ${verdictStyle.icon}`} />

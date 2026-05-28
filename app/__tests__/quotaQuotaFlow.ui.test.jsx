@@ -390,7 +390,6 @@ describe('quota-driven plan state and paywall flows', () => {
     });
 
     render(<LandingPage />);
-    const fileInput = screen.getByTestId('generate-file-input');
     const fileSelect = { target: { files: [SAMPLE_FILE] } };
 
     await waitFor(() => {
@@ -399,11 +398,14 @@ describe('quota-driven plan state and paywall flows', () => {
 
   async function runOneExport({
     remainingLabel,
-    expectPaywallAfter = false,
+    resetAfter = true,
   }) {
     const beforeRenderCalls = mock.calls.filter((call) => String(call.url).includes('/api/render')).length;
 
-    fireEvent.change(fileInput, fileSelect);
+    await waitFor(() => {
+      expect(screen.getByTestId('generate-file-input')).toBeTruthy();
+    }, { timeout: 2000 });
+    fireEvent.change(screen.getByTestId('generate-file-input'), fileSelect);
 
     // Wait for file to be set in state before submitting
     await waitFor(() => {
@@ -414,16 +416,8 @@ describe('quota-driven plan state and paywall flows', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Generate PDF' }));
 
-    if (expectPaywallAfter) {
-      await waitFor(() => {
-        expect(screen.getByTestId('upload-paywall')).toBeTruthy();
-        expect(screen.getByTestId('quota-pill').textContent).toContain(remainingLabel);
-      }, { timeout: 4000 });
-      return;
-    }
-
     await waitFor(() => {
-      expect(screen.getByText('Download again')).toBeTruthy();
+      expect(screen.getByRole('button', { name: 'Download PDF' })).toBeTruthy();
     }, { timeout: 4000 });
 
     await waitFor(() => {
@@ -433,17 +427,27 @@ describe('quota-driven plan state and paywall flows', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('quota-pill').textContent).toContain(remainingLabel);
+      expect(screen.queryByTestId('upload-paywall')).toBeNull();
     }, { timeout: 2000 });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    await waitFor(() => {
+      const renderAnother = screen.getByTestId('render-another');
+      expect(renderAnother).toBeTruthy();
+      expect(renderAnother.disabled).toBe(false);
+    }, { timeout: 2000 });
+    if (resetAfter) {
+      fireEvent.click(screen.getByTestId('render-another'));
+    }
   }
 
     await runOneExport({ remainingLabel: 'Free · 2 exports left' });
     await runOneExport({ remainingLabel: 'Free · 1 exports left' });
     await runOneExport({
       remainingLabel: 'Free · 0 exports left',
-      expectPaywallAfter: true,
+      resetAfter: false,
     });
+
+    fireEvent.click(screen.getByTestId('render-another'));
 
     await waitFor(() => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();

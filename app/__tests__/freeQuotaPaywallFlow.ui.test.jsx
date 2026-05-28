@@ -125,7 +125,7 @@ afterEach(() => {
 });
 
 describe('free plan strict quota journey', () => {
-    test('three free renders then immediate paywall at 0', async () => {
+    test('third free render keeps download at 0 before paywall on next attempt', async () => {
     const mock = createDeterministicFetch({
       quotaStart: 3,
       renderOutcomes: ['pdf', 'pdf', 'pdf', 'free_quota_exhausted'],
@@ -148,7 +148,6 @@ describe('free plan strict quota journey', () => {
     const runExport = async ({
       expectedBadgeAfter,
       retainForNextAttempt = false,
-      expectPaywallAfter = false,
     }) => {
       const fileInput = screen.getByTestId('generate-file-input');
       fireEvent.change(fileInput, { target: { files: [SAMPLE_FILE] } });
@@ -168,14 +167,6 @@ describe('free plan strict quota journey', () => {
       fireEvent.click(generateButton);
       expect(mock.getRenderCallCount()).toBe(beforeRenderCalls + 1);
 
-      if (expectPaywallAfter) {
-        await waitFor(() => {
-          expect(screen.getByText(/0\s*exports\s*left/i)).toBeTruthy();
-          expect(screen.getByTestId('upload-paywall')).toBeTruthy();
-        });
-        return;
-      }
-
       await waitFor(() => {
         const doneButton = screen.getByTestId('download-again');
         expect(doneButton).toBeTruthy();
@@ -186,6 +177,7 @@ describe('free plan strict quota journey', () => {
         const expectedRegex = new RegExp(`Free ·\\s*${expectedBadgeAfter}\\s*exports?\\s*left`, 'i');
         expect(screen.getByTestId('quota-pill').textContent).toMatch(expectedRegex);
         expect(getRemaining()).toBeGreaterThanOrEqual(0);
+        expect(screen.queryByTestId('upload-paywall')).toBeNull();
         expect(screen.queryByText(/free_quota_exhausted/i)).toBeNull();
       });
 
@@ -193,7 +185,7 @@ describe('free plan strict quota journey', () => {
         return;
       }
 
-      fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Render another file' }));
       await waitFor(() => {
         expect(screen.queryByTestId('download-again')).toBeNull();
       });
@@ -208,8 +200,15 @@ describe('free plan strict quota journey', () => {
     await runExport({
       expectedBadgeAfter: 0,
       retainForNextAttempt: true,
-      expectPaywallAfter: true,
     });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('download-again')).toBeTruthy();
+      expect(screen.queryByTestId('upload-paywall')).toBeNull();
+      expect(screen.getByText(/0\s*exports\s*left/i)).toBeTruthy();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Render another file' }));
 
     await waitFor(() => {
       expect(screen.getByTestId('upload-paywall')).toBeTruthy();
@@ -229,8 +228,6 @@ describe('free plan strict quota journey', () => {
       expect(screen.getByText(/0\s*exports\s*left/i)).toBeTruthy();
     });
 
-    const fileInput = screen.getByTestId('generate-file-input');
-    fireEvent.change(fileInput, { target: { files: [SAMPLE_FILE] } });
     const form = getForm();
     const renderCallsBeforeFourtthAttempt = mock.getRenderCallCount();
     const generateButton = screen.queryByRole('button', { name: 'Generate PDF' });

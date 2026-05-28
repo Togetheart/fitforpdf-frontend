@@ -62,6 +62,20 @@ describe('site navbar style and behavior', () => {
     expect(document.activeElement).toBe(pricingLink);
   });
 
+  test('mobile navigation panel is hidden until the menu opens', () => {
+    render(
+      <SiteShell>
+        <main data-testid="page-content">content</main>
+      </SiteShell>,
+    );
+
+    const mobilePanel = document.getElementById('mobile-nav-panel');
+
+    expect(mobilePanel).not.toBeNull();
+    expect(mobilePanel?.hasAttribute('hidden')).toBe(true);
+    expect(mobilePanel?.getAttribute('aria-hidden')).toBe('true');
+  });
+
   test('logo link contains the fitforpdf logo image', () => {
     render(
       <SiteShell>

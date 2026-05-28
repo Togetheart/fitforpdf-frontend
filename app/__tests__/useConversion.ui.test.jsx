@@ -38,8 +38,13 @@ function createQuotaSnapshot({ planType = 'free', freeExportsLeft = 0, remaining
 function ConversionHarness({ quota }) {
   const conversion = useConversion({ quota });
   const [ready, setReady] = React.useState(false);
+  /* useConversion returns a fresh object on every render, so the effect's
+   * [conversion] dep ticks each render. Guard the file-select to run once. */
+  const initRef = React.useRef(false);
 
   React.useEffect(() => {
+    if (initRef.current) return;
+    initRef.current = true;
     conversion.handleFileSelect(SAMPLE_FILE);
     setReady(true);
   }, [conversion]);

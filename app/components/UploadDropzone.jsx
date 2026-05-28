@@ -82,10 +82,10 @@ export default function UploadDropzone({
           htmlFor={inputId}
           data-testid="upload-dropzone"
           aria-label="Upload CSV or XLSX file"
-          className="flex flex-col items-center w-full sm:flex-row sm:items-center sm:w-auto gap-3 cursor-pointer min-w-0"
+          className="flex w-full min-w-0 cursor-pointer flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-start"
         >
           {file ? (
-            <div className="flex items-center gap-2.5 min-w-0">
+            <div className="flex w-full min-w-0 items-center gap-2.5">
               <CheckCircle2
                 aria-hidden="true"
                 className="h-5 w-5 shrink-0 text-emerald-500"
@@ -113,7 +113,7 @@ export default function UploadDropzone({
               </button>
             </div>
           ) : (
-            <div className="flex flex-col items-center text-center gap-1.5 w-full sm:flex-row sm:items-center sm:text-left sm:gap-2.5 sm:w-auto">
+            <div className="flex w-full flex-col items-center gap-1.5 text-center sm:flex-row sm:items-center sm:gap-2.5 sm:text-left">
               <AnimatedCloudIcon size={20} className="shrink-0 text-blue-500" />
               <div className="min-w-0 w-full sm:w-auto">
                 {/* Mobile-aware copy: "Drop here" is misleading on touch — show

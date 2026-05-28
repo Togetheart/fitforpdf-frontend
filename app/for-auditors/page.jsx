@@ -1,15 +1,14 @@
 import VerticalPage from '../components/VerticalPage';
 import { JsonLd } from '../components/JsonLd';
+import { SEO } from '../siteCopy.mjs';
 
 export const metadata = {
-  title: 'Excel to PDF for Auditors',
-  description:
-    'Stop losing audit table columns in PDF exports. fitforpdf automatically groups columns, preserves reference data, and produces clean paginated PDFs from wide Excel audit reports.',
+  title: SEO.forAuditors.title,
+  description: SEO.forAuditors.description,
   alternates: { canonical: '/for-auditors' },
   openGraph: {
-    title: 'Excel to PDF for Auditors',
-    description:
-      'Stop losing audit table columns in PDF exports. fitforpdf automatically groups columns and produces clean paginated PDFs.',
+    title: SEO.forAuditors.title,
+    description: SEO.forAuditors.description,
     url: 'https://www.fitforpdf.com/for-auditors',
   },
   twitter: { card: 'summary_large_image' },

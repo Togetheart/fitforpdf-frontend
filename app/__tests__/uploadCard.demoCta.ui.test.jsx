@@ -130,16 +130,20 @@ describe('UploadCard — try-your-file CTA after demo', () => {
     });
   });
 
-  describe('regular (non-demo) success state is unchanged', () => {
-    test('still shows "PDF generated successfully!" + Download again + Copy review link', () => {
+  describe('regular (non-demo) success state uses the post-render panel', () => {
+    test('shows the post-render result panel, download CTA, ready filename, and no review link', () => {
       render(<UploadCard {...baseProps({
         wasDemoLastUpload: false,
         renderId: 'rid_real',
         downloadedFileName: 'real-export.pdf',
       })} />);
-      expect(screen.getByText(/pdf generated successfully/i)).toBeTruthy();
+      expect(screen.getByTestId('post-render-panel')).toBeTruthy();
+      expect(screen.getByText(/your client-ready pdf is ready/i)).toBeTruthy();
       expect(screen.getByTestId('download-again')).toBeTruthy();
-      expect(screen.getByText(/copy review link/i)).toBeTruthy();
+      expect(screen.getByTestId('download-again').textContent).toMatch(/download pdf/i);
+      expect(screen.getByText(/ready: real-export\.pdf/i)).toBeTruthy();
+      expect(screen.queryByTestId('copy-review-link')).toBeNull();
+      expect(screen.queryByText(/copy review link/i)).toBeNull();
     });
 
     test('does NOT render the demo download link in regular flow', () => {

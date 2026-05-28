@@ -4,7 +4,12 @@ import test from 'node:test';
 import {
   trackDemoFileUsed,
   trackDemoPdfShown,
+  trackDownloadClicked,
+  trackDownloadCompleted,
+  trackPostRenderContactClicked,
+  trackPostRenderPricingClicked,
   trackRenderCompleted,
+  trackSecondRealRenderStarted,
   trackUploadAfterDemo,
   trackUploadStarted,
 } from './analytics.mjs';
@@ -142,5 +147,93 @@ test('trackRenderCompleted tolerates missing optional fields (only file_type req
 test('trackRenderCompleted is a no-op outside the browser', () => {
   const restore = withoutWindow();
   assert.doesNotThrow(() => trackRenderCompleted({ fileType: 'xlsx', score: 78 }));
+  restore();
+});
+
+/* ── Post-render conversion funnel ───────────────────────────
+ * Last CEO-validated plan: the post-render result screen is where
+ * intent (download / pricing / contact / second render) gets proven
+ * or lost. These helpers must fire consistently with shared render_id
+ * + flow_id so PostHog can reconstruct the loop.
+ */
+test('trackDownloadClicked captures download_clicked with render context', () => {
+  const { calls, restore } = withMockPostHog();
+  trackDownloadClicked({
+    renderId: 'r_abc',
+    flowId: 'flow_xyz',
+    isDemo: false,
+    verdict: 'OK',
+    score: 92,
+    fileType: 'xlsx',
+  });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'download_clicked');
+  const p = calls[0].properties;
+  assert.equal(p.render_id, 'r_abc');
+  assert.equal(p.flow_id, 'flow_xyz');
+  assert.equal(p.is_demo, false);
+  assert.equal(p.verdict, 'OK');
+  assert.equal(p.score, 92);
+  assert.equal(p.file_type, 'xlsx');
+  restore();
+});
+
+test('trackDownloadCompleted captures download_completed', () => {
+  const { calls, restore } = withMockPostHog();
+  trackDownloadCompleted({ renderId: 'r_abc', flowId: 'flow_xyz', isDemo: true });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'download_completed');
+  assert.equal(calls[0].properties.render_id, 'r_abc');
+  assert.equal(calls[0].properties.is_demo, true);
+  restore();
+});
+
+test('trackPostRenderPricingClicked captures post_render_pricing_clicked', () => {
+  const { calls, restore } = withMockPostHog();
+  trackPostRenderPricingClicked({ renderId: 'r_abc', flowId: 'flow_xyz', isDemo: false });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'post_render_pricing_clicked');
+  assert.equal(calls[0].properties.render_id, 'r_abc');
+  assert.equal(calls[0].properties.flow_id, 'flow_xyz');
+  assert.equal(calls[0].properties.is_demo, false);
+  restore();
+});
+
+test('trackPostRenderContactClicked captures post_render_contact_clicked', () => {
+  const { calls, restore } = withMockPostHog();
+  trackPostRenderContactClicked({ renderId: 'r_abc', flowId: 'flow_xyz', isDemo: false });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'post_render_contact_clicked');
+  assert.equal(calls[0].properties.render_id, 'r_abc');
+  restore();
+});
+
+test('trackSecondRealRenderStarted captures second_real_render_started', () => {
+  const { calls, restore } = withMockPostHog();
+  trackSecondRealRenderStarted({ previousRenderId: 'r_prev', flowId: 'flow_xyz' });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'second_real_render_started');
+  assert.equal(calls[0].properties.previous_render_id, 'r_prev');
+  assert.equal(calls[0].properties.flow_id, 'flow_xyz');
+  restore();
+});
+
+test('post-render helpers are no-ops outside the browser (SSR safety)', () => {
+  const restore = withoutWindow();
+  assert.doesNotThrow(() => trackDownloadClicked({ renderId: 'r' }));
+  assert.doesNotThrow(() => trackDownloadCompleted({ renderId: 'r' }));
+  assert.doesNotThrow(() => trackPostRenderPricingClicked({ renderId: 'r' }));
+  assert.doesNotThrow(() => trackPostRenderContactClicked({ renderId: 'r' }));
+  assert.doesNotThrow(() => trackSecondRealRenderStarted({}));
+  restore();
+});
+
+test('post-render helpers tolerate empty arg objects', () => {
+  const { calls, restore } = withMockPostHog();
+  trackDownloadClicked({});
+  trackPostRenderPricingClicked({});
+  assert.equal(calls.length, 2);
+  assert.equal(calls[0].event, 'download_clicked');
+  assert.equal(calls[1].event, 'post_render_pricing_clicked');
   restore();
 });

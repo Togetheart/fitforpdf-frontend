@@ -173,6 +173,17 @@ function buildUpstreamHeaders(apiKey, req, requestId) {
   return headers;
 }
 
+/* The legacy upstream sets `x-cleansheet-*` headers. The public V1 API
+ * surfaces the same data under `x-fitforpdf-*`. The proxy accepts both,
+ * always passes the originals through, and aliases V1 → legacy so the
+ * existing front parser keeps working when upstream evolves. */
+const CLEANSHEET_TO_FITFORPDF_ALIAS = Object.freeze({
+  'x-cleansheet-score': 'x-fitforpdf-score',
+  'x-cleansheet-verdict': 'x-fitforpdf-verdict',
+  'x-cleansheet-reasons': 'x-fitforpdf-reasons',
+  'x-render-id': 'x-fitforpdf-render-id',
+});
+
 function copyPassThroughHeaders(from) {
   const out = new Headers();
   const passHeaders = [
@@ -189,10 +200,24 @@ function copyPassThroughHeaders(from) {
     'x-render-id',
     'x-request-id',
     'x-trace-id',
+    'x-fitforpdf-score',
+    'x-fitforpdf-verdict',
+    'x-fitforpdf-reasons',
+    'x-fitforpdf-render-id',
   ];
   for (const header of passHeaders) {
     const value = from.get(header);
     if (value != null) out.set(header, value);
+  }
+  for (const [legacy, v1] of Object.entries(CLEANSHEET_TO_FITFORPDF_ALIAS)) {
+    if (out.get(legacy) == null) {
+      const v1Value = from.get(v1);
+      if (v1Value != null) out.set(legacy, v1Value);
+    }
+  }
+  if (out.get('x-render-id') == null) {
+    const requestId = out.get('x-request-id') || from.get('x-request-id');
+    if (requestId != null) out.set('x-render-id', requestId);
   }
   return out;
 }
