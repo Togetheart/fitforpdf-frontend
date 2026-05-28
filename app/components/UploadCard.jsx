@@ -100,10 +100,6 @@ const EXPORT_BADGE_STYLES = {
   danger: 'border-red-300 bg-red-600 text-white',
 };
 
-const BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY = 'fitforpdf_branding_nudge_suppressed_until';
-const BRANDING_UPGRADE_NUDGE_SUPPRESS_MS = 10 * 60 * 1000;
-let inMemoryBrandingNudgeSuppression = 0;
-
 function toFiniteInt(value) {
   const parsed = Number.parseInt(value, 10);
   if (!Number.isFinite(parsed)) return null;
@@ -293,51 +289,9 @@ function normalizeFreeExportsLeft(value) {
   return toFiniteInt(value);
 }
 
-function safeLocalStorage() {
-  if (typeof window === 'undefined') return null;
-  try {
-    return window.localStorage;
-  } catch {
-    return null;
-  }
-}
-
 function isJsdomEnvironment() {
   if (typeof navigator === 'undefined') return false;
   return /jsdom/i.test(String(navigator.userAgent || ''));
-}
-
-function getBrandingNudgeSuppressedUntil() {
-  const storage = safeLocalStorage();
-  if (storage) {
-    try {
-      const value = storage.getItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
-      const parsed = Number.parseInt(value, 10);
-      if (Number.isFinite(parsed)) {
-        if (parsed > Date.now()) return parsed;
-        storage.removeItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY);
-      }
-    } catch {
-      // fall through to in-memory value
-    }
-  }
-
-  return inMemoryBrandingNudgeSuppression;
-}
-
-function setBrandingNudgeSuppressedUntil(ts) {
-  const safeTs = Number.parseInt(ts, 10);
-  if (!Number.isFinite(safeTs)) return;
-
-  inMemoryBrandingNudgeSuppression = safeTs;
-  const storage = safeLocalStorage();
-  if (!storage) return;
-
-  try {
-    storage.setItem(BRANDING_UPGRADE_NUDGE_SUPPRESSION_KEY, String(safeTs));
-  } catch {
-    // no-op
-  }
 }
 
 function getPlanTypeLabel(planType) {
@@ -464,7 +418,6 @@ export default function UploadCard({
   };
   const [showBuyCreditsPanelInternal, setShowBuyCreditsPanelInternal] = React.useState(false);
   const effectiveShowBuyCreditsPanel = showBuyCreditsPanel || showBuyCreditsPanelInternal;
-  const isBrandingNudgeSuppressed = React.useCallback(() => getBrandingNudgeSuppressedUntil() > Date.now(), []);
   const isCurrentShareLoading = shareState?.status === 'loading' && shareState?.jobId === renderId;
   const isCurrentShareCopied = shareState?.status === 'copied' && shareState?.jobId === renderId;
 
@@ -489,11 +442,12 @@ export default function UploadCard({
   };
 
   const openNudge = (feature) => {
-    if (!isBrandingNudgeSuppressed()) {
-      requestNudge(feature);
-      setShowBuyCreditsPanelInternal(false);
-      setShowBrandingUpgradeNudge(true);
-    }
+    // An explicit toggle click is a clear user intent — always surface the
+    // nudge. Suppression (after "Not now") must only stop AUTO popups, never
+    // turn a clicked toggle into a silent dead no-op. (bug fix 2026-05-28)
+    requestNudge(feature);
+    setShowBuyCreditsPanelInternal(false);
+    setShowBrandingUpgradeNudge(true);
   };
 
   const handleBrandingChange = (nextChecked) => {
@@ -532,8 +486,9 @@ export default function UploadCard({
   };
 
   const handleBrandingNudgeDismiss = () => {
+    // "Not now" only closes the nudge for this session. Clicking the gated
+    // toggle again re-surfaces it — never silently swallow an explicit click.
     trackEvent('paywall_dismissed');
-    setBrandingNudgeSuppressedUntil(Date.now() + BRANDING_UPGRADE_NUDGE_SUPPRESS_MS);
     setShowBrandingUpgradeNudge(false);
   };
 
@@ -770,7 +725,7 @@ export default function UploadCard({
                 </section>
               ) : null}
 
-              {showBrandingUpgradeNudge && !isBrandingNudgeSuppressed() ? (
+              {showBrandingUpgradeNudge ? (
                 <div data-testid="branding-upgrade-nudge-slot" aria-live="polite">
                   <section className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 mb-3" data-testid="branding-upgrade-nudge">
                     <p className="text-sm font-semibold text-[var(--color-text)]">{nudgeData?.title || 'Upgrade to unlock this feature'}</p>
@@ -1139,5 +1094,3 @@ export default function UploadCard({
     </article>
   );
 }
-
-export { getBrandingNudgeSuppressedUntil, setBrandingNudgeSuppressedUntil };

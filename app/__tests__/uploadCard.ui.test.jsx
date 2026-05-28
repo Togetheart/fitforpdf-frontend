@@ -10,10 +10,7 @@ import {
   waitFor,
 } from '@testing-library/react';
 
-import UploadCard, {
-  getBrandingNudgeSuppressedUntil,
-  setBrandingNudgeSuppressedUntil,
-} from '../components/UploadCard';
+import UploadCard from '../components/UploadCard';
 import LandingPage from '../page.jsx';
 import { LANDING_COPY_KEYS } from '../siteCopy.mjs';
 
@@ -194,7 +191,6 @@ function renderUploadCardHarness({
 
 function clearBrandingNudgeSuppression() {
   if (typeof window === 'undefined') return;
-  setBrandingNudgeSuppressedUntil(0);
   window.localStorage.removeItem('fitforpdf_branding_nudge_suppressed_until');
 }
 
@@ -753,7 +749,10 @@ describe('UploadCard unit behavior', () => {
     expect(onEvent).toHaveBeenCalledWith('paywall_upgrade_clicked');
   });
 
-  test('suppression timestamp prevents re-showing nudge for 10 minutes', () => {
+  test('clicking the gated toggle again after "Not now" re-shows the nudge (no dead toggle)', () => {
+    // Regression: previously "Not now" set a 10-min suppression window, after
+    // which clicking the gated toggle was a silent no-op — the toggle looked
+    // broken. An explicit click must ALWAYS surface the nudge.
     cleanup();
     clearBrandingNudgeSuppression();
     const onEvent = vi.fn();
@@ -767,25 +766,24 @@ describe('UploadCard unit behavior', () => {
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
     fireEvent.click(brandingTitle);
-    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
-    expect(getBrandingNudgeSuppressedUntil()).toBeGreaterThan(Date.now());
+    expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
 
-    fireEvent.click(brandingTitle);
+    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
     expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+
+    // Second explicit click → nudge re-appears immediately, no silent swallow.
+    fireEvent.click(brandingTitle);
+    expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
+    expect(onEvent).toHaveBeenCalledWith('paywall_branding_attempt');
     expect(onBrandingChange).not.toHaveBeenCalled();
     expect(screen.getByRole('switch', { name: 'Branding' }).getAttribute('aria-checked')).toBe('true');
-    expect(onEvent).toHaveBeenCalledWith('paywall_dismissed');
   });
 
-  test('branding nudge reappears after 10-minute suppression window', () => {
+  test('"Not now" then re-click works repeatedly without any suppression delay', () => {
     cleanup();
     clearBrandingNudgeSuppression();
     const onEvent = vi.fn();
     const onBrandingChange = vi.fn();
-    vi.useFakeTimers();
-    const now = Date.now();
-    vi.setSystemTime(now);
-
     renderUploadCardHarness({
       isPro: false,
       onEvent,
@@ -794,19 +792,16 @@ describe('UploadCard unit behavior', () => {
     });
 
     const brandingTitle = within(screen.getByTestId('setting-row-branding')).getByText('Branding');
-    fireEvent.click(brandingTitle);
-    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
 
-    expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+    for (let i = 0; i < 3; i += 1) {
+      fireEvent.click(brandingTitle);
+      expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
+      fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
+      expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
+    }
 
-    vi.advanceTimersByTime(10 * 60 * 1000 + 5);
-    vi.setSystemTime(now + (10 * 60 * 1000 + 5));
-    fireEvent.click(brandingTitle);
-
-    expect(onEvent).toHaveBeenCalledWith('paywall_branding_attempt');
-    expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
     expect(onBrandingChange).not.toHaveBeenCalled();
-    vi.useRealTimers();
+    expect(onEvent).toHaveBeenCalledWith('paywall_dismissed');
   });
 
   test('click on setting title or description toggles the row', () => {
