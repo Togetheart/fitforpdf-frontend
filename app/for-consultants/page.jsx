@@ -1,15 +1,14 @@
 import VerticalPage from '../components/VerticalPage';
 import { JsonLd } from '../components/JsonLd';
+import { SEO } from '../siteCopy.mjs';
 
 export const metadata = {
-  title: 'Excel to PDF for Consultants',
-  description:
-    'Stop manually formatting client deliverables. fitforpdf converts Excel spreadsheets to professional, consistent PDFs with drag-and-drop simplicity.',
+  title: SEO.forConsultants.title,
+  description: SEO.forConsultants.description,
   alternates: { canonical: '/for-consultants' },
   openGraph: {
-    title: 'Excel to PDF for Consultants',
-    description:
-      'Stop manually formatting client deliverables. fitforpdf converts Excel spreadsheets to professional, consistent PDFs.',
+    title: SEO.forConsultants.title,
+    description: SEO.forConsultants.description,
     url: 'https://www.fitforpdf.com/for-consultants',
   },
   twitter: { card: 'summary_large_image' },

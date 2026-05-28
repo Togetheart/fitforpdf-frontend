@@ -1,15 +1,14 @@
 import VerticalPage from '../components/VerticalPage';
 import { JsonLd } from '../components/JsonLd';
+import { SEO } from '../siteCopy.mjs';
 
 export const metadata = {
-  title: 'PDF Export for SaaS Products',
-  description:
-    'Automate PDF report generation for your SaaS product. fitforpdf turns exported dashboards and data tables into professionally formatted PDFs via API.',
+  title: SEO.forSaas.title,
+  description: SEO.forSaas.description,
   alternates: { canonical: '/for-saas' },
   openGraph: {
-    title: 'PDF Export for SaaS Products',
-    description:
-      'Automate PDF report generation for your SaaS product. fitforpdf turns data tables into professionally formatted PDFs via API.',
+    title: SEO.forSaas.title,
+    description: SEO.forSaas.description,
     url: 'https://www.fitforpdf.com/for-saas',
   },
   twitter: { card: 'summary_large_image' },

@@ -116,6 +116,7 @@ export default function SiteHeader() {
         // still discoverable by tab/SR even when visually hidden.
         inert={menuOpen ? undefined : ''}
         aria-hidden={menuOpen ? undefined : 'true'}
+        hidden={!menuOpen}
         className={cn(
           'fixed left-0 right-0 top-0 z-40 sm:hidden',
           'bg-[var(--color-bg)]/95 backdrop-blur-xl pt-20 pb-6 px-6',

@@ -16,6 +16,11 @@ import {
   trackRenderCompleted,
   trackUploadAfterDemo,
   trackShareLinkCopied,
+  trackDownloadClicked,
+  trackDownloadCompleted,
+  trackSecondRealRenderStarted,
+  trackPostRenderPricingClicked,
+  trackPostRenderContactClicked,
 } from '../lib/analytics.mjs';
 
 const API_BASE = '/api';
@@ -430,7 +435,6 @@ export default function useConversion({ quota }) {
       if (!isPdfResponse) { setError('PDF response is missing.'); return; }
 
       setPdfBlob(blob);
-      console.log('[FeedbackBar debug] x-render-id:', res.headers.get('x-render-id'));
       setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
@@ -445,15 +449,6 @@ export default function useConversion({ quota }) {
       const reasonCodes = Array.isArray(confidenceData?.reasons)
         ? confidenceData.reasons.filter((reason) => isReasonCode(reason))
         : [];
-      console.log({
-        verdict: confidenceData?.verdict ?? 'OK',
-        score: confidenceData?.score ?? null,
-        reasonsCount: Array.isArray(confidenceData?.reasons) ? confidenceData.reasons.length : 0,
-        reasonCodes,
-        mode,
-        rows: confidenceData?.metrics?.rowCount ?? debugMetricsData?.rowCount ?? null,
-        cols: confidenceData?.metrics?.columnCount ?? debugMetricsData?.columnCount ?? null,
-      });
 
       /* Funnel diagnostic — captures every dimension we have so we can later
        * group by (file_type, size_bucket) and answer the XLSX-vs-CSV gap.
@@ -482,12 +477,12 @@ export default function useConversion({ quota }) {
         console.warn('[cleansheet] confidence missing or invalid; defaulting verdict to OK');
       }
 
-      const effectiveVerdict = confidenceData?.verdict ?? 'OK';
-      if (effectiveVerdict === 'OK') {
-        downloadBlob(blob, responseFilename);
-        setConfidence(null);
-        setFlowId(null);
-      }
+      /* Previously: an OK verdict triggered an automatic download and
+       * cleared confidence/flowId. That made the success moment invisible —
+       * users got a file in their downloads bin and the UI had nothing
+       * left to sell (no score, no "render another", no pricing). The
+       * post-render panel now owns the success state, so we keep
+       * confidence/flowId/renderId and let the user click Download. */
     } catch (err) {
       setError(err.message || 'Upload failed');
     } finally {
@@ -613,8 +608,68 @@ export default function useConversion({ quota }) {
 
   function handleDownloadAnyway() {
     if (!pdfBlob) return;
-    downloadBlob(pdfBlob, resolvedPdfFilename);
+    const isDemo = wasDemoLastUploadRef.current;
+    const fileType = (file?.name || '').split('.').pop()?.toLowerCase() || null;
+    trackDownloadClicked({
+      renderId,
+      flowId,
+      isDemo,
+      verdict: confidence?.verdict ?? null,
+      score: confidence?.score ?? null,
+      fileType,
+    });
+    try {
+      downloadBlob(pdfBlob, resolvedPdfFilename);
+      trackDownloadCompleted({
+        renderId,
+        flowId,
+        isDemo,
+        verdict: confidence?.verdict ?? null,
+        score: confidence?.score ?? null,
+        fileType,
+      });
+    } catch (downloadErr) {
+      /* Browser may block the synthetic click in rare cases; we still
+       * want the click event in PostHog so we can measure the gap. */
+      console.warn('[fitforpdf] download failed', downloadErr);
+    }
+  }
+
+  /* "Render another file" — preserves the just-emitted render_id so we
+   * can measure activation (1 successful render → 2nd attempt). */
+  function handleRenderAnother() {
+    const previousRenderId = renderId;
+    trackSecondRealRenderStarted({ previousRenderId, flowId });
+    setFile(null);
+    setPdfBlob(null);
+    setConfidence(null);
+    setRenderVerdict(null);
+    setRenderId(null);
     setFlowId(null);
+    setError(null);
+    setNotice(null);
+    setShareState({ status: 'idle', jobId: null });
+    if (typeof document === 'undefined') return;
+    setTimeout(() => {
+      const input = document.querySelector('[data-testid="generate-file-input"]');
+      if (input && typeof input.click === 'function') input.click();
+    }, 50);
+  }
+
+  function handlePostRenderPricingClick() {
+    trackPostRenderPricingClicked({
+      renderId,
+      flowId,
+      isDemo: wasDemoLastUploadRef.current,
+    });
+  }
+
+  function handlePostRenderContactClick() {
+    trackPostRenderContactClicked({
+      renderId,
+      flowId,
+      isDemo: wasDemoLastUploadRef.current,
+    });
   }
 
   function handleLayoutChange(nextKey, nextChecked) {
@@ -775,6 +830,9 @@ export default function useConversion({ quota }) {
     handleGenerateOptimized,
     handleGenerateCompact,
     handleDownloadAnyway,
+    handleRenderAnother,
+    handlePostRenderPricingClick,
+    handlePostRenderContactClick,
     handleCopyShareLink,
     // result
     pdfBlob,

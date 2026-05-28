@@ -311,6 +311,15 @@ describe('UploadCard unit behavior', () => {
     expect(dropzone.className).toContain('cursor-pointer');
   });
 
+  test('upload dropzone label fills the row so nearby clicks open the picker', () => {
+    const shell = screen.getByTestId('generate-dropzone');
+    const dropzone = screen.getByTestId('upload-dropzone');
+
+    expect(shell.className).toContain('flex-1');
+    expect(dropzone.className).toContain('w-full');
+    expect(dropzone.className).not.toContain('sm:w-auto');
+  });
+
   test('renders export history timeline fields and mismatch', () => {
     cleanup();
     renderUploadCardHarness({
@@ -625,6 +634,7 @@ describe('UploadCard unit behavior', () => {
     const buyButton = screen.getByRole('button', { name: 'Buy credits' });
 
     expect(buyButton.getAttribute('aria-label')).toBe('Buy credits');
+    expect(buyButton.textContent).toContain('Buy credits');
     expect(screen.getByTestId('quota-buy-slot')).toBeTruthy();
 
     fireEvent.click(buyButton);
@@ -824,13 +834,16 @@ describe('UploadCard unit behavior', () => {
     expect(screen.queryByLabelText('Truncate long text info')).toBeNull();
   });
 
-  test('buy credits slot is rendered and keeps compact size', () => {
+  test('buy credits slot includes text when low exports make it a purchase prompt', () => {
     cleanup();
     renderUploadCardHarness({ freeExportsLeft: 1, onBuyCredits: vi.fn() });
 
     const slot = screen.getByTestId('quota-buy-slot');
     expect(slot).toBeTruthy();
-    expect(slot.className).toContain('w-9');
+    expect(slot.textContent).toContain('Buy credits');
+    expect(slot.className).toContain('gap-2');
+    expect(slot.className).toContain('px-3');
+    expect(slot.className).not.toContain('w-9');
     expect(slot.className).toContain('h-9');
   });
 
@@ -947,7 +960,7 @@ describe('UploadCard conversion flow on landing page', () => {
     mock.restore();
   });
 
-  test('run the demo helper text is compact and muted with wrap-friendly layout', () => {
+  test('demo helper text is secondary and does not compete with upload', () => {
     const mock = mockFetch({
       response: createPdfResponse(),
       delayMs: 30,
@@ -958,9 +971,29 @@ describe('UploadCard conversion flow on landing page', () => {
     const demoButton = within(uploadCard).getByTestId('demo-try-button');
 
     expect(demoButton).toBeTruthy();
-    expect(demoButton.textContent).toContain('Try with a demo file');
+    expect(demoButton.textContent).toContain('See an example first');
+    const demoClass = demoButton.getAttribute('class') || '';
+    expect(demoClass).toContain('text-white/55');
+    expect(demoClass).not.toContain('bg-white/10');
     expect(screen.queryByText('120 rows · 15 columns · invoices')).toBeNull();
     expect(screen.getByTestId('demo-try-row')).toBeTruthy();
+
+    mock.restore();
+  });
+
+  test('demo helper disappears once a real file has been selected', () => {
+    const mock = mockFetch({
+      response: createPdfResponse(),
+      delayMs: 30,
+    });
+
+    render(<LandingPage />);
+    fireEvent.change(screen.getByTestId('generate-file-input'), {
+      target: { files: [SAMPLE_FILE] },
+    });
+
+    expect(screen.queryByTestId('demo-try-button')).toBeNull();
+    expect(screen.queryByTestId('demo-try-row')).toBeNull();
 
     mock.restore();
   });
@@ -1015,13 +1048,17 @@ describe('UploadCard conversion flow on landing page', () => {
 
     await waitFor(() => {
       expect(screen.queryByText('Converting your file')).toBeNull();
-      expect(screen.getByRole('button', { name: 'Download again' })).toBeTruthy();
+      expect(screen.getByRole('button', { name: 'Download PDF' })).toBeTruthy();
     }, { timeout: 4000 });
+
+    expect(screen.queryByTestId('demo-try-button')).toBeNull();
+    expect(screen.getByTestId('current-file-strip').textContent).toContain('report.csv');
+    expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
 
     mock.restore();
   });
 
-  test('success state share button calls handler with current render id', () => {
+  test('success state does not expose the broken review link CTA', () => {
     cleanup();
     const onCopyShareLink = vi.fn();
     renderUploadCardHarness({
@@ -1030,8 +1067,9 @@ describe('UploadCard conversion flow on landing page', () => {
       renderId: 'job-share-landing',
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Copy review link' }));
-    expect(onCopyShareLink).toHaveBeenCalledWith('job-share-landing', 'render_success');
+    expect(screen.queryByTestId('copy-review-link')).toBeNull();
+    expect(screen.queryByText(/copy review link/i)).toBeNull();
+    expect(onCopyShareLink).not.toHaveBeenCalled();
   });
 
   test('double click on Generate PDF triggers only one /api/render request while in-flight', async () => {

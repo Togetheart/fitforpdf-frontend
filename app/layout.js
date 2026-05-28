@@ -107,7 +107,7 @@ const organizationLd = {
 export default function RootLayout({ children }) {
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
   return (
-    <html lang="en" className={lora.variable}>
+    <html lang="en" className={lora.variable} suppressHydrationWarning>
       <head>
         <link
           rel="preload"

@@ -50,8 +50,8 @@ describe('landing conversion-first structure', () => {
     expect(faq).toBeTruthy();
     expect(finalCta).toBeTruthy();
     expect(hero.compareDocumentPosition(proof) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(proof.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(pricing.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(proof.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(comparison.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(comparison.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(faq.compareDocumentPosition(finalCta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
@@ -69,6 +69,8 @@ describe('landing conversion-first structure', () => {
 
   test('unverified social proof claim is not shown', () => {
     expect(screen.queryByText(/Trusted by 1,098 professionals this week/i)).toBeNull();
+    expect(screen.queryByText(/Trusted by teams worldwide/i)).toBeNull();
+    expect(screen.queryByText(/Head of Operations/i)).toBeNull();
   });
 
   test('legacy demo section below options is removed', () => {
@@ -103,17 +105,34 @@ describe('landing conversion-first structure', () => {
     const heroBackdrop = screen.getByTestId('hero-backdrop');
     const heroBg = screen.getByTestId('hero-bg');
     const heroGradients = screen.getByTestId('hero-bg-gradients');
+    const heroSpacer = screen.getByTestId('hero-section').parentElement;
 
     expect((heroBackdrop.getAttribute('class') || '').includes('hero-backdrop')).toBe(true);
     expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
     expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients')).toBe(true);
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
+    expect(heroSpacer?.getAttribute('class') || '').toContain('sm:h-[calc(100vh+140px)]');
   });
 
   test('pricing preview renders PAYG plan cards', () => {
     // PricingToggleSection shows payg-plan-card elements in PAYG mode (default)
     const cards = screen.getAllByTestId('payg-plan-card');
     expect(cards.length).toBeGreaterThanOrEqual(1);
+  });
+
+  test('secondary API and ROI modules are not in the primary landing flow', () => {
+    expect(screen.queryByTestId('apple-grid-section')).toBeNull();
+    expect(screen.queryByTestId('section-use-cases')).toBeNull();
+    expect(screen.queryByText(/Integrate in minutes/i)).toBeNull();
+    expect(screen.queryByText(/How much time could you save/i)).toBeNull();
+  });
+
+  test('landing uses real early workflow feedback instead of broad anonymous testimonials', () => {
+    const feedback = screen.getByTestId('early-feedback-section');
+
+    expect(feedback.textContent).toContain('Early workflow feedback');
+    expect(feedback.textContent).toContain('Magdalena');
+    expect(feedback.textContent).toContain("The export often isn't truly client-ready");
   });
 
   test('proof statement exists', () => {
@@ -152,10 +171,19 @@ describe('landing conversion-first structure', () => {
     expect(proofCard).toBeTruthy();
     expect(demoButton).toBeTruthy();
     const demoClass = demoButton.getAttribute('class') || '';
-    expect(demoClass).toContain('text-white');
-    expect(demoClass).toContain('bg-white/10');
+    expect(demoButton.textContent).toContain('See an example first');
+    expect(demoClass).toContain('text-white/55');
+    expect(demoClass).not.toContain('bg-white/10');
     expect(screen.queryByRole('button', { name: 'Run the demo' })).toBeNull();
     expect(screen.getAllByTestId('demo-try-button')).toHaveLength(1);
+  });
+
+  test('upload blue container is wide enough for the post-render state', () => {
+    const container = screen.getByTestId('upload-blue-container');
+    const inner = screen.getByTestId('upload-blue-inner');
+
+    expect(container.getAttribute('class') || '').toContain('max-w-[1040px]');
+    expect(inner.getAttribute('class') || '').toContain('max-w-[760px]');
   });
 
   test('preview card has desktop float animation class', () => {
@@ -187,8 +215,10 @@ describe('landing conversion-first structure', () => {
 
     expect(screen.getByText('Excel PDF Export vs fitforpdf')).toBeTruthy();
     expect(screen.getByText('Stop fighting print settings. Get a presentable structured PDF in seconds.')).toBeTruthy();
-    // Comparison follows proof in document order (upload card sits between them in proof-first flow)
+    // Comparison follows proof and upload in document order, before pricing.
     expect(proofSection.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
+    expect(comparison.compareDocumentPosition(pricing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test('FAQ items stay focused on conversion objections', () => {
@@ -203,6 +233,7 @@ describe('landing conversion-first structure', () => {
     ].forEach((question) => {
       expect(faq.textContent).toContain(question);
     });
+    expect(faq.textContent).toContain('Yes. Open the sample PDF before uploading your own file.');
   });
 
   test('landing section spacing uses varied rhythm', () => {
