@@ -85,8 +85,11 @@ describe('home conversion-critical UI', () => {
   });
 
   test('upload card heading is anchored for scroll targeting', () => {
+    expect(document.querySelectorAll('#generate')).toHaveLength(1);
     const generateEl = document.getElementById('generate');
     expect(generateEl).toBeTruthy();
+    expect(generateEl?.getAttribute('data-testid')).toBe(`section-${LANDING_COPY_KEYS.upload}`);
+    expect(generateEl?.contains(screen.getByTestId('upload-card'))).toBe(true);
     expect(generateEl.className).toContain('scroll-mt-24');
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
   });

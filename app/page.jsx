@@ -267,8 +267,8 @@ export default function Page() {
           The apple-grid-bg + apple-grid-noise + apple-grid-card aesthetic
           is preserved; only the framing changed. */}
       <section
-        id={LANDING_COPY_KEYS.upload}
-        className="bg-[var(--color-bg-hero)] relative z-10 py-8 sm:py-12 scroll-mt-16"
+        id="generate"
+        className="bg-[var(--color-bg-hero)] relative z-10 py-8 sm:py-12 scroll-mt-24"
         data-testid={`section-${LANDING_COPY_KEYS.upload}`}
       >
         <div

@@ -821,7 +821,6 @@ export default function UploadCard({
              single decision visible (Try with your file). ───────────── */}
         {!wasDemoLastUpload && !isRegularResult && (
         <div
-          id="generate"
           className="scroll-mt-24 upload-pill flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5"
         >
           <UploadDropzone
@@ -887,7 +886,6 @@ export default function UploadCard({
 
         {isRegularResult ? (
           <div
-            id="generate"
             data-testid="current-file-strip"
             className="scroll-mt-24 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/60"
           >
