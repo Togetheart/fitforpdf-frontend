@@ -479,6 +479,28 @@ describe('UploadCard unit behavior', () => {
     expect(screen.queryByRole('switch', { name: 'Branding' })).toBeNull();
   });
 
+  test('mousedown inside the options panel does NOT close the dropdown (regression)', () => {
+    // Regression for the "Branding toggle resists" bug: the outside-click
+    // handler used to check only the gear button ref, so a mousedown on any
+    // toggle inside the panel was treated as "outside" and slammed the
+    // dropdown shut before the toggle's click could register.
+    const optionsToggle = screen.getByRole('button', { name: 'Advanced options' });
+    fireEvent.click(optionsToggle);
+    expect(screen.getByTestId('upload-options')).toBeTruthy();
+
+    // Simulate a real pointer interaction inside the panel (the Branding row).
+    const brandingRow = screen.getByTestId('setting-row-branding');
+    fireEvent.mouseDown(brandingRow);
+
+    // Panel must still be open.
+    expect(screen.queryByTestId('upload-options')).toBeTruthy();
+    expect(optionsToggle.getAttribute('aria-expanded')).toBe('true');
+
+    // And a mousedown truly OUTSIDE (on document.body) still closes it.
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByTestId('upload-options')).toBeNull();
+  });
+
   test('opening options does not call window.scrollBy in jsdom', () => {
     cleanup();
     vi.useFakeTimers();

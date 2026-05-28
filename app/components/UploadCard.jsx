@@ -557,12 +557,23 @@ export default function UploadCard({
   const buyCreditsButtonText = paywallReason ? 'Buy credits' : 'Buy credits';
 
   const gearRef = React.useRef(null);
+  const optionsPanelRef = React.useRef(null);
 
-  // Close dropdown on outside click
+  // Close dropdown on outside click.
+  //
+  // BUG FIX (2026-05-28): previously this only checked `gearRef` (the gear
+  // BUTTON). The options panel (#upload-options) renders separately, OUTSIDE
+  // gearRef, so a mousedown on any toggle inside the panel was treated as an
+  // "outside" click and closed the dropdown before the toggle's onClick could
+  // fire. Result: the Branding/overview/headers/footer/truncate toggles felt
+  // un-clickable. Now we treat a click as "outside" only when it's outside
+  // BOTH the gear button AND the panel.
   React.useEffect(() => {
     if (!isOptionsExpanded) return;
     const handleClick = (e) => {
-      if (gearRef.current && !gearRef.current.contains(e.target)) {
+      const inGear = gearRef.current && gearRef.current.contains(e.target);
+      const inPanel = optionsPanelRef.current && optionsPanelRef.current.contains(e.target);
+      if (!inGear && !inPanel) {
         setIsOptionsExpanded(false);
       }
     };
@@ -730,6 +741,7 @@ export default function UploadCard({
         {/* ── Options dropdown — in document flow below pill ── */}
         {isOptionsExpanded ? (
           <div
+            ref={optionsPanelRef}
             id="upload-options"
             data-testid="upload-options"
             className="mt-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg p-4"
