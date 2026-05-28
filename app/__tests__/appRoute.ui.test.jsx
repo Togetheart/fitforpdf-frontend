@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import React from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 import AppPage from '../app/page.jsx';
 
@@ -46,5 +46,14 @@ describe('/app tool-first workbench shell', () => {
     render(<AppPage />);
     // The landing-only proof/comparison sections must NOT be present on /app.
     expect(screen.queryByTestId('early-feedback-section')).toBeNull();
+  });
+
+  test('exposes a pre-render Report title control (Kunj custom title)', () => {
+    render(<AppPage />);
+    expect(screen.getByTestId('app-inspector')).toBeTruthy();
+    const input = screen.getByLabelText(/Report title/i);
+    expect(input).toBeTruthy();
+    fireEvent.change(input, { target: { value: 'Acme Q4' } });
+    expect(input.value).toBe('Acme Q4');
   });
 });

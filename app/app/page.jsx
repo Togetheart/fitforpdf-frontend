@@ -40,7 +40,7 @@ export default function AppPage() {
         data-testid="tool"
         className="apple-grid-card relative mx-auto w-full p-6 sm:p-8"
       >
-        <ConversionTool toolTitle="Upload your spreadsheet" variant="light" />
+        <ConversionTool toolTitle="Upload your spreadsheet" variant="light" showInspector />
       </div>
 
       <p className="mt-5 text-center text-xs text-muted">

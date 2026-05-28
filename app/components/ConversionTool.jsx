@@ -17,7 +17,7 @@ import UploadCard from './UploadCard';
  * wiring because it shares conversion state with the lead modal + hero CTAs;
  * migrating it onto this component is a separate, tested follow-up (T-task).
  */
-export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark' }) {
+export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark', showInspector = false }) {
   const quota = useQuota();
   const conversion = useConversion({ quota });
 
@@ -38,6 +38,24 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
   })();
 
   return (
+    <>
+      {showInspector ? (
+        <div data-testid="app-inspector" className="mb-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+          <label htmlFor="app-report-title" className="block text-xs font-semibold uppercase tracking-[0.06em] text-muted">
+            Report title <span className="font-normal normal-case text-[var(--color-muted)]">(optional)</span>
+          </label>
+          <input
+            id="app-report-title"
+            type="text"
+            value={conversion.reportTitle}
+            onChange={(e) => conversion.setReportTitle(e.target.value)}
+            placeholder="e.g. Acme Co. — Q4 2025 export"
+            maxLength={200}
+            className="mt-2 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] outline-none focus:border-[var(--color-cta-bg)]"
+          />
+          <p className="mt-2 text-xs text-muted">Appears as the title of your PDF. Leave blank to use the file name.</p>
+        </div>
+      ) : null}
     <UploadCard
       toolTitle={toolTitle}
       toolSubcopy={resolvedSubcopy}
@@ -99,5 +117,6 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
       confidence={conversion.confidence}
       debugMetrics={conversion.debugMetrics}
     />
+    </>
   );
 }

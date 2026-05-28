@@ -265,6 +265,10 @@ export default function useConversion({ quota }) {
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [layout, setLayout] = useState({ overview: true, headers: true, footer: true });
+  // Kunj control: custom report title (pre-render). Sent to the render route,
+  // which forwards it to the engine (options.reportTitle). Empty => engine
+  // falls back to the filename-derived title.
+  const [reportTitle, setReportTitle] = useState('');
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -358,6 +362,11 @@ export default function useConversion({ quota }) {
       formData.append('keep_overview', layout.overview !== false ? '1' : '0');
       formData.append('keep_headers', layout.headers !== false ? '1' : '0');
       formData.append('keep_footer', layout.footer !== false ? '1' : '0');
+      // Custom report title (Kunj). Only sent when set; demo renders skip it.
+      const isDemoRender = targetFile.name === 'enterprise-invoices-demo.csv';
+      if (!isDemoRender && typeof reportTitle === 'string' && reportTitle.trim()) {
+        formData.append('reportTitle', reportTitle.trim().slice(0, 200));
+      }
 
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText }), {
         method: 'POST',
@@ -819,6 +828,8 @@ export default function useConversion({ quota }) {
     setTruncateLongText,
     layout,
     handleLayoutChange,
+    reportTitle,
+    setReportTitle,
     // conversion
     isLoading,
     error,
