@@ -701,6 +701,33 @@ test('POST /api/render passes upstream x-cleansheet score/verdict/reasons throug
   restoreEnv();
 });
 
+test('POST /api/render passes router recommendation and identity hash headers through', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-cleansheet-router-mode': 'column_split',
+      'x-cleansheet-router-reason': 'false_fit_detected',
+      'x-identity-hash': 'abc123hash',
+    },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-cleansheet-router-mode'), 'column_split');
+  assert.equal(res.headers.get('x-cleansheet-router-reason'), 'false_fit_detected');
+  assert.equal(res.headers.get('x-identity-hash'), 'abc123hash');
+  fetchMock.restore();
+  restoreEnv();
+});
+
 test('POST /api/render aliases X-FitForPDF-* response headers into x-cleansheet-*', async () => {
   /* If the upstream evolves to the V1 API (X-FitForPDF-Score / Verdict /
    * Reasons), the front must keep working without code changes. The proxy

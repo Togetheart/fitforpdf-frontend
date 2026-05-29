@@ -138,6 +138,7 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
       failureRecommendations={conversion.failureRecommendations}
       pageBurdenCopy={conversion.pageBurdenCopy}
       onRetryCompact={conversion.handleGenerateCompact}
+      compactSuggestion={conversion.compactSuggestion}
       wasDemoLastUpload={conversion.wasDemoLastUpload}
       onTryYourFile={conversion.handleSwitchToRealUpload}
       onRenderAnother={conversion.handleRenderAnother}

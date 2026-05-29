@@ -21,16 +21,19 @@ import useConversion from '../hooks/useConversion.mjs';
 
 const REAL_FILE = new File(['col1,col2\n1,2'], 'real.csv', { type: 'text/csv' });
 
-function pdfResponse({ score = 95, verdict = 'OK', renderId = 'rid_post' } = {}) {
+function pdfResponse({ score = 95, verdict = 'OK', renderId = 'rid_post', routerMode = null, routerReason = null } = {}) {
+  const headers = {
+    'content-type': 'application/pdf',
+    'content-disposition': 'attachment; filename="out.pdf"',
+    'x-render-id': renderId,
+    'x-cleansheet-score': String(score),
+    'x-cleansheet-verdict': verdict,
+  };
+  if (routerMode) headers['x-cleansheet-router-mode'] = routerMode;
+  if (routerReason) headers['x-cleansheet-router-reason'] = routerReason;
   return new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
     status: 200,
-    headers: {
-      'content-type': 'application/pdf',
-      'content-disposition': 'attachment; filename="out.pdf"',
-      'x-render-id': renderId,
-      'x-cleansheet-score': String(score),
-      'x-cleansheet-verdict': verdict,
-    },
+    headers,
   });
 }
 
@@ -107,6 +110,7 @@ function Harness({ exposeRef }) {
       <p data-testid="render-id">{conversion.renderId || ''}</p>
       <p data-testid="flow-id">{conversion.flowId || ''}</p>
       <p data-testid="has-blob">{conversion.pdfBlob ? 'yes' : 'no'}</p>
+      <p data-testid="compact-suggestion">{conversion.compactSuggestion?.mode || ''}</p>
     </div>
   );
 }
@@ -253,6 +257,35 @@ describe('useConversion — post-render result contract', () => {
     expect(pricing.props.render_id).toBe('rid_intent');
     expect(contact).toBeDefined();
     expect(contact.props.render_id).toBe('rid_intent');
+
+    ph.restore();
+    restoreFetch();
+  }, 8000);
+
+  test('surfaces router column_split as a compact suggestion without rerendering automatically', async () => {
+    const restoreFetch = mockFetch([
+      ['/api/quota', quotaResponse],
+      ['/render', () => pdfResponse({
+        verdict: 'OK',
+        renderId: 'rid_router',
+        routerMode: 'column_split',
+        routerReason: 'false_fit_detected',
+      })],
+    ]);
+    const ph = mockPostHog();
+    const ref = { current: null };
+
+    render(<Harness exposeRef={ref} />);
+    await act(async () => {
+      fireEvent.click(screen.getByText('upload-real'));
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('compact-suggestion').textContent).toBe('column_split');
+    }, { timeout: 4000 });
+
+    const renderCalls = global.fetch.mock.calls.filter(([url]) => String(url).includes('/render'));
+    expect(renderCalls).toHaveLength(1);
+    expect(ref.current.lastRequestMode).toBe('normal');
 
     ph.restore();
     restoreFetch();

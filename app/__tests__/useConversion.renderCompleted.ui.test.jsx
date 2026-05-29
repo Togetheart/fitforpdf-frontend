@@ -12,24 +12,36 @@ import useConversion from '../hooks/useConversion.mjs';
 
 const REAL_FILE = new File(['col1,col2\n1,2'], 'real.csv', { type: 'text/csv' });
 
-function pdfResponse({ score = 95, verdict = 'OK', cols = 4, rows = 12, pages = 3, wrap = 0, overflow = 0, renderMs = 412 } = {}) {
+function pdfResponse({
+  score = 95,
+  verdict = 'OK',
+  cols = 4,
+  rows = 12,
+  pages = 3,
+  wrap = 0,
+  overflow = 0,
+  renderMs = 412,
+  identityHash = null,
+} = {}) {
+  const headers = {
+    'content-type': 'application/pdf',
+    'content-disposition': 'attachment; filename="out.pdf"',
+    'x-render-id': 'rid_test',
+    'x-cleansheet-score': String(score),
+    'x-cleansheet-verdict': verdict,
+    'x-render-ms': String(renderMs),
+    'x-cleansheet-debug-metrics': JSON.stringify({
+      columnCount: cols,
+      rowCount: rows,
+      pageCount: pages,
+      wrap_pressure: wrap,
+      overflow_cells: overflow,
+    }),
+  };
+  if (identityHash) headers['x-identity-hash'] = identityHash;
   return new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
     status: 200,
-    headers: {
-      'content-type': 'application/pdf',
-      'content-disposition': 'attachment; filename="out.pdf"',
-      'x-render-id': 'rid_test',
-      'x-cleansheet-score': String(score),
-      'x-cleansheet-verdict': verdict,
-      'x-render-ms': String(renderMs),
-      'x-cleansheet-debug-metrics': JSON.stringify({
-        columnCount: cols,
-        rowCount: rows,
-        pageCount: pages,
-        wrap_pressure: wrap,
-        overflow_cells: overflow,
-      }),
-    },
+    headers,
   });
 }
 
@@ -54,10 +66,15 @@ function mockFetch(routes) {
 
 function mockPostHog() {
   const captures = [];
+  const identifies = [];
   const previousPosthog = window.posthog;
-  window.posthog = { capture: (event, props) => captures.push({ event, props }) };
+  window.posthog = {
+    capture: (event, props) => captures.push({ event, props }),
+    identify: (distinctId) => identifies.push(distinctId),
+  };
   return {
     captures,
+    identifies,
     restore: () => { window.posthog = previousPosthog; },
   };
 }
@@ -200,6 +217,29 @@ describe('useConversion — render_completed funnel event', () => {
         expect(events.length).toBe(1);
         expect(events[0].props.verdict).toBe('WARN');
         expect(events[0].props.wrap_pressure).toBe(0.81);
+      },
+      { timeout: 4000 },
+    );
+
+    ph.restore();
+    restoreFetch();
+  }, 8000);
+
+  test('identifies PostHog with the backend identity hash when present', async () => {
+    const restoreFetch = mockFetch([
+      ['/api/quota', quotaResponse],
+      ['/render', () => pdfResponse({ identityHash: 'hash_render_identity' })],
+    ]);
+    const ph = mockPostHog();
+
+    render(<Harness />);
+    await act(async () => {
+      fireEvent.click(screen.getByText('upload-real'));
+    });
+
+    await waitFor(
+      () => {
+        expect(ph.identifies).toEqual(['hash_render_identity']);
       },
       { timeout: 4000 },
     );

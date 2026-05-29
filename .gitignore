@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+.claude/
+!.claude/
 .claude/*
 !.claude/hooks/
 !.claude/hooks/check-gstack.sh

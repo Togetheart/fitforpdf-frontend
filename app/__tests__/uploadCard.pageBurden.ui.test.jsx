@@ -96,4 +96,23 @@ describe('UploadCard — page burden FAIL surface', () => {
       screen.queryByText('Document too large for direct sending'),
     ).toBeNull();
   });
+
+  test('renders compact suggestion on successful renders as an explicit user action', () => {
+    const onRetryCompact = vi.fn();
+    renderWithPageBurdenFail({
+      hasResultBlob: true,
+      failKind: 'none',
+      verdict: 'OK',
+      pageBurdenCopy: null,
+      failureRecommendations: [],
+      compactSuggestion: { mode: 'column_split', reason: 'false_fit_detected' },
+      onRetryCompact,
+      confidence: { score: 91, verdict: 'OK', reasons: [], metrics: null },
+    });
+
+    expect(screen.getByTestId('compact-suggestion')).toBeTruthy();
+    const cta = screen.getByRole('button', { name: /generate compact version/i });
+    fireEvent.click(cta);
+    expect(onRetryCompact).toHaveBeenCalledTimes(1);
+  });
 });

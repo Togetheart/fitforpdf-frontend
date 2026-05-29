@@ -100,6 +100,26 @@ function parseConfidenceFromHeaders(headers) {
   return { verdict, score: Number.isFinite(score) ? score : null, reasons, metrics: null };
 }
 
+function parseRouterCompactSuggestion(headers, requestMode) {
+  const routerMode = String(headers.get('x-cleansheet-router-mode') || '').trim();
+  if (routerMode !== 'column_split' || requestMode === 'compact') return null;
+  return {
+    mode: routerMode,
+    reason: String(headers.get('x-cleansheet-router-reason') || '').trim() || null,
+  };
+}
+
+function identifyPostHog(identityHash) {
+  if (!identityHash || typeof window === 'undefined') return;
+  const posthog = window.posthog;
+  if (!posthog || typeof posthog.identify !== 'function') return;
+  try {
+    posthog.identify(identityHash);
+  } catch (_) {
+    // Analytics stitching must never block rendering.
+  }
+}
+
 async function parseConfidenceFromJsonIfAvailable(res) {
   const contentType = (res.headers.get('content-type') || '').toLowerCase();
   if (!contentType.includes('application/json')) return null;
@@ -262,6 +282,7 @@ export default function useConversion({ quota }) {
   const [showDebug, setShowDebug] = useState(false);
   const [debugByQuery, setDebugByQuery] = useState(false);
   const [failureRecommendations, setFailureRecommendations] = useState([]);
+  const [compactSuggestion, setCompactSuggestion] = useState(null);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [layout, setLayout] = useState({ overview: true, headers: true, footer: true });
@@ -351,6 +372,7 @@ export default function useConversion({ quota }) {
     setRenderVerdict(null);
     setRenderId(null);
     setFailureRecommendations([]);
+    setCompactSuggestion(null);
     setColumnMapDebug(null);
     setShareState({ status: 'idle', jobId: null });
     setIsLoading(true);
@@ -435,6 +457,8 @@ export default function useConversion({ quota }) {
       const confidenceData = normalizeConfidence(confidenceFromJson || confidenceFromHeaders);
       const debugMetricsData = parseDebugMetricsHeader(res.headers.get('x-cleansheet-debug-metrics'));
       const columnMapDebugData = parseColumnMapDebugFromHeaders(res.headers);
+      const compactSuggestionData = parseRouterCompactSuggestion(res.headers, mode);
+      identifyPostHog(res.headers.get('x-identity-hash'));
       const blob = await res.blob();
       const contentType = (res.headers.get('content-type') || '').toLowerCase();
       const isPdfResponse = res.status === 200 && contentType.includes('application/pdf');
@@ -455,6 +479,7 @@ export default function useConversion({ quota }) {
       setShowDetails(false);
       setDebugMetrics(debugMetricsData);
       setColumnMapDebug(columnMapDebugData);
+      setCompactSuggestion(compactSuggestionData);
       setShowDebug(false);
       setFailureRecommendations([]);
 
@@ -551,6 +576,7 @@ export default function useConversion({ quota }) {
     setFile(nextFile);
     if (nextFile) { setError(null); setNotice(null); }
     setPdfBlob(null);
+    setCompactSuggestion(null);
   }
 
   async function handleTrySample() {
@@ -582,6 +608,7 @@ export default function useConversion({ quota }) {
     setShareState({ status: 'idle', jobId: null });
     setError(null);
     setNotice(null);
+    setCompactSuggestion(null);
   }
 
   /* Single-action helper for the post-demo "Try with your file" CTA.
@@ -660,6 +687,7 @@ export default function useConversion({ quota }) {
     setFlowId(null);
     setError(null);
     setNotice(null);
+    setCompactSuggestion(null);
     setShareState({ status: 'idle', jobId: null });
     if (typeof document === 'undefined') return;
     setTimeout(() => {
@@ -858,6 +886,7 @@ export default function useConversion({ quota }) {
     resolvedPdfFilename,
     lastRequestMode,
     failureRecommendations,
+    compactSuggestion,
     wasDemoLastUpload,
     showDetails,
     setShowDetails,

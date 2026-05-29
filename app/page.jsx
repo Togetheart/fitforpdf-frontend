@@ -358,6 +358,7 @@ export default function Page() {
             failureRecommendations={conversion.failureRecommendations}
             pageBurdenCopy={conversion.pageBurdenCopy}
             onRetryCompact={conversion.handleGenerateCompact}
+            compactSuggestion={conversion.compactSuggestion}
             wasDemoLastUpload={conversion.wasDemoLastUpload}
             onTryYourFile={conversion.handleSwitchToRealUpload}
             onRenderAnother={conversion.handleRenderAnother}
