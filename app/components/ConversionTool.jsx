@@ -240,6 +240,61 @@ function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant 
   );
 }
 
+function PdfPreviewPane({ pdfBlob, filename }) {
+  const [previewUrl, setPreviewUrl] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!pdfBlob || typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') {
+      setPreviewUrl(null);
+      return undefined;
+    }
+
+    const nextUrl = URL.createObjectURL(pdfBlob);
+    setPreviewUrl(nextUrl);
+    return () => {
+      if (typeof URL.revokeObjectURL === 'function') {
+        URL.revokeObjectURL(nextUrl);
+      }
+    };
+  }, [pdfBlob]);
+
+  if (!previewUrl) {
+    return (
+      <div
+        data-testid="app-pdf-preview-empty"
+        className="mt-5 flex min-h-[300px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/70 p-6 text-center"
+      >
+        <div>
+          <p className="text-sm font-semibold text-slate-800">PDF preview appears here after render.</p>
+          <p className="mt-1 text-xs text-slate-500">Configure once, generate once, then inspect before downloading.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const safeFilename = filename || 'report.pdf';
+  return (
+    <div className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-inner">
+      <div className="flex items-center justify-between border-b border-slate-200 bg-white/80 px-4 py-2">
+        <p className="truncate text-sm font-semibold text-slate-800">Preview: {safeFilename}</p>
+        <span className="text-xs font-medium text-slate-500">PDF</span>
+      </div>
+      <object
+        aria-label={`PDF preview: ${safeFilename}`}
+        data-testid="app-pdf-preview"
+        data={previewUrl}
+        title={`PDF preview: ${safeFilename}`}
+        type="application/pdf"
+        className="h-[520px] w-full bg-white"
+      >
+        <div className="p-5 text-sm text-slate-600">
+          PDF preview is not available in this browser. Use Download PDF to open it.
+        </div>
+      </object>
+    </div>
+  );
+}
+
 export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark', showInspector = false, layout = 'inline' }) {
   const quota = useQuota();
   const conversion = useConversion({ quota });
@@ -300,6 +355,7 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
           </div>
 
           {uploadSurface}
+          <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
         </section>
 
         <ConversionInspector conversion={conversion} className="lg:sticky lg:top-[4.5rem] lg:self-start" />
