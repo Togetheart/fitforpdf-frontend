@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ArrowLeft, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
 import UploadCard from './UploadCard';
@@ -368,6 +368,196 @@ function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant 
   );
 }
 
+function WorkbenchDropzone({ conversion }) {
+  const inputRef = React.useRef(null);
+
+  const selectFile = (nextFile) => {
+    if (!nextFile || conversion.isLoading) return;
+    conversion.handleFileSelect(nextFile);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    selectFile(event.dataTransfer?.files?.[0]);
+  };
+
+  const openPicker = () => {
+    if (!conversion.isLoading) inputRef.current?.click();
+  };
+
+  return (
+    <div className="rounded-[12px] border border-slate-200 bg-white p-3.5 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+      <div
+        data-testid="generate-dropzone"
+        role="button"
+        tabIndex={conversion.isLoading ? -1 : 0}
+        aria-label="Upload CSV or XLSX file"
+        onClick={openPicker}
+        onDrop={handleDrop}
+        onDragOver={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        }}
+        onKeyDown={(event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          openPicker();
+        }}
+        className="flex min-h-[356px] cursor-pointer flex-col items-center justify-center rounded-[11px] border-2 border-dashed border-blue-600 bg-slate-50/20 px-6 py-12 text-center transition hover:bg-blue-50/30"
+      >
+        <Upload className="mb-4 h-[50px] w-[50px] text-blue-600" strokeWidth={1.6} aria-hidden="true" />
+        <h2 className="max-w-[320px] text-[18px] font-semibold leading-tight text-slate-950">
+          {conversion.file ? conversion.file.name : 'Drop your Excel or CSV here'}
+        </h2>
+        <p className="mt-2 text-[13.5px] text-slate-500">.xlsx, .xls, .csv - up to 20 MB</p>
+        <div className="my-[18px] text-[12.5px] text-slate-400">or</div>
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            openPicker();
+          }}
+          disabled={conversion.isLoading}
+          className="min-h-11 rounded-[10px] bg-blue-600 px-7 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Browse files
+        </button>
+        <div className="mt-[22px] flex flex-wrap justify-center gap-x-[18px] gap-y-2 text-xs font-medium text-slate-500">
+          {['No storage', 'No LLM in the data path', 'EU-hosted'].map((item) => (
+            <span key={item} className="inline-flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-600" aria-hidden="true" />
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+      <input
+        ref={inputRef}
+        id="fitforpdf-file-input"
+        data-testid="generate-file-input"
+        type="file"
+        accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        className="hidden"
+        disabled={conversion.isLoading}
+        onChange={(event) => selectFile(event.target.files?.[0])}
+      />
+    </div>
+  );
+}
+
+function WorkbenchSampleCard({ conversion }) {
+  return (
+    <aside className="flex min-h-[356px] flex-col rounded-[12px] border border-slate-200 bg-white p-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+      <h2 className="text-[13px] font-semibold text-slate-950">New here?</h2>
+      <p className="mb-3 mt-1 text-xs leading-5 text-slate-500">See a render before uploading your own file.</p>
+      <div className="flex-1 rounded-lg border border-slate-200 bg-slate-50 p-3 font-mono text-[11px] leading-[1.8] text-slate-600">
+        <span className="text-slate-400">id,name,region,plan,mrr...</span>
+        <br />
+        1,Northwind,EU,Pro,840
+        <br />
+        2,Acme,US,Team,1240
+        <br />
+        3,Globex,EU,Pro,520
+        <br />
+        4,Initech,APAC,Free,0
+      </div>
+      <button
+        type="button"
+        onClick={conversion.handleTrySample}
+        disabled={conversion.isLoading}
+        className="mt-3 inline-flex min-h-10 items-center gap-1.5 self-start text-[12.5px] font-semibold text-blue-600 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        See an example
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </button>
+    </aside>
+  );
+}
+
+function WorkbenchModeSwitch({ hasPreview }) {
+  return (
+    <div className="mt-4 flex justify-center">
+      <div className="inline-flex rounded-full bg-slate-950 p-1.5 shadow-[0_14px_30px_rgba(15,23,42,0.22)]">
+        <button
+          type="button"
+          aria-pressed={!hasPreview}
+          className={[
+            'min-h-11 rounded-full px-6 text-[13px] font-bold transition',
+            !hasPreview ? 'bg-blue-600 text-white' : 'text-slate-400',
+          ].join(' ')}
+        >
+          First screen (before upload)
+        </button>
+        <button
+          type="button"
+          aria-pressed={hasPreview}
+          className={[
+            'min-h-11 rounded-full px-6 text-[13px] font-bold transition',
+            hasPreview ? 'bg-blue-600 text-white' : 'text-slate-400',
+          ].join(' ')}
+        >
+          After render
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function WorkbenchEmptyCanvas({ conversion }) {
+  return (
+    <>
+      <div className="mb-[22px] max-w-[600px]">
+        <h1 className="text-[25px] font-bold tracking-tight text-slate-950">
+          Turn a messy export into a <span className="font-serif italic font-normal">readable</span> PDF
+        </h1>
+        <p className="mt-[7px] max-w-[62ch] text-[14.5px] leading-[1.5] text-slate-500">
+          Drop a wide Excel or CSV. We split wide tables into sections, repeat the anchor columns,
+          and build a clean table of contents - no cut-off columns.
+        </p>
+      </div>
+      <div className="grid gap-[18px] xl:grid-cols-[minmax(0,1fr)_250px]">
+        <WorkbenchDropzone conversion={conversion} />
+        <WorkbenchSampleCard conversion={conversion} />
+      </div>
+      <WorkbenchModeSwitch hasPreview={Boolean(conversion.pdfBlob)} />
+    </>
+  );
+}
+
+function WorkbenchRenderedCanvas({ conversion }) {
+  return (
+    <>
+      <div className="mb-[18px] flex max-w-[620px] items-center gap-3 rounded-[10px] border border-slate-200 bg-white px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+        <FileText className="h-5 w-5 text-slate-400" aria-hidden="true" />
+        <div className="min-w-0">
+          <p className="truncate text-[13.5px] font-semibold text-slate-950">
+            {conversion.file?.name || conversion.resolvedPdfFilename}
+          </p>
+          <p className="text-xs text-slate-500">Preview ready. Adjust output, then update preview.</p>
+        </div>
+        <button
+          type="button"
+          onClick={conversion.handleRenderAnother}
+          className="ml-auto shrink-0 text-[12.5px] font-semibold text-blue-600"
+        >
+          Change file
+        </button>
+      </div>
+      <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-slate-500">
+        <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+        Preview
+        <span className="ml-1 inline-flex items-center gap-1 text-[13.5px] normal-case tracking-normal text-green-700">
+          <span className="h-1.5 w-1.5 rounded-full bg-green-600" aria-hidden="true" />
+          Ready
+        </span>
+      </div>
+      <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
+      <WorkbenchModeSwitch hasPreview />
+    </>
+  );
+}
+
 function PdfPreviewPane({ pdfBlob, filename }) {
   const [previewUrl, setPreviewUrl] = React.useState(null);
 
@@ -499,22 +689,11 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
             data-testid="app-canvas"
             className="min-w-0 overflow-y-auto px-4 py-6 sm:px-8 sm:py-[30px] lg:h-[calc(100vh-57px)]"
           >
-            <div className="mb-6 max-w-[640px]">
-              <div className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-slate-500">
-                <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-                Configure - generate - view
-              </div>
-              <h1 className="text-[25px] font-bold tracking-tight text-slate-950">
-                Turn a messy export into a <span className="font-serif italic font-normal">readable</span> PDF
-              </h1>
-              <p className="mt-2 max-w-[62ch] text-[14.5px] leading-6 text-slate-500">
-                Drop a wide Excel or CSV. Wide tables get split into sections,
-                anchor columns repeat, and you get a clean table of contents.
-              </p>
-            </div>
-
-            {uploadSurface}
-            <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
+            {conversion.pdfBlob ? (
+              <WorkbenchRenderedCanvas conversion={conversion} />
+            ) : (
+              <WorkbenchEmptyCanvas conversion={conversion} />
+            )}
             <div className="mt-6 flex items-center gap-2 text-[12.5px] text-slate-500">
               <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
               Need this every week? <a href="/developers" className="font-semibold text-blue-600">Automate it with the API</a>

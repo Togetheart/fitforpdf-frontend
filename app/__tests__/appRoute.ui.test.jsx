@@ -55,6 +55,18 @@ describe('/app tool-first workbench shell', () => {
     expect(screen.getByTestId('app-avatar').textContent).toBe('SN');
   });
 
+  test('matches the finalized empty center canvas', () => {
+    render(<AppPage />);
+    const canvas = screen.getByTestId('app-canvas');
+    expect(within(canvas).getByRole('heading', { name: /Turn a messy export into a readable PDF/i })).toBeTruthy();
+    expect(within(canvas).getByText(/no cut-off columns/i)).toBeTruthy();
+    expect(within(canvas).getByText('Drop your Excel or CSV here')).toBeTruthy();
+    expect(within(canvas).getByText('New here?')).toBeTruthy();
+    expect(within(canvas).getByText(/id,name,region,plan,mrr/i)).toBeTruthy();
+    expect(within(canvas).getByRole('button', { name: /First screen/i }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(canvas).getByRole('button', { name: /After render/i }).getAttribute('aria-pressed')).toBe('false');
+  });
+
   test('shows finalized inspector sections with live/soon statuses and bottom actions', () => {
     render(<AppPage />);
     const inspector = screen.getByTestId('app-inspector');
