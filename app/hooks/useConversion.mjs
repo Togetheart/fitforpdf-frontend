@@ -269,6 +269,9 @@ export default function useConversion({ quota }) {
   // which forwards it to the engine (options.reportTitle). Empty => engine
   // falls back to the filename-derived title.
   const [reportTitle, setReportTitle] = useState('');
+  // Kunj control: column grouping mode (pre-render). off | auto | force.
+  // Default 'auto' = current effective behavior (proxy historically forced auto).
+  const [columnMap, setColumnMap] = useState('auto');
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -368,7 +371,7 @@ export default function useConversion({ quota }) {
         formData.append('reportTitle', reportTitle.trim().slice(0, 200));
       }
 
-      const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText }), {
+      const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText, columnMap }), {
         method: 'POST',
         body: formData,
         headers: {
@@ -830,6 +833,8 @@ export default function useConversion({ quota }) {
     handleLayoutChange,
     reportTitle,
     setReportTitle,
+    columnMap,
+    setColumnMap,
     // conversion
     isLoading,
     error,

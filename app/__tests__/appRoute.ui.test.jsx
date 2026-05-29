@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import React from 'react';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 
 import AppPage from '../app/page.jsx';
 
@@ -55,5 +55,16 @@ describe('/app tool-first workbench shell', () => {
     expect(input).toBeTruthy();
     fireEvent.change(input, { target: { value: 'Acme Q4' } });
     expect(input.value).toBe('Acme Q4');
+  });
+
+  test('exposes a pre-render column-grouping toggle (auto default, selectable)', () => {
+    render(<AppPage />);
+    const group = screen.getByTestId('app-columnmap');
+    const auto = within(group).getByRole('button', { name: 'Auto' });
+    expect(auto.getAttribute('aria-pressed')).toBe('true');
+    const off = within(group).getByRole('button', { name: 'Off' });
+    fireEvent.click(off);
+    expect(off.getAttribute('aria-pressed')).toBe('true');
+    expect(auto.getAttribute('aria-pressed')).toBe('false');
   });
 });

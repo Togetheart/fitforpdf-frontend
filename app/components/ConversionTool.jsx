@@ -54,6 +54,35 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
             className="mt-2 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] outline-none focus:border-[var(--color-cta-bg)]"
           />
           <p className="mt-2 text-xs text-muted">Appears as the title of your PDF. Leave blank to use the file name.</p>
+
+          <div className="mt-4">
+            <span className="block text-xs font-semibold uppercase tracking-[0.06em] text-muted">Column grouping</span>
+            <div data-testid="app-columnmap" className="mt-2 inline-flex overflow-hidden rounded-lg border border-[var(--color-border)]">
+              {[
+                { v: 'auto', label: 'Auto' },
+                { v: 'force', label: 'Always split' },
+                { v: 'off', label: 'Off' },
+              ].map((opt, i) => {
+                const active = conversion.columnMap === opt.v;
+                return (
+                  <button
+                    key={opt.v}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => conversion.setColumnMap(opt.v)}
+                    className={[
+                      'px-3 py-1.5 text-xs font-medium transition',
+                      i > 0 ? 'border-l border-[var(--color-border)]' : '',
+                      active ? 'bg-[var(--color-cta-bg)] text-white' : 'bg-[var(--color-bg)] text-muted hover:text-[var(--color-text)]',
+                    ].join(' ')}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-xs text-muted">How wide tables are split across pages. Auto decides for you.</p>
+          </div>
         </div>
       ) : null}
     <UploadCard

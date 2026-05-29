@@ -366,6 +366,29 @@ test('POST /api/render does not rewrite content-disposition for non-PDF upstream
   restoreEnv();
 });
 
+test('POST /api/render forwards a user-chosen columnMap and rejects invalid values', async () => {
+  for (const [requested, expected] of [['force', 'force'], ['off', 'off'], ['bogus', 'auto']]) {
+    const restoreEnv = setupEnv({
+      CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+      NEATEXPORT_API_KEY: 'backend-key',
+    });
+    const fetchMock = withMockFetch(() => new Response(JSON.stringify({ error: 'bad' }), {
+      status: 400,
+      headers: { 'content-type': 'application/json' },
+    }));
+    const req = new Request(`https://www.fitforpdf.com/api/render?columnMap=${requested}`, {
+      method: 'POST',
+      body: makeRequestBody('customers-100.xlsx'),
+      headers: { 'X-FitForPDF-Source-Filename': 'customers-100.xlsx' },
+    });
+    await POST(req);
+    const called = new URL(fetchMock.calls[0].url);
+    assert.equal(called.searchParams.get('columnMap'), expected, `columnMap ${requested} -> ${expected}`);
+    fetchMock.restore();
+    restoreEnv();
+  }
+});
+
 test('POST /api/render forwards anon_id cookie to upstream', async () => {
   const restoreEnv = setupEnv({
     CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
