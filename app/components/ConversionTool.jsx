@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { ArrowLeft, ArrowRight, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
 import UploadCard from './UploadCard';
+import { PAYG_PACKS } from '../siteCopy.mjs';
 
 /*
  * ConversionTool - the reusable conversion surface.
@@ -18,6 +19,8 @@ import UploadCard from './UploadCard';
  * wiring because it shares conversion state with the lead modal + hero CTAs;
  * migrating it onto this component is a separate, tested follow-up (T-task).
  */
+
+const WORKBENCH_CREDIT_PACKS = PAYG_PACKS.filter((pack) => pack.id !== 'single').slice(0, 2);
 
 function StatusBadge({ tone, children }) {
   return (
@@ -388,9 +391,46 @@ function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant 
   );
 }
 
-function WorkbenchDropzone({ conversion }) {
+function WorkbenchQuotaPaywall({ conversion }) {
+  return (
+    <div
+      role="alert"
+      data-testid="workbench-quota-paywall"
+      className="mt-5 w-full max-w-[560px] rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-left"
+    >
+      <div className="flex gap-2">
+        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
+        <div className="min-w-0">
+          <p className="text-[13px] font-bold text-amber-950">You've used your free exports.</p>
+          <p className="mt-1 text-[12.5px] leading-5 text-amber-900/80">
+            Buy credits to generate this PDF. Your selected file stays ready.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {WORKBENCH_CREDIT_PACKS.map((pack) => (
+              <button
+                key={pack.stripePackId}
+                type="button"
+                disabled={conversion.isLoading}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  conversion.handleBuyCreditsPack(pack.stripePackId);
+                }}
+                className="min-h-10 rounded-lg bg-slate-950 px-3 text-[12.5px] font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {pack.actionLabel}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WorkbenchDropzone({ conversion, quota }) {
   const inputRef = React.useRef(null);
   const hasFile = Boolean(conversion.file);
+  const isQuotaLocked = Boolean(quota?.isQuotaLocked);
 
   const selectFile = (nextFile) => {
     if (!nextFile || conversion.isLoading) return;
@@ -436,30 +476,34 @@ function WorkbenchDropzone({ conversion }) {
         <p className="mt-2 text-[13.5px] text-slate-500">.xlsx, .xls, .csv - up to 20 MB</p>
         <div className="my-[18px] text-[12.5px] text-slate-400">{hasFile ? 'ready' : 'or'}</div>
         {hasFile ? (
-          <div className="flex flex-wrap justify-center gap-2">
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                void conversion.handleSubmit({ preventDefault: () => {} });
-              }}
-              disabled={conversion.isLoading}
-              className="min-h-11 rounded-[10px] bg-blue-600 px-7 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {conversion.isLoading ? 'Generating...' : 'Generate PDF'}
-            </button>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                openPicker();
-              }}
-              disabled={conversion.isLoading}
-              className="min-h-11 rounded-[10px] border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Change file
-            </button>
-          </div>
+          <>
+            <div className="flex flex-wrap justify-center gap-2">
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  if (isQuotaLocked) return;
+                  void conversion.handleSubmit({ preventDefault: () => {} });
+                }}
+                disabled={conversion.isLoading || isQuotaLocked}
+                className="min-h-11 rounded-[10px] bg-blue-600 px-7 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {conversion.isLoading ? 'Generating...' : 'Generate PDF'}
+              </button>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openPicker();
+                }}
+                disabled={conversion.isLoading}
+                className="min-h-11 rounded-[10px] border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Change file
+              </button>
+            </div>
+            {isQuotaLocked ? <WorkbenchQuotaPaywall conversion={conversion} /> : null}
+          </>
         ) : (
           <button
             type="button"
@@ -554,7 +598,7 @@ function WorkbenchModeSwitch({ hasPreview }) {
   );
 }
 
-function WorkbenchEmptyCanvas({ conversion }) {
+function WorkbenchEmptyCanvas({ conversion, quota }) {
   return (
     <>
       <div className="mb-[22px] max-w-[600px]">
@@ -567,7 +611,7 @@ function WorkbenchEmptyCanvas({ conversion }) {
         </p>
       </div>
       <div className="grid gap-[18px] xl:grid-cols-[minmax(0,1fr)_250px]">
-        <WorkbenchDropzone conversion={conversion} />
+        <WorkbenchDropzone conversion={conversion} quota={quota} />
         <WorkbenchSampleCard conversion={conversion} />
       </div>
       <WorkbenchModeSwitch hasPreview={Boolean(conversion.pdfBlob)} />
@@ -742,7 +786,7 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
             {conversion.pdfBlob ? (
               <WorkbenchRenderedCanvas conversion={conversion} />
             ) : (
-              <WorkbenchEmptyCanvas conversion={conversion} />
+              <WorkbenchEmptyCanvas conversion={conversion} quota={quota} />
             )}
             <div className="mt-6 flex items-center gap-2 text-[12.5px] text-slate-500">
               <Code2 className="h-3.5 w-3.5" aria-hidden="true" />

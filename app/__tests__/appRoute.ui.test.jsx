@@ -189,6 +189,35 @@ describe('/app tool-first workbench shell', () => {
     fetchMock.restore();
   });
 
+  test('shows the quota paywall in the workbench instead of silently blocking generation', async () => {
+    const fetchMock = mockFetch(({ url }) => {
+      if (url.includes('/api/quota')) {
+        return new Response(JSON.stringify({ plan_type: 'free', free_exports_left: 0 }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      if (url.includes('/api/render')) return createPdfResponse();
+      return new Response('', { status: 404 });
+    });
+
+    render(<AppPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('app-quota').textContent).toMatch(/Free - 0 left/i);
+    });
+
+    fireEvent.change(screen.getByTestId('generate-file-input'), {
+      target: { files: [new File(['sku,name\n1,Widget'], 'products-100.csv', { type: 'text/csv' })] },
+    });
+
+    const canvas = screen.getByTestId('app-canvas');
+    expect(within(canvas).getByTestId('workbench-quota-paywall')).toBeTruthy();
+    expect(within(canvas).getByRole('button', { name: /Get 10 exports/i })).toBeTruthy();
+    expect(fetchMock.calls.some((call) => call.url.includes('/api/render'))).toBe(false);
+
+    fetchMock.restore();
+  });
+
   test('surfaces the API path as a secondary route, not a primary CTA', () => {
     render(<AppPage />);
     const apiLinks = screen.getAllByRole('link', { name: /API/i });
