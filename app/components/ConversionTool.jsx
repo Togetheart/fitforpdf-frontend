@@ -58,26 +58,32 @@ function ConversionInspector({ conversion, quota, className = '' }) {
       aria-label="Conversion settings"
       data-testid="app-inspector"
       className={[
-        'flex min-h-[620px] flex-col border-l border-slate-200 bg-white px-[18px] py-[22px] lg:h-[calc(100vh-57px)] lg:overflow-y-auto',
+        'order-2 flex min-h-[620px] flex-col overflow-visible border-t border-slate-200 bg-white px-[18px] pt-[22px] lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-hidden lg:border-l lg:border-t-0',
         className,
       ].filter(Boolean).join(' ')}
     >
-      <h2 className="text-[15px] font-bold text-slate-950">Adjust output</h2>
-      <p className="mb-5 mt-1 text-xs leading-5 text-slate-500">
-        {conversion.pdfBlob
-          ? 'Change anything, then update the preview. Re-render costs one export.'
-          : 'Fine-tune the PDF before you download it.'}
-      </p>
+      <div className="shrink-0 bg-white pb-4">
+        <h2 className="text-[15px] font-bold text-slate-950">Adjust output</h2>
+        <p className="mt-1 text-xs leading-5 text-slate-500">
+          {conversion.pdfBlob
+            ? 'Change anything, then update the preview. Re-render costs one export.'
+            : 'Fine-tune the PDF before you download it.'}
+        </p>
+      </div>
 
-      {!conversion.pdfBlob ? (
-        <div className="mb-5 rounded-[10px] border border-dashed border-slate-200 bg-slate-50 p-3 text-center text-[12.5px] leading-5 text-slate-400">
-          Unlocks after your first render.
-          <br />
-          Rename sections, regroup columns, add branding.
-        </div>
-      ) : null}
+      <div
+        data-testid="app-inspector-options"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1"
+      >
+        {!conversion.pdfBlob ? (
+          <div className="mb-5 rounded-[10px] border border-dashed border-slate-200 bg-slate-50 p-3 text-center text-[12.5px] leading-5 text-slate-400">
+            Unlocks after your first render.
+            <br />
+            Rename sections, regroup columns, add branding.
+          </div>
+        ) : null}
 
-      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 pb-4">
         <InspectorSection title="Report title" status="live">
           <input
             id="app-report-title"
@@ -199,8 +205,12 @@ function ConversionInspector({ conversion, quota, className = '' }) {
           />
         </InspectorSection>
       </div>
+      </div>
 
-      <div className="mt-auto pt-5">
+      <div
+        data-testid="app-inspector-actions"
+        className="sticky bottom-0 z-10 -mx-[18px] mt-auto shrink-0 border-t border-slate-200 bg-white px-[18px] pb-[18px] pt-4 shadow-[0_-12px_28px_rgba(15,23,42,0.08)]"
+      >
         <button
           type="button"
           onClick={() => conversion.handleSubmit()}
@@ -243,7 +253,7 @@ function WorkbenchRail({ conversion }) {
     <aside
       aria-label="Recent exports and sections"
       data-testid="app-left-rail"
-      className="flex flex-col overflow-hidden bg-slate-950 px-3.5 py-[18px] text-white lg:h-[calc(100vh-57px)]"
+      className="order-3 hidden flex-col overflow-hidden bg-slate-950 px-3.5 py-[18px] text-white lg:order-none lg:flex lg:h-[calc(100vh-57px)]"
     >
       <div className="flex items-center gap-2">
         <FolderOpen className="h-4 w-4 text-slate-400" aria-hidden="true" />
@@ -720,14 +730,14 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
         <AppToolbar conversion={conversion} quota={quota} />
         <div
           data-testid="tool"
-          className="grid h-[calc(100vh-57px)] grid-cols-1 overflow-y-auto lg:grid-cols-[264px_minmax(0,1fr)_320px] lg:overflow-hidden"
+          className="grid min-h-[calc(100vh-57px)] grid-cols-1 overflow-visible lg:h-[calc(100vh-57px)] lg:grid-cols-[264px_minmax(0,1fr)_320px] lg:overflow-hidden"
         >
           <WorkbenchRail conversion={conversion} />
 
           <section
             aria-label="Upload and PDF workspace"
             data-testid="app-canvas"
-            className="min-w-0 overflow-y-auto px-4 py-6 sm:px-8 sm:py-[30px] lg:h-[calc(100vh-57px)]"
+            className="order-1 min-w-0 px-4 py-6 sm:px-8 sm:py-[30px] lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-y-auto"
           >
             {conversion.pdfBlob ? (
               <WorkbenchRenderedCanvas conversion={conversion} />

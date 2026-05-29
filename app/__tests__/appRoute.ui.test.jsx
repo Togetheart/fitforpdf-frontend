@@ -106,6 +106,35 @@ describe('/app tool-first workbench shell', () => {
     expect(within(inspector).getByRole('button', { name: /Render another file/i })).toBeTruthy();
   });
 
+  test('keeps inspector actions permanent below a scrollable options area', () => {
+    render(<AppPage />);
+    const inspector = screen.getByTestId('app-inspector');
+    const options = screen.getByTestId('app-inspector-options');
+    const actions = screen.getByTestId('app-inspector-actions');
+    expect(inspector.contains(options)).toBe(true);
+    expect(inspector.contains(actions)).toBe(true);
+    expect(options.compareDocumentPosition(actions) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(options.className).toMatch(/overflow-y-auto/);
+    expect(actions.className).toMatch(/sticky/);
+    expect(actions.className).toMatch(/bottom-0/);
+    expect(within(actions).getByRole('button', { name: /Download PDF/i })).toBeTruthy();
+  });
+
+  test('uses mobile-first workbench ordering: canvas before inspector and rail hidden until desktop', () => {
+    render(<AppPage />);
+    expect(screen.getByTestId('app-workbench').className).toMatch(/min-h-screen/);
+    expect(screen.getByTestId('app-workbench').className).toMatch(/lg:h-screen/);
+    expect(screen.getByTestId('tool').className).toMatch(/min-h-\[calc\(100vh-57px\)\]/);
+    expect(screen.getByTestId('tool').className).toMatch(/lg:h-\[calc\(100vh-57px\)\]/);
+    expect(screen.getByTestId('app-canvas').className).toMatch(/order-1/);
+    expect(screen.getByTestId('app-canvas').className).toMatch(/lg:overflow-y-auto/);
+    expect(screen.getByTestId('app-inspector').className).toMatch(/order-2/);
+    expect(screen.getByTestId('app-inspector').className).toMatch(/overflow-visible/);
+    expect(screen.getByTestId('app-inspector').className).toMatch(/lg:overflow-hidden/);
+    expect(screen.getByTestId('app-left-rail').className).toMatch(/hidden/);
+    expect(screen.getByTestId('app-left-rail').className).toMatch(/lg:flex/);
+  });
+
   test('renders from the finalized center canvas after file selection', async () => {
     const fetchMock = mockFetch(({ url }) => {
       if (url.includes('/api/quota')) {

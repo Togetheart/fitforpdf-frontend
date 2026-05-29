@@ -24,7 +24,7 @@ export default function AppPage() {
     <main
       aria-label="fitforpdf conversion workbench"
       data-testid="app-workbench"
-      className="h-screen overflow-hidden bg-[#F7F4F0] text-[#0F172A]"
+      className="min-h-screen overflow-x-hidden bg-[#F7F4F0] text-[#0F172A] lg:h-screen lg:overflow-hidden"
     >
       <ConversionTool layout="workbench" toolTitle="Upload your spreadsheet" variant="light" showInspector />
     </main>
