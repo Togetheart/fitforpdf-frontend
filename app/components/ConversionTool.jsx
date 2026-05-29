@@ -164,7 +164,11 @@ function ConversionInspector({ conversion, quota, className = '' }) {
           )}
         </InspectorSection>
 
-        <InspectorSection title="Branding" status="soon" hint="Accent color, logo and footer for external deliverables - coming soon.">
+        <InspectorSection title="Branding" status="live" hint="Footer text is live for paid exports. Accent color and logo are next.">
+          <div className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
+            <span>Accent color</span>
+            <StatusBadge tone="soon">Soon</StatusBadge>
+          </div>
           <div className="mb-3 flex gap-2 opacity-55">
             {['bg-blue-600', 'bg-slate-950', 'bg-emerald-600', 'bg-red-600'].map((swatch, index) => (
               <span
@@ -177,15 +181,21 @@ function ConversionInspector({ conversion, quota, className = '' }) {
               />
             ))}
           </div>
+          <div className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
+            <span>Logo</span>
+            <StatusBadge tone="soon">Soon</StatusBadge>
+          </div>
           <div className="mb-2 rounded-lg border border-dashed border-slate-300 p-3 text-center text-[11.5px] text-slate-500 opacity-55">
             Upload logo
           </div>
           <input
             type="text"
-            value="Confidential - internal use"
-            disabled
-            readOnly
-            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12.5px] text-slate-500 opacity-55"
+            aria-label="Footer text"
+            value={conversion.footerText}
+            maxLength={120}
+            onChange={(event) => conversion.setFooterText(event.target.value)}
+            placeholder="Confidential - internal use"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600"
           />
         </InspectorSection>
       </div>
@@ -370,6 +380,7 @@ function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant 
 
 function WorkbenchDropzone({ conversion }) {
   const inputRef = React.useRef(null);
+  const hasFile = Boolean(conversion.file);
 
   const selectFile = (nextFile) => {
     if (!nextFile || conversion.isLoading) return;
@@ -393,7 +404,9 @@ function WorkbenchDropzone({ conversion }) {
         role="button"
         tabIndex={conversion.isLoading ? -1 : 0}
         aria-label="Upload CSV or XLSX file"
-        onClick={openPicker}
+        onClick={() => {
+          if (!hasFile) openPicker();
+        }}
         onDrop={handleDrop}
         onDragOver={(event) => {
           event.preventDefault();
@@ -411,18 +424,45 @@ function WorkbenchDropzone({ conversion }) {
           {conversion.file ? conversion.file.name : 'Drop your Excel or CSV here'}
         </h2>
         <p className="mt-2 text-[13.5px] text-slate-500">.xlsx, .xls, .csv - up to 20 MB</p>
-        <div className="my-[18px] text-[12.5px] text-slate-400">or</div>
-        <button
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            openPicker();
-          }}
-          disabled={conversion.isLoading}
-          className="min-h-11 rounded-[10px] bg-blue-600 px-7 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Browse files
-        </button>
+        <div className="my-[18px] text-[12.5px] text-slate-400">{hasFile ? 'ready' : 'or'}</div>
+        {hasFile ? (
+          <div className="flex flex-wrap justify-center gap-2">
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                void conversion.handleSubmit({ preventDefault: () => {} });
+              }}
+              disabled={conversion.isLoading}
+              className="min-h-11 rounded-[10px] bg-blue-600 px-7 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {conversion.isLoading ? 'Generating...' : 'Generate PDF'}
+            </button>
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                openPicker();
+              }}
+              disabled={conversion.isLoading}
+              className="min-h-11 rounded-[10px] border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Change file
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              openPicker();
+            }}
+            disabled={conversion.isLoading}
+            className="min-h-11 rounded-[10px] bg-blue-600 px-7 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Browse files
+          </button>
+        )}
         <div className="mt-[22px] flex flex-wrap justify-center gap-x-[18px] gap-y-2 text-xs font-medium text-slate-500">
           {['No storage', 'No LLM in the data path', 'EU-hosted'].map((item) => (
             <span key={item} className="inline-flex items-center gap-1.5">

@@ -307,6 +307,9 @@ export default function useConversion({ quota }) {
   // Kunj control: column grouping mode (pre-render). off | auto | force.
   // Default 'auto' = current effective behavior (proxy historically forced auto).
   const [columnMap, setColumnMap] = useState('auto');
+  // Kunj branding control: custom footer text. Backend accepts this only when
+  // branding entitlement allows it; free exports safely fall back upstream.
+  const [footerText, setFooterText] = useState('');
   // Kunj control: rename sections (post-render). renderedSections come from the
   // X-CleanSheet-Sections response header (label + current title); overrides are
   // keyed by label and sent on the next render to re-title sections.
@@ -410,6 +413,9 @@ export default function useConversion({ quota }) {
       const isDemoRender = targetFile.name === 'enterprise-invoices-demo.csv';
       if (!isDemoRender && typeof reportTitle === 'string' && reportTitle.trim()) {
         formData.append('reportTitle', reportTitle.trim().slice(0, 200));
+      }
+      if (!isDemoRender && typeof footerText === 'string' && footerText.trim()) {
+        formData.append('footerText', footerText.trim().slice(0, 120));
       }
       // Custom section names (Kunj) — keyed by label, only non-empty overrides.
       if (!isDemoRender) {
@@ -893,6 +899,8 @@ export default function useConversion({ quota }) {
     setReportTitle,
     columnMap,
     setColumnMap,
+    footerText,
+    setFooterText,
     renderedSections,
     sectionTitleOverrides,
     setSectionTitleOverrides,
