@@ -32,8 +32,19 @@ describe('/app tool-first workbench shell', () => {
   test('renders the workbench shell with the conversion tool', () => {
     render(<AppPage />);
     expect(screen.getByTestId('app-workbench')).toBeTruthy();
+    expect(screen.getByRole('main', { name: /fitforpdf conversion workbench/i })).toBeTruthy();
     // The existing UploadCard is reused inside the shell (no rebuild).
     expect(screen.getByTestId('tool')).toBeTruthy();
+  });
+
+  test('renders immersive workbench regions instead of a centered page card', () => {
+    render(<AppPage />);
+    expect(screen.getByTestId('app-toolbar')).toBeTruthy();
+    expect(screen.getByTestId('app-left-rail')).toBeTruthy();
+    expect(screen.getByTestId('app-canvas')).toBeTruthy();
+    expect(screen.getByTestId('app-inspector')).toBeTruthy();
+    expect(screen.getByRole('complementary', { name: /recent exports and sections/i })).toBeTruthy();
+    expect(screen.getByRole('complementary', { name: /conversion settings/i })).toBeTruthy();
   });
 
   test('surfaces the API path as a secondary route, not a primary CTA', () => {

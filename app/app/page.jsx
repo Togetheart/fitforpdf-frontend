@@ -18,37 +18,48 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { ArrowLeft, Code2 } from 'lucide-react';
 import ConversionTool from '../components/ConversionTool';
 
 export default function AppPage() {
   return (
-    <div
+    <main
+      aria-label="fitforpdf conversion workbench"
       data-testid="app-workbench"
-      className="mx-auto flex w-full max-w-[860px] flex-col px-4 py-10 sm:py-14"
+      className="min-h-screen bg-[#FAF8F5] text-[#0F172A]"
     >
-      <div className="mb-6 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          Turn a messy export into a readable PDF
-        </h1>
-        <p className="mx-auto mt-2 max-w-[52ch] text-sm text-muted sm:text-base">
-          Drop a wide Excel or CSV. Wide tables get split into sections, anchor
-          columns repeat, and you get a clean table of contents. No cut-off columns.
-        </p>
-      </div>
-
-      <div
-        data-testid="tool"
-        className="apple-grid-card relative mx-auto w-full p-6 sm:p-8"
+      <header
+        data-testid="app-toolbar"
+        className="sticky top-0 z-40 border-b border-slate-200/80 bg-[#FAF8F5]/90 backdrop-blur-xl"
       >
-        <ConversionTool toolTitle="Upload your spreadsheet" variant="light" showInspector />
-      </div>
+        <div className="flex h-14 items-center justify-between gap-3 px-4 sm:px-5">
+          <Link
+            href="/"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-slate-700 transition hover:bg-white/70 hover:text-slate-950"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            fitforpdf.com
+          </Link>
 
-      <p className="mt-5 text-center text-xs text-muted">
-        No storage · No LLM in the data path · EU-hosted ·{' '}
-        <Link href="/developers" className="font-medium text-blue-600 hover:underline">
-          Automate recurring exports with the API →
-        </Link>
-      </p>
-    </div>
+          <div className="hidden items-center gap-2 text-xs text-slate-500 sm:flex">
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 font-medium text-emerald-700">
+              No storage
+            </span>
+            <span>No LLM in the data path</span>
+            <span>EU-hosted</span>
+          </div>
+
+          <Link
+            href="/developers"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-200 bg-white/70 px-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-950"
+          >
+            <Code2 className="h-4 w-4" aria-hidden="true" />
+            API
+          </Link>
+        </div>
+      </header>
+
+      <ConversionTool layout="workbench" toolTitle="Upload your spreadsheet" variant="light" showInspector />
+    </main>
   );
 }
