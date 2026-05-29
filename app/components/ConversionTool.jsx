@@ -83,6 +83,38 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
             </div>
             <p className="mt-2 text-xs text-muted">How wide tables are split across pages. Auto decides for you.</p>
           </div>
+
+          {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
+            <div data-testid="app-section-rename" className="mt-4 border-t border-[var(--color-border)] pt-4">
+              <span className="block text-xs font-semibold uppercase tracking-[0.06em] text-muted">Section names</span>
+              <p className="mt-1 text-xs text-muted">Rename the auto-generated sections, then regenerate.</p>
+              <div className="mt-2 flex flex-col gap-2">
+                {conversion.renderedSections.map((s) => (
+                  <div key={s.label} className="flex items-center gap-2">
+                    <span className="w-5 shrink-0 text-center text-xs font-semibold text-muted">{s.label}</span>
+                    <input
+                      type="text"
+                      defaultValue={conversion.sectionTitleOverrides[s.label] ?? s.title}
+                      maxLength={80}
+                      onChange={(e) =>
+                        conversion.setSectionTitleOverrides((cur) => ({ ...cur, [s.label]: e.target.value }))
+                      }
+                      className="flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-1.5 text-sm text-[var(--color-text)] outline-none focus:border-[var(--color-cta-bg)]"
+                    />
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => conversion.handleSubmit()}
+                disabled={conversion.isLoading}
+                className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[var(--color-cta-bg)] px-3.5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+              >
+                Apply names & regenerate
+                <span className="text-xs font-normal opacity-80">· uses 1 export</span>
+              </button>
+            </div>
+          ) : null}
         </div>
       ) : null}
     <UploadCard

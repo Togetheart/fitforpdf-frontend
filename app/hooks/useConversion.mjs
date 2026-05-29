@@ -251,6 +251,20 @@ async function copyText(text) {
   return copied;
 }
 
+// Parse the X-CleanSheet-Sections response header (JSON [{label,title}]).
+function parseSectionsHeader(raw) {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((s) => s && typeof s.label === 'string' && s.label)
+      .map((s) => ({ label: s.label, title: typeof s.title === 'string' ? s.title : '' }));
+  } catch {
+    return [];
+  }
+}
+
 // ── Hook ──────────────────────────────────────────────────
 
 export default function useConversion({ quota }) {
@@ -293,6 +307,11 @@ export default function useConversion({ quota }) {
   // Kunj control: column grouping mode (pre-render). off | auto | force.
   // Default 'auto' = current effective behavior (proxy historically forced auto).
   const [columnMap, setColumnMap] = useState('auto');
+  // Kunj control: rename sections (post-render). renderedSections come from the
+  // X-CleanSheet-Sections response header (label + current title); overrides are
+  // keyed by label and sent on the next render to re-title sections.
+  const [renderedSections, setRenderedSections] = useState([]);
+  const [sectionTitleOverrides, setSectionTitleOverrides] = useState({});
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -392,6 +411,16 @@ export default function useConversion({ quota }) {
       if (!isDemoRender && typeof reportTitle === 'string' && reportTitle.trim()) {
         formData.append('reportTitle', reportTitle.trim().slice(0, 200));
       }
+      // Custom section names (Kunj) — keyed by label, only non-empty overrides.
+      if (!isDemoRender) {
+        const trimmedOverrides = {};
+        for (const [k, v] of Object.entries(sectionTitleOverrides)) {
+          if (typeof v === 'string' && v.trim()) trimmedOverrides[k] = v.trim();
+        }
+        if (Object.keys(trimmedOverrides).length) {
+          formData.append('sectionTitles', JSON.stringify(trimmedOverrides));
+        }
+      }
 
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText, columnMap }), {
         method: 'POST',
@@ -471,6 +500,7 @@ export default function useConversion({ quota }) {
       if (!isPdfResponse) { setError('PDF response is missing.'); return; }
 
       setPdfBlob(blob);
+      setRenderedSections(parseSectionsHeader(res.headers.get('x-cleansheet-sections')));
       setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
@@ -863,6 +893,9 @@ export default function useConversion({ quota }) {
     setReportTitle,
     columnMap,
     setColumnMap,
+    renderedSections,
+    sectionTitleOverrides,
+    setSectionTitleOverrides,
     // conversion
     isLoading,
     error,

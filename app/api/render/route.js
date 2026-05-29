@@ -200,6 +200,7 @@ function copyPassThroughHeaders(from) {
     'x-cleansheet-verdict',
     'x-cleansheet-reasons',
     'x-cleansheet-debug-metrics',
+    'x-cleansheet-sections',
     'x-cleansheet-branding',
     'x-cleansheet-column-map-mode',
     'x-cleansheet-column-map-rendered',
