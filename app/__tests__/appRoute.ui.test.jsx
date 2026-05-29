@@ -47,10 +47,32 @@ describe('/app tool-first workbench shell', () => {
     expect(screen.getByRole('complementary', { name: /conversion settings/i })).toBeTruthy();
   });
 
+  test('matches the finalized app chrome structure', () => {
+    render(<AppPage />);
+    expect(screen.getByText('FitForPDF')).toBeTruthy();
+    expect(screen.getByTestId('app-crumb').textContent).toMatch(/new export/i);
+    expect(screen.getByTestId('app-quota').textContent).toMatch(/free/i);
+    expect(screen.getByTestId('app-avatar').textContent).toBe('SN');
+  });
+
+  test('shows finalized inspector sections with live/soon statuses and bottom actions', () => {
+    render(<AppPage />);
+    const inspector = screen.getByTestId('app-inspector');
+    expect(within(inspector).getByText('Adjust output')).toBeTruthy();
+    expect(within(inspector).getByText('Report title')).toBeTruthy();
+    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(2);
+    expect(within(inspector).getByText('Branding')).toBeTruthy();
+    expect(within(inspector).getAllByText('Soon').length).toBeGreaterThanOrEqual(2);
+    expect(within(inspector).getByRole('button', { name: /Update preview/i })).toBeTruthy();
+    expect(within(inspector).getByRole('button', { name: /Download PDF/i })).toBeTruthy();
+    expect(within(inspector).getByRole('button', { name: /Render another file/i })).toBeTruthy();
+  });
+
   test('surfaces the API path as a secondary route, not a primary CTA', () => {
     render(<AppPage />);
-    const apiLink = screen.getByRole('link', { name: /API/i });
-    expect(apiLink.getAttribute('href')).toBe('/developers');
+    const apiLinks = screen.getAllByRole('link', { name: /API/i });
+    expect(apiLinks.length).toBeGreaterThanOrEqual(1);
+    expect(apiLinks.every((link) => link.getAttribute('href') === '/developers')).toBe(true);
   });
 
   test('frames itself as a tool, not a landing page (no hero marketing sections)', () => {

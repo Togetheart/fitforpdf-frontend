@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FileText, FolderOpen, Layers3, Settings2 } from 'lucide-react';
+import { ArrowLeft, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw } from 'lucide-react';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
 import UploadCard from './UploadCard';
@@ -19,95 +19,208 @@ import UploadCard from './UploadCard';
  * migrating it onto this component is a separate, tested follow-up (T-task).
  */
 
-function ConversionInspector({ conversion, className = '' }) {
+function StatusBadge({ tone, children }) {
+  return (
+    <span
+      className={[
+        'rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.05em]',
+        tone === 'live' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700',
+      ].join(' ')}
+    >
+      {children}
+    </span>
+  );
+}
+
+function InspectorSection({ title, status, hint, children }) {
+  return (
+    <section className="border-b border-slate-200/70 pb-4">
+      <div className="mb-1 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
+        <span>{title}</span>
+        <StatusBadge tone={status}>{status === 'live' ? 'Live' : 'Soon'}</StatusBadge>
+        <span className="ml-auto text-[10px] text-slate-300">v</span>
+      </div>
+      {hint ? <p className="mb-3 text-[11.5px] leading-5 text-slate-400">{hint}</p> : null}
+      {children}
+    </section>
+  );
+}
+
+function ConversionInspector({ conversion, quota, className = '' }) {
+  const exportsLeft = Number.isFinite(quota.freeExportsLeft)
+    ? quota.freeExportsLeft
+    : Number.isFinite(quota.freeExportsLimit)
+      ? quota.freeExportsLimit
+      : 3;
+
   return (
     <aside
       aria-label="Conversion settings"
       data-testid="app-inspector"
       className={[
-        'rounded-xl border border-slate-200 bg-white/80 p-4 shadow-sm shadow-slate-900/5 backdrop-blur',
+        'flex min-h-[620px] flex-col border-l border-slate-200 bg-white px-[18px] py-[22px] lg:h-[calc(100vh-57px)] lg:overflow-y-auto',
         className,
       ].filter(Boolean).join(' ')}
     >
-      <div className="mb-4 flex items-center gap-2">
-        <Settings2 className="h-4 w-4 text-slate-500" aria-hidden="true" />
-        <h2 className="text-sm font-semibold text-slate-950">Controls</h2>
-      </div>
+      <h2 className="text-[15px] font-bold text-slate-950">Adjust output</h2>
+      <p className="mb-5 mt-1 text-xs leading-5 text-slate-500">
+        {conversion.pdfBlob
+          ? 'Change anything, then update the preview. Re-render costs one export.'
+          : 'Fine-tune the PDF before you download it.'}
+      </p>
 
-      <label htmlFor="app-report-title" className="block text-xs font-semibold uppercase tracking-[0.06em] text-muted">
-        Report title <span className="font-normal normal-case text-[var(--color-muted)]">(optional)</span>
-      </label>
-      <input
-        id="app-report-title"
-        type="text"
-        value={conversion.reportTitle}
-        onChange={(e) => conversion.setReportTitle(e.target.value)}
-        placeholder="e.g. Acme Co. - Q4 2025 export"
-        maxLength={200}
-        className="mt-2 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] outline-none focus:border-[var(--color-cta-bg)]"
-      />
-      <p className="mt-2 text-xs text-muted">Appears as the title of your PDF. Leave blank to use the file name.</p>
-
-      <div className="mt-4">
-        <span className="block text-xs font-semibold uppercase tracking-[0.06em] text-muted">Column grouping</span>
-        <div data-testid="app-columnmap" className="mt-2 inline-flex overflow-hidden rounded-lg border border-[var(--color-border)]">
-          {[
-            { v: 'auto', label: 'Auto' },
-            { v: 'force', label: 'Always split' },
-            { v: 'off', label: 'Off' },
-          ].map((opt, i) => {
-            const active = conversion.columnMap === opt.v;
-            return (
-              <button
-                key={opt.v}
-                type="button"
-                aria-pressed={active}
-                onClick={() => conversion.setColumnMap(opt.v)}
-                className={[
-                  'min-h-10 px-3 py-1.5 text-xs font-medium transition',
-                  i > 0 ? 'border-l border-[var(--color-border)]' : '',
-                  active ? 'bg-[var(--color-cta-bg)] text-white' : 'bg-[var(--color-bg)] text-muted hover:text-[var(--color-text)]',
-                ].join(' ')}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-2 text-xs text-muted">How wide tables are split across pages. Auto decides for you.</p>
-      </div>
-
-      {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
-        <div data-testid="app-section-rename" className="mt-4 border-t border-[var(--color-border)] pt-4">
-          <span className="block text-xs font-semibold uppercase tracking-[0.06em] text-muted">Section names</span>
-          <p className="mt-1 text-xs text-muted">Rename the auto-generated sections, then regenerate.</p>
-          <div className="mt-2 flex flex-col gap-2">
-            {conversion.renderedSections.map((s) => (
-              <div key={s.label} className="flex items-center gap-2">
-                <span className="w-5 shrink-0 text-center text-xs font-semibold text-muted">{s.label}</span>
-                <input
-                  type="text"
-                  defaultValue={conversion.sectionTitleOverrides[s.label] ?? s.title}
-                  maxLength={80}
-                  onChange={(e) =>
-                    conversion.setSectionTitleOverrides((cur) => ({ ...cur, [s.label]: e.target.value }))
-                  }
-                  className="flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-1.5 text-sm text-[var(--color-text)] outline-none focus:border-[var(--color-cta-bg)]"
-                />
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={() => conversion.handleSubmit()}
-            disabled={conversion.isLoading}
-            className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-lg bg-[var(--color-cta-bg)] px-3.5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
-          >
-            Apply names & regenerate
-            <span className="text-xs font-normal opacity-80">· uses 1 export</span>
-          </button>
+      {!conversion.pdfBlob ? (
+        <div className="mb-5 rounded-[10px] border border-dashed border-slate-200 bg-slate-50 p-3 text-center text-[12.5px] leading-5 text-slate-400">
+          Unlocks after your first render.
+          <br />
+          Rename sections, regroup columns, add branding.
         </div>
       ) : null}
+
+      <div className="flex flex-col gap-4">
+        <InspectorSection title="Report title" status="live">
+          <input
+            id="app-report-title"
+            aria-label="Report title"
+            type="text"
+            value={conversion.reportTitle}
+            onChange={(e) => conversion.setReportTitle(e.target.value)}
+            placeholder="e.g. Acme Co. - Q4 2025 export"
+            maxLength={200}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600"
+          />
+        </InspectorSection>
+
+        <InspectorSection title="Column grouping" status="live" hint="How wide tables get split across pages.">
+          <div data-testid="app-columnmap" className="flex overflow-hidden rounded-lg border border-slate-200">
+            {[
+              { v: 'off', label: 'Off' },
+              { v: 'auto', label: 'Auto' },
+              { v: 'force', label: 'Force' },
+            ].map((opt, i) => {
+              const active = conversion.columnMap === opt.v;
+              return (
+                <button
+                  key={opt.v}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => conversion.setColumnMap(opt.v)}
+                  className={[
+                    'min-h-9 flex-1 px-2 py-1.5 text-xs transition',
+                    i > 0 ? 'border-l border-slate-200' : '',
+                    active ? 'bg-blue-50 font-semibold text-blue-600' : 'bg-white text-slate-500 hover:text-slate-950',
+                  ].join(' ')}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <span className="rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white">Group A</span>
+            <span className="rounded-full bg-emerald-600 px-2.5 py-1 text-[11px] font-semibold text-white">Group B</span>
+            <span className="rounded-full bg-amber-600 px-2.5 py-1 text-[11px] font-semibold text-white">Group C</span>
+          </div>
+          <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
+            <span>Custom groups</span>
+            <StatusBadge tone="soon">Soon</StatusBadge>
+          </div>
+          <p className="mt-1 text-[11.5px] leading-5 text-slate-400">Drag columns into your own groups - coming soon.</p>
+        </InspectorSection>
+
+        <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Rename the auto-generated titles, then update preview.' : 'Available after the first render.'}>
+          {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
+            <div data-testid="app-section-rename" className="flex flex-col gap-2">
+              {conversion.renderedSections.map((s) => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <span className="cursor-grab text-sm leading-none text-slate-300">::</span>
+                  <input
+                    type="text"
+                    defaultValue={conversion.sectionTitleOverrides[s.label] ?? s.title}
+                    maxLength={80}
+                    onChange={(e) =>
+                      conversion.setSectionTitleOverrides((cur) => ({ ...cur, [s.label]: e.target.value }))
+                    }
+                    className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-2 opacity-55">
+              {['Customer info', 'Orders'].map((name) => (
+                <div key={name} className="flex items-center gap-2">
+                  <span className="text-sm leading-none text-slate-300">::</span>
+                  <input
+                    type="text"
+                    value={name}
+                    disabled
+                    readOnly
+                    className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </InspectorSection>
+
+        <InspectorSection title="Branding" status="soon" hint="Accent color, logo and footer for external deliverables - coming soon.">
+          <div className="mb-3 flex gap-2 opacity-55">
+            {['bg-blue-600', 'bg-slate-950', 'bg-emerald-600', 'bg-red-600'].map((swatch, index) => (
+              <span
+                key={swatch}
+                className={[
+                  'h-6 w-6 rounded-full border border-slate-200',
+                  swatch,
+                  index === 0 ? 'ring-2 ring-blue-600 ring-offset-2' : '',
+                ].join(' ')}
+              />
+            ))}
+          </div>
+          <div className="mb-2 rounded-lg border border-dashed border-slate-300 p-3 text-center text-[11.5px] text-slate-500 opacity-55">
+            Upload logo
+          </div>
+          <input
+            type="text"
+            value="Confidential - internal use"
+            disabled
+            readOnly
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12.5px] text-slate-500 opacity-55"
+          />
+        </InspectorSection>
+      </div>
+
+      <div className="mt-auto pt-5">
+        <button
+          type="button"
+          onClick={() => conversion.handleSubmit()}
+          disabled={conversion.isLoading || !conversion.file}
+          className="mb-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[10px] border border-blue-600 bg-white px-3 py-2 text-[13.5px] font-bold text-blue-600 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+          Update preview
+          <span className="text-[10px] font-medium text-slate-400">- re-renders on click</span>
+        </button>
+        <button
+          type="button"
+          onClick={conversion.handleDownloadAnyway}
+          disabled={!conversion.pdfBlob || conversion.isLoading}
+          className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[11px] bg-blue-600 px-3 py-3 text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(37,99,235,0.28)] transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Download className="h-4 w-4" aria-hidden="true" />
+          Download PDF
+        </button>
+        <button
+          type="button"
+          onClick={conversion.handleRenderAnother}
+          className="mt-1 min-h-10 w-full rounded-lg bg-transparent px-3 py-2 text-[13px] font-medium text-slate-500 transition hover:text-slate-950"
+        >
+          Render another file
+        </button>
+        <div className="mt-1 text-center text-[11.5px] text-slate-400">
+          Free - {exportsLeft} exports left - <a href="/pricing" className="text-blue-600">View pricing</a>
+        </div>
+      </div>
     </aside>
   );
 }
@@ -120,7 +233,7 @@ function WorkbenchRail({ conversion }) {
     <aside
       aria-label="Recent exports and sections"
       data-testid="app-left-rail"
-      className="rounded-xl border border-slate-200 bg-slate-950 p-4 text-white shadow-sm shadow-slate-900/10 lg:min-h-[calc(100vh-6.5rem)]"
+      className="flex flex-col overflow-hidden bg-slate-950 px-3.5 py-[18px] text-white lg:h-[calc(100vh-57px)]"
     >
       <div className="flex items-center gap-2">
         <FolderOpen className="h-4 w-4 text-slate-400" aria-hidden="true" />
@@ -143,11 +256,20 @@ function WorkbenchRail({ conversion }) {
             </a>
           ))
         ) : (
-          <div className="rounded-lg border border-dashed border-white/15 px-3 py-3 text-xs text-slate-400">
-            No exports yet.
+          <div className="px-3 py-2 text-[12.5px] leading-5 text-slate-500">
+            No exports yet. Drop a spreadsheet to start.
           </div>
         )}
       </div>
+
+      <button
+        type="button"
+        onClick={conversion.handleRenderAnother}
+        className="mt-3 inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/20 px-3 text-[13px] font-medium text-slate-300 transition hover:border-white/30 hover:text-white"
+      >
+        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+        New export
+      </button>
 
       <div className="mt-6 border-t border-white/10 pt-4">
         <div className="flex items-center gap-2">
@@ -169,6 +291,12 @@ function WorkbenchRail({ conversion }) {
           )}
         </div>
       </div>
+      {!conversion.pdfBlob ? (
+        <div className="mt-auto flex items-center gap-2 px-2 pb-1 pt-3 text-[11px] text-slate-600">
+          <span className="h-1.5 w-1.5 rounded-full bg-green-600" />
+          Processed ephemerally - never stored
+        </div>
+      ) : null}
     </aside>
   );
 }
@@ -259,22 +387,12 @@ function PdfPreviewPane({ pdfBlob, filename }) {
   }, [pdfBlob]);
 
   if (!previewUrl) {
-    return (
-      <div
-        data-testid="app-pdf-preview-empty"
-        className="mt-5 flex min-h-[300px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/70 p-6 text-center"
-      >
-        <div>
-          <p className="text-sm font-semibold text-slate-800">PDF preview appears here after render.</p>
-          <p className="mt-1 text-xs text-slate-500">Configure once, generate once, then inspect before downloading.</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   const safeFilename = filename || 'report.pdf';
   return (
-    <div className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-inner">
+    <div className="mt-5 max-w-[620px] overflow-hidden rounded-[9px] border border-slate-200 bg-white shadow-[0_8px_40px_rgba(15,23,42,0.14)]">
       <div className="flex items-center justify-between border-b border-slate-200 bg-white/80 px-4 py-2">
         <p className="truncate text-sm font-semibold text-slate-800">Preview: {safeFilename}</p>
         <span className="text-xs font-medium text-slate-500">PDF</span>
@@ -285,13 +403,54 @@ function PdfPreviewPane({ pdfBlob, filename }) {
         data={previewUrl}
         title={`PDF preview: ${safeFilename}`}
         type="application/pdf"
-        className="h-[520px] w-full bg-white"
+        className="h-[560px] w-full bg-white"
       >
         <div className="p-5 text-sm text-slate-600">
           PDF preview is not available in this browser. Use Download PDF to open it.
         </div>
       </object>
     </div>
+  );
+}
+
+function AppToolbar({ conversion, quota }) {
+  const exportsLeft = Number.isFinite(quota.freeExportsLeft)
+    ? quota.freeExportsLeft
+    : Number.isFinite(quota.freeExportsLimit)
+      ? quota.freeExportsLimit
+      : 3;
+  const crumb = conversion.file?.name || (conversion.pdfBlob ? conversion.resolvedPdfFilename : 'New export');
+
+  return (
+    <header
+      data-testid="app-toolbar"
+      className="flex h-[57px] items-center gap-4 border-b border-slate-200 bg-white px-4 sm:px-[22px]"
+    >
+      <a href="/" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-950">
+        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+        fitforpdf.com
+      </a>
+      <div className="hidden h-5 w-px bg-slate-200 sm:block" aria-hidden="true" />
+      <div className="text-base font-black tracking-tight text-slate-950">FitForPDF</div>
+      <div data-testid="app-crumb" className="min-w-0 truncate text-[13.5px] text-slate-500">
+        <span className="font-serif italic text-[15px] text-slate-950">{crumb}</span>
+      </div>
+      <div className="ml-auto flex items-center gap-3">
+        <a
+          href="/developers"
+          className="hidden min-h-9 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-[13px] font-semibold text-slate-950 transition hover:border-slate-950 hover:bg-slate-50 sm:inline-flex"
+        >
+          <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
+          Use the API
+        </a>
+        <span data-testid="app-quota" className="rounded-full bg-[#F1F0ED] px-3 py-1.5 text-xs font-semibold text-slate-500">
+          Free - {exportsLeft} left
+        </span>
+        <span data-testid="app-avatar" className="flex h-[31px] w-[31px] items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-slate-950 text-xs font-bold text-white">
+          SN
+        </span>
+      </div>
+    </header>
   );
 }
 
@@ -327,45 +486,50 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
 
   if (layout === 'workbench') {
     return (
-      <div
-        data-testid="tool"
-        className="grid min-h-[calc(100vh-3.5rem)] gap-4 px-4 py-4 lg:grid-cols-[260px_minmax(0,1fr)_320px] lg:px-5"
-      >
-        <WorkbenchRail conversion={conversion} />
-
-        <section
-          aria-label="Upload and PDF workspace"
-          data-testid="app-canvas"
-          className="min-w-0 rounded-xl border border-slate-200 bg-white/75 p-4 shadow-sm shadow-slate-900/5 backdrop-blur sm:p-6"
+      <>
+        <AppToolbar conversion={conversion} quota={quota} />
+        <div
+          data-testid="tool"
+          className="grid h-[calc(100vh-57px)] grid-cols-1 overflow-y-auto lg:grid-cols-[264px_minmax(0,1fr)_320px] lg:overflow-hidden"
         >
-          <div className="mb-5 flex flex-col gap-3 border-b border-slate-200 pb-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+          <WorkbenchRail conversion={conversion} />
+
+          <section
+            aria-label="Upload and PDF workspace"
+            data-testid="app-canvas"
+            className="min-w-0 overflow-y-auto px-4 py-6 sm:px-8 sm:py-[30px] lg:h-[calc(100vh-57px)]"
+          >
+            <div className="mb-6 max-w-[640px]">
+              <div className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-slate-500">
                 <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-                Configure - Generate - View
+                Configure - generate - view
               </div>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                Turn a messy export into a readable PDF
+              <h1 className="text-[25px] font-bold tracking-tight text-slate-950">
+                Turn a messy export into a <span className="font-serif italic font-normal">readable</span> PDF
               </h1>
-              <p className="mt-2 max-w-[62ch] text-sm leading-6 text-slate-600">
+              <p className="mt-2 max-w-[62ch] text-[14.5px] leading-6 text-slate-500">
                 Drop a wide Excel or CSV. Wide tables get split into sections,
                 anchor columns repeat, and you get a clean table of contents.
               </p>
             </div>
-          </div>
 
-          {uploadSurface}
-          <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
-        </section>
+            {uploadSurface}
+            <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
+            <div className="mt-6 flex items-center gap-2 text-[12.5px] text-slate-500">
+              <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
+              Need this every week? <a href="/developers" className="font-semibold text-blue-600">Automate it with the API</a>
+            </div>
+          </section>
 
-        <ConversionInspector conversion={conversion} className="lg:sticky lg:top-[4.5rem] lg:self-start" />
-      </div>
+          <ConversionInspector conversion={conversion} quota={quota} />
+        </div>
+      </>
     );
   }
 
   return (
     <>
-      {showInspector ? <ConversionInspector conversion={conversion} className="mb-5" /> : null}
+      {showInspector ? <ConversionInspector conversion={conversion} quota={quota} className="mb-5 min-h-0 rounded-xl border border-slate-200" /> : null}
       {uploadSurface}
     </>
   );
