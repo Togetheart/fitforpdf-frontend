@@ -23,7 +23,10 @@ function pdfResponse() {
       'x-render-id': 'rid_e2e',
       'x-cleansheet-score': '95',
       'x-cleansheet-verdict': 'OK',
-      'x-cleansheet-sections': JSON.stringify([{ label: 'A', title: 'Customer info' }, { label: 'B', title: 'Orders' }]),
+      'x-cleansheet-sections': JSON.stringify([
+        { label: 'A', title: 'Customer info', columns: ['Region', 'Plan'] },
+        { label: 'B', title: 'Orders', columns: ['Email', 'Phone'] },
+      ]),
     },
   });
 }
@@ -125,6 +128,23 @@ describe('/app workbench — end-to-end (real hook, mocked fetch)', () => {
     const entries = bodyEntries(renderCalls[1]);
     expect(entries.sectionTitles).toBeTruthy();
     expect(JSON.parse(entries.sectionTitles).A).toBe('Clients');
+  });
+
+  test('reassigning a column sends a columnGroups override on regenerate', async () => {
+    await selectFileAndGenerate();
+    // The custom-groups control is populated from the sections columns.
+    const groupsBox = await screen.findByTestId('app-custom-groups');
+    const selects = groupsBox.querySelectorAll('select');
+    expect(selects.length).toBe(4); // Region, Plan, Email, Phone
+    // Move "Region" (first column, currently group A) into a new group C.
+    await act(async () => { fireEvent.change(selects[0], { target: { value: 'C' } }); });
+    await clickUpdatePreviewAndExpectRender(2);
+    const entries = bodyEntries(renderCalls[1]);
+    expect(entries.columnGroups).toBeTruthy();
+    const groups = JSON.parse(entries.columnGroups);
+    const groupC = groups.find((g) => g.label === 'C');
+    expect(groupC).toBeTruthy();
+    expect(groupC.columns).toContain('Region');
   });
 
   test('Report title typed before Generate is sent in the render FormData', async () => {

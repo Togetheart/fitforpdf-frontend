@@ -259,7 +259,11 @@ function parseSectionsHeader(raw) {
     if (!Array.isArray(parsed)) return [];
     return parsed
       .filter((s) => s && typeof s.label === 'string' && s.label)
-      .map((s) => ({ label: s.label, title: typeof s.title === 'string' ? s.title : '' }));
+      .map((s) => ({
+        label: s.label,
+        title: typeof s.title === 'string' ? s.title : '',
+        columns: Array.isArray(s.columns) ? s.columns.filter((c) => typeof c === 'string') : [],
+      }));
   } catch {
     return [];
   }
@@ -315,6 +319,9 @@ export default function useConversion({ quota }) {
   // keyed by label and sent on the next render to re-title sections.
   const [renderedSections, setRenderedSections] = useState([]);
   const [sectionTitleOverrides, setSectionTitleOverrides] = useState({});
+  // Custom column groups (Kunj T5): array of { label, columns } sent on the
+  // next render. null => use the engine's automatic grouping.
+  const [columnGroupsOverride, setColumnGroupsOverride] = useState(null);
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -426,6 +433,10 @@ export default function useConversion({ quota }) {
         if (Object.keys(trimmedOverrides).length) {
           formData.append('sectionTitles', JSON.stringify(trimmedOverrides));
         }
+      }
+      // Custom column groups (Kunj T5) — only when the user defined an override.
+      if (!isDemoRender && Array.isArray(columnGroupsOverride) && columnGroupsOverride.length) {
+        formData.append('columnGroups', JSON.stringify(columnGroupsOverride));
       }
 
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText, columnMap }), {
@@ -616,6 +627,10 @@ export default function useConversion({ quota }) {
     if (nextFile) { setError(null); setNotice(null); }
     setPdfBlob(null);
     setCompactSuggestion(null);
+    // A new file invalidates any prior section/group customization.
+    setSectionTitleOverrides({});
+    setColumnGroupsOverride(null);
+    setRenderedSections([]);
   }
 
   async function handleTrySample() {
@@ -907,6 +922,8 @@ export default function useConversion({ quota }) {
     renderedSections,
     sectionTitleOverrides,
     setSectionTitleOverrides,
+    columnGroupsOverride,
+    setColumnGroupsOverride,
     // conversion
     isLoading,
     error,

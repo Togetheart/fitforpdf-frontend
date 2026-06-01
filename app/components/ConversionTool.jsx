@@ -49,6 +49,79 @@ function InspectorSection({ title, status, hint, children }) {
   );
 }
 
+/*
+ * CustomGroupsControl — assign each data column to a group, then re-render.
+ * Columns + their current group come from the render response
+ * (conversion.renderedSections[].columns). Reassigning rebuilds the
+ * columnGroups override sent on the next "Update preview". A "new group"
+ * option (next letter) lets the user split an existing group.
+ */
+function CustomGroupsControl({ conversion }) {
+  const sections = Array.isArray(conversion.renderedSections) ? conversion.renderedSections : [];
+  const allColumns = sections.flatMap((s) => (Array.isArray(s.columns) ? s.columns : []));
+
+  if (allColumns.length === 0) {
+    return (
+      <p className="mt-1 text-[11.5px] leading-5 text-slate-400">
+        Render with grouping (Auto or Always split) to assign columns to your own groups.
+      </p>
+    );
+  }
+
+  // Current assignment: column -> group label (from the override if set, else
+  // from the rendered sections).
+  const assignment = {};
+  if (Array.isArray(conversion.columnGroupsOverride)) {
+    for (const g of conversion.columnGroupsOverride) {
+      for (const c of g.columns || []) assignment[c] = g.label;
+    }
+  } else {
+    for (const s of sections) {
+      for (const c of s.columns || []) assignment[c] = s.label;
+    }
+  }
+  for (const c of allColumns) if (!assignment[c]) assignment[c] = sections[0]?.label || 'A';
+
+  const labels = sections.map((s) => s.label);
+  const nextLabel = String.fromCharCode(65 + labels.length); // allow one new group
+  const options = [...labels, nextLabel];
+
+  function reassign(column, label) {
+    const next = { ...assignment, [column]: label };
+    const byLabel = new Map();
+    for (const c of allColumns) {
+      const l = next[c];
+      if (!byLabel.has(l)) byLabel.set(l, []);
+      byLabel.get(l).push(c);
+    }
+    const groups = [...byLabel.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([label, columns]) => ({ label, columns }));
+    conversion.setColumnGroupsOverride(groups);
+  }
+
+  return (
+    <div data-testid="app-custom-groups" className="mt-2 flex flex-col gap-1.5">
+      <p className="text-[11.5px] leading-5 text-slate-400">Move columns between groups, then update the preview.</p>
+      {allColumns.map((col) => (
+        <div key={col} className="flex items-center gap-2">
+          <span className="min-w-0 flex-1 truncate text-[12.5px] text-slate-700">{col}</span>
+          <select
+            aria-label={`Group for ${col}`}
+            value={assignment[col]}
+            onChange={(e) => reassign(col, e.target.value)}
+            className="min-h-11 rounded-lg border border-slate-200 bg-white px-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-8"
+          >
+            {options.map((l) => (
+              <option key={l} value={l}>Group {l}</option>
+            ))}
+          </select>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function ConversionInspector({ conversion, quota, className = '' }) {
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
@@ -144,9 +217,9 @@ function ConversionInspector({ conversion, quota, className = '' }) {
           ) : null}
           <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
             <span>Custom groups</span>
-            <StatusBadge tone="soon">Soon</StatusBadge>
+            <StatusBadge tone="live">Live</StatusBadge>
           </div>
-          <p className="mt-1 text-[11.5px] leading-5 text-slate-400">Drag columns into your own groups - coming soon.</p>
+          <CustomGroupsControl conversion={conversion} />
         </InspectorSection>
 
         <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Rename the auto-generated titles, then update preview.' : 'Available after the first render.'}>
