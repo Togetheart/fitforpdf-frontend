@@ -41,7 +41,6 @@ function InspectorSection({ title, status, hint, children }) {
       <div className="mb-1 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
         <span>{title}</span>
         <StatusBadge tone={status}>{status === 'live' ? 'Live' : 'Soon'}</StatusBadge>
-        <span className="ml-auto text-[10px] text-slate-300">v</span>
       </div>
       {hint ? <p className="mb-3 text-[11.5px] leading-5 text-slate-400">{hint}</p> : null}
       {children}

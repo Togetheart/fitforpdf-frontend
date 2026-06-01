@@ -674,6 +674,11 @@ export default function useConversion({ quota }) {
     setError(null);
     setNotice(null);
     setCompactSuggestion(null);
+    // Clearing the file invalidates the rendered structure too, so the
+    // inspector's section/group controls don't linger on the old file.
+    setSectionTitleOverrides({});
+    setColumnGroupsOverride(null);
+    setRenderedSections([]);
   }
 
   /* Single-action helper for the post-demo "Try with your file" CTA.
@@ -754,6 +759,11 @@ export default function useConversion({ quota }) {
     setNotice(null);
     setCompactSuggestion(null);
     setShareState({ status: 'idle', jobId: null });
+    // Drop the previous file's rendered structure so the inspector doesn't
+    // show stale section/group controls before the next file is picked.
+    setSectionTitleOverrides({});
+    setColumnGroupsOverride(null);
+    setRenderedSections([]);
     if (typeof document === 'undefined') return;
     setTimeout(() => {
       const input = document.querySelector('[data-testid="generate-file-input"]');

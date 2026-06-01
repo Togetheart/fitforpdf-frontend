@@ -254,4 +254,33 @@ describe('/app tool-first workbench shell', () => {
     expect(off.getAttribute('aria-pressed')).toBe('true');
     expect(auto.getAttribute('aria-pressed')).toBe('false');
   });
+
+  test('column-grouping toggle reaches the render URL (Off → columnMap=off)', async () => {
+    const fetchMock = mockFetch(({ url }) => {
+      if (url.includes('/api/quota')) {
+        return new Response(JSON.stringify({ plan_type: 'free', free_exports_left: 5 }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      if (url.includes('/api/render')) return createPdfResponse();
+      return new Response('', { status: 404 });
+    });
+
+    render(<AppPage />);
+    // Choosing "Off" must actually flow into the request, not just flip aria-pressed.
+    fireEvent.click(within(screen.getByTestId('app-columnmap')).getByRole('button', { name: 'Off' }));
+    fireEvent.change(screen.getByTestId('generate-file-input'), {
+      target: { files: [new File(['a,b\n1,2'], 'customers.csv', { type: 'text/csv' })] },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Generate PDF/i }));
+
+    await waitFor(() => {
+      const renderCall = fetchMock.calls.find((call) => call.url.includes('/api/render'));
+      expect(renderCall).toBeTruthy();
+      expect(renderCall.url).toMatch(/columnMap=off/);
+    });
+
+    fetchMock.restore();
+  });
 });
