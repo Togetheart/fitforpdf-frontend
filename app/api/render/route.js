@@ -201,6 +201,7 @@ function copyPassThroughHeaders(from) {
     'x-cleansheet-reasons',
     'x-cleansheet-debug-metrics',
     'x-cleansheet-sections',
+    'x-cleansheet-frozen-columns',
     'x-cleansheet-branding',
     'x-cleansheet-column-map-mode',
     'x-cleansheet-column-map-rendered',
