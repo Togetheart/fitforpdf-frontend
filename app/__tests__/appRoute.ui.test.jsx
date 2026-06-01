@@ -89,8 +89,10 @@ describe('/app tool-first workbench shell', () => {
     expect(within(canvas).getByText('Drop your Excel or CSV here')).toBeTruthy();
     expect(within(canvas).getByText('New here?')).toBeTruthy();
     expect(within(canvas).getByText(/id,name,region,plan,mrr/i)).toBeTruthy();
-    expect(within(canvas).getByRole('button', { name: /First screen/i }).getAttribute('aria-pressed')).toBe('true');
-    expect(within(canvas).getByRole('button', { name: /After render/i }).getAttribute('aria-pressed')).toBe('false');
+    // The demo-only "First screen / After render" mode switch was removed: it
+    // had no onClick (dead control). State is driven by the render, not a toggle.
+    expect(within(canvas).queryByRole('button', { name: /First screen/i })).toBeNull();
+    expect(within(canvas).queryByRole('button', { name: /After render/i })).toBeNull();
   });
 
   test('shows finalized inspector sections with live/soon statuses and bottom actions', () => {

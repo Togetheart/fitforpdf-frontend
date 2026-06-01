@@ -55,6 +55,8 @@ function ConversionInspector({ conversion, quota, className = '' }) {
     : Number.isFinite(quota.freeExportsLimit)
       ? quota.freeExportsLimit
       : 3;
+  const planLabel = quota.planType === 'pro' ? 'Pro' : quota.planType === 'credits' ? 'Credits' : 'Free';
+  const quotaLocked = Boolean(quota.isQuotaLocked);
 
   return (
     <aside
@@ -115,7 +117,7 @@ function ConversionInspector({ conversion, quota, className = '' }) {
                   aria-pressed={active}
                   onClick={() => conversion.setColumnMap(opt.v)}
                   className={[
-                    'min-h-9 flex-1 px-2 py-1.5 text-xs transition',
+                    'min-h-11 flex-1 px-2 py-1.5 text-xs transition lg:min-h-9',
                     i > 0 ? 'border-l border-slate-200' : '',
                     active ? 'bg-blue-50 font-semibold text-blue-600' : 'bg-white text-slate-500 hover:text-slate-950',
                   ].join(' ')}
@@ -216,14 +218,19 @@ function ConversionInspector({ conversion, quota, className = '' }) {
       >
         <button
           type="button"
-          onClick={() => conversion.handleSubmit()}
-          disabled={conversion.isLoading || !conversion.file}
+          onClick={() => conversion.handleSubmit({ preventDefault: () => {} })}
+          disabled={conversion.isLoading || !conversion.file || quotaLocked}
           className="mb-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[10px] border border-blue-600 bg-white px-3 py-2 text-[13.5px] font-bold text-blue-600 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
           Update preview
           <span className="text-[10px] font-medium text-slate-400">- re-renders on click</span>
         </button>
+        {quotaLocked ? (
+          <p data-testid="app-inspector-quota-lock" className="mb-2 text-center text-[11.5px] text-amber-700">
+            No exports left. <a href="/pricing" className="font-semibold text-blue-600">Buy credits</a> to re-render.
+          </p>
+        ) : null}
         <button
           type="button"
           onClick={conversion.handleDownloadAnyway}
@@ -241,7 +248,7 @@ function ConversionInspector({ conversion, quota, className = '' }) {
           Render another file
         </button>
         <div className="mt-1 text-center text-[11.5px] text-slate-400">
-          Free - {exportsLeft} exports left - <a href="/pricing" className="text-blue-600">View pricing</a>
+          {planLabel} - {exportsLeft} exports left - <a href="/pricing" className="text-blue-600">View pricing</a>
         </div>
       </div>
     </aside>
@@ -569,35 +576,6 @@ function WorkbenchSampleCard({ conversion }) {
   );
 }
 
-function WorkbenchModeSwitch({ hasPreview }) {
-  return (
-    <div className="mt-4 flex justify-center">
-      <div className="inline-flex rounded-full bg-slate-950 p-1.5 shadow-[0_14px_30px_rgba(15,23,42,0.22)]">
-        <button
-          type="button"
-          aria-pressed={!hasPreview}
-          className={[
-            'min-h-11 rounded-full px-6 text-[13px] font-bold transition',
-            !hasPreview ? 'bg-blue-600 text-white' : 'text-slate-400',
-          ].join(' ')}
-        >
-          First screen (before upload)
-        </button>
-        <button
-          type="button"
-          aria-pressed={hasPreview}
-          className={[
-            'min-h-11 rounded-full px-6 text-[13px] font-bold transition',
-            hasPreview ? 'bg-blue-600 text-white' : 'text-slate-400',
-          ].join(' ')}
-        >
-          After render
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function WorkbenchEmptyCanvas({ conversion, quota }) {
   return (
     <>
@@ -614,7 +592,6 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
         <WorkbenchDropzone conversion={conversion} quota={quota} />
         <WorkbenchSampleCard conversion={conversion} />
       </div>
-      <WorkbenchModeSwitch hasPreview={Boolean(conversion.pdfBlob)} />
     </>
   );
 }
@@ -647,7 +624,6 @@ function WorkbenchRenderedCanvas({ conversion }) {
         </span>
       </div>
       <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
-      <WorkbenchModeSwitch hasPreview />
     </>
   );
 }
@@ -681,18 +657,33 @@ function PdfPreviewPane({ pdfBlob, filename }) {
         <p className="truncate text-sm font-semibold text-slate-800">Preview: {safeFilename}</p>
         <span className="text-xs font-medium text-slate-500">PDF</span>
       </div>
+      {/* Inline embed on desktop. Mobile browsers (esp. iOS Safari) render an
+          empty <object> box, so on small screens we show an explicit open/
+          download CTA instead of a blank pane. */}
       <object
         aria-label={`PDF preview: ${safeFilename}`}
         data-testid="app-pdf-preview"
         data={previewUrl}
         title={`PDF preview: ${safeFilename}`}
         type="application/pdf"
-        className="h-[560px] w-full bg-white"
+        className="hidden h-[560px] w-full bg-white lg:block"
       >
         <div className="p-5 text-sm text-slate-600">
           PDF preview is not available in this browser. Use Download PDF to open it.
         </div>
       </object>
+      <div data-testid="app-pdf-preview-mobile" className="flex flex-col items-center gap-3 px-5 py-8 text-center lg:hidden">
+        <p className="text-sm text-slate-600">Your PDF is ready. Open it to review on your device.</p>
+        <a
+          href={previewUrl}
+          download={safeFilename}
+          target="_blank"
+          rel="noopener"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-blue-600 px-5 py-2.5 text-sm font-bold text-white"
+        >
+          Open PDF
+        </a>
+      </div>
     </div>
   );
 }

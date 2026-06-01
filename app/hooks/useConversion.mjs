@@ -580,7 +580,10 @@ export default function useConversion({ quota }) {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    // Callers may invoke this from a form submit (real event), from the
+    // dropzone (stub event), or from the inspector "Update preview" button
+    // (no event). Tolerate all three — a missing/partial event must not throw.
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
     let canExport = true;
     if (isQuotaLocked) {
       canExport = await refreshQuotaAndBlockIfNeeded();
