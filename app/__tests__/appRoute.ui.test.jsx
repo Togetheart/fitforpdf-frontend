@@ -95,14 +95,16 @@ describe('/app tool-first workbench shell', () => {
     expect(within(canvas).queryByRole('button', { name: /After render/i })).toBeNull();
   });
 
-  test('shows finalized inspector sections with live/soon statuses and bottom actions', () => {
+  test('shows finalized inspector sections (all Live) and bottom actions', () => {
     render(<AppPage />);
     const inspector = screen.getByTestId('app-inspector');
     expect(within(inspector).getByText('Adjust output')).toBeTruthy();
     expect(within(inspector).getByText('Report title')).toBeTruthy();
-    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(2);
     expect(within(inspector).getByText('Branding')).toBeTruthy();
-    expect(within(inspector).getAllByText('Soon').length).toBeGreaterThanOrEqual(2);
+    // All Kunj controls (title, grouping, custom groups, section names, branding)
+    // are now Live — no "Soon" placeholders remain.
+    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(4);
+    expect(within(inspector).queryByText('Soon')).toBeNull();
     expect(within(inspector).getByRole('button', { name: /Update preview/i })).toBeTruthy();
     expect(within(inspector).getByRole('button', { name: /Download PDF/i })).toBeTruthy();
     expect(within(inspector).getByRole('button', { name: /Render another file/i })).toBeTruthy();

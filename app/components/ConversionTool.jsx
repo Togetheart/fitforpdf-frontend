@@ -261,31 +261,40 @@ function ConversionInspector({ conversion, quota, className = '' }) {
           )}
         </InspectorSection>
 
-        <InspectorSection title="Branding" status="live" hint="Footer text is live for paid exports. Accent color and logo are next.">
-          <div className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
+        <InspectorSection title="Branding" status="live" hint="Title, accent color, logo & footer for paid exports.">
+          <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
             <span>Accent color</span>
-            <StatusBadge tone="soon">Soon</StatusBadge>
+          </label>
+          <div className="mb-3 flex items-center gap-2">
+            <input
+              id="app-accent-color"
+              type="color"
+              aria-label="Accent color"
+              value={/^#[0-9a-fA-F]{6}$/.test(conversion.accentColor) ? conversion.accentColor : '#2563EB'}
+              onChange={(e) => conversion.setAccentColor(e.target.value)}
+              className="h-9 w-12 cursor-pointer rounded border border-slate-200 bg-white"
+            />
+            <span className="text-[12px] text-slate-500">{conversion.accentColor || 'Default'}</span>
+            {conversion.accentColor ? (
+              <button type="button" onClick={() => conversion.setAccentColor('')} className="ml-auto text-[11.5px] text-blue-600">Reset</button>
+            ) : null}
           </div>
-          <div className="mb-3 flex gap-2 opacity-55">
-            {['bg-blue-600', 'bg-slate-950', 'bg-emerald-600', 'bg-red-600'].map((swatch, index) => (
-              <span
-                key={swatch}
-                className={[
-                  'h-6 w-6 rounded-full border border-slate-200',
-                  swatch,
-                  index === 0 ? 'ring-2 ring-blue-600 ring-offset-2' : '',
-                ].join(' ')}
-              />
-            ))}
+          <div className="mb-2 text-[13px] font-semibold text-slate-950">Logo</div>
+          <div className="mb-3">
+            <input
+              type="file"
+              aria-label="Logo image (PNG or JPG)"
+              accept="image/png,image/jpeg"
+              onChange={(e) => conversion.setLogoFile(e.target.files?.[0] || null)}
+              className="block w-full text-[12px] text-slate-600 file:mr-2 file:min-h-9 file:rounded-lg file:border file:border-slate-200 file:bg-white file:px-3 file:text-[12px] file:font-semibold file:text-slate-700"
+            />
+            <p className="mt-1 text-[11px] text-slate-400">
+              {conversion.logoFile ? `Selected: ${conversion.logoFile.name}` : 'PNG or JPG, up to 256 KB.'}
+            </p>
           </div>
-          <div className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
-            <span>Logo</span>
-            <StatusBadge tone="soon">Soon</StatusBadge>
-          </div>
-          <div className="mb-2 rounded-lg border border-dashed border-slate-300 p-3 text-center text-[11.5px] text-slate-500 opacity-55">
-            Upload logo
-          </div>
+          <label htmlFor="app-footer-text" className="mb-2 block text-[13px] font-semibold text-slate-950">Footer text</label>
           <input
+            id="app-footer-text"
             type="text"
             aria-label="Footer text"
             value={conversion.footerText}
@@ -294,6 +303,7 @@ function ConversionInspector({ conversion, quota, className = '' }) {
             placeholder="Confidential - internal use"
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600"
           />
+          <p className="mt-2 text-[11px] text-slate-400">Branding applies to paid exports.</p>
         </InspectorSection>
       </div>
       </div>

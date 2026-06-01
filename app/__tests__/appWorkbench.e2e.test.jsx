@@ -147,6 +147,24 @@ describe('/app workbench — end-to-end (real hook, mocked fetch)', () => {
     expect(groupC.columns).toContain('Region');
   });
 
+  test('accent color and logo file are sent in the render FormData', async () => {
+    render(<AppPage />);
+    const accent = screen.getByLabelText(/Accent color/i);
+    await act(async () => { fireEvent.change(accent, { target: { value: '#ff0000' } }); });
+    const logoInput = screen.getByLabelText(/Logo image/i);
+    const logo = new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47])], 'brand.png', { type: 'image/png' });
+    await act(async () => { fireEvent.change(logoInput, { target: { files: [logo] } }); });
+    const fileInput = document.querySelector('[data-testid="generate-file-input"]');
+    await act(async () => { fireEvent.change(fileInput, { target: { files: [REAL_FILE] } }); });
+    const generate = await screen.findByRole('button', { name: /Generate PDF/i });
+    await act(async () => { fireEvent.click(generate); });
+    await waitFor(() => expect(renderCalls.length).toBe(1));
+    const entries = bodyEntries(renderCalls[0]);
+    expect(String(entries.accentColor).toLowerCase()).toBe('#ff0000');
+    expect(entries.logo).toBeInstanceOf(File);
+    expect(entries.logo.name).toBe('brand.png');
+  });
+
   test('Report title typed before Generate is sent in the render FormData', async () => {
     render(<AppPage />);
     const titleInput = screen.getByLabelText(/Report title/i);

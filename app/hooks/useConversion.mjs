@@ -314,6 +314,10 @@ export default function useConversion({ quota }) {
   // Kunj branding control: custom footer text. Backend accepts this only when
   // branding entitlement allows it; free exports safely fall back upstream.
   const [footerText, setFooterText] = useState('');
+  // Brand accent color (#RRGGBB) + logo (File). Paid branding — sent on render;
+  // the backend applies them only for entitled (paid) users.
+  const [accentColor, setAccentColor] = useState('');
+  const [logoFile, setLogoFile] = useState(null);
   // Kunj control: rename sections (post-render). renderedSections come from the
   // X-CleanSheet-Sections response header (label + current title); overrides are
   // keyed by label and sent on the next render to re-title sections.
@@ -423,6 +427,13 @@ export default function useConversion({ quota }) {
       }
       if (!isDemoRender && typeof footerText === 'string' && footerText.trim()) {
         formData.append('footerText', footerText.trim().slice(0, 120));
+      }
+      // Brand accent color + logo (paid; backend gates by entitlement).
+      if (!isDemoRender && /^#[0-9a-fA-F]{6}$/.test(String(accentColor))) {
+        formData.append('accentColor', accentColor);
+      }
+      if (!isDemoRender && logoFile) {
+        formData.append('logo', logoFile);
       }
       // Custom section names (Kunj) — keyed by label, only non-empty overrides.
       if (!isDemoRender) {
@@ -919,6 +930,10 @@ export default function useConversion({ quota }) {
     setColumnMap,
     footerText,
     setFooterText,
+    accentColor,
+    setAccentColor,
+    logoFile,
+    setLogoFile,
     renderedSections,
     sectionTitleOverrides,
     setSectionTitleOverrides,
