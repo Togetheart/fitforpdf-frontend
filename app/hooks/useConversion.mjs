@@ -100,6 +100,26 @@ function parseConfidenceFromHeaders(headers) {
   return { verdict, score: Number.isFinite(score) ? score : null, reasons, metrics: null };
 }
 
+function parseRouterCompactSuggestion(headers, requestMode) {
+  const routerMode = String(headers.get('x-cleansheet-router-mode') || '').trim();
+  if (routerMode !== 'column_split' || requestMode === 'compact') return null;
+  return {
+    mode: routerMode,
+    reason: String(headers.get('x-cleansheet-router-reason') || '').trim() || null,
+  };
+}
+
+function identifyPostHog(identityHash) {
+  if (!identityHash || typeof window === 'undefined') return;
+  const posthog = window.posthog;
+  if (!posthog || typeof posthog.identify !== 'function') return;
+  try {
+    posthog.identify(identityHash);
+  } catch (_) {
+    // Analytics stitching must never block rendering.
+  }
+}
+
 async function parseConfidenceFromJsonIfAvailable(res) {
   const contentType = (res.headers.get('content-type') || '').toLowerCase();
   if (!contentType.includes('application/json')) return null;
@@ -231,6 +251,24 @@ async function copyText(text) {
   return copied;
 }
 
+// Parse the X-CleanSheet-Sections response header (JSON [{label,title}]).
+function parseSectionsHeader(raw) {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((s) => s && typeof s.label === 'string' && s.label)
+      .map((s) => ({
+        label: s.label,
+        title: typeof s.title === 'string' ? s.title : '',
+        columns: Array.isArray(s.columns) ? s.columns.filter((c) => typeof c === 'string') : [],
+      }));
+  } catch {
+    return [];
+  }
+}
+
 // ── Hook ──────────────────────────────────────────────────
 
 export default function useConversion({ quota }) {
@@ -262,9 +300,32 @@ export default function useConversion({ quota }) {
   const [showDebug, setShowDebug] = useState(false);
   const [debugByQuery, setDebugByQuery] = useState(false);
   const [failureRecommendations, setFailureRecommendations] = useState([]);
+  const [compactSuggestion, setCompactSuggestion] = useState(null);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
   const [layout, setLayout] = useState({ overview: true, headers: true, footer: true });
+  // Kunj control: custom report title (pre-render). Sent to the render route,
+  // which forwards it to the engine (options.reportTitle). Empty => engine
+  // falls back to the filename-derived title.
+  const [reportTitle, setReportTitle] = useState('');
+  // Kunj control: column grouping mode (pre-render). off | auto | force.
+  // Default 'auto' = current effective behavior (proxy historically forced auto).
+  const [columnMap, setColumnMap] = useState('auto');
+  // Kunj branding control: custom footer text. Backend accepts this only when
+  // branding entitlement allows it; free exports safely fall back upstream.
+  const [footerText, setFooterText] = useState('');
+  // Brand accent color (#RRGGBB) + logo (File). Paid branding — sent on render;
+  // the backend applies them only for entitled (paid) users.
+  const [accentColor, setAccentColor] = useState('');
+  const [logoFile, setLogoFile] = useState(null);
+  // Kunj control: rename sections (post-render). renderedSections come from the
+  // X-CleanSheet-Sections response header (label + current title); overrides are
+  // keyed by label and sent on the next render to re-title sections.
+  const [renderedSections, setRenderedSections] = useState([]);
+  const [sectionTitleOverrides, setSectionTitleOverrides] = useState({});
+  // Custom column groups (Kunj T5): array of { label, columns } sent on the
+  // next render. null => use the engine's automatic grouping.
+  const [columnGroupsOverride, setColumnGroupsOverride] = useState(null);
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -344,6 +405,7 @@ export default function useConversion({ quota }) {
     setRenderVerdict(null);
     setRenderId(null);
     setFailureRecommendations([]);
+    setCompactSuggestion(null);
     setColumnMapDebug(null);
     setShareState({ status: 'idle', jobId: null });
     setIsLoading(true);
@@ -358,8 +420,37 @@ export default function useConversion({ quota }) {
       formData.append('keep_overview', layout.overview !== false ? '1' : '0');
       formData.append('keep_headers', layout.headers !== false ? '1' : '0');
       formData.append('keep_footer', layout.footer !== false ? '1' : '0');
+      // Custom report title (Kunj). Only sent when set; demo renders skip it.
+      const isDemoRender = targetFile.name === 'enterprise-invoices-demo.csv';
+      if (!isDemoRender && typeof reportTitle === 'string' && reportTitle.trim()) {
+        formData.append('reportTitle', reportTitle.trim().slice(0, 200));
+      }
+      if (!isDemoRender && typeof footerText === 'string' && footerText.trim()) {
+        formData.append('footerText', footerText.trim().slice(0, 120));
+      }
+      // Brand accent color + logo (paid; backend gates by entitlement).
+      if (!isDemoRender && /^#[0-9a-fA-F]{6}$/.test(String(accentColor))) {
+        formData.append('accentColor', accentColor);
+      }
+      if (!isDemoRender && logoFile) {
+        formData.append('logo', logoFile);
+      }
+      // Custom section names (Kunj) — keyed by label, only non-empty overrides.
+      if (!isDemoRender) {
+        const trimmedOverrides = {};
+        for (const [k, v] of Object.entries(sectionTitleOverrides)) {
+          if (typeof v === 'string' && v.trim()) trimmedOverrides[k] = v.trim();
+        }
+        if (Object.keys(trimmedOverrides).length) {
+          formData.append('sectionTitles', JSON.stringify(trimmedOverrides));
+        }
+      }
+      // Custom column groups (Kunj T5) — only when the user defined an override.
+      if (!isDemoRender && Array.isArray(columnGroupsOverride) && columnGroupsOverride.length) {
+        formData.append('columnGroups', JSON.stringify(columnGroupsOverride));
+      }
 
-      const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText }), {
+      const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText, columnMap }), {
         method: 'POST',
         body: formData,
         headers: {
@@ -423,6 +514,8 @@ export default function useConversion({ quota }) {
       const confidenceData = normalizeConfidence(confidenceFromJson || confidenceFromHeaders);
       const debugMetricsData = parseDebugMetricsHeader(res.headers.get('x-cleansheet-debug-metrics'));
       const columnMapDebugData = parseColumnMapDebugFromHeaders(res.headers);
+      const compactSuggestionData = parseRouterCompactSuggestion(res.headers, mode);
+      identifyPostHog(res.headers.get('x-identity-hash'));
       const blob = await res.blob();
       const contentType = (res.headers.get('content-type') || '').toLowerCase();
       const isPdfResponse = res.status === 200 && contentType.includes('application/pdf');
@@ -435,6 +528,7 @@ export default function useConversion({ quota }) {
       if (!isPdfResponse) { setError('PDF response is missing.'); return; }
 
       setPdfBlob(blob);
+      setRenderedSections(parseSectionsHeader(res.headers.get('x-cleansheet-sections')));
       setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
@@ -443,6 +537,7 @@ export default function useConversion({ quota }) {
       setShowDetails(false);
       setDebugMetrics(debugMetricsData);
       setColumnMapDebug(columnMapDebugData);
+      setCompactSuggestion(compactSuggestionData);
       setShowDebug(false);
       setFailureRecommendations([]);
 
@@ -507,7 +602,10 @@ export default function useConversion({ quota }) {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    // Callers may invoke this from a form submit (real event), from the
+    // dropzone (stub event), or from the inspector "Update preview" button
+    // (no event). Tolerate all three — a missing/partial event must not throw.
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
     let canExport = true;
     if (isQuotaLocked) {
       canExport = await refreshQuotaAndBlockIfNeeded();
@@ -539,6 +637,11 @@ export default function useConversion({ quota }) {
     setFile(nextFile);
     if (nextFile) { setError(null); setNotice(null); }
     setPdfBlob(null);
+    setCompactSuggestion(null);
+    // A new file invalidates any prior section/group customization.
+    setSectionTitleOverrides({});
+    setColumnGroupsOverride(null);
+    setRenderedSections([]);
   }
 
   async function handleTrySample() {
@@ -570,6 +673,12 @@ export default function useConversion({ quota }) {
     setShareState({ status: 'idle', jobId: null });
     setError(null);
     setNotice(null);
+    setCompactSuggestion(null);
+    // Clearing the file invalidates the rendered structure too, so the
+    // inspector's section/group controls don't linger on the old file.
+    setSectionTitleOverrides({});
+    setColumnGroupsOverride(null);
+    setRenderedSections([]);
   }
 
   /* Single-action helper for the post-demo "Try with your file" CTA.
@@ -648,7 +757,13 @@ export default function useConversion({ quota }) {
     setFlowId(null);
     setError(null);
     setNotice(null);
+    setCompactSuggestion(null);
     setShareState({ status: 'idle', jobId: null });
+    // Drop the previous file's rendered structure so the inspector doesn't
+    // show stale section/group controls before the next file is picked.
+    setSectionTitleOverrides({});
+    setColumnGroupsOverride(null);
+    setRenderedSections([]);
     if (typeof document === 'undefined') return;
     setTimeout(() => {
       const input = document.querySelector('[data-testid="generate-file-input"]');
@@ -819,6 +934,21 @@ export default function useConversion({ quota }) {
     setTruncateLongText,
     layout,
     handleLayoutChange,
+    reportTitle,
+    setReportTitle,
+    columnMap,
+    setColumnMap,
+    footerText,
+    setFooterText,
+    accentColor,
+    setAccentColor,
+    logoFile,
+    setLogoFile,
+    renderedSections,
+    sectionTitleOverrides,
+    setSectionTitleOverrides,
+    columnGroupsOverride,
+    setColumnGroupsOverride,
     // conversion
     isLoading,
     error,
@@ -842,6 +972,7 @@ export default function useConversion({ quota }) {
     resolvedPdfFilename,
     lastRequestMode,
     failureRecommendations,
+    compactSuggestion,
     wasDemoLastUpload,
     showDetails,
     setShowDetails,

@@ -128,7 +128,14 @@ function buildUpstreamUrl(reqUrl, upstream, clientLocale = null) {
       target.searchParams.set('locale', 'en');
     }
   }
-  target.searchParams.set('columnMap', 'auto');
+  // Respect the caller's columnMap (off/auto/force); default to auto. Previously
+  // hardcoded to 'auto', which silently overrode the value — that made the
+  // /app grouping toggle a no-op. Whitelisted to avoid forwarding garbage.
+  const requestedColumnMap = source.searchParams.get('columnMap');
+  target.searchParams.set(
+    'columnMap',
+    ['off', 'auto', 'force'].includes(requestedColumnMap) ? requestedColumnMap : 'auto',
+  );
   return target;
 }
 
@@ -193,10 +200,14 @@ function copyPassThroughHeaders(from) {
     'x-cleansheet-verdict',
     'x-cleansheet-reasons',
     'x-cleansheet-debug-metrics',
+    'x-cleansheet-sections',
     'x-cleansheet-branding',
     'x-cleansheet-column-map-mode',
     'x-cleansheet-column-map-rendered',
     'x-cleansheet-column-map-entries',
+    'x-cleansheet-router-mode',
+    'x-cleansheet-router-reason',
+    'x-identity-hash',
     'x-render-id',
     'x-request-id',
     'x-trace-id',

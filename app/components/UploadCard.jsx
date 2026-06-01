@@ -365,6 +365,8 @@ function PostRenderPanel({
   onRenderAnother,
   onPostRenderPricingClick,
   onPostRenderContactClick,
+  compactSuggestion,
+  onRetryCompact,
 }) {
   const score = Number.isFinite(confidence?.score) ? confidence.score : null;
   const verdictUpper = verdict ? String(verdict).toUpperCase() : null;
@@ -497,6 +499,26 @@ function PostRenderPanel({
         </div>
       </div>
 
+      {compactSuggestion ? (
+        <div
+          data-testid="compact-suggestion"
+          className="flex flex-col gap-3 rounded-xl border border-sky-300/20 bg-sky-300/10 px-4 py-3 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left"
+        >
+          <p className="text-sm text-white/80">
+            This sheet may fit better in compact mode.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="mx-auto h-9 w-auto min-w-[190px] border-white/15 bg-white/10 px-5 text-white/75 hover:bg-white/15 hover:text-white sm:mx-0"
+            onClick={onRetryCompact}
+            disabled={isLoading}
+          >
+            Generate compact version
+          </Button>
+        </div>
+      ) : null}
+
       <p className="text-center text-[11px] text-white/40">
         No storage · No LLM · Files processed ephemerally.
       </p>
@@ -569,6 +591,7 @@ export default function UploadCard({
   onRenderAnother = () => {},
   onPostRenderPricingClick = () => {},
   onPostRenderContactClick = () => {},
+  compactSuggestion = null,
   confidence = null,
   debugMetrics = null,
 }) {
@@ -1103,6 +1126,8 @@ export default function UploadCard({
               onRenderAnother={onRenderAnother}
               onPostRenderPricingClick={onPostRenderPricingClick}
               onPostRenderContactClick={onPostRenderContactClick}
+              compactSuggestion={compactSuggestion}
+              onRetryCompact={onRetryCompact}
             />
           ) : null}
 

@@ -5,7 +5,12 @@ const RECOMMENDATION_SCOPE_REDUCE = 'scope_reduce';
 export function buildRenderUrl(apiUrl, mode, options = {}) {
   const truncateLongText = Boolean(options && options.truncateLongText === true);
   const params = new URLSearchParams();
-  params.set('columnMap', 'force');
+  // columnMap is user-controllable (off/auto/force). Default 'auto' — the proxy
+  // previously hardcoded 'auto', overriding the old 'force' default, so 'auto'
+  // is the real effective behavior; keeping it preserves render output.
+  const requestedColumnMap = options && options.columnMap;
+  const columnMap = ['off', 'auto', 'force'].includes(requestedColumnMap) ? requestedColumnMap : 'auto';
+  params.set('columnMap', columnMap);
   if (mode === 'optimized') {
     params.set('mode', 'optimized');
   }

@@ -937,7 +937,9 @@ describe('UploadCard conversion flow on landing page', () => {
     const calledUrl = new URL(renderCall.url, 'http://localhost');
 
     expect(calledUrl.pathname).toBe('/api/render');
-    expect(calledUrl.searchParams.get('columnMap')).toBe('force');
+    // Default columnMap is 'auto' (the proxy historically overrode 'force' to
+    // 'auto', so 'auto' is the effective render behavior — unchanged).
+    expect(calledUrl.searchParams.get('columnMap')).toBe('auto');
     expect(renderCall.options.method).toBe('POST');
     expect(renderCall.options.headers['X-FitForPDF-Source-Filename']).toBe('enterprise-invoices-demo.csv');
     expect(renderCall.options.body).toBeInstanceOf(FormData);

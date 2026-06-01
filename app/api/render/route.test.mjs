@@ -366,6 +366,29 @@ test('POST /api/render does not rewrite content-disposition for non-PDF upstream
   restoreEnv();
 });
 
+test('POST /api/render forwards a user-chosen columnMap and rejects invalid values', async () => {
+  for (const [requested, expected] of [['force', 'force'], ['off', 'off'], ['bogus', 'auto']]) {
+    const restoreEnv = setupEnv({
+      CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+      NEATEXPORT_API_KEY: 'backend-key',
+    });
+    const fetchMock = withMockFetch(() => new Response(JSON.stringify({ error: 'bad' }), {
+      status: 400,
+      headers: { 'content-type': 'application/json' },
+    }));
+    const req = new Request(`https://www.fitforpdf.com/api/render?columnMap=${requested}`, {
+      method: 'POST',
+      body: makeRequestBody('customers-100.xlsx'),
+      headers: { 'X-FitForPDF-Source-Filename': 'customers-100.xlsx' },
+    });
+    await POST(req);
+    const called = new URL(fetchMock.calls[0].url);
+    assert.equal(called.searchParams.get('columnMap'), expected, `columnMap ${requested} -> ${expected}`);
+    fetchMock.restore();
+    restoreEnv();
+  }
+});
+
 test('POST /api/render forwards anon_id cookie to upstream', async () => {
   const restoreEnv = setupEnv({
     CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
@@ -674,6 +697,51 @@ test('POST /api/render passes upstream x-cleansheet score/verdict/reasons throug
   assert.equal(res.headers.get('x-cleansheet-score'), '92');
   assert.equal(res.headers.get('x-cleansheet-verdict'), 'OK');
   assert.equal(res.headers.get('x-cleansheet-reasons'), 'min_font_low,high_wrap_rate');
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render passes the x-cleansheet-sections header through (rename UI)', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const sections = JSON.stringify([{ label: 'A', title: 'Customer info' }, { label: 'B', title: 'Orders' }]);
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf', 'x-cleansheet-sections': sections },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render', { method: 'POST', body: makeRequestBody() });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-cleansheet-sections'), sections);
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render passes router recommendation and identity hash headers through', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: {
+      'content-type': 'application/pdf',
+      'x-cleansheet-router-mode': 'column_split',
+      'x-cleansheet-router-reason': 'false_fit_detected',
+      'x-identity-hash': 'abc123hash',
+    },
+  }));
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('x-cleansheet-router-mode'), 'column_split');
+  assert.equal(res.headers.get('x-cleansheet-router-reason'), 'false_fit_detected');
+  assert.equal(res.headers.get('x-identity-hash'), 'abc123hash');
   fetchMock.restore();
   restoreEnv();
 });

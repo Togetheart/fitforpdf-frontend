@@ -1,7 +1,7 @@
 import Script from 'next/script';
 import { Lora } from 'next/font/google';
 import './globals.css';
-import SiteShell from './components/SiteShell';
+import SiteShellGate from './components/SiteShellGate';
 
 const lora = Lora({
   subsets: ['latin'],
@@ -164,7 +164,7 @@ export default function RootLayout({ children }) {
         <JsonLd data={websiteLd} />
         <JsonLd data={organizationLd} />
         <ViewTransitions />
-        <SiteShell>{children}</SiteShell>
+        <SiteShellGate>{children}</SiteShellGate>
         <Analytics />
         {clarityId && (
           <Script

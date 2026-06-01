@@ -1,6 +1,11 @@
 # Dependencies
 node_modules/
 .claude/
+!.claude/
+.claude/*
+!.claude/hooks/
+!.claude/hooks/check-gstack.sh
+!.claude/settings.json
 
 # Next.js
 /.next/
