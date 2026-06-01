@@ -127,11 +127,21 @@ function ConversionInspector({ conversion, quota, className = '' }) {
               );
             })}
           </div>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            <span className="rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white">Group A</span>
-            <span className="rounded-full bg-emerald-600 px-2.5 py-1 text-[11px] font-semibold text-white">Group B</span>
-            <span className="rounded-full bg-amber-600 px-2.5 py-1 text-[11px] font-semibold text-white">Group C</span>
-          </div>
+          {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
+            <div data-testid="app-group-pills" className="mt-2 flex flex-wrap gap-1.5">
+              {conversion.renderedSections.map((s, i) => (
+                <span
+                  key={s.label}
+                  className={[
+                    'rounded-full px-2.5 py-1 text-[11px] font-semibold text-white',
+                    ['bg-blue-600', 'bg-emerald-600', 'bg-amber-600', 'bg-violet-600'][i % 4],
+                  ].join(' ')}
+                >
+                  Group {s.label}
+                </span>
+              ))}
+            </div>
+          ) : null}
           <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
             <span>Custom groups</span>
             <StatusBadge tone="soon">Soon</StatusBadge>
