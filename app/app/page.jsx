@@ -8,12 +8,12 @@
  * destination. Reuses the existing conversion engine via <ConversionTool/> —
  * no rebuild.
  *
- * Chrome note: every route is wrapped by the root layout's <SiteShell> (global
- * SiteHeader + <main> + SiteFooter). This page therefore renders NO <header>
- * and NO <main> of its own — it presents only the focused tool inside the
- * shared shell, with all marketing sections stripped. The fully-immersive
- * workbench chrome (slim tool top-bar, sidebar, inspector) is the next
- * iteration and needs a route-group layout decision (touches shared layout).
+ * Chrome: SiteShellGate (app/components/SiteShellGate.jsx) detects the /app
+ * route via usePathname and renders children WITHOUT the marketing SiteShell
+ * (no SiteHeader / SiteFooter / shell <main>). So /app owns its own single
+ * <main> below and provides its own immersive chrome (toolbar, left rail,
+ * inspector) inside <ConversionTool layout="workbench">. There is exactly one
+ * <main> on the page — the shell's is bypassed here.
  */
 
 import React from 'react';

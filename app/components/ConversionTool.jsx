@@ -147,12 +147,15 @@ function ConversionInspector({ conversion, quota, className = '' }) {
                   <span className="cursor-grab text-sm leading-none text-slate-300">::</span>
                   <input
                     type="text"
-                    defaultValue={conversion.sectionTitleOverrides[s.label] ?? s.title}
+                    // Controlled: bound to the override (falling back to the
+                    // current title) so the field always reflects state and
+                    // never goes stale across regenerates.
+                    value={conversion.sectionTitleOverrides[s.label] ?? s.title}
                     maxLength={80}
                     onChange={(e) =>
                       conversion.setSectionTitleOverrides((cur) => ({ ...cur, [s.label]: e.target.value }))
                     }
-                    className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600"
+                    className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-9"
                   />
                 </div>
               ))}
@@ -610,7 +613,7 @@ function WorkbenchRenderedCanvas({ conversion }) {
         <button
           type="button"
           onClick={conversion.handleRenderAnother}
-          className="ml-auto shrink-0 text-[12.5px] font-semibold text-blue-600"
+          className="ml-auto inline-flex min-h-11 shrink-0 items-center px-1 text-[12.5px] font-semibold text-blue-600 lg:min-h-0"
         >
           Change file
         </button>
