@@ -48,16 +48,26 @@ function InspectorSection({ title, status, hint, children }) {
   );
 }
 
+// Reserved group label (matches the backend) naming columns pinned to every
+// section. Real groups are the data sections (A, B, ...).
+const FIXED_GROUP_LABEL = '__fixed__';
+const groupOptionLabel = (l) => (l === FIXED_GROUP_LABEL ? 'Fixed (every section)' : `Group ${l}`);
+
 /*
- * CustomGroupsControl — assign each data column to a group, then re-render.
- * Columns + their current group come from the render response
- * (conversion.renderedSections[].columns). Reassigning rebuilds the
- * columnGroups override sent on the next "Update preview". A "new group"
- * option (next letter) lets the user split an existing group.
+ * CustomGroupsControl — assign EVERY column to a group, then re-render.
+ * Columns come from the render response: the per-section data columns
+ * (conversion.renderedSections[].columns) PLUS the pinned/anchor columns
+ * (conversion.renderedFrozenColumns), so nothing is hidden. Pinned columns
+ * default to "Fixed" (repeated in every section); moving one into a real group
+ * un-pins it. Reassigning rebuilds the columnGroups override (including the
+ * reserved Fixed group) sent on the next "Update preview".
  */
 function CustomGroupsControl({ conversion }) {
   const sections = Array.isArray(conversion.renderedSections) ? conversion.renderedSections : [];
-  const allColumns = sections.flatMap((s) => (Array.isArray(s.columns) ? s.columns : []));
+  const frozenColumns = Array.isArray(conversion.renderedFrozenColumns) ? conversion.renderedFrozenColumns : [];
+  const sectionColumns = sections.flatMap((s) => (Array.isArray(s.columns) ? s.columns : []));
+  // Every column the user can place: section data columns + the pinned ones.
+  const allColumns = [...new Set([...sectionColumns, ...frozenColumns])];
 
   if (allColumns.length === 0) {
     return (
@@ -67,8 +77,9 @@ function CustomGroupsControl({ conversion }) {
     );
   }
 
-  // Current assignment: column -> group label (from the override if set, else
-  // from the rendered sections).
+  const frozenSet = new Set(frozenColumns);
+  // Current assignment: column -> group label. From the override if set, else
+  // from the rendered sections; pinned columns default to Fixed.
   const assignment = {};
   if (Array.isArray(conversion.columnGroupsOverride)) {
     for (const g of conversion.columnGroupsOverride) {
@@ -78,12 +89,15 @@ function CustomGroupsControl({ conversion }) {
     for (const s of sections) {
       for (const c of s.columns || []) assignment[c] = s.label;
     }
+    for (const c of frozenColumns) assignment[c] = FIXED_GROUP_LABEL;
   }
-  for (const c of allColumns) if (!assignment[c]) assignment[c] = sections[0]?.label || 'A';
+  for (const c of allColumns) {
+    if (!assignment[c]) assignment[c] = frozenSet.has(c) ? FIXED_GROUP_LABEL : (sections[0]?.label || 'A');
+  }
 
   const labels = sections.map((s) => s.label);
   const nextLabel = String.fromCharCode(65 + labels.length); // allow one new group
-  const options = [...labels, nextLabel];
+  const options = [FIXED_GROUP_LABEL, ...labels, nextLabel];
 
   function reassign(column, label) {
     const next = { ...assignment, [column]: label };
@@ -101,10 +115,19 @@ function CustomGroupsControl({ conversion }) {
 
   return (
     <div data-testid="app-custom-groups" className="mt-2 flex flex-col gap-1.5">
-      <p className="text-[11.5px] leading-5 text-slate-400">Move columns between groups, then update the preview.</p>
+      <p className="text-[11.5px] leading-5 text-slate-400">
+        Move columns between groups, then update the preview. &ldquo;Fixed&rdquo; columns repeat in every section.
+      </p>
       {allColumns.map((col) => (
         <div key={col} className="flex items-center gap-2">
-          <span className="min-w-0 flex-1 truncate text-[12.5px] text-slate-700">{col}</span>
+          <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-[12.5px] text-slate-700">
+            <span className="truncate">{col}</span>
+            {assignment[col] === FIXED_GROUP_LABEL ? (
+              <span className="shrink-0 rounded bg-slate-100 px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-slate-400">
+                fixed
+              </span>
+            ) : null}
+          </span>
           <select
             aria-label={`Group for ${col}`}
             value={assignment[col]}
@@ -112,7 +135,7 @@ function CustomGroupsControl({ conversion }) {
             className="min-h-11 rounded-lg border border-slate-200 bg-white px-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-8"
           >
             {options.map((l) => (
-              <option key={l} value={l}>Group {l}</option>
+              <option key={l} value={l}>{groupOptionLabel(l)}</option>
             ))}
           </select>
         </div>

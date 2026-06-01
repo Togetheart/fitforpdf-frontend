@@ -269,6 +269,19 @@ function parseSectionsHeader(raw) {
   }
 }
 
+// Pinned/anchor columns (repeated in every section). Exposed so the custom-
+// groups control can list every column, not just the per-section data columns.
+function parseFrozenColumnsHeader(raw) {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((c) => typeof c === 'string' && c);
+  } catch {
+    return [];
+  }
+}
+
 // ── Hook ──────────────────────────────────────────────────
 
 export default function useConversion({ quota }) {
@@ -322,6 +335,9 @@ export default function useConversion({ quota }) {
   // X-CleanSheet-Sections response header (label + current title); overrides are
   // keyed by label and sent on the next render to re-title sections.
   const [renderedSections, setRenderedSections] = useState([]);
+  // Pinned/anchor columns from the last render (X-CleanSheet-Frozen-Columns).
+  // Listed alongside section columns so every column is visible + assignable.
+  const [renderedFrozenColumns, setRenderedFrozenColumns] = useState([]);
   const [sectionTitleOverrides, setSectionTitleOverrides] = useState({});
   // Custom column groups (Kunj T5): array of { label, columns } sent on the
   // next render. null => use the engine's automatic grouping.
@@ -529,6 +545,7 @@ export default function useConversion({ quota }) {
 
       setPdfBlob(blob);
       setRenderedSections(parseSectionsHeader(res.headers.get('x-cleansheet-sections')));
+      setRenderedFrozenColumns(parseFrozenColumnsHeader(res.headers.get('x-cleansheet-frozen-columns')));
       setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
@@ -642,6 +659,7 @@ export default function useConversion({ quota }) {
     setSectionTitleOverrides({});
     setColumnGroupsOverride(null);
     setRenderedSections([]);
+    setRenderedFrozenColumns([]);
   }
 
   async function handleTrySample() {
@@ -679,6 +697,7 @@ export default function useConversion({ quota }) {
     setSectionTitleOverrides({});
     setColumnGroupsOverride(null);
     setRenderedSections([]);
+    setRenderedFrozenColumns([]);
   }
 
   /* Single-action helper for the post-demo "Try with your file" CTA.
@@ -764,6 +783,7 @@ export default function useConversion({ quota }) {
     setSectionTitleOverrides({});
     setColumnGroupsOverride(null);
     setRenderedSections([]);
+    setRenderedFrozenColumns([]);
     if (typeof document === 'undefined') return;
     setTimeout(() => {
       const input = document.querySelector('[data-testid="generate-file-input"]');
@@ -945,6 +965,7 @@ export default function useConversion({ quota }) {
     logoFile,
     setLogoFile,
     renderedSections,
+    renderedFrozenColumns,
     sectionTitleOverrides,
     setSectionTitleOverrides,
     columnGroupsOverride,
