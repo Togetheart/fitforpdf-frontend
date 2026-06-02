@@ -78,7 +78,7 @@ describe('/app tool-first workbench shell', () => {
     expect(screen.getByText('FitForPDF')).toBeTruthy();
     expect(screen.getByTestId('app-crumb').textContent).toMatch(/new export/i);
     expect(screen.getByTestId('app-quota').textContent).toMatch(/free/i);
-    expect(screen.getByTestId('app-avatar').textContent).toBe('SN');
+    expect(screen.getByRole('link', { name: /se connecter/i }).getAttribute('href')).toBe('/login');
   });
 
   test('shows admin unlimited quota when backend returns api_enterprise', async () => {
