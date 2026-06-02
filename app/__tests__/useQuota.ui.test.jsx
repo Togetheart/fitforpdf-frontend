@@ -1,4 +1,4 @@
-import { cleanup, render, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import React from 'react';
 
@@ -65,6 +65,41 @@ afterEach(() => {
 });
 
 describe('useQuota sync behavior', () => {
+  test('treats api_enterprise quota as unlimited and never locked', async () => {
+    const originalFetch = global.fetch;
+    global.fetch = vi.fn(() => Promise.resolve(new Response(JSON.stringify({
+      plan: 'api_enterprise',
+      apiEnterprise: {
+        unlimited: true,
+        usedInPeriod: 1234,
+      },
+    }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    })));
+
+    function EnterpriseProbe() {
+      const quota = useQuota();
+      return (
+        <div>
+          <div data-testid="plan">{quota.planType}</div>
+          <div data-testid="locked">{String(quota.isQuotaLocked)}</div>
+          <div data-testid="unlimited">{String(quota.isUnlimited)}</div>
+        </div>
+      );
+    }
+
+    render(<EnterpriseProbe />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('plan').textContent).toBe('api_enterprise');
+    });
+    expect(screen.getByTestId('locked').textContent).toBe('false');
+    expect(screen.getByTestId('unlimited').textContent).toBe('true');
+
+    global.fetch = originalFetch;
+  });
+
   test('re-syncs quota when window regains focus', async () => {
     const mock = mockFetch();
     render(<UseQuotaProbe />);

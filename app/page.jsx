@@ -293,6 +293,9 @@ export default function Page() {
           <UploadCard
             toolTitle={LANDING_COPY.toolTitle}
             toolSubcopy={(() => {
+              if (quota.planType === 'api_enterprise' || quota.isUnlimited === true) {
+                return 'Admin account. Unlimited test exports.';
+              }
               if (quota.planType === 'credits') {
                 const count = Number.isFinite(quota.freeExportsLeft) ? quota.freeExportsLeft : 0;
                 if (count <= 0) return 'No exports left. Get more to continue.';

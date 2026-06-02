@@ -81,6 +81,29 @@ describe('/app tool-first workbench shell', () => {
     expect(screen.getByTestId('app-avatar').textContent).toBe('SN');
   });
 
+  test('shows admin unlimited quota when backend returns api_enterprise', async () => {
+    const mock = mockFetch((call) => {
+      if (call.url.includes('/api/quota')) {
+        return new Response(JSON.stringify({
+          plan: 'api_enterprise',
+          apiEnterprise: { unlimited: true, usedInPeriod: 42 },
+        }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      return new Response(JSON.stringify({ error: 'unexpected fetch' }), { status: 500 });
+    });
+
+    render(<AppPage />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('app-quota').textContent).toMatch(/Admin\s*-\s*unlimited/i);
+    });
+
+    mock.restore();
+  });
+
   test('matches the finalized empty center canvas', () => {
     render(<AppPage />);
     const canvas = screen.getByTestId('app-canvas');

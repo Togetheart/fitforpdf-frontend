@@ -145,13 +145,17 @@ function CustomGroupsControl({ conversion }) {
 }
 
 function ConversionInspector({ conversion, quota, className = '' }) {
+  const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
     : Number.isFinite(quota.freeExportsLimit)
       ? quota.freeExportsLimit
       : 3;
-  const planLabel = quota.planType === 'pro' ? 'Pro' : quota.planType === 'credits' ? 'Credits' : 'Free';
+  const planLabel = isUnlimited ? 'Admin' : quota.planType === 'pro' ? 'Pro' : quota.planType === 'credits' ? 'Credits' : 'Free';
   const quotaLocked = Boolean(quota.isQuotaLocked);
+  const quotaSummary = isUnlimited
+    ? 'Admin - unlimited'
+    : `${planLabel} - ${exportsLeft} exports left`;
 
   return (
     <aside
@@ -366,7 +370,7 @@ function ConversionInspector({ conversion, quota, className = '' }) {
           Render another file
         </button>
         <div className="mt-1 text-center text-[11.5px] text-slate-400">
-          {planLabel} - {exportsLeft} exports left - <a href="/pricing" className="text-blue-600">View pricing</a>
+          {quotaSummary} - <a href="/pricing" className="text-blue-600">View pricing</a>
         </div>
       </div>
     </aside>
@@ -807,11 +811,13 @@ function PdfPreviewPane({ pdfBlob, filename }) {
 }
 
 function AppToolbar({ conversion, quota }) {
+  const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
     : Number.isFinite(quota.freeExportsLimit)
       ? quota.freeExportsLimit
       : 3;
+  const quotaLabel = isUnlimited ? 'Admin - unlimited' : `Free - ${exportsLeft} left`;
   const crumb = conversion.file?.name || (conversion.pdfBlob ? conversion.resolvedPdfFilename : 'New export');
 
   return (
@@ -837,7 +843,7 @@ function AppToolbar({ conversion, quota }) {
           Use the API
         </a>
         <span data-testid="app-quota" className="rounded-full bg-[#F1F0ED] px-3 py-1.5 text-xs font-semibold text-slate-500">
-          Free - {exportsLeft} left
+          {quotaLabel}
         </span>
         <span data-testid="app-avatar" className="flex h-[31px] w-[31px] items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-slate-950 text-xs font-bold text-white">
           SN
@@ -853,6 +859,9 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
 
   const resolvedSubcopy = (() => {
     if (toolSubcopy) return toolSubcopy;
+    if (quota.planType === 'api_enterprise' || quota.isUnlimited === true) {
+      return 'Admin account. Unlimited test exports.';
+    }
     if (quota.planType === 'credits') {
       const count = Number.isFinite(quota.freeExportsLeft) ? quota.freeExportsLeft : 0;
       if (count <= 0) return 'No exports left. Get more to continue.';

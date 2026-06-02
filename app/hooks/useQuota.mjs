@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const PRO_PERIOD_LIMIT_DEFAULT = 500;
+const UNLIMITED_PLAN_TYPES = new Set(['api_enterprise']);
 
 const QUOTA_STATUS_BY_RENDER_CODE = {
   free_quota_exhausted: 'free',
@@ -25,6 +26,10 @@ function normalizePlanType(value) {
   return normalized || 'free';
 }
 
+function isUnlimitedPlan(planType) {
+  return UNLIMITED_PLAN_TYPES.has(normalizePlanType(planType));
+}
+
 function pickFirstDefined(...values) {
   for (const value of values) {
     if (value !== undefined && value !== null) return value;
@@ -42,6 +47,9 @@ function getQuotaExhaustedMessage(planType, rawCode) {
 
 function normalizeQuotaState(raw = {}) {
   const planType = normalizePlanType(raw.plan_type || raw.planType || raw.plan || 'free');
+  const isUnlimited = isUnlimitedPlan(planType)
+    || raw?.apiEnterprise?.unlimited === true
+    || raw?.unlimited === true;
   const freePayload = raw && typeof raw.free === 'object' && !Array.isArray(raw.free) ? raw.free : null;
   const creditsPayload = raw && typeof raw.credits === 'object' && !Array.isArray(raw.credits) ? raw.credits : null;
   const freeScalar = raw && (typeof raw.free === 'number' || typeof raw.free === 'string')
@@ -86,10 +94,11 @@ function normalizeQuotaState(raw = {}) {
   );
   return {
     planType,
+    isUnlimited,
     freeExportsLeft: Number.isFinite(freeExportsLeft) ? freeExportsLeft : null,
     freeExportsLimit: Number.isFinite(freeExportsLimit) ? freeExportsLimit : null,
     remainingInPeriod: Number.isFinite(remainingInPeriod)
-      ? remainingInPeriod
+      ? (isUnlimited ? null : remainingInPeriod)
       : (planType === 'pro' ? PRO_PERIOD_LIMIT_DEFAULT : null),
     usedInPeriod: Number.isFinite(usedInPeriod) ? usedInPeriod : null,
     periodLimit: Number.isFinite(periodLimit) ? periodLimit : (planType === 'pro' ? PRO_PERIOD_LIMIT_DEFAULT : null),
@@ -97,6 +106,7 @@ function normalizeQuotaState(raw = {}) {
 }
 
 function getPlanExhausted(planType, remaining, remainingInPeriod) {
+  if (isUnlimitedPlan(planType)) return false;
   if (normalizePlanType(planType) === 'pro') {
     return Number.isFinite(remainingInPeriod) ? remainingInPeriod <= 0 : false;
   }
@@ -121,6 +131,7 @@ export default function useQuota() {
   const [remainingInPeriod, setRemainingInPeriod] = useState(null);
   const [usedInPeriod, setUsedInPeriod] = useState(null);
   const [periodLimit, setPeriodLimit] = useState(PRO_PERIOD_LIMIT_DEFAULT);
+  const [isUnlimited, setIsUnlimited] = useState(false);
   const [showBuyCreditsPanel, setShowBuyCreditsPanel] = useState(false);
   const [paywallReason, setPaywallReason] = useState('');
   const [purchaseMessage, setPurchaseMessage] = useState('');
@@ -135,6 +146,7 @@ export default function useQuota() {
       if (!raw || typeof raw !== 'object') return null;
       const normalized = normalizeQuotaState(raw);
       setPlanType(normalized.planType);
+      setIsUnlimited(normalized.isUnlimited);
       setFreeExportsLeft(normalized.freeExportsLeft);
       setFreeExportsLimit(normalized.freeExportsLimit);
       setRemainingInPeriod(normalized.remainingInPeriod);
@@ -156,6 +168,7 @@ export default function useQuota() {
     const nextPlan = QUOTA_STATUS_BY_RENDER_CODE[normalizedCode] || 'free';
     const nextMessage = getQuotaExhaustedMessage(nextPlan, normalizedCode);
     setPlanType(nextPlan);
+    setIsUnlimited(false);
     setPaywallReason(nextMessage);
     if (nextPlan === 'pro') {
       const overrideUsed = toFiniteInt(payload?.used_in_period)
@@ -221,6 +234,7 @@ export default function useQuota() {
 
   return {
     planType,
+    isUnlimited,
     freeExportsLeft,
     freeExportsLimit,
     remainingInPeriod,
@@ -239,4 +253,4 @@ export default function useQuota() {
   };
 }
 
-export { QUOTA_STATUS_BY_RENDER_CODE, PRO_PERIOD_LIMIT_DEFAULT, getPlanExhausted };
+export { QUOTA_STATUS_BY_RENDER_CODE, PRO_PERIOD_LIMIT_DEFAULT, getPlanExhausted, isUnlimitedPlan };

@@ -113,6 +113,8 @@ function getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedThi
   const periodUsed = toFiniteInt(usedThisPeriod);
   const limit = toFiniteInt(periodLimit);
 
+  if (normalizedPlan === 'api_enterprise') return null;
+
   if (normalizedPlan === 'pro') {
     if (periodRemaining != null) return Math.max(0, periodRemaining);
     if (limit != null && periodUsed != null) return Math.max(0, limit - periodUsed);
@@ -132,6 +134,10 @@ function getQuotaBadgeText(planType, freeExportsLeft, remainingInPeriod, usedThi
   const periodUsed = toFiniteInt(usedThisPeriod);
   const limit = toFiniteInt(periodLimit);
   const safeRemaining = getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedThisPeriod, periodLimit);
+
+  if (normalizedPlan === 'api_enterprise') {
+    return 'Admin · unlimited exports';
+  }
 
   if (normalizedPlan === 'pro') {
     if (periodRemaining != null) {
