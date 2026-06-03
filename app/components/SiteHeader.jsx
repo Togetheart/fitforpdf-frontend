@@ -78,6 +78,9 @@ export default function SiteHeader() {
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/contact">
               Contact
             </a>
+            <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/login">
+              Se connecter
+            </a>
             <ThemeToggle />
             <Button variant="primary" href="/#generate" className="px-4 text-xs h-9">
               Try free
@@ -151,6 +154,13 @@ export default function SiteHeader() {
             className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
           >
             Contact
+          </a>
+          <a
+            href="/login"
+            onClick={closeMenu}
+            className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
+          >
+            Se connecter
           </a>
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]">
             <ThemeToggle />

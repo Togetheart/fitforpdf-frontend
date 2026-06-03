@@ -4,7 +4,9 @@ import React from 'react';
 import { AlertCircle, ArrowLeft, ArrowRight, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
+import useSession from '../hooks/useSession.mjs';
 import UploadCard from './UploadCard';
+import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
 
 /*
@@ -810,7 +812,7 @@ function PdfPreviewPane({ pdfBlob, filename }) {
   );
 }
 
-function AppToolbar({ conversion, quota }) {
+function AppToolbar({ conversion, quota, session }) {
   const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
@@ -845,9 +847,7 @@ function AppToolbar({ conversion, quota }) {
         <span data-testid="app-quota" className="rounded-full bg-[#F1F0ED] px-3 py-1.5 text-xs font-semibold text-slate-500">
           {quotaLabel}
         </span>
-        <span data-testid="app-avatar" className="flex h-[31px] w-[31px] items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-slate-950 text-xs font-bold text-white">
-          SN
-        </span>
+        <AccountMenu account={session?.account || null} onLogout={session?.logout || (() => {})} />
       </div>
     </header>
   );
@@ -856,6 +856,7 @@ function AppToolbar({ conversion, quota }) {
 export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark', showInspector = false, layout = 'inline' }) {
   const quota = useQuota();
   const conversion = useConversion({ quota });
+  const session = useSession();
 
   const resolvedSubcopy = (() => {
     if (toolSubcopy) return toolSubcopy;
@@ -889,7 +890,7 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
   if (layout === 'workbench') {
     return (
       <>
-        <AppToolbar conversion={conversion} quota={quota} />
+        <AppToolbar conversion={conversion} quota={quota} session={session} />
         <div
           data-testid="tool"
           className="grid min-h-[calc(100vh-57px)] grid-cols-1 overflow-visible lg:h-[calc(100vh-57px)] lg:grid-cols-[264px_minmax(0,1fr)_320px] lg:overflow-hidden"
