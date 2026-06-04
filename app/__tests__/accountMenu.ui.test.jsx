@@ -20,4 +20,19 @@ describe('AccountMenu', () => {
     fireEvent.click(screen.getByRole('button', { name: /se déconnecter/i }));
     expect(onLogout).toHaveBeenCalledTimes(1);
   });
+
+  test('logged in → dropdown has a "Mon compte" link to /account', () => {
+    render(<AccountMenu account={{ email: 'k@x.com' }} onLogout={() => {}} />);
+    fireEvent.click(screen.getByTestId('account-avatar'));
+    const link = screen.getByRole('link', { name: /mon compte/i });
+    expect(link.getAttribute('href')).toBe('/account');
+  });
+
+  test('clicking outside closes the dropdown', () => {
+    render(<AccountMenu account={{ email: 'k@x.com' }} onLogout={() => {}} />);
+    fireEvent.click(screen.getByTestId('account-avatar'));
+    expect(screen.getByText('k@x.com')).toBeTruthy();
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByText('k@x.com')).toBeNull();
+  });
 });

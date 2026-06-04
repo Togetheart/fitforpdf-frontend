@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 function initials(email) {
   const local = String(email || '?').split('@')[0];
@@ -9,6 +9,16 @@ function initials(email) {
 
 export default function AccountMenu({ account, onLogout }) {
   const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    function onDown(e) { if (ref.current && !ref.current.contains(e.target)) setOpen(false); }
+    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [open]);
 
   if (!account) {
     return (
@@ -22,7 +32,7 @@ export default function AccountMenu({ account, onLogout }) {
   }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={ref}>
       <button
         type="button"
         data-testid="account-avatar"
@@ -39,6 +49,13 @@ export default function AccountMenu({ account, onLogout }) {
           className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-lg"
         >
           <div className="truncate px-3 py-2 text-[13px] text-slate-500">{account.email}</div>
+          <a
+            href="/account"
+            onClick={() => setOpen(false)}
+            className="block rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-950 transition hover:bg-slate-50"
+          >
+            Mon compte
+          </a>
           <button
             type="button"
             onClick={() => { setOpen(false); onLogout(); }}
