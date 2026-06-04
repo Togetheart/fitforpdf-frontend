@@ -17,7 +17,15 @@ export default function AccountPage() {
 
   const plan = (quota && quota.plan) || 'free';
   const isUnlimited = plan === 'api_enterprise' || (quota && quota.apiEnterprise && quota.apiEnterprise.unlimited);
-  const credits = quota && quota.credits && Number.isFinite(quota.credits.remaining) ? quota.credits.remaining : 0;
+  function remainingFor() {
+    if (!quota) return { label: 'Crédits restants', value: 0 };
+    if (plan === 'pro') return { label: 'Exports restants ce mois', value: Number.isFinite(quota.pro?.remainingInPeriod) ? quota.pro.remainingInPeriod : 0 };
+    if (plan === 'api_starter') return { label: 'Appels restants ce mois', value: Number.isFinite(quota.apiStarter?.remainingInPeriod) ? quota.apiStarter.remainingInPeriod : 0 };
+    if (plan === 'api_scale') return { label: 'Appels restants ce mois', value: Number.isFinite(quota.apiScale?.remainingInPeriod) ? quota.apiScale.remainingInPeriod : 0 };
+    if (plan === 'credits') return { label: 'Crédits restants', value: Number.isFinite(quota.credits?.remaining) ? quota.credits.remaining : 0 };
+    return { label: 'Exports gratuits restants', value: Number.isFinite(quota.free?.remaining) ? quota.free.remaining : 0 };
+  }
+  const remaining = remainingFor();
 
   async function openBilling() {
     setBillingError('');
@@ -40,7 +48,7 @@ export default function AccountPage() {
         <div className="flex justify-between"><dt className="text-[var(--color-muted)]">Email</dt><dd className="font-medium text-[var(--color-text)]">{account.email}</dd></div>
         <div className="flex justify-between"><dt className="text-[var(--color-muted)]">Plan</dt><dd className="font-medium text-[var(--color-text)]">{isUnlimited ? 'Illimité (admin)' : plan}</dd></div>
         {!isUnlimited ? (
-          <div className="flex justify-between"><dt className="text-[var(--color-muted)]">Crédits restants</dt><dd className="font-medium text-[var(--color-text)]">{credits}</dd></div>
+          <div className="flex justify-between"><dt className="text-[var(--color-muted)]">{remaining.label}</dt><dd className="font-medium text-[var(--color-text)]">{remaining.value}</dd></div>
         ) : null}
       </dl>
 
