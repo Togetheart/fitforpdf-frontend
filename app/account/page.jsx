@@ -99,7 +99,11 @@ export default function AccountPage() {
                 <li key={item.id} className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="truncate font-medium text-[var(--color-text)]">{item.original_name}</p>
-                    {expiry ? <p className="text-xs text-[var(--color-muted)]">expire le {expiry}</p> : null}
+                    {expiry ? (
+                      <p className="text-xs text-[var(--color-muted)]">expire le {expiry}</p>
+                    ) : (
+                      <p className="text-xs text-[var(--color-muted)]">Conservé jusqu'à suppression</p>
+                    )}
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
                     <a

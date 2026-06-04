@@ -55,4 +55,23 @@ describe('AccountPage retained files', () => {
     await waitFor(() => expect(screen.getByText('me@x.com')).toBeTruthy());
     await waitFor(() => expect(screen.getByText(/aucun fichier conservé/i)).toBeTruthy());
   });
+
+  test('renders a dated expiry line for items with expires_at', async () => {
+    mockLoggedInWithRetained([
+      { id: 'd1', original_name: 'dated.csv', consented_at: '2026-06-01T10:00:00Z', expires_at: '2026-06-08T10:00:00Z' },
+    ]);
+    render(<AccountPage />);
+    await waitFor(() => expect(screen.getByText('dated.csv')).toBeTruthy());
+    expect(screen.getByText(/expire le/i)).toBeTruthy();
+  });
+
+  test('shows kept-until-deleted for items with no expiry', async () => {
+    mockLoggedInWithRetained([
+      { id: 'c1', original_name: 'contacts.csv', consented_at: '2026-06-01T10:00:00Z', expires_at: null, purpose: 'contacts_database' },
+    ]);
+    render(<AccountPage />);
+    await waitFor(() => expect(screen.getByText('contacts.csv')).toBeTruthy());
+    expect(screen.getByText(/jusqu'à suppression/i)).toBeTruthy();
+    expect(screen.queryByText(/expire le/i)).toBeNull();
+  });
 });
