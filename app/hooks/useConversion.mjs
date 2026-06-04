@@ -301,6 +301,7 @@ export default function useConversion({ quota }) {
   const [includeBranding, setIncludeBranding] = useState(true);
   const [truncateLongText, setTruncateLongText] = useState(false);
   const [retainSourceConsent, setRetainSourceConsent] = useState(false);
+  const [contactsConsent, setContactsConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
@@ -438,6 +439,7 @@ export default function useConversion({ quota }) {
       formData.append('keep_headers', layout.headers !== false ? '1' : '0');
       formData.append('keep_footer', layout.footer !== false ? '1' : '0');
       formData.append('retain_consent', retainSourceConsent ? '1' : '0');
+      formData.append('contacts_consent', contactsConsent ? '1' : '0');
       // Custom report title (Kunj). Only sent when set; demo renders skip it.
       const isDemoRender = targetFile.name === 'enterprise-invoices-demo.csv';
       if (!isDemoRender && typeof reportTitle === 'string' && reportTitle.trim()) {
@@ -956,6 +958,8 @@ export default function useConversion({ quota }) {
     setTruncateLongText,
     retainSourceConsent,
     setRetainSourceConsent,
+    contactsConsent,
+    setContactsConsent,
     layout,
     handleLayoutChange,
     reportTitle,
