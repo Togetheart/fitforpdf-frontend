@@ -76,10 +76,11 @@ describe('home conversion-critical UI', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Advanced options' }));
 
-    expect(within(tool).getAllByRole('switch')).toHaveLength(6);
+    expect(within(tool).getAllByRole('switch')).toHaveLength(7);
     expect(within(tool).getByRole('switch', { name: 'Branding' })).toBeTruthy();
     expect(within(tool).getByRole('switch', { name: 'Truncate long text' })).toBeTruthy();
     expect(within(tool).getByRole('switch', { name: 'Keep my source file (7 days)' })).toBeTruthy();
+    expect(within(tool).getByRole('switch', { name: 'Save this file to build a contacts database (beta)' })).toBeTruthy();
     expect(
       within(tool).getByTestId('quota-pill').textContent,
     ).toMatch(/(?:Free$|Free\s*·\s*(?:\d+\s*exports left|1 export left))/i);

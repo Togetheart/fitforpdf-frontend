@@ -81,10 +81,11 @@ test('branding toggle defaults on and truncate defaults off', () => {
   render(<ModuleHarness />);
 
   fireEvent.click(screen.getByRole('button', { name: 'Advanced options' }));
-  expect(screen.getAllByRole('switch')).toHaveLength(6);
+  expect(screen.getAllByRole('switch')).toHaveLength(7);
   expect(screen.getByRole('switch', { name: 'Branding' }).getAttribute('aria-checked')).toBe('true');
   expect(screen.getByRole('switch', { name: 'Keep overview' }).getAttribute('aria-checked')).toBe('true');
   expect(screen.getByRole('switch', { name: 'Keep my source file (7 days)' }).getAttribute('aria-checked')).toBe('false');
+  expect(screen.getByRole('switch', { name: 'Save this file to build a contacts database (beta)' }).getAttribute('aria-checked')).toBe('false');
   expect(screen.getByRole('switch', { name: 'Keep headers' }).getAttribute('aria-checked')).toBe('true');
   expect(screen.getByRole('switch', { name: 'Keep footer' }).getAttribute('aria-checked')).toBe('true');
   expect(screen.getByRole('switch', { name: 'Truncate long text' }).getAttribute('aria-checked')).toBe('false');
