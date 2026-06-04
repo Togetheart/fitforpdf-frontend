@@ -6,10 +6,45 @@ import useSession from '../hooks/useSession.mjs';
 export default function AccountPage() {
   const { account, quota, loading, logout } = useSession();
   const [billingError, setBillingError] = useState('');
+  const [retainedItems, setRetainedItems] = useState([]);
 
   useEffect(() => {
     if (!loading && !account) window.location.assign('/login');
   }, [loading, account]);
+
+  useEffect(() => {
+    if (!account) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/account/retained-sources', { method: 'GET', credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) setRetainedItems(Array.isArray(data && data.items) ? data.items : []);
+      } catch {
+        /* ignore — leave list empty */
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [account]);
+
+  async function deleteRetained(id) {
+    try {
+      await fetch('/api/account/retained-sources/' + id, { method: 'DELETE', credentials: 'include' });
+      setRetainedItems((prev) => prev.filter((it) => it.id !== id));
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function formatExpiry(value) {
+    if (!value) return null;
+    try {
+      return new Date(value).toLocaleDateString('fr-FR');
+    } catch {
+      return null;
+    }
+  }
 
   if (loading || !account) {
     return <main className="mx-auto w-full max-w-md px-6 py-16 text-sm text-[var(--color-muted)]">Chargement…</main>;
@@ -51,6 +86,43 @@ export default function AccountPage() {
           <div className="flex justify-between"><dt className="text-[var(--color-muted)]">{remaining.label}</dt><dd className="font-medium text-[var(--color-text)]">{remaining.value}</dd></div>
         ) : null}
       </dl>
+
+      <section className="mt-10">
+        <h2 className="text-sm font-semibold text-[var(--color-text)]">Vos fichiers conservés</h2>
+        {retainedItems.length === 0 ? (
+          <p className="mt-3 text-sm text-[var(--color-muted)]">Aucun fichier conservé.</p>
+        ) : (
+          <ul className="mt-3 space-y-3 text-sm">
+            {retainedItems.map((item) => {
+              const expiry = formatExpiry(item.expires_at);
+              return (
+                <li key={item.id} className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-[var(--color-text)]">{item.original_name}</p>
+                    {expiry ? <p className="text-xs text-[var(--color-muted)]">expire le {expiry}</p> : null}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <a
+                      className="underline text-[var(--color-text)] hover:text-[var(--color-muted)]"
+                      href={'/api/account/retained-sources/' + item.id}
+                    >
+                      Télécharger
+                    </a>
+                    <button
+                      type="button"
+                      data-testid={'retained-delete-' + item.id}
+                      onClick={() => deleteRetained(item.id)}
+                      className="text-[var(--color-muted)] underline hover:text-red-600"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
 
       <div className="mt-8">
         {account.hasBilling ? (
