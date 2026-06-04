@@ -373,6 +373,7 @@ function PostRenderPanel({
   onPostRenderContactClick,
   compactSuggestion,
   onRetryCompact,
+  retainSourceConsent,
 }) {
   const score = Number.isFinite(confidence?.score) ? confidence.score : null;
   const verdictUpper = verdict ? String(verdict).toUpperCase() : null;
@@ -526,7 +527,9 @@ function PostRenderPanel({
       ) : null}
 
       <p className="text-center text-[11px] text-white/40">
-        No storage · No LLM · Files processed ephemerally.
+        {retainSourceConsent
+          ? 'Source kept 7 days at your request · No LLM · auto-deleted.'
+          : 'No storage · No LLM · Files processed ephemerally.'}
       </p>
     </section>
   );
@@ -547,6 +550,8 @@ export default function UploadCard({
   onRemoveFile,
   onBrandingChange,
   onTruncateChange,
+  retainSourceConsent = false,
+  onRetainConsentChange = () => {},
   onSubmit,
   onDownloadAgain,
   onCopyShareLink = () => {},
@@ -990,7 +995,8 @@ export default function UploadCard({
               <SettingRow title="Keep overview" description="Show overview summary page in the export." checked={layout?.overview !== false} onChange={(v) => handleLayoutChange('overview', v)} rowTestId="setting-row-overview" disabled={isLoading} />
               <SettingRow title="Keep headers" description="Keep repeated headers for multi-page outputs." checked={layout?.headers !== false} onChange={(v) => handleLayoutChange('headers', v)} rowTestId="setting-row-headers" disabled={isLoading} />
               <SettingRow title="Keep footer" description="Keep footer metadata in the exported PDF." checked={layout?.footer !== false} onChange={(v) => handleLayoutChange('footer', v)} rowTestId="setting-row-footer" disabled={isLoading} />
-              <SettingRow title="Truncate long text" description="Auto-crops very long content to keep layout stable" checked={truncateLongText} onChange={onTruncateChange} rowTestId="setting-row-truncate" disabled={isLoading} showBottomBorder={false} />
+              <SettingRow title="Truncate long text" description="Auto-crops very long content to keep layout stable" checked={truncateLongText} onChange={onTruncateChange} rowTestId="setting-row-truncate" disabled={isLoading} />
+              <SettingRow title="Keep my source file (7 days)" description="Lets us improve the product and fix your export manually if it breaks. Optional — your file is deleted after 7 days." checked={retainSourceConsent} onChange={onRetainConsentChange} rowTestId="setting-row-retain-consent" disabled={isLoading} showBottomBorder={false} />
             </div>
           </div>
         ) : null}
@@ -1134,6 +1140,7 @@ export default function UploadCard({
               onPostRenderContactClick={onPostRenderContactClick}
               compactSuggestion={compactSuggestion}
               onRetryCompact={onRetryCompact}
+              retainSourceConsent={retainSourceConsent}
             />
           ) : null}
 
