@@ -472,6 +472,8 @@ function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant 
       onRemoveFile={conversion.handleRemoveFile}
       onBrandingChange={conversion.setIncludeBranding}
       onTruncateChange={conversion.setTruncateLongText}
+      retainSourceConsent={conversion.retainSourceConsent}
+      onRetainConsentChange={conversion.setRetainSourceConsent}
       onSubmit={conversion.handleSubmit}
       onDownloadAgain={conversion.handleDownloadAnyway}
       onCopyShareLink={conversion.handleCopyShareLink}
