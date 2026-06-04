@@ -7,6 +7,8 @@ export default function AccountPage() {
   const { account, quota, loading, logout } = useSession();
   const [billingError, setBillingError] = useState('');
   const [retainedItems, setRetainedItems] = useState([]);
+  const [contacts, setContacts] = useState([]);
+  const [contactsTotal, setContactsTotal] = useState(0);
 
   useEffect(() => {
     if (!loading && !account) window.location.assign('/login');
@@ -32,6 +34,45 @@ export default function AccountPage() {
     try {
       await fetch('/api/account/retained-sources/' + id, { method: 'DELETE', credentials: 'include' });
       setRetainedItems((prev) => prev.filter((it) => it.id !== id));
+    } catch {
+      /* ignore */
+    }
+  }
+
+  useEffect(() => {
+    if (!account) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/account/contacts', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          setContacts(Array.isArray(data && data.items) ? data.items : []);
+          setContactsTotal((data && data.total) || 0);
+        }
+      } catch {
+        /* ignore — leave list empty */
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [account]);
+
+  async function deleteContact(id) {
+    try {
+      await fetch('/api/account/contacts/' + id, { method: 'DELETE', credentials: 'include' });
+      setContacts((c) => c.filter((x) => x.id !== id));
+      setContactsTotal((t) => Math.max(0, t - 1));
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function clearContacts() {
+    try {
+      await fetch('/api/account/contacts', { method: 'DELETE', credentials: 'include' });
+      setContacts([]);
+      setContactsTotal(0);
     } catch {
       /* ignore */
     }
@@ -125,6 +166,69 @@ export default function AccountPage() {
               );
             })}
           </ul>
+        )}
+      </section>
+
+      <section className="mt-10">
+        <h2 className="text-sm font-semibold text-[var(--color-text)]">Mes contacts ({contactsTotal})</h2>
+        {contactsTotal === 0 ? (
+          <p className="mt-3 text-sm text-[var(--color-muted)]">Aucun contact.</p>
+        ) : (
+          <>
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="text-[var(--color-muted)]">
+                    <th className="py-1 pr-3 font-medium">Nom</th>
+                    <th className="py-1 pr-3 font-medium">Email</th>
+                    <th className="py-1 pr-3 font-medium">Téléphone</th>
+                    <th className="py-1 pr-3 font-medium">Société</th>
+                    <th className="py-1 font-medium" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {contacts.map((c) => (
+                    <tr key={c.id} data-testid={'contact-row-' + c.id} className="border-t border-[var(--color-border)]">
+                      <td className="py-1 pr-3 text-[var(--color-text)]">{c.name || '—'}</td>
+                      <td className="py-1 pr-3 text-[var(--color-text)]">{c.email || '—'}</td>
+                      <td className="py-1 pr-3 text-[var(--color-text)]">{c.phone || '—'}</td>
+                      <td className="py-1 pr-3 text-[var(--color-text)]">{c.company || '—'}</td>
+                      <td className="py-1">
+                        <button
+                          type="button"
+                          data-testid={'contact-delete-' + c.id}
+                          onClick={() => deleteContact(c.id)}
+                          className="text-[var(--color-muted)] underline hover:text-red-600"
+                        >
+                          Supprimer
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {contactsTotal > contacts.length ? (
+              <p className="mt-2 text-xs text-[var(--color-muted)]">Affichage des {contacts.length} premiers sur {contactsTotal} — exportez pour tout récupérer.</p>
+            ) : null}
+            <div className="mt-3 flex items-center gap-3 text-sm">
+              <a
+                className="underline text-[var(--color-text)] hover:text-[var(--color-muted)]"
+                href="/api/account/contacts/export"
+                data-testid="contacts-export"
+              >
+                Exporter CSV
+              </a>
+              <button
+                type="button"
+                data-testid="contacts-clear"
+                onClick={clearContacts}
+                className="text-[var(--color-muted)] underline hover:text-red-600"
+              >
+                Tout supprimer
+              </button>
+            </div>
+          </>
         )}
       </section>
 
