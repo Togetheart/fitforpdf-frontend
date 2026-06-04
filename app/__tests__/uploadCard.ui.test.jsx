@@ -538,10 +538,14 @@ describe('UploadCard unit behavior', () => {
 
     const brandingRow = screen.getByTestId('setting-row-branding').parentElement;
     const truncateRow = screen.getByTestId('setting-row-truncate').parentElement;
+    const retainRow = screen.getByTestId('setting-row-retain-consent').parentElement;
 
     expect(brandingRow.className).toContain('border-b');
     expect(brandingRow.className).not.toContain('border-t');
-    expect(truncateRow.className).not.toContain('border-b');
+    // truncate is no longer the last row → it now carries a bottom separator
+    expect(truncateRow.className).toContain('border-b');
+    // the opt-in retain-consent row is last → no trailing separator
+    expect(retainRow.className).not.toContain('border-b');
   });
 
   test('upload card nested panels use glass styling', () => {
