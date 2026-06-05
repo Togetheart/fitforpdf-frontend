@@ -146,7 +146,7 @@ function CustomGroupsControl({ conversion }) {
   );
 }
 
-function ConversionInspector({ conversion, quota, className = '' }) {
+export function ConversionInspector({ conversion, quota, className = '' }) {
   const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
@@ -371,9 +371,13 @@ function ConversionInspector({ conversion, quota, className = '' }) {
         >
           Render another file
         </button>
-        <div className="mt-1 text-center text-[11.5px] text-slate-400">
-          {quotaSummary} - <a href="/pricing" className="text-blue-600">View pricing</a>
-        </div>
+        {/* When quota is locked, the amber "No exports left · Buy credits" line above
+            already states the plan status + pricing CTA — so we drop this duplicate. */}
+        {!quotaLocked ? (
+          <div className="mt-1 text-center text-[11.5px] text-slate-400">
+            {quotaSummary} - <a href="/pricing" className="text-blue-600">View pricing</a>
+          </div>
+        ) : null}
       </div>
     </aside>
   );
