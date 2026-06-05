@@ -415,7 +415,7 @@ test('POST /api/render forwards anon_id cookie to upstream', async () => {
   restoreEnv();
 });
 
-test('POST /api/render forwards only anon_id cookie, not other cookies', async () => {
+test('POST /api/render forwards the ffp_session cookie so renders run as the logged-in account', async () => {
   const restoreEnv = setupEnv({
     CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
     NEATEXPORT_API_KEY: 'backend-key',
@@ -428,13 +428,39 @@ test('POST /api/render forwards only anon_id cookie, not other cookies', async (
   const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
     method: 'POST',
     body: makeRequestBody(),
-    headers: { cookie: 'anon_id=token-abc; session=secret; _ga=GA1.2.123' },
+    headers: { cookie: 'anon_id=token-abc; ffp_session=sess-raw-1' },
   });
   const res = await POST(req);
   assert.equal(res.status, 200);
   const upstreamCookie = fetchMock.calls[0].options.headers.Cookie;
   assert.ok(upstreamCookie.includes('anon_id=token-abc'), 'must forward anon_id');
-  assert.ok(!upstreamCookie.includes('session='), 'must not forward session cookie');
+  assert.ok(upstreamCookie.includes('ffp_session=sess-raw-1'), 'must forward ffp_session');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render forwards only anon_id + ffp_session, not other cookies', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf' },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render?mode=normal', {
+    method: 'POST',
+    body: makeRequestBody(),
+    headers: { cookie: 'anon_id=token-abc; ffp_session=sess-1; session=secret; _ga=GA1.2.123' },
+  });
+  const res = await POST(req);
+  assert.equal(res.status, 200);
+  const upstreamCookie = fetchMock.calls[0].options.headers.Cookie;
+  assert.ok(upstreamCookie.includes('anon_id=token-abc'), 'must forward anon_id');
+  assert.ok(upstreamCookie.includes('ffp_session=sess-1'), 'must forward ffp_session');
+  assert.ok(!upstreamCookie.includes('session=secret'), 'must not forward an unrelated session cookie');
   assert.ok(!upstreamCookie.includes('_ga='), 'must not forward analytics cookie');
 
   fetchMock.restore();
