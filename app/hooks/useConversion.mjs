@@ -333,6 +333,28 @@ export default function useConversion({ quota }) {
   // the backend applies them only for entitled (paid) users.
   const [accentColor, setAccentColor] = useState('');
   const [logoFile, setLogoFile] = useState(null);
+  // Logo is paid branding; the backend SILENTLY drops anything > 256 KB or not a
+  // real PNG/JPEG. Validate at selection so the user gets a clear message instead
+  // of an export that quietly ignores their logo.
+  const [logoError, setLogoError] = useState('');
+  function handleLogoSelect(file) {
+    if (!file) { setLogoError(''); setLogoFile(null); return; }
+    const type = String(file.type || '').toLowerCase();
+    if (type !== 'image/png' && type !== 'image/jpeg') {
+      setLogoError('Logo : format PNG ou JPG uniquement.');
+      return;
+    }
+    if (Number.isFinite(file.size) && file.size > 256 * 1024) {
+      setLogoError('Logo trop lourd : 256 Ko maximum.');
+      return;
+    }
+    setLogoError('');
+    setLogoFile(file);
+  }
+  function removeLogo() {
+    setLogoFile(null);
+    setLogoError('');
+  }
   // Kunj control: rename sections (post-render). renderedSections come from the
   // X-CleanSheet-Sections response header (label + current title); overrides are
   // keyed by label and sent on the next render to re-title sections.
@@ -972,6 +994,9 @@ export default function useConversion({ quota }) {
     setAccentColor,
     logoFile,
     setLogoFile,
+    logoError,
+    handleLogoSelect,
+    removeLogo,
     renderedSections,
     renderedFrozenColumns,
     sectionTitleOverrides,
