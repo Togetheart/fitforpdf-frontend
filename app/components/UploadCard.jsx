@@ -621,13 +621,14 @@ export default function UploadCard({
   const verdictStyle = verdictVisualStyle(verdict ? String(verdict).toUpperCase() : '');
   const shouldShowVerdict = !isLoading && verdict;
   const normalizedFreeExportsLeft = normalizeFreeExportsLeft(freeExportsLeft);
+  const isUnlimitedPlan = String(planType || '').toLowerCase() === 'api_enterprise';
   const badgeClassValue = getBadgeRemainder(planType, freeExportsLeft, remainingInPeriod, usedInPeriod, periodLimit);
   const freeExportsBadgeClass = getFreeExportsBadgeClass(badgeClassValue);
-  const showBuyCredits = (
+  const showBuyCredits = !isUnlimitedPlan && ((
     Number.isFinite(normalizedFreeExportsLeft)
       ? normalizedFreeExportsLeft <= 1
       : false
-  ) || (showBuyCreditsForTwo && normalizedFreeExportsLeft === 2);
+  ) || (showBuyCreditsForTwo && normalizedFreeExportsLeft === 2));
   const quotaText = getQuotaBadgeText(planType, freeExportsLeft, remainingInPeriod, usedInPeriod, periodLimit);
   const [showBrandingUpgradeNudge, setShowBrandingUpgradeNudge] = React.useState(false);
   const [nudgeTarget, setNudgeTarget] = React.useState('branding');

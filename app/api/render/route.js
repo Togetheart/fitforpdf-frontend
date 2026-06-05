@@ -139,10 +139,20 @@ function buildUpstreamUrl(reqUrl, upstream, clientLocale = null) {
   return target;
 }
 
-function extractAnonCookie(cookieHeader) {
+// Forward both the anonymous device cookie AND the signed session cookie so the backend
+// resolves the LOGGED-IN account identity (via sessionAuth) on render. Without ffp_session,
+// every render by a logged-in user is processed as anon — wrong quota enforcement (paywall
+// for unlimited accounts), and source-retention / contacts-extraction get attributed to the
+// anon device instead of the account (so they never reach the user's /account).
+const FORWARDABLE_COOKIES = ['anon_id', 'ffp_session'];
+
+function extractForwardableCookies(cookieHeader) {
   if (!cookieHeader) return null;
-  const match = cookieHeader.split(';').map((c) => c.trim()).find((c) => c.startsWith('anon_id='));
-  return match || null;
+  const kept = cookieHeader
+    .split(';')
+    .map((c) => c.trim())
+    .filter((c) => FORWARDABLE_COOKIES.some((name) => c.startsWith(`${name}=`)));
+  return kept.length ? kept.join('; ') : null;
 }
 
 function buildUpstreamHeaders(apiKey, req, requestId) {
@@ -158,8 +168,8 @@ function buildUpstreamHeaders(apiKey, req, requestId) {
   if (flowId) headers['X-CleanSheet-Flow-Id'] = flowId;
   const branding = req.headers.get('x-fitforpdf-branding');
   if (branding) headers['X-FitForPDF-Branding'] = branding;
-  const anonCookie = extractAnonCookie(req.headers.get('cookie'));
-  if (anonCookie) headers.Cookie = anonCookie;
+  const forwardCookie = extractForwardableCookies(req.headers.get('cookie'));
+  if (forwardCookie) headers.Cookie = forwardCookie;
   const forwardedFor = req.headers.get('x-forwarded-for');
   if (forwardedFor) headers['X-Forwarded-For'] = forwardedFor;
 

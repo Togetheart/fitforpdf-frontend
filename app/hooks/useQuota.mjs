@@ -164,6 +164,11 @@ export default function useQuota() {
   }
 
   function applyQuotaExhaustion(code, payload = {}) {
+    // Defensive: an unlimited (api_enterprise) account must never be paywalled or
+    // downgraded, even if the render endpoint spuriously returns a quota 402.
+    if (isUnlimited) {
+      return '';
+    }
     const normalizedCode = String(code || '').trim();
     const nextPlan = QUOTA_STATUS_BY_RENDER_CODE[normalizedCode] || 'free';
     const nextMessage = getQuotaExhaustedMessage(nextPlan, normalizedCode);
