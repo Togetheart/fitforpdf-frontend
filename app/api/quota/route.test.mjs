@@ -83,7 +83,29 @@ test('GET /api/quota forwards anon_id cookie to upstream', async () => {
   restoreEnv();
 });
 
-test('GET /api/quota forwards only anon_id cookie, not other cookies', async () => {
+test('GET /api/quota forwards the ffp_session cookie so the logged-in account quota is used', async () => {
+  const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
+  const fetchMock = withMockFetch(() => {
+    return new Response(JSON.stringify({ plan: 'free', free: { remaining: 3 } }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  });
+
+  const req = new Request('https://www.fitforpdf.com/api/quota', {
+    headers: { cookie: 'anon_id=signed-token-abc; ffp_session=session-raw-xyz' },
+  });
+  const res = await GET(req);
+  assert.equal(res.status, 200);
+  const upstreamCookie = fetchMock.calls[0].options.headers.Cookie;
+  assert.ok(upstreamCookie.includes('anon_id=signed-token-abc'), 'must forward anon_id');
+  assert.ok(upstreamCookie.includes('ffp_session=session-raw-xyz'), 'must forward ffp_session');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('GET /api/quota forwards only anon_id + ffp_session, not other cookies', async () => {
   const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
   const fetchMock = withMockFetch(() => {
     return new Response(JSON.stringify({ plan_type: 'free' }), {
@@ -93,13 +115,14 @@ test('GET /api/quota forwards only anon_id cookie, not other cookies', async () 
   });
 
   const req = new Request('https://www.fitforpdf.com/api/quota', {
-    headers: { cookie: 'anon_id=signed-token; session=secret123; tracking=abc' },
+    headers: { cookie: 'anon_id=signed-token; ffp_session=sess-xyz; session=secret123; tracking=abc' },
   });
   const res = await GET(req);
   assert.equal(res.status, 200);
   const upstreamCookie = fetchMock.calls[0].options.headers.Cookie;
   assert.ok(upstreamCookie.includes('anon_id=signed-token'), 'must forward anon_id');
-  assert.ok(!upstreamCookie.includes('session='), 'must not forward session cookie');
+  assert.ok(upstreamCookie.includes('ffp_session=sess-xyz'), 'must forward ffp_session');
+  assert.ok(!upstreamCookie.includes('session=secret123'), 'must not forward an unrelated session cookie');
   assert.ok(!upstreamCookie.includes('tracking='), 'must not forward tracking cookie');
 
   fetchMock.restore();
