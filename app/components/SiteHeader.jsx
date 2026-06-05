@@ -6,12 +6,15 @@ import { cn } from '../lib/cn.mjs';
 import Button from './ui/Button';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
+import AccountMenu from './AccountMenu';
+import useSession from '../hooks/useSession.mjs';
 
 const SCROLL_THRESHOLD = 16;
 
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { account, logout } = useSession();
 
   useEffect(() => {
     function handleScroll() {
@@ -78,12 +81,16 @@ export default function SiteHeader() {
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/contact">
               Contact
             </a>
-            <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/login">
-              Se connecter
-            </a>
+            {account ? (
+              <AccountMenu account={account} onLogout={logout} />
+            ) : (
+              <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/login">
+                Se connecter
+              </a>
+            )}
             <ThemeToggle />
-            <Button variant="primary" href="/#generate" className="px-4 text-xs h-9">
-              Try free
+            <Button variant="primary" href={account ? '/app' : '/#generate'} className="px-4 text-xs h-9">
+              {account ? "Ouvrir l'app" : 'Try free'}
             </Button>
           </nav>
 
@@ -155,22 +162,41 @@ export default function SiteHeader() {
           >
             Contact
           </a>
-          <a
-            href="/login"
-            onClick={closeMenu}
-            className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
-          >
-            Se connecter
-          </a>
+          {account ? (
+            <>
+              <a
+                href="/account"
+                onClick={closeMenu}
+                className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
+              >
+                Mon compte
+              </a>
+              <button
+                type="button"
+                onClick={() => { closeMenu(); logout(); }}
+                className="rounded-lg px-3 py-3 text-left text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
+              >
+                Se déconnecter
+              </button>
+            </>
+          ) : (
+            <a
+              href="/login"
+              onClick={closeMenu}
+              className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
+            >
+              Se connecter
+            </a>
+          )}
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]">
             <ThemeToggle />
             <Button
               variant="primary"
-              href="/#generate"
+              href={account ? '/app' : '/#generate'}
               className="flex-1 ml-3"
               onClick={closeMenu}
             >
-              Try free
+              {account ? "Ouvrir l'app" : 'Try free'}
             </Button>
           </div>
         </nav>
