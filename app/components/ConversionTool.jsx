@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ArrowLeft, ArrowRight, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
 import useSession from '../hooks/useSession.mjs';
+import useIsDesktop from '../hooks/useIsDesktop.mjs';
 import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
@@ -311,7 +313,7 @@ function SectionNamesEditor({ conversion }) {
   );
 }
 
-export function ConversionInspector({ conversion, quota, className = '' }) {
+export function ConversionInspector({ conversion, quota, className = '', onCollapse, collapsed = false }) {
   const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
@@ -334,7 +336,14 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
       ].filter(Boolean).join(' ')}
     >
       <div className="shrink-0 bg-white pb-4">
-        <h2 className="text-[15px] font-bold text-slate-950">Adjust output</h2>
+        <div className="flex items-start gap-2">
+          <h2 className="text-[15px] font-bold text-slate-950">Adjust output</h2>
+          {onCollapse && !collapsed ? (
+            <span className="ml-auto">
+              <CollapseToggle side="right" collapsed={collapsed} onToggle={onCollapse} />
+            </span>
+          ) : null}
+        </div>
         <p className="mt-1 text-xs leading-5 text-slate-500">
           {conversion.pdfBlob
             ? 'Change anything, then update the preview. Re-render costs one export.'
@@ -547,7 +556,17 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
   );
 }
 
-function WorkbenchRail({ conversion }) {
+// Left rail (dark "Recent exports" + "Sections"). `className` owns the layout
+// concern so the same markup serves both branches: the mobile grid passes the
+// `order-3 hidden … lg:flex` grid-cell classes (rail is hidden on mobile),
+// while the desktop PanelGroup passes panel-fit classes (`flex-1`) and an
+// `onCollapse` handler that renders the header collapse toggle.
+function WorkbenchRail({
+  conversion,
+  className = 'order-3 hidden lg:order-none lg:flex lg:h-[calc(100vh-57px)]',
+  onCollapse,
+  collapsed = false,
+}) {
   const recentExports = Array.isArray(conversion.exportHistory) ? conversion.exportHistory.slice(0, 4) : [];
   const sections = Array.isArray(conversion.renderedSections) ? conversion.renderedSections : [];
 
@@ -555,11 +574,16 @@ function WorkbenchRail({ conversion }) {
     <aside
       aria-label="Recent exports and sections"
       data-testid="app-left-rail"
-      className="order-3 hidden flex-col overflow-hidden bg-slate-950 px-3.5 py-[18px] text-white lg:order-none lg:flex lg:h-[calc(100vh-57px)]"
+      className={['flex-col overflow-y-auto bg-slate-950 px-3.5 py-[18px] text-white', className].filter(Boolean).join(' ')}
     >
       <div className="flex items-center gap-2">
         <FolderOpen className="h-4 w-4 text-slate-400" aria-hidden="true" />
         <h2 className="text-sm font-semibold">Recent exports</h2>
+        {onCollapse && !collapsed ? (
+          <span className="ml-auto">
+            <CollapseToggle side="left" collapsed={collapsed} onToggle={onCollapse} />
+          </span>
+        ) : null}
       </div>
       <p className="mt-2 text-xs leading-5 text-slate-400">
         PDF artifacts only. Source spreadsheets are not stored.
@@ -1055,10 +1079,203 @@ function AppToolbar({ conversion, quota, session }) {
   );
 }
 
+// Center workspace (upload dropzone / rendered PDF preview). Shared by both the
+// desktop PanelGroup and the mobile stacked layout so the markup lives once.
+// `className` lets each branch own its sizing: the grid uses `order-1 … lg:…`
+// for the stacked/grid cell, the panel uses `h-full` to fill its Panel.
+function WorkbenchWorkspace({ conversion, quota, className = '' }) {
+  return (
+    <section
+      aria-label="Upload and PDF workspace"
+      data-testid="app-canvas"
+      className={['min-w-0 px-4 py-6 sm:px-8 sm:py-[30px]', className].filter(Boolean).join(' ')}
+    >
+      {conversion.pdfBlob ? (
+        <WorkbenchRenderedCanvas conversion={conversion} />
+      ) : (
+        <WorkbenchEmptyCanvas conversion={conversion} quota={quota} />
+      )}
+      <div className="mt-6 flex items-center gap-2 text-[12.5px] text-slate-500">
+        <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
+        Need this every week? <a href="/developers" className="font-semibold text-blue-600">Automate it with the API</a>
+      </div>
+    </section>
+  );
+}
+
+// A draggable divider between two panels. react-resizable-panels already gives
+// PanelResizeHandle role="separator" + arrow-key resizing; we only add a visible
+// grab affordance: a thin slate divider that widens + colors on hover/active to
+// match the light workbench theme.
+function WorkbenchResizeHandle() {
+  return (
+    <PanelResizeHandle className="group/handle relative flex w-px shrink-0 items-stretch bg-slate-200 outline-none transition-colors data-[resize-handle-state=hover]:bg-blue-400 data-[resize-handle-state=drag]:bg-blue-500 focus-visible:bg-blue-500">
+      <span
+        aria-hidden="true"
+        className="absolute inset-y-0 -left-1.5 -right-1.5 z-10"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-8 w-[3px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-transparent transition-colors group-hover/handle:bg-blue-400 group-data-[resize-handle-state=drag]/handle:bg-blue-500"
+      />
+    </PanelResizeHandle>
+  );
+}
+
+// A thin always-visible edge button shown WHERE a collapsed panel used to be, so
+// the user can re-open it. `side` decides which chevron / position it renders on.
+function CollapsedEdgeReopen({ side, label, onExpand }) {
+  const isLeft = side === 'left';
+  return (
+    <div
+      data-testid={`workbench-${side}-reopen`}
+      className={[
+        'flex h-full w-6 shrink-0 flex-col items-center bg-white py-2',
+        isLeft ? 'border-r border-slate-200' : 'border-l border-slate-200',
+      ].join(' ')}
+    >
+      <button
+        type="button"
+        aria-label={label}
+        onClick={onExpand}
+        className="inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+      >
+        {isLeft ? (
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        )}
+      </button>
+    </div>
+  );
+}
+
+// Header-row collapse/expand toggle wired to a Panel imperative ref. `collapsed`
+// drives the accessible name + chevron; clicking calls the panel's collapse()/
+// expand(). aria-label is exactly "Collapse/Expand left|right panel" so tests +
+// screen readers can target it.
+function CollapseToggle({ side, collapsed, onToggle }) {
+  const word = collapsed ? 'Expand' : 'Collapse';
+  const label = `${word} ${side} panel`;
+  const isLeft = side === 'left';
+  // When expanded, the chevron points "inward" (toward collapse direction);
+  // when collapsed it points "outward" (toward expand).
+  const pointLeft = isLeft ? !collapsed : collapsed;
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-expanded={!collapsed}
+      onClick={onToggle}
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-400 transition hover:border-slate-300 hover:text-slate-700"
+    >
+      {pointLeft ? (
+        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+      ) : (
+        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+      )}
+    </button>
+  );
+}
+
+// The desktop-only resizable / collapsible workbench. Renders a horizontal
+// PanelGroup: collapsible left rail | center workspace | collapsible inspector.
+// Sizes + collapsed state persist via autoSaveId (localStorage). Each
+// collapsible panel carries a header toggle (imperative collapse/expand) and,
+// when collapsed, a thin edge re-open affordance.
+function WorkbenchDesktopPanels({ conversion, quota }) {
+  const leftRef = React.useRef(null);
+  const rightRef = React.useRef(null);
+  const [leftCollapsed, setLeftCollapsed] = React.useState(false);
+  const [rightCollapsed, setRightCollapsed] = React.useState(false);
+
+  const toggleLeft = () => {
+    const panel = leftRef.current;
+    if (!panel) return;
+    if (panel.isCollapsed()) panel.expand();
+    else panel.collapse();
+  };
+  const toggleRight = () => {
+    const panel = rightRef.current;
+    if (!panel) return;
+    if (panel.isCollapsed()) panel.expand();
+    else panel.collapse();
+  };
+
+  // Edge re-open buttons live OUTSIDE the PanelGroup. With collapsedSize={0} a
+  // collapsed panel has zero width and would clip any in-panel affordance, so the
+  // thin re-open rail sits as a flex sibling on the group's edge and stays
+  // visible. Each is mounted only while its panel is collapsed.
+  return (
+    <div className="flex h-[calc(100vh-57px)] w-full">
+      {leftCollapsed ? (
+        <CollapsedEdgeReopen side="left" label="Expand left panel" onExpand={toggleLeft} />
+      ) : null}
+
+      <PanelGroup
+        direction="horizontal"
+        autoSaveId="ffp-workbench-panels"
+        data-testid="workbench-panel-group"
+        className="min-w-0 flex-1"
+      >
+        <Panel
+          ref={leftRef}
+          collapsible
+          defaultSize={18}
+          minSize={12}
+          collapsedSize={0}
+          onCollapse={() => setLeftCollapsed(true)}
+          onExpand={() => setLeftCollapsed(false)}
+          className="flex"
+        >
+          <WorkbenchRail
+            conversion={conversion}
+            className="flex h-full min-w-0 flex-1"
+            onCollapse={toggleLeft}
+            collapsed={leftCollapsed}
+          />
+        </Panel>
+
+        <WorkbenchResizeHandle />
+
+        <Panel minSize={30} className="flex" data-testid="workbench-center-panel">
+          <WorkbenchWorkspace conversion={conversion} quota={quota} className="h-full flex-1 overflow-y-auto" />
+        </Panel>
+
+        <WorkbenchResizeHandle />
+
+        <Panel
+          ref={rightRef}
+          collapsible
+          defaultSize={22}
+          minSize={16}
+          collapsedSize={0}
+          onCollapse={() => setRightCollapsed(true)}
+          onExpand={() => setRightCollapsed(false)}
+          className="flex"
+        >
+          <ConversionInspector
+            conversion={conversion}
+            quota={quota}
+            className="h-full min-w-0 flex-1"
+            onCollapse={toggleRight}
+            collapsed={rightCollapsed}
+          />
+        </Panel>
+      </PanelGroup>
+
+      {rightCollapsed ? (
+        <CollapsedEdgeReopen side="right" label="Expand right panel" onExpand={toggleRight} />
+      ) : null}
+    </div>
+  );
+}
+
 export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark', showInspector = false, layout = 'inline' }) {
   const quota = useQuota();
   const conversion = useConversion({ quota });
   const session = useSession();
+  const isDesktop = useIsDesktop();
 
   // Load "Recent exports" on mount, and refresh after each render (renderId changes).
   // useConversion only fetched history on a manual status change / load-more, so the
@@ -1101,30 +1318,29 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
     return (
       <>
         <AppToolbar conversion={conversion} quota={quota} session={session} />
-        <div
-          data-testid="tool"
-          className="grid min-h-[calc(100vh-57px)] grid-cols-1 overflow-visible lg:h-[calc(100vh-57px)] lg:grid-cols-[264px_minmax(0,1fr)_320px] lg:overflow-hidden"
-        >
-          <WorkbenchRail conversion={conversion} />
-
-          <section
-            aria-label="Upload and PDF workspace"
-            data-testid="app-canvas"
-            className="order-1 min-w-0 px-4 py-6 sm:px-8 sm:py-[30px] lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-y-auto"
+        {isDesktop ? (
+          // Desktop (>= lg): resizable / collapsible PanelGroup. data-testid="tool"
+          // is kept here so existing selectors that scope to the workbench still work.
+          <div data-testid="tool" className="overflow-hidden">
+            <WorkbenchDesktopPanels conversion={conversion} quota={quota} />
+          </div>
+        ) : (
+          // Mobile (< lg): the unchanged stacked layout. Same content components as
+          // the desktop branch — no duplicated markup. The rail is hidden on mobile
+          // (it carries `hidden ... lg:flex`), matching the prior behavior exactly.
+          <div
+            data-testid="tool"
+            className="grid min-h-[calc(100vh-57px)] grid-cols-1 overflow-visible lg:h-[calc(100vh-57px)] lg:grid-cols-[264px_minmax(0,1fr)_320px] lg:overflow-hidden"
           >
-            {conversion.pdfBlob ? (
-              <WorkbenchRenderedCanvas conversion={conversion} />
-            ) : (
-              <WorkbenchEmptyCanvas conversion={conversion} quota={quota} />
-            )}
-            <div className="mt-6 flex items-center gap-2 text-[12.5px] text-slate-500">
-              <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-              Need this every week? <a href="/developers" className="font-semibold text-blue-600">Automate it with the API</a>
-            </div>
-          </section>
-
-          <ConversionInspector conversion={conversion} quota={quota} />
-        </div>
+            <WorkbenchRail conversion={conversion} />
+            <WorkbenchWorkspace
+              conversion={conversion}
+              quota={quota}
+              className="order-1 lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-y-auto"
+            />
+            <ConversionInspector conversion={conversion} quota={quota} />
+          </div>
+        )}
       </>
     );
   }
