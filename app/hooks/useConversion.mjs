@@ -6,6 +6,7 @@ import {
   isPageBurdenFail,
   normalizePageBurdenRecommendations,
   recommendationLabel,
+  buildSubmitColumnGroups,
 } from '../pageUiLogic.mjs';
 import { getPlanExhausted, QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
 import { useCheckout } from './useCheckout.mjs';
@@ -423,6 +424,9 @@ export default function useConversion({ quota }) {
   // Custom column groups (Kunj T5): array of { label, columns } sent on the
   // next render. null => use the engine's automatic grouping.
   const [columnGroupsOverride, setColumnGroupsOverride] = useState(null);
+  // Drag-and-drop section order: array of section labels (e.g. ['B','A']).
+  // [] => the rendered/natural order. Sent as columnGroups order on render.
+  const [sectionOrder, setSectionOrder] = useState([]);
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -544,9 +548,19 @@ export default function useConversion({ quota }) {
           formData.append('sectionTitles', JSON.stringify(trimmedOverrides));
         }
       }
-      // Custom column groups (Kunj T5) — only when the user defined an override.
-      if (!isDemoRender && Array.isArray(columnGroupsOverride) && columnGroupsOverride.length) {
-        formData.append('columnGroups', JSON.stringify(columnGroupsOverride));
+      // Custom column groups (Kunj T5) + drag-and-drop section order: emit groups
+      // in the user's chosen order. Returns null when nothing is customized, so a
+      // plain render still lets the engine auto-group (unchanged behavior).
+      if (!isDemoRender) {
+        const submitGroups = buildSubmitColumnGroups({
+          renderedSections,
+          columnGroupsOverride,
+          sectionOrder,
+          frozenColumns: renderedFrozenColumns,
+        });
+        if (Array.isArray(submitGroups) && submitGroups.length) {
+          formData.append('columnGroups', JSON.stringify(submitGroups));
+        }
       }
 
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText, columnMap }), {
@@ -741,6 +755,7 @@ export default function useConversion({ quota }) {
     // A new file invalidates any prior section/group customization.
     setSectionTitleOverrides({});
     setColumnGroupsOverride(null);
+    setSectionOrder([]);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
   }
@@ -779,6 +794,7 @@ export default function useConversion({ quota }) {
     // inspector's section/group controls don't linger on the old file.
     setSectionTitleOverrides({});
     setColumnGroupsOverride(null);
+    setSectionOrder([]);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
   }
@@ -865,6 +881,7 @@ export default function useConversion({ quota }) {
     // show stale section/group controls before the next file is picked.
     setSectionTitleOverrides({});
     setColumnGroupsOverride(null);
+    setSectionOrder([]);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
     if (typeof document === 'undefined') return;
@@ -1060,6 +1077,8 @@ export default function useConversion({ quota }) {
     setSectionTitleOverrides,
     columnGroupsOverride,
     setColumnGroupsOverride,
+    sectionOrder,
+    setSectionOrder,
     // conversion
     isLoading,
     error,
