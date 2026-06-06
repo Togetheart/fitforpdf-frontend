@@ -21,7 +21,12 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # node >=22 required: the `npm test` script passes Next.js dynamic-route
+          # paths like app/api/account/contacts/[id]/route.test.mjs to `node --test`
+          # using POSIX bracket-escaping ('[[]id[]]'). node 20's test runner has no
+          # glob support and reads that arg literally -> "Could not find" -> exit 1.
+          # node >=22's runner glob-expands it correctly. See .nvmrc.
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
