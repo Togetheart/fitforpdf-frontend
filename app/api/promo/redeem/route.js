@@ -16,10 +16,18 @@ function getPromoUrl() {
   return `${upstream.replace(/\/+$/, '')}/v1/promo/redeem`;
 }
 
-function extractAnonCookie(cookieHeader) {
+// Forward the anon device cookie AND the signed session cookie so the backend
+// resolves the LOGGED-IN account identity (sessionAuth) — credits should attach to
+// the account when the user is signed in, not the anon device.
+const FORWARDABLE_COOKIES = ['anon_id', 'ffp_session'];
+
+function extractForwardableCookies(cookieHeader) {
   if (!cookieHeader) return null;
-  const match = cookieHeader.split(';').map((c) => c.trim()).find((c) => c.startsWith('anon_id='));
-  return match || null;
+  const kept = cookieHeader
+    .split(';')
+    .map((c) => c.trim())
+    .filter((c) => FORWARDABLE_COOKIES.some((name) => c.startsWith(`${name}=`)));
+  return kept.length ? kept.join('; ') : null;
 }
 
 function buildHeaders(req) {

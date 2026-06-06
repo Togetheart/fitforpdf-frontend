@@ -98,7 +98,7 @@ test('GET /api/jobs forwards cursor and status query params', async () => {
   restoreEnv();
 });
 
-test('GET /api/jobs forwards anon_id cookie only', async () => {
+test('GET /api/jobs forwards anon_id + ffp_session so it reads the logged-in account history', async () => {
   const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
   const fetchMock = withMockFetch(() => {
     return new Response(JSON.stringify({ items: [], count: 0 }), {
@@ -108,14 +108,15 @@ test('GET /api/jobs forwards anon_id cookie only', async () => {
   });
 
   const req = new Request('https://www.fitforpdf.com/api/jobs', {
-    headers: { cookie: 'anon_id=signed-token; session=secret123; tracking=abc' },
+    headers: { cookie: 'anon_id=signed-token; ffp_session=sess-xyz; session=secret123; tracking=abc' },
   });
   const res = await GET(req);
   assert.equal(res.status, 200);
   const upstreamCookie = fetchMock.calls[0].options.headers.Cookie;
-  assert.ok(upstreamCookie.includes('anon_id=signed-token'));
-  assert.ok(!upstreamCookie.includes('session='));
-  assert.ok(!upstreamCookie.includes('tracking='));
+  assert.ok(upstreamCookie.includes('anon_id=signed-token'), 'must forward anon_id');
+  assert.ok(upstreamCookie.includes('ffp_session=sess-xyz'), 'must forward ffp_session (logged-in account)');
+  assert.ok(!upstreamCookie.includes('session=secret123'), 'must not forward an unrelated session cookie');
+  assert.ok(!upstreamCookie.includes('tracking='), 'must not forward tracking cookie');
 
   fetchMock.restore();
   restoreEnv();
