@@ -100,8 +100,8 @@ describe('/app custom groups — pinned columns are visible and movable (Option 
     expect(box.textContent).toContain('Customer ID');
     expect(box.textContent).toContain('Internal ID');
     // Pinned columns default to the Fixed bucket (select value 'fixed').
-    expect(box.querySelector('select[aria-label="Group for Customer ID"]').value).toBe('fixed');
-    expect(box.querySelector('select[aria-label="Group for Internal ID"]').value).toBe('fixed');
+    expect(box.querySelector('select[aria-label="Section for Customer ID"]').value).toBe('fixed');
+    expect(box.querySelector('select[aria-label="Section for Internal ID"]').value).toBe('fixed');
   });
 
   test('moving a pinned column into a real group un-pins it in the override', async () => {
@@ -109,7 +109,7 @@ describe('/app custom groups — pinned columns are visible and movable (Option 
     const box = await screen.findByTestId('app-custom-groups');
     await act(async () => {
       // Move into the first section (positional "Group A" = option index 0).
-      fireEvent.change(box.querySelector('select[aria-label="Group for Customer ID"]'), { target: { value: '0' } });
+      fireEvent.change(box.querySelector('select[aria-label="Section for Customer ID"]'), { target: { value: '0' } });
     });
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Update preview/i })); });
     await waitFor(() => expect(renderCalls.length).toBe(2), { timeout: 3000 });
@@ -152,11 +152,42 @@ describe('/app custom groups — column name takes its group color', () => {
     const box = await screen.findByTestId('app-custom-groups');
 
     await act(async () => {
-      fireEvent.change(box.querySelector('select[aria-label="Group for Customer ID"]'), { target: { value: '0' } });
+      fireEvent.change(box.querySelector('select[aria-label="Section for Customer ID"]'), { target: { value: '0' } });
     });
 
     // Recolored from the draft alone — no second render call yet.
     expect(renderCalls.length).toBe(1);
     expect(within(box).getByText('Customer ID').className).toContain('text-blue-700');
+  });
+});
+
+/**
+ * Terminology is unified on "Section" (the PDF output concept, already used by the
+ * dropdowns and the "Section names" editor) — no more "Group" in the visible copy.
+ */
+describe('/app custom groups — panel uses "Section" terminology, not "Group"', () => {
+  test('pills, header, option, aria-label and hint all say "Section"', async () => {
+    await generate();
+    const box = await screen.findByTestId('app-custom-groups');
+
+    // Colored pills: positional labels read "Section A", "Section B".
+    expect(screen.getByText('Section A')).toBeTruthy();
+    expect(screen.getByText('Section B')).toBeTruthy();
+    expect(screen.queryByText('Group A')).toBeNull();
+
+    // Sub-panel header.
+    expect(screen.getByText('Custom sections')).toBeTruthy();
+    expect(screen.queryByText('Custom groups')).toBeNull();
+
+    // Dropdown trailing option + per-row aria-label.
+    const optionTexts = [...box.querySelectorAll('option')].map((o) => o.textContent);
+    expect(optionTexts).toContain('New section');
+    expect(optionTexts).not.toContain('New group');
+    expect(box.querySelector('select[aria-label="Section for Region"]')).toBeTruthy();
+    expect(box.querySelector('select[aria-label="Group for Region"]')).toBeNull();
+
+    // Hint copy.
+    expect(box.textContent).toContain('between sections');
+    expect(box.textContent).not.toContain('between groups');
   });
 });
