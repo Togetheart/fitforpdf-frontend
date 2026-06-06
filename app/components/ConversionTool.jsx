@@ -290,6 +290,18 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
         </InspectorSection>
 
         <InspectorSection title="Branding" status="live" hint="Title, accent color, logo & footer for paid exports.">
+          <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-slate-950">
+            <span>Logo &amp; branding</span>
+            <input
+              type="checkbox"
+              aria-label="Logo & branding"
+              data-testid="app-branding-toggle"
+              checked={conversion.includeBranding !== false}
+              onChange={(e) => conversion.setIncludeBranding(e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+          </label>
+          <p className="mb-3 text-[11px] text-slate-400">Désactivé = PDF sans aucun logo (ni FitForPDF, ni le vôtre).</p>
           <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
             <span>Accent color</span>
           </label>
@@ -313,12 +325,26 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
               type="file"
               aria-label="Logo image (PNG or JPG)"
               accept="image/png,image/jpeg"
-              onChange={(e) => conversion.setLogoFile(e.target.files?.[0] || null)}
+              onChange={(e) => conversion.handleLogoSelect(e.target.files?.[0] || null)}
               className="block w-full text-[12px] text-slate-600 file:mr-2 file:min-h-9 file:rounded-lg file:border file:border-slate-200 file:bg-white file:px-3 file:text-[12px] file:font-semibold file:text-slate-700"
             />
-            <p className="mt-1 text-[11px] text-slate-400">
-              {conversion.logoFile ? `Selected: ${conversion.logoFile.name}` : 'PNG or JPG, up to 256 KB.'}
-            </p>
+            {conversion.logoError ? (
+              <p data-testid="app-logo-error" className="mt-1 text-[11px] font-medium text-red-600">{conversion.logoError}</p>
+            ) : (
+              <p className="mt-1 text-[11px] text-slate-400">
+                {conversion.logoFile ? `Selected: ${conversion.logoFile.name}` : 'PNG or JPG, up to 256 KB.'}
+              </p>
+            )}
+            {conversion.logoFile ? (
+              <button
+                type="button"
+                data-testid="app-logo-remove"
+                onClick={() => conversion.removeLogo()}
+                className="mt-1 text-[11.5px] text-blue-600"
+              >
+                Retirer le logo
+              </button>
+            ) : null}
           </div>
           <label htmlFor="app-footer-text" className="mb-2 block text-[13px] font-semibold text-slate-950">Footer text</label>
           <input
