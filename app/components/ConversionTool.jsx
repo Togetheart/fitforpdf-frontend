@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Code2, Download, FileText, Layers3, PanelLeft, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, Code2, Download, FileText, Layers3, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -413,7 +413,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
       aria-label="Conversion settings"
       data-testid="app-inspector"
       className={[
-        'order-2 flex min-h-[620px] flex-col overflow-visible border-t border-slate-200 bg-white px-[18px] pt-[22px] lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-hidden lg:border-l lg:border-t-0',
+        'order-2 flex min-h-[620px] flex-col overflow-visible bg-white px-[18px] pt-[22px] lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-hidden',
         className,
       ].filter(Boolean).join(' ')}
     >
@@ -1259,71 +1259,67 @@ function WorkbenchWorkspace({ conversion, quota, className = '' }) {
 // match the light workbench theme.
 function WorkbenchResizeHandle() {
   return (
-    <PanelResizeHandle className="group/handle relative flex w-px shrink-0 items-stretch bg-slate-200 outline-none transition-colors data-[resize-handle-state=hover]:bg-blue-400 data-[resize-handle-state=drag]:bg-blue-500 focus-visible:bg-blue-500">
+    <PanelResizeHandle className="group/handle relative flex w-2 shrink-0 items-stretch justify-center bg-slate-100 outline-none">
       <span
         aria-hidden="true"
-        className="absolute inset-y-0 -left-1.5 -right-1.5 z-10"
+        className="absolute inset-y-0 -left-1 -right-1 z-10"
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-8 w-[3px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-transparent transition-colors group-hover/handle:bg-blue-400 group-data-[resize-handle-state=drag]/handle:bg-blue-500"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-9 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-slate-300 transition-colors group-hover/handle:bg-blue-400 group-data-[resize-handle-state=drag]/handle:bg-blue-500 group-focus-visible/handle:bg-blue-500"
       />
     </PanelResizeHandle>
   );
 }
 
-// A thin always-visible edge button shown WHERE a collapsed panel used to be, so
-// the user can re-open it. `side` decides which chevron / position it renders on.
+// A thin always-visible edge rail shown WHERE a collapsed panel used to be, so the
+// user can re-open it. Uses the macOS-style panel-open icon (lucide PanelLeftOpen /
+// PanelRightOpen) in a clean white rounded button, on the gray gutter.
 function CollapsedEdgeReopen({ side, label, onExpand }) {
   const isLeft = side === 'left';
+  const Icon = isLeft ? PanelLeftOpen : PanelRightOpen;
   return (
     <div
       data-testid={`workbench-${side}-reopen`}
-      className={[
-        'flex h-full w-6 shrink-0 flex-col items-center bg-white py-2',
-        isLeft ? 'border-r border-slate-200' : 'border-l border-slate-200',
-      ].join(' ')}
+      className="flex h-full w-10 shrink-0 flex-col items-center bg-slate-100 py-2"
     >
       <button
         type="button"
         aria-label={label}
+        title={label}
         onClick={onExpand}
-        className="inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-slate-900"
       >
-        {isLeft ? (
-          <ChevronRight className="h-4 w-4" aria-hidden="true" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-        )}
+        <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
       </button>
     </div>
   );
 }
 
-// Header-row collapse/expand toggle wired to a Panel imperative ref. `collapsed`
-// drives the accessible name + chevron; clicking calls the panel's collapse()/
-// expand(). aria-label is exactly "Collapse/Expand left|right panel" so tests +
-// screen readers can target it.
+// Header-row collapse toggle wired to a Panel imperative ref. Uses the macOS-style
+// panel-toggle icon (lucide PanelLeftClose / PanelRightClose, like Claude Code).
+// Themed light (right inspector, white) or dark (left rail, slate-950). aria-label
+// is exactly "Collapse/Expand left|right panel" so tests + screen readers target it.
 function CollapseToggle({ side, collapsed, onToggle }) {
   const word = collapsed ? 'Expand' : 'Collapse';
   const label = `${word} ${side} panel`;
   const isLeft = side === 'left';
-  // When expanded, the chevron points "inward" (toward collapse direction);
-  // when collapsed it points "outward" (toward expand).
-  const pointLeft = isLeft ? !collapsed : collapsed;
+  const Icon = isLeft ? PanelLeftClose : PanelRightClose;
   return (
     <button
       type="button"
       aria-label={label}
       aria-expanded={!collapsed}
       onClick={onToggle}
-      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-400 transition hover:border-slate-300 hover:text-slate-700"
+      title={label}
+      className={[
+        'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition',
+        isLeft
+          ? 'text-slate-400 hover:bg-white/10 hover:text-white'
+          : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700',
+      ].join(' ')}
     >
-      {pointLeft ? (
-        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-      ) : (
-        <ChevronRight className="h-4 w-4" aria-hidden="true" />
-      )}
+      <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
     </button>
   );
 }
@@ -1356,8 +1352,13 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
   // collapsed panel has zero width and would clip any in-panel affordance, so the
   // thin re-open rail sits as a flex sibling on the group's edge and stays
   // visible. Each is mounted only while its panel is collapsed.
+  // Each panel's content sits in a floating "card" (rounded, ring, shadow) on a gray
+  // gutter, with the gutter showing through the gaps + resize handles — the Anthropic
+  // app look. CARD owns the rounding/inset so the shared content components are reused
+  // untouched (their square corners are clipped by overflow-hidden).
+  const CARD = 'm-1.5 flex min-w-0 flex-1 overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5';
   return (
-    <div className="flex h-[calc(100vh-57px)] w-full">
+    <div className="flex h-[calc(100vh-57px)] w-full bg-slate-100">
       {leftCollapsed ? (
         <CollapsedEdgeReopen side="left" label="Expand left panel" onExpand={toggleLeft} />
       ) : null}
@@ -1378,18 +1379,22 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
           onExpand={() => setLeftCollapsed(false)}
           className="flex"
         >
-          <WorkbenchRail
-            conversion={conversion}
-            className="flex h-full min-w-0 flex-1"
-            onCollapse={toggleLeft}
-            collapsed={leftCollapsed}
-          />
+          <div className={CARD}>
+            <WorkbenchRail
+              conversion={conversion}
+              className="flex h-full min-w-0 flex-1"
+              onCollapse={toggleLeft}
+              collapsed={leftCollapsed}
+            />
+          </div>
         </Panel>
 
         <WorkbenchResizeHandle />
 
         <Panel minSize={30} className="flex" data-testid="workbench-center-panel">
-          <WorkbenchWorkspace conversion={conversion} quota={quota} className="h-full flex-1 overflow-y-auto" />
+          <div className={`${CARD} bg-white`}>
+            <WorkbenchWorkspace conversion={conversion} quota={quota} className="h-full flex-1 overflow-y-auto" />
+          </div>
         </Panel>
 
         <WorkbenchResizeHandle />
@@ -1404,13 +1409,15 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
           onExpand={() => setRightCollapsed(false)}
           className="flex"
         >
-          <ConversionInspector
-            conversion={conversion}
-            quota={quota}
-            className="h-full min-w-0 flex-1"
-            onCollapse={toggleRight}
-            collapsed={rightCollapsed}
-          />
+          <div className={`${CARD} bg-white`}>
+            <ConversionInspector
+              conversion={conversion}
+              quota={quota}
+              className="h-full min-w-0 flex-1"
+              onCollapse={toggleRight}
+              collapsed={rightCollapsed}
+            />
+          </div>
         </Panel>
       </PanelGroup>
 
