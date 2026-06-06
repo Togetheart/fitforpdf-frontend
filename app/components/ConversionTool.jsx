@@ -8,6 +8,7 @@ import useSession from '../hooks/useSession.mjs';
 import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
+import { recommendationLabel } from '../pageUiLogic.mjs';
 
 /*
  * ConversionTool - the reusable conversion surface.
@@ -638,7 +639,7 @@ function WorkbenchDropzone({ conversion, quota }) {
         <h2 className="max-w-[320px] text-[18px] font-semibold leading-tight text-slate-950">
           {conversion.file ? conversion.file.name : 'Drop your Excel or CSV here'}
         </h2>
-        <p className="mt-2 text-[13.5px] text-slate-500">.xlsx, .xls, .csv - up to 20 MB</p>
+        <p className="mt-2 text-[13.5px] text-slate-500">.xlsx, .xls, .csv - up to 4 MB</p>
         <div className="my-[18px] text-[12.5px] text-slate-400">{hasFile ? 'ready' : 'or'}</div>
         {hasFile ? (
           <>
@@ -682,6 +683,36 @@ function WorkbenchDropzone({ conversion, quota }) {
             Browse files
           </button>
         )}
+        {(conversion.failKind === 'page_burden' || conversion.error) ? (
+          <div
+            data-testid="generate-error"
+            role="alert"
+            onClick={(event) => event.stopPropagation()}
+            className="mt-4 w-full max-w-[460px] rounded-[10px] border border-rose-200 bg-rose-50 px-4 py-3 text-left"
+          >
+            {conversion.failKind === 'page_burden' ? (
+              <>
+                <p className="text-[13.5px] font-semibold text-rose-800">
+                  {conversion.pageBurdenCopy?.title
+                    || 'This export is too large to render as a clean, sendable PDF.'}
+                </p>
+                {conversion.pageBurdenCopy?.description ? (
+                  <p className="mt-1 text-[12.5px] text-rose-700/90">{conversion.pageBurdenCopy.description}</p>
+                ) : null}
+                {Array.isArray(conversion.failureRecommendations) && conversion.failureRecommendations.length > 0 ? (
+                  <ul className="mt-2 list-disc space-y-0.5 pl-5 text-[12.5px] text-rose-700">
+                    {conversion.failureRecommendations.map((token) => (
+                      <li key={token}>{recommendationLabel(token)}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </>
+            ) : (
+              <p className="text-[13.5px] font-medium text-rose-700">{conversion.error}</p>
+            )}
+          </div>
+        ) : null}
+
         <div className="mt-[22px] flex flex-wrap justify-center gap-x-[18px] gap-y-2 text-xs font-medium text-slate-500">
           {['No storage', 'No LLM in the data path', 'EU-hosted'].map((item) => (
             <span key={item} className="inline-flex items-center gap-1.5">
