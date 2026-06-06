@@ -9,6 +9,22 @@ import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
 import { recommendationLabel } from '../pageUiLogic.mjs';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 /*
  * ConversionTool - the reusable conversion surface.
@@ -51,26 +67,23 @@ function InspectorSection({ title, status, hint, children }) {
   );
 }
 
-// Reserved group label (matches the backend) naming columns pinned to every
-// section. Real groups are the data sections (A, B, ...).
-const FIXED_GROUP_LABEL = '__fixed__';
-const groupOptionLabel = (l) => (l === FIXED_GROUP_LABEL ? 'Fixed (every section)' : `Group ${l}`);
+// Reserved target value for pinned columns repeated in every section.
+const FIXED_TARGET = 'fixed';
+// Positional section label for index i: 0 -> 'A', 1 -> 'B', ...
+const sectionLabel = (i) => String.fromCharCode(65 + i);
 
 /*
- * CustomGroupsControl — assign EVERY column to a group, then re-render.
- * Columns come from the render response: the per-section data columns
- * (conversion.renderedSections[].columns) PLUS the pinned/anchor columns
- * (conversion.renderedFrozenColumns), so nothing is hidden. Pinned columns
- * default to "Fixed" (repeated in every section); moving one into a real group
- * un-pins it. Reassigning rebuilds the columnGroups override (including the
- * reserved Fixed group) sent on the next "Update preview".
+ * CustomGroupsControl — assign EVERY column to a section, then re-render.
+ * Operates on the position-based section draft (conversion.sectionDraft) plus
+ * the pinned columns (conversion.frozenDraft), so order/titles set elsewhere are
+ * preserved. Moving a column calls conversion.reassignSectionColumn(col, target)
+ * where target is 'fixed', a section index, or the next index (new section).
  */
 function CustomGroupsControl({ conversion }) {
-  const sections = Array.isArray(conversion.renderedSections) ? conversion.renderedSections : [];
-  const frozenColumns = Array.isArray(conversion.renderedFrozenColumns) ? conversion.renderedFrozenColumns : [];
-  const sectionColumns = sections.flatMap((s) => (Array.isArray(s.columns) ? s.columns : []));
-  // Every column the user can place: section data columns + the pinned ones.
-  const allColumns = [...new Set([...sectionColumns, ...frozenColumns])];
+  const sectionDraft = Array.isArray(conversion.sectionDraft) ? conversion.sectionDraft : [];
+  const frozenDraft = Array.isArray(conversion.frozenDraft) ? conversion.frozenDraft : [];
+  const sectionColumns = sectionDraft.flatMap((s) => (Array.isArray(s.columns) ? s.columns : []));
+  const allColumns = [...new Set([...sectionColumns, ...frozenDraft])];
 
   if (allColumns.length === 0) {
     return (
@@ -80,41 +93,22 @@ function CustomGroupsControl({ conversion }) {
     );
   }
 
-  const frozenSet = new Set(frozenColumns);
-  // Current assignment: column -> group label. From the override if set, else
-  // from the rendered sections; pinned columns default to Fixed.
-  const assignment = {};
-  if (Array.isArray(conversion.columnGroupsOverride)) {
-    for (const g of conversion.columnGroupsOverride) {
-      for (const c of g.columns || []) assignment[c] = g.label;
-    }
-  } else {
-    for (const s of sections) {
-      for (const c of s.columns || []) assignment[c] = s.label;
-    }
-    for (const c of frozenColumns) assignment[c] = FIXED_GROUP_LABEL;
-  }
-  for (const c of allColumns) {
-    if (!assignment[c]) assignment[c] = frozenSet.has(c) ? FIXED_GROUP_LABEL : (sections[0]?.label || 'A');
-  }
+  // Current target per column: a section index, or FIXED_TARGET.
+  const frozenSet = new Set(frozenDraft);
+  const targetOf = (col) => {
+    if (frozenSet.has(col)) return FIXED_TARGET;
+    const idx = sectionDraft.findIndex((s) => (s.columns || []).includes(col));
+    return idx >= 0 ? String(idx) : '0';
+  };
 
-  const labels = sections.map((s) => s.label);
-  const nextLabel = String.fromCharCode(65 + labels.length); // allow one new group
-  const options = [FIXED_GROUP_LABEL, ...labels, nextLabel];
-
-  function reassign(column, label) {
-    const next = { ...assignment, [column]: label };
-    const byLabel = new Map();
-    for (const c of allColumns) {
-      const l = next[c];
-      if (!byLabel.has(l)) byLabel.set(l, []);
-      byLabel.get(l).push(c);
-    }
-    const groups = [...byLabel.entries()]
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([label, columns]) => ({ label, columns }));
-    conversion.setColumnGroupsOverride(groups);
-  }
+  const options = [
+    { value: FIXED_TARGET, label: 'Fixed (every section)' },
+    ...sectionDraft.map((s, i) => ({
+      value: String(i),
+      label: s.title ? `Section ${s.title}` : `Group ${sectionLabel(i)}`,
+    })),
+    { value: String(sectionDraft.length), label: 'New group' },
+  ];
 
   return (
     <div data-testid="app-custom-groups" className="mt-2 flex flex-col gap-1.5">
@@ -125,7 +119,7 @@ function CustomGroupsControl({ conversion }) {
         <div key={col} className="flex items-center gap-2">
           <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-[12.5px] text-slate-700">
             <span className="truncate">{col}</span>
-            {assignment[col] === FIXED_GROUP_LABEL ? (
+            {frozenSet.has(col) ? (
               <span className="shrink-0 rounded bg-slate-100 px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-slate-400">
                 fixed
               </span>
@@ -133,17 +127,112 @@ function CustomGroupsControl({ conversion }) {
           </span>
           <select
             aria-label={`Group for ${col}`}
-            value={assignment[col]}
-            onChange={(e) => reassign(col, e.target.value)}
+            value={targetOf(col)}
+            onChange={(e) => {
+              const v = e.target.value;
+              conversion.reassignSectionColumn(col, v === FIXED_TARGET ? FIXED_TARGET : Number(v));
+            }}
             className="min-h-11 rounded-lg border border-slate-200 bg-white px-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-8"
           >
-            {options.map((l) => (
-              <option key={l} value={l}>{groupOptionLabel(l)}</option>
+            {options.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
         </div>
       ))}
     </div>
+  );
+}
+
+// One draggable + renamable section row. The `::` handle is the drag affordance
+// (so the title input stays editable). Reordering reaches preview + download via
+// the positional columnGroups order sent on the next "Update preview".
+function SortableSectionRow({ id, index, title, onRename }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className="flex items-center gap-2">
+      <button
+        type="button"
+        aria-label={`Reorder section ${title || sectionLabel(index)}`}
+        className="cursor-grab touch-none select-none px-0.5 text-sm leading-none text-slate-300 hover:text-slate-500"
+        {...attributes}
+        {...listeners}
+      >
+        ::
+      </button>
+      <input
+        type="text"
+        value={title}
+        maxLength={80}
+        onChange={(e) => onRename(index, e.target.value)}
+        className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-9"
+      />
+    </div>
+  );
+}
+
+// "Section names" editor: drag-to-reorder (mouse/touch/keyboard) + rename, on the
+// position-based section draft. Each row id is its current index (stable within a
+// render); onDragEnd maps ids back to from/to indices.
+function SectionNamesEditor({ conversion }) {
+  const draft = Array.isArray(conversion.sectionDraft) ? conversion.sectionDraft : [];
+  const ids = draft.map((_, i) => `section-${i}`);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  if (draft.length === 0) {
+    return (
+      <div className="space-y-2 opacity-55">
+        {['Customer info', 'Orders'].map((name) => (
+          <div key={name} className="flex items-center gap-2">
+            <span className="text-sm leading-none text-slate-300">::</span>
+            <input
+              type="text"
+              value={name}
+              disabled
+              readOnly
+              className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950"
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const from = ids.indexOf(active.id);
+    const to = ids.indexOf(over.id);
+    if (from === -1 || to === -1) return;
+    conversion.reorderSection(from, to);
+  }
+
+  return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+        <div data-testid="app-section-rename" className="flex flex-col gap-2">
+          {draft.map((s, i) => (
+            <SortableSectionRow
+              key={ids[i]}
+              id={ids[i]}
+              index={i}
+              title={typeof s.title === 'string' ? s.title : ''}
+              onRename={conversion.renameSection}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 }
 
@@ -251,43 +340,8 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
           <CustomGroupsControl conversion={conversion} />
         </InspectorSection>
 
-        <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Rename the auto-generated titles, then update preview.' : 'Available after the first render.'}>
-          {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
-            <div data-testid="app-section-rename" className="flex flex-col gap-2">
-              {conversion.renderedSections.map((s) => (
-                <div key={s.label} className="flex items-center gap-2">
-                  <span className="cursor-grab text-sm leading-none text-slate-300">::</span>
-                  <input
-                    type="text"
-                    // Controlled: bound to the override (falling back to the
-                    // current title) so the field always reflects state and
-                    // never goes stale across regenerates.
-                    value={conversion.sectionTitleOverrides[s.label] ?? s.title}
-                    maxLength={80}
-                    onChange={(e) =>
-                      conversion.setSectionTitleOverrides((cur) => ({ ...cur, [s.label]: e.target.value }))
-                    }
-                    className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-9"
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-2 opacity-55">
-              {['Customer info', 'Orders'].map((name) => (
-                <div key={name} className="flex items-center gap-2">
-                  <span className="text-sm leading-none text-slate-300">::</span>
-                  <input
-                    type="text"
-                    value={name}
-                    disabled
-                    readOnly
-                    className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+        <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Drag to reorder, rename the titles, then update preview.' : 'Available after the first render.'}>
+          <SectionNamesEditor conversion={conversion} />
         </InspectorSection>
 
         <InspectorSection title="Branding" status="live" hint="Title, accent color, logo & footer for paid exports.">

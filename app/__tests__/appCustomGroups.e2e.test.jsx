@@ -99,16 +99,17 @@ describe('/app custom groups — pinned columns are visible and movable (Option 
     expect(selects.length).toBe(6);
     expect(box.textContent).toContain('Customer ID');
     expect(box.textContent).toContain('Internal ID');
-    // Pinned columns default to the Fixed bucket.
-    expect(box.querySelector('select[aria-label="Group for Customer ID"]').value).toBe('__fixed__');
-    expect(box.querySelector('select[aria-label="Group for Internal ID"]').value).toBe('__fixed__');
+    // Pinned columns default to the Fixed bucket (select value 'fixed').
+    expect(box.querySelector('select[aria-label="Group for Customer ID"]').value).toBe('fixed');
+    expect(box.querySelector('select[aria-label="Group for Internal ID"]').value).toBe('fixed');
   });
 
   test('moving a pinned column into a real group un-pins it in the override', async () => {
     await generate();
     const box = await screen.findByTestId('app-custom-groups');
     await act(async () => {
-      fireEvent.change(box.querySelector('select[aria-label="Group for Customer ID"]'), { target: { value: 'A' } });
+      // Move into the first section (positional "Group A" = option index 0).
+      fireEvent.change(box.querySelector('select[aria-label="Group for Customer ID"]'), { target: { value: '0' } });
     });
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Update preview/i })); });
     await waitFor(() => expect(renderCalls.length).toBe(2), { timeout: 3000 });

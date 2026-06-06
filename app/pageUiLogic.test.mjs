@@ -8,6 +8,10 @@ import {
   isPageBurdenFail,
   normalizePageBurdenRecommendations,
   recommendationLabel,
+  reorder,
+  buildGroupingPayload,
+  reassignColumn,
+  FIXED_GROUP_LABEL,
 } from './pageUiLogic.mjs';
 import {
   canExport,
@@ -158,4 +162,94 @@ test('free exports left computed correctly', () => {
   assert.equal(freeLeft(), 0);
 
   storage.restore();
+});
+
+// --- Section reorder v2: position-based pure helpers ---
+
+test('reorder moves an item forward / backward / no-op, without mutating', () => {
+  assert.deepEqual(reorder(['A', 'B', 'C'], 0, 2), ['B', 'C', 'A']);
+  assert.deepEqual(reorder(['A', 'B', 'C'], 2, 0), ['C', 'A', 'B']);
+  const input = ['A', 'B', 'C'];
+  const out = reorder(input, 1, 1);
+  assert.deepEqual(out, ['A', 'B', 'C']);
+  assert.deepEqual(input, ['A', 'B', 'C']);
+  assert.deepEqual(reorder(['A', 'B'], 5, 0), ['A', 'B']); // bounds-safe
+});
+
+test('buildGroupingPayload: positional labels + titles, Fixed appended', () => {
+  const sectionDraft = [
+    { columns: ['cat'], title: 'Cat' },
+    { columns: ['desc'], title: 'Descriptions' },
+  ];
+  const { columnGroups, sectionTitles } = buildGroupingPayload({ sectionDraft, frozenColumns: ['id'] });
+  assert.deepEqual(columnGroups, [
+    { label: 'A', columns: ['cat'] },
+    { label: 'B', columns: ['desc'] },
+    { label: FIXED_GROUP_LABEL, columns: ['id'] },
+  ]);
+  assert.deepEqual(sectionTitles, { A: 'Cat', B: 'Descriptions' });
+});
+
+test('buildGroupingPayload: reordered draft -> columnGroups + titles follow the new order', () => {
+  const sectionDraft = [
+    { columns: ['desc'], title: 'Descriptions' },
+    { columns: ['cat'], title: 'Cat' },
+  ];
+  const { columnGroups, sectionTitles } = buildGroupingPayload({ sectionDraft, frozenColumns: [] });
+  assert.deepEqual(columnGroups, [
+    { label: 'A', columns: ['desc'] },
+    { label: 'B', columns: ['cat'] },
+  ]);
+  // 'Cat' is now the SECOND section -> positional label B (no drift).
+  assert.deepEqual(sectionTitles, { A: 'Descriptions', B: 'Cat' });
+});
+
+test('buildGroupingPayload: blank titles are omitted', () => {
+  const { sectionTitles } = buildGroupingPayload({
+    sectionDraft: [{ columns: ['a'], title: '' }, { columns: ['b'], title: '  ' }],
+    frozenColumns: [],
+  });
+  assert.deepEqual(sectionTitles, {});
+});
+
+test('reassignColumn: move a column to another section', () => {
+  const r = reassignColumn({
+    sectionDraft: [{ columns: ['a', 'x'], title: 'A' }, { columns: ['b'], title: 'B' }],
+    frozenColumns: [],
+    column: 'x',
+    target: 1,
+  });
+  assert.deepEqual(r.sectionDraft, [{ columns: ['a'], title: 'A' }, { columns: ['b', 'x'], title: 'B' }]);
+  assert.deepEqual(r.frozenColumns, []);
+});
+
+test('reassignColumn: move a column to Fixed, and back to a section', () => {
+  const toFixed = reassignColumn({
+    sectionDraft: [{ columns: ['a', 'x'], title: 'A' }],
+    frozenColumns: [],
+    column: 'x',
+    target: 'fixed',
+  });
+  assert.deepEqual(toFixed.frozenColumns, ['x']);
+  assert.deepEqual(toFixed.sectionDraft, [{ columns: ['a'], title: 'A' }]);
+
+  const back = reassignColumn({
+    sectionDraft: [{ columns: ['a'], title: 'A' }],
+    frozenColumns: ['x'],
+    column: 'x',
+    target: 0,
+  });
+  assert.deepEqual(back.frozenColumns, []);
+  assert.deepEqual(back.sectionDraft, [{ columns: ['a', 'x'], title: 'A' }]);
+});
+
+test('reassignColumn: target past the end creates a new section; emptied sections are dropped', () => {
+  const r = reassignColumn({
+    sectionDraft: [{ columns: ['only'], title: 'A' }, { columns: ['b'], title: 'B' }],
+    frozenColumns: [],
+    column: 'only',
+    target: 2, // === length -> new section
+  });
+  // 'only' left section 0 (now empty -> dropped) and became a new trailing section.
+  assert.deepEqual(r.sectionDraft, [{ columns: ['b'], title: 'B' }, { columns: ['only'], title: '' }]);
 });

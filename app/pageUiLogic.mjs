@@ -90,3 +90,74 @@ export function recommendationLabel(token) {
   if (token === RECOMMENDATION_SCOPE_REDUCE) return 'Reduce rows or columns.';
   return String(token || '');
 }
+
+// --- Section reorder v2 (position-based) ---
+//
+// The backend labels sections POSITIONALLY by the columnGroups array order
+// (1st group -> "A", 2nd -> "B", ...) and maps sectionTitles by that positional
+// label. So the workbench keeps a position-indexed working copy of the sections
+// (no label identity) and emits both columnGroups and sectionTitles by position.
+
+// Reserved group label (matches the backend) for pinned columns repeated in
+// every section. Single source of truth (also imported by ConversionTool).
+export const FIXED_GROUP_LABEL = '__fixed__';
+
+// Positional section label for index i: 0 -> 'A', 1 -> 'B', ...
+function posLabel(i) {
+  return String.fromCharCode(65 + i);
+}
+
+// Move the item at `from` to `to`, returning a NEW array. Bounds-safe (an
+// out-of-range index or from === to yields an unchanged copy). Never mutates.
+export function reorder(list, from, to) {
+  const arr = Array.isArray(list) ? list.slice() : [];
+  if (from === to || from < 0 || to < 0 || from >= arr.length || to >= arr.length) return arr;
+  const [moved] = arr.splice(from, 1);
+  arr.splice(to, 0, moved);
+  return arr;
+}
+
+// Turn the position-indexed section draft into the render payload the backend
+// expects: columnGroups (positional labels, in draft order, + Fixed group) and
+// sectionTitles (positional label -> title, blanks omitted).
+export function buildGroupingPayload({ sectionDraft, frozenColumns } = {}) {
+  const draft = Array.isArray(sectionDraft) ? sectionDraft : [];
+  const frozen = Array.isArray(frozenColumns) ? frozenColumns : [];
+  const columnGroups = draft.map((s, i) => ({
+    label: posLabel(i),
+    columns: Array.isArray(s.columns) ? s.columns.slice() : [],
+  }));
+  if (frozen.length) columnGroups.push({ label: FIXED_GROUP_LABEL, columns: frozen.slice() });
+  const sectionTitles = {};
+  draft.forEach((s, i) => {
+    if (typeof s.title === 'string' && s.title.trim()) sectionTitles[posLabel(i)] = s.title.trim();
+  });
+  return { columnGroups, sectionTitles };
+}
+
+// Move a column between sections / Fixed in the draft. `target` is 'fixed', an
+// existing section index, or any index >= length to start a new trailing
+// section. Removes the column from wherever it was; drops emptied sections.
+// Pure: returns a new { sectionDraft, frozenColumns }.
+export function reassignColumn({ sectionDraft, frozenColumns, column, target } = {}) {
+  const col = column;
+  let draft = (Array.isArray(sectionDraft) ? sectionDraft : []).map((s) => ({
+    title: s.title,
+    columns: (Array.isArray(s.columns) ? s.columns : []).filter((c) => c !== col),
+  }));
+  let frozen = (Array.isArray(frozenColumns) ? frozenColumns : []).filter((c) => c !== col);
+
+  if (target === 'fixed') {
+    frozen = [...frozen, col];
+  } else {
+    const idx = Number(target);
+    if (Number.isInteger(idx) && idx >= 0 && idx < draft.length) {
+      draft[idx] = { ...draft[idx], columns: [...draft[idx].columns, col] };
+    } else {
+      draft = [...draft, { title: '', columns: [col] }];
+    }
+  }
+
+  draft = draft.filter((s) => s.columns.length > 0);
+  return { sectionDraft: draft, frozenColumns: frozen };
+}

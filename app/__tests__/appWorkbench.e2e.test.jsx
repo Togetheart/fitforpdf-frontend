@@ -136,8 +136,9 @@ describe('/app workbench — end-to-end (real hook, mocked fetch)', () => {
     const groupsBox = await screen.findByTestId('app-custom-groups');
     const selects = groupsBox.querySelectorAll('select');
     expect(selects.length).toBe(4); // Region, Plan, Email, Phone
-    // Move "Region" (first column, currently group A) into a new group C.
-    await act(async () => { fireEvent.change(selects[0], { target: { value: 'C' } }); });
+    // Move "Region" into a new group (option index 2 = a new trailing section,
+    // which renders as positional group "C").
+    await act(async () => { fireEvent.change(selects[0], { target: { value: '2' } }); });
     await clickUpdatePreviewAndExpectRender(2);
     const entries = bodyEntries(renderCalls[1]);
     expect(entries.columnGroups).toBeTruthy();
