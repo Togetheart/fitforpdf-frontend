@@ -7,6 +7,14 @@ const nextConfig = {
   // without being 308-redirected by Next.js
   skipTrailingSlashRedirect: true,
 
+  // pdf.js (lazy-loaded for the mobile first-page preview) references the optional
+  // Node 'canvas' package in its server code path; the browser uses native canvas,
+  // so tell webpack to ignore it (otherwise: "Module not found: Can't resolve 'canvas'").
+  webpack: (config) => {
+    config.resolve.alias = { ...(config.resolve.alias || {}), canvas: false, encoding: false };
+    return config;
+  },
+
   // Reverse proxy for PostHog — bypasses ad-blockers
   async rewrites() {
     return [

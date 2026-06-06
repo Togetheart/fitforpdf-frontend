@@ -11,6 +11,7 @@ import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
 import { recommendationLabel, sectionColorClasses, SECTION_COLOR_HEXES } from '../pageUiLogic.mjs';
+import { renderPdfFirstPageImage } from '../lib/pdfPreviewImage.mjs';
 import {
   DndContext,
   closestCenter,
@@ -1095,7 +1096,7 @@ function WorkbenchRenderedCanvas({ conversion }) {
   );
 }
 
-function PdfPreviewPane({ pdfBlob, filename }) {
+export function PdfPreviewPane({ pdfBlob, filename }) {
   const [previewUrl, setPreviewUrl] = React.useState(null);
 
   React.useEffect(() => {
@@ -1124,9 +1125,7 @@ function PdfPreviewPane({ pdfBlob, filename }) {
         <p className="truncate text-sm font-semibold text-slate-800">Preview: {safeFilename}</p>
         <span className="text-xs font-medium text-slate-500">PDF</span>
       </div>
-      {/* Inline embed on desktop. Mobile browsers (esp. iOS Safari) render an
-          empty <object> box, so on small screens we show an explicit open/
-          download CTA instead of a blank pane. */}
+      {/* Desktop: inline <object> embed (works on large screens). */}
       <object
         aria-label={`PDF preview: ${safeFilename}`}
         data-testid="app-pdf-preview"
@@ -1139,19 +1138,80 @@ function PdfPreviewPane({ pdfBlob, filename }) {
           PDF preview is not available in this browser. Use Download PDF to open it.
         </div>
       </object>
-      <div data-testid="app-pdf-preview-mobile" className="flex flex-col items-center gap-3 px-5 py-8 text-center lg:hidden">
-        <p className="text-sm text-slate-600">Your PDF is ready. Open it to review on your device.</p>
-        <a
-          href={previewUrl}
-          download={safeFilename}
-          target="_blank"
-          rel="noopener"
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-blue-600 px-5 py-2.5 text-sm font-bold text-white"
-        >
-          Open PDF
-        </a>
+      {/* Mobile browsers (esp. iOS Safari) render an empty <object> box, so on
+          small screens we render the first page to an image instead — a real
+          inline preview that works everywhere. */}
+      <div data-testid="app-pdf-preview-mobile" className="flex flex-col items-center gap-3 px-4 py-5 text-center lg:hidden">
+        <MobilePdfPreview pdfBlob={pdfBlob} previewUrl={previewUrl} filename={safeFilename} />
       </div>
     </div>
+  );
+}
+
+// Mobile-only first-page image preview. Renders the PDF's first page to an image
+// (works where <object> embeds don't), falling back to an iOS-safe "Open PDF"
+// link if rendering isn't possible. pdf.js is only loaded on a mobile viewport
+// with a real canvas, so desktop + jsdom never pull it in (see renderPdfFirstPageImage).
+function MobilePdfPreview({ pdfBlob, previewUrl, filename }) {
+  const [imageUrl, setImageUrl] = React.useState(null);
+  const [status, setStatus] = React.useState('idle'); // idle | rendering | image | fallback
+
+  React.useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+      ? window.matchMedia('(max-width: 1023px)').matches
+      : false;
+    if (!isMobile || !pdfBlob) {
+      setStatus('fallback');
+      setImageUrl(null);
+      return undefined;
+    }
+    let cancelled = false;
+    setStatus('rendering');
+    setImageUrl(null);
+    renderPdfFirstPageImage(pdfBlob).then((url) => {
+      if (cancelled) return;
+      if (url) { setImageUrl(url); setStatus('image'); } else { setStatus('fallback'); }
+    });
+    return () => { cancelled = true; };
+  }, [pdfBlob]);
+
+  // iOS-safe: a same-tab navigation to the blob URL renders the PDF (no `download`
+  // / `target=_blank`, which Safari mishandles for blob: PDFs).
+  const openLink = (label, variant) => (
+    <a
+      href={previewUrl}
+      rel="noopener"
+      data-testid="app-pdf-preview-mobile-open"
+      className={variant === 'subtle'
+        ? 'inline-flex min-h-10 items-center justify-center gap-1.5 rounded-[10px] border border-slate-200 px-4 py-2 text-[13px] font-semibold text-slate-700'
+        : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-blue-600 px-5 py-2.5 text-sm font-bold text-white'}
+    >
+      {label}
+    </a>
+  );
+
+  if (status === 'image' && imageUrl) {
+    return (
+      <>
+        <img
+          src={imageUrl}
+          alt={`First page preview: ${filename}`}
+          data-testid="app-pdf-preview-mobile-image"
+          className="w-full max-w-[520px] rounded-md border border-slate-200 shadow-sm"
+        />
+        <p className="text-xs text-slate-500">First page shown. Open the full PDF below.</p>
+        {openLink('Open full PDF', 'subtle')}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <p className="text-sm text-slate-600">
+        {status === 'rendering' ? 'Preparing preview…' : 'Your PDF is ready.'}
+      </p>
+      {openLink('Open PDF')}
+    </>
   );
 }
 
