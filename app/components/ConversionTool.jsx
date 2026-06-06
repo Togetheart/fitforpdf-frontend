@@ -8,23 +8,7 @@ import useSession from '../hooks/useSession.mjs';
 import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
-import { recommendationLabel, reorder, orderSectionsForDisplay } from '../pageUiLogic.mjs';
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  TouchSensor,
-  KeyboardSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  useSortable,
-  sortableKeyboardCoordinates,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { recommendationLabel } from '../pageUiLogic.mjs';
 
 /*
  * ConversionTool - the reusable conversion surface.
@@ -163,95 +147,6 @@ function CustomGroupsControl({ conversion }) {
   );
 }
 
-// One draggable + renamable section row. The `::` handle is the drag affordance
-// (so the title input stays editable); reordering reaches preview + download via
-// the columnGroups order sent on the next "Update preview".
-function SortableSectionRow({ section, conversion }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: section.label });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.6 : 1,
-    zIndex: isDragging ? 10 : undefined,
-  };
-  return (
-    <div ref={setNodeRef} style={style} className="flex items-center gap-2">
-      <button
-        type="button"
-        aria-label={`Reorder section ${section.title || section.label}`}
-        className="cursor-grab touch-none select-none px-0.5 text-sm leading-none text-slate-300 hover:text-slate-500"
-        {...attributes}
-        {...listeners}
-      >
-        ::
-      </button>
-      <input
-        type="text"
-        // Controlled: bound to the override (falling back to the current title).
-        value={conversion.sectionTitleOverrides[section.label] ?? section.title}
-        maxLength={80}
-        onChange={(e) =>
-          conversion.setSectionTitleOverrides((cur) => ({ ...cur, [section.label]: e.target.value }))
-        }
-        className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-9"
-      />
-    </div>
-  );
-}
-
-// "Section names" editor: drag-to-reorder (mouse/touch/keyboard) + rename. Order
-// is held in conversion.sectionOrder and applied on the next render.
-function SectionNamesEditor({ conversion }) {
-  const sections = Array.isArray(conversion.renderedSections) ? conversion.renderedSections : [];
-  const ordered = orderSectionsForDisplay(sections, conversion.sectionOrder);
-  const labels = ordered.map((s) => s.label);
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 6 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
-
-  if (ordered.length === 0) {
-    return (
-      <div className="space-y-2 opacity-55">
-        {['Customer info', 'Orders'].map((name) => (
-          <div key={name} className="flex items-center gap-2">
-            <span className="text-sm leading-none text-slate-300">::</span>
-            <input
-              type="text"
-              value={name}
-              disabled
-              readOnly
-              className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950"
-            />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  function handleDragEnd(event) {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    const from = labels.indexOf(active.id);
-    const to = labels.indexOf(over.id);
-    if (from === -1 || to === -1) return;
-    conversion.setSectionOrder(reorder(labels, from, to));
-  }
-
-  return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={labels} strategy={verticalListSortingStrategy}>
-        <div data-testid="app-section-rename" className="flex flex-col gap-2">
-          {ordered.map((s) => (
-            <SortableSectionRow key={s.label} section={s} conversion={conversion} />
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
-  );
-}
-
 export function ConversionInspector({ conversion, quota, className = '' }) {
   const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
@@ -356,8 +251,43 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
           <CustomGroupsControl conversion={conversion} />
         </InspectorSection>
 
-        <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Drag to reorder, rename the titles, then update preview.' : 'Available after the first render.'}>
-          <SectionNamesEditor conversion={conversion} />
+        <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Rename the auto-generated titles, then update preview.' : 'Available after the first render.'}>
+          {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
+            <div data-testid="app-section-rename" className="flex flex-col gap-2">
+              {conversion.renderedSections.map((s) => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <span className="cursor-grab text-sm leading-none text-slate-300">::</span>
+                  <input
+                    type="text"
+                    // Controlled: bound to the override (falling back to the
+                    // current title) so the field always reflects state and
+                    // never goes stale across regenerates.
+                    value={conversion.sectionTitleOverrides[s.label] ?? s.title}
+                    maxLength={80}
+                    onChange={(e) =>
+                      conversion.setSectionTitleOverrides((cur) => ({ ...cur, [s.label]: e.target.value }))
+                    }
+                    className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-9"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-2 opacity-55">
+              {['Customer info', 'Orders'].map((name) => (
+                <div key={name} className="flex items-center gap-2">
+                  <span className="text-sm leading-none text-slate-300">::</span>
+                  <input
+                    type="text"
+                    value={name}
+                    disabled
+                    readOnly
+                    className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </InspectorSection>
 
         <InspectorSection title="Branding" status="live" hint="Title, accent color, logo & footer for paid exports.">

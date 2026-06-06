@@ -8,10 +8,6 @@ import {
   isPageBurdenFail,
   normalizePageBurdenRecommendations,
   recommendationLabel,
-  reorder,
-  orderSectionsForDisplay,
-  buildSubmitColumnGroups,
-  FIXED_GROUP_LABEL,
 } from './pageUiLogic.mjs';
 import {
   canExport,
@@ -162,85 +158,4 @@ test('free exports left computed correctly', () => {
   assert.equal(freeLeft(), 0);
 
   storage.restore();
-});
-
-// --- Section reordering (drag-and-drop) pure helpers ---
-
-test('reorder moves an item forward', () => {
-  assert.deepEqual(reorder(['A', 'B', 'C'], 0, 2), ['B', 'C', 'A']);
-});
-
-test('reorder moves an item backward', () => {
-  assert.deepEqual(reorder(['A', 'B', 'C'], 2, 0), ['C', 'A', 'B']);
-});
-
-test('reorder with equal indices returns an unchanged copy (no mutation)', () => {
-  const input = ['A', 'B', 'C'];
-  const out = reorder(input, 1, 1);
-  assert.deepEqual(out, ['A', 'B', 'C']);
-  assert.notEqual(out, input);
-  assert.deepEqual(input, ['A', 'B', 'C']);
-});
-
-test('reorder is bounds-safe (out-of-range -> unchanged copy)', () => {
-  assert.deepEqual(reorder(['A', 'B'], 5, 0), ['A', 'B']);
-  assert.deepEqual(reorder(['A', 'B'], 0, 9), ['A', 'B']);
-});
-
-test('orderSectionsForDisplay: empty order keeps natural order', () => {
-  const secs = [{ label: 'A' }, { label: 'B' }, { label: 'C' }];
-  assert.deepEqual(orderSectionsForDisplay(secs, []).map((s) => s.label), ['A', 'B', 'C']);
-});
-
-test('orderSectionsForDisplay: listed labels first, remaining in natural order', () => {
-  const secs = [{ label: 'A' }, { label: 'B' }, { label: 'C' }];
-  assert.deepEqual(orderSectionsForDisplay(secs, ['C', 'A']).map((s) => s.label), ['C', 'A', 'B']);
-});
-
-test('orderSectionsForDisplay: unknown labels in order are ignored', () => {
-  const secs = [{ label: 'A' }, { label: 'B' }];
-  assert.deepEqual(orderSectionsForDisplay(secs, ['Z', 'B']).map((s) => s.label), ['B', 'A']);
-});
-
-test('buildSubmitColumnGroups: null when nothing is customized (preserves current behavior)', () => {
-  const renderedSections = [{ label: 'A', columns: ['x'] }, { label: 'B', columns: ['y'] }];
-  assert.equal(buildSubmitColumnGroups({ renderedSections, sectionOrder: [] }), null);
-  assert.equal(buildSubmitColumnGroups({ renderedSections, sectionOrder: ['A', 'B'] }), null);
-});
-
-test('buildSubmitColumnGroups: reorder-only builds groups from sections in the chosen order', () => {
-  const renderedSections = [{ label: 'A', columns: ['x'] }, { label: 'B', columns: ['y'] }];
-  const out = buildSubmitColumnGroups({ renderedSections, sectionOrder: ['B', 'A'] });
-  assert.deepEqual(out, [{ label: 'B', columns: ['y'] }, { label: 'A', columns: ['x'] }]);
-});
-
-test('buildSubmitColumnGroups: reorder-only keeps the Fixed group (from frozen columns) last', () => {
-  const renderedSections = [{ label: 'A', columns: ['x'] }, { label: 'B', columns: ['y'] }];
-  const out = buildSubmitColumnGroups({ renderedSections, sectionOrder: ['B', 'A'], frozenColumns: ['id'] });
-  assert.deepEqual(out, [
-    { label: 'B', columns: ['y'] },
-    { label: 'A', columns: ['x'] },
-    { label: FIXED_GROUP_LABEL, columns: ['id'] },
-  ]);
-});
-
-test('buildSubmitColumnGroups: override is reordered by sectionOrder, Fixed preserved', () => {
-  const renderedSections = [{ label: 'A', columns: ['x'] }, { label: 'B', columns: ['y'] }];
-  const columnGroupsOverride = [
-    { label: 'A', columns: ['x'] },
-    { label: 'B', columns: ['y'] },
-    { label: FIXED_GROUP_LABEL, columns: ['id'] },
-  ];
-  const out = buildSubmitColumnGroups({ renderedSections, columnGroupsOverride, sectionOrder: ['B', 'A'] });
-  assert.deepEqual(out, [
-    { label: 'B', columns: ['y'] },
-    { label: 'A', columns: ['x'] },
-    { label: FIXED_GROUP_LABEL, columns: ['id'] },
-  ]);
-});
-
-test('buildSubmitColumnGroups: override with no reorder still sends (current behavior)', () => {
-  const columnGroupsOverride = [{ label: 'A', columns: ['x', 'z'] }, { label: 'B', columns: ['y'] }];
-  const out = buildSubmitColumnGroups({ renderedSections: [], columnGroupsOverride, sectionOrder: [] });
-  assert.deepEqual(out, [{ label: 'A', columns: ['x', 'z'] }, { label: 'B', columns: ['y'] }]);
 });
