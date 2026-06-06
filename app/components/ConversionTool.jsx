@@ -892,6 +892,14 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
   const conversion = useConversion({ quota });
   const session = useSession();
 
+  // Load "Recent exports" on mount, and refresh after each render (renderId changes).
+  // useConversion only fetched history on a manual status change / load-more, so the
+  // workbench panel always showed "No exports yet".
+  React.useEffect(() => {
+    void conversion.refreshExportHistory({ cursor: 0, append: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversion.renderId]);
+
   const resolvedSubcopy = (() => {
     if (toolSubcopy) return toolSubcopy;
     if (quota.planType === 'api_enterprise' || quota.isUnlimited === true) {
