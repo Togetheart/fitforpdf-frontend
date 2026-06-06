@@ -101,6 +101,36 @@ export function recommendationLabel(token) {
 // every section. Single source of truth (also imported by ConversionTool).
 export const FIXED_GROUP_LABEL = '__fixed__';
 
+// Section colors — MUST mirror the backend SECTION_COLOR_PALETTE (strong hex) in
+// fitforpdf-backend/src/pdfRenderer.js so the workbench shows the EXACT colors the
+// PDF prints. Indexed by section position (cycles). `pill` = the section's color as
+// a filled badge (white text, matches the PDF section bar); `name` = the same hue
+// in a readable shade for colored text on white. The Tailwind shades below equal
+// the backend hexes exactly: blue-600 #2563EB, green-500 #22C55E, amber-500 #F59E0B,
+// red-500 #EF4444, violet-500 #8B5CF6, cyan-600 #0891B2, pink-500 #EC4899,
+// emerald-600 #059669, red-600 #DC2626, violet-600 #7C3AED, sky-700 #0369A1,
+// amber-600 #D97706.
+export const SECTION_COLOR_CLASSES = [
+  { pill: 'bg-blue-600', name: 'text-blue-700' },      // A blue
+  { pill: 'bg-green-500', name: 'text-green-700' },    // B green
+  { pill: 'bg-amber-500', name: 'text-amber-700' },    // C amber
+  { pill: 'bg-red-500', name: 'text-red-600' },        // D red
+  { pill: 'bg-violet-500', name: 'text-violet-700' },  // E violet
+  { pill: 'bg-cyan-600', name: 'text-cyan-700' },      // F cyan
+  { pill: 'bg-pink-500', name: 'text-pink-700' },      // G pink
+  { pill: 'bg-emerald-600', name: 'text-emerald-700' }, // H emerald
+  { pill: 'bg-red-600', name: 'text-red-700' },        // I red-600
+  { pill: 'bg-violet-600', name: 'text-violet-800' },  // J violet-600
+  { pill: 'bg-sky-700', name: 'text-sky-800' },        // K sky-700
+  { pill: 'bg-amber-600', name: 'text-amber-800' },    // L amber-600
+];
+
+// The pill/name color classes for section index i (cycles through the palette).
+export function sectionColorClasses(i) {
+  const idx = ((Number(i) % SECTION_COLOR_CLASSES.length) + SECTION_COLOR_CLASSES.length) % SECTION_COLOR_CLASSES.length;
+  return SECTION_COLOR_CLASSES[Number.isFinite(Number(i)) ? idx : 0];
+}
+
 // Positional section label for index i: 0 -> 'A', 1 -> 'B', ...
 function posLabel(i) {
   return String.fromCharCode(65 + i);
