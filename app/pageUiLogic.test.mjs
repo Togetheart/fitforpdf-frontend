@@ -15,7 +15,6 @@ import {
   SECTION_COLOR_CLASSES,
   SECTION_COLOR_HEXES,
   sectionColorClasses,
-  classesForHex,
 } from './pageUiLogic.mjs';
 import {
   canExport,
@@ -281,7 +280,7 @@ test('section colors cycle and are bounds-safe', () => {
   }
 });
 
-// --- Editable section colors (preset swatches) ---
+// --- Editable section colors (free-form native picker) ---
 
 test('SECTION_COLOR_HEXES is index-aligned with SECTION_COLOR_CLASSES (strong hexes)', () => {
   assert.equal(SECTION_COLOR_HEXES.length, SECTION_COLOR_CLASSES.length);
@@ -295,32 +294,18 @@ test('SECTION_COLOR_HEXES is index-aligned with SECTION_COLOR_CLASSES (strong he
   }
 });
 
-test('classesForHex maps a palette hex to its index-aligned classes (case-insensitive)', () => {
-  // Exact (upper) hit.
-  assert.deepEqual(classesForHex('#EF4444'), SECTION_COLOR_CLASSES[3]);
-  // Lower-case still matches.
-  assert.deepEqual(classesForHex('#8b5cf6'), SECTION_COLOR_CLASSES[4]);
-  // First palette entry.
-  assert.deepEqual(classesForHex('#2563EB'), SECTION_COLOR_CLASSES[0]);
-});
-
-test('classesForHex falls back to the first palette entry for unknown/blank/invalid hex', () => {
-  assert.deepEqual(classesForHex('#123456'), sectionColorClasses(0));
-  assert.deepEqual(classesForHex(''), sectionColorClasses(0));
-  assert.deepEqual(classesForHex(undefined), sectionColorClasses(0));
-  assert.deepEqual(classesForHex('not-a-hex'), sectionColorClasses(0));
-});
-
-test('buildGroupingPayload returns sectionColors for sections with a valid color, omits blank/invalid', () => {
+test('buildGroupingPayload returns sectionColors for ANY valid hex (free-form), omits blank/invalid', () => {
   const sectionDraft = [
-    { columns: ['cat'], title: 'Cat', color: '#EF4444' },
-    { columns: ['desc'], title: 'Descriptions' }, // no color -> omitted
-    { columns: ['color'], title: 'Colors', color: '' }, // blank -> omitted
-    { columns: ['size'], title: 'Sizes', color: 'nope' }, // invalid -> omitted
-    { columns: ['sku'], title: 'SKUs', color: '#8b5cf6' }, // lower-case kept
+    { columns: ['cat'], title: 'Cat', color: '#EF4444' },   // preset -> kept
+    { columns: ['desc'], title: 'Descriptions' },           // no color -> omitted
+    { columns: ['color'], title: 'Colors', color: '' },     // blank -> omitted
+    { columns: ['size'], title: 'Sizes', color: 'nope' },   // invalid -> omitted
+    { columns: ['sku'], title: 'SKUs', color: '#123456' },  // free-form (non-preset) -> kept
+    { columns: ['ean'], title: 'EANs', color: '#8b5cf6' },  // lower-case -> kept
   ];
   const { sectionColors } = buildGroupingPayload({ sectionDraft, frozenColumns: [] });
-  assert.deepEqual(sectionColors, { A: '#EF4444', E: '#8b5cf6' });
+  // Positional labels: index 0->A, 4->E, 5->F.
+  assert.deepEqual(sectionColors, { A: '#EF4444', E: '#123456', F: '#8b5cf6' });
 });
 
 test('buildGroupingPayload omits sectionColors map entries when no section has a color', () => {
