@@ -150,6 +150,8 @@ describe('/app workbench — end-to-end (real hook, mocked fetch)', () => {
 
   test('accent color and logo file are sent in the render FormData', async () => {
     render(<AppPage />);
+    // Accent color + logo live behind the inspector's "Export" tab (Phase 3).
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
     const accent = screen.getByLabelText(/Accent color/i);
     await act(async () => { fireEvent.change(accent, { target: { value: '#ff0000' } }); });
     const logoInput = screen.getByLabelText(/Logo image/i);
@@ -168,6 +170,8 @@ describe('/app workbench — end-to-end (real hook, mocked fetch)', () => {
 
   test('Report title typed before Generate is sent in the render FormData', async () => {
     render(<AppPage />);
+    // Report title lives behind the inspector's "Export" tab (Phase 3).
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
     const titleInput = screen.getByLabelText(/Report title/i);
     await act(async () => { fireEvent.change(titleInput, { target: { value: 'Acme Q4' } }); });
     const fileInput = document.querySelector('[data-testid="generate-file-input"]');

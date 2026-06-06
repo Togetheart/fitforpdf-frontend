@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Code2, Download, FileText, FolderOpen, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Code2, Download, FileText, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -66,6 +66,82 @@ function InspectorSection({ title, status, hint, children }) {
       {hint ? <p className="mb-3 text-[11.5px] leading-5 text-slate-400">{hint}</p> : null}
       {children}
     </section>
+  );
+}
+
+// PanelTabs — a small, accessible segmented control used at the top of each
+// workbench side panel to group its controls (mirrors the Off/Auto toggle for
+// the light inspector; a subtle white/10 highlight for the dark rail).
+//
+// tabs:  [{ id, label }]
+// value: the active tab id; onChange(id) is called on click / arrow-key nav.
+// tone:  'light' (inspector) | 'dark' (rail) — themes the active highlight.
+// ariaLabel: names the tablist for screen readers + tests.
+//
+// role="tablist" with role="tab" buttons + aria-selected; Left/Right arrow keys
+// move focus + activate the previous/next tab (wrapping at the ends).
+function PanelTabs({ tabs, value, onChange, tone = 'light', ariaLabel }) {
+  const refs = React.useRef([]);
+  const index = Math.max(0, tabs.findIndex((t) => t.id === value));
+
+  const focusTab = (i) => {
+    const tab = tabs[i];
+    if (!tab) return;
+    onChange(tab.id);
+    const node = refs.current[i];
+    if (node && typeof node.focus === 'function') node.focus();
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      focusTab((index + 1) % tabs.length);
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      focusTab((index - 1 + tabs.length) % tabs.length);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      focusTab(0);
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      focusTab(tabs.length - 1);
+    }
+  };
+
+  const isDark = tone === 'dark';
+  const wrapClass = isDark
+    ? 'flex overflow-hidden rounded-lg border border-white/10 bg-white/5 p-0.5'
+    : 'flex overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-0.5';
+
+  return (
+    <div role="tablist" aria-label={ariaLabel} onKeyDown={handleKeyDown} className={wrapClass}>
+      {tabs.map((tab, i) => {
+        const active = tab.id === value;
+        const tabClass = isDark
+          ? [
+              'min-h-9 flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition lg:min-h-8',
+              active ? 'bg-white/10 font-semibold text-white' : 'bg-transparent text-slate-400 hover:text-white',
+            ].join(' ')
+          : [
+              'min-h-9 flex-1 rounded-md px-2 py-1.5 text-xs transition lg:min-h-8',
+              active ? 'bg-white font-semibold text-blue-600 shadow-sm' : 'bg-transparent text-slate-500 hover:text-slate-950',
+            ].join(' ');
+        return (
+          <button
+            key={tab.id}
+            ref={(node) => { refs.current[i] = node; }}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            tabIndex={active ? 0 : -1}
+            onClick={() => onChange(tab.id)}
+            className={tabClass}
+          >
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -313,7 +389,13 @@ function SectionNamesEditor({ conversion }) {
   );
 }
 
+const INSPECTOR_TABS = [
+  { id: 'sections', label: 'Sections' },
+  { id: 'export', label: 'Export' },
+];
+
 export function ConversionInspector({ conversion, quota, className = '', onCollapse, collapsed = false }) {
+  const [activeTab, setActiveTab] = React.useState('sections');
   const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
@@ -363,20 +445,19 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-4 pb-4">
-        <InspectorSection title="Report title" status="live">
-          <input
-            id="app-report-title"
-            aria-label="Report title"
-            type="text"
-            value={conversion.reportTitle}
-            onChange={(e) => conversion.setReportTitle(e.target.value)}
-            placeholder="e.g. Acme Co. - Q4 2025 export"
-            maxLength={200}
-            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600"
+        <div className="mb-4">
+          <PanelTabs
+            tabs={INSPECTOR_TABS}
+            value={activeTab}
+            onChange={setActiveTab}
+            tone="light"
+            ariaLabel="Adjust output sections"
           />
-        </InspectorSection>
+        </div>
 
+        <div className="flex flex-col gap-4 pb-4">
+        {activeTab === 'sections' ? (
+          <>
         <InspectorSection title="Column grouping" status="live" hint="How wide tables get split across pages.">
           <div data-testid="app-columnmap" className="flex overflow-hidden rounded-lg border border-slate-200">
             {[
@@ -435,6 +516,21 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             <SectionNamesEditor conversion={conversion} />
           </InspectorSection>
         )}
+          </>
+        ) : (
+          <>
+        <InspectorSection title="Report title" status="live">
+          <input
+            id="app-report-title"
+            aria-label="Report title"
+            type="text"
+            value={conversion.reportTitle}
+            onChange={(e) => conversion.setReportTitle(e.target.value)}
+            placeholder="e.g. Acme Co. - Q4 2025 export"
+            maxLength={200}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12.5px] text-slate-950 outline-none focus:border-blue-600"
+          />
+        </InspectorSection>
 
         <InspectorSection title="Branding" status="live" hint="Title, accent color, logo & footer for paid exports.">
           <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-slate-950">
@@ -506,6 +602,8 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           />
           <p className="mt-2 text-[11px] text-slate-400">Branding applies to paid exports.</p>
         </InspectorSection>
+          </>
+        )}
       </div>
       </div>
 
@@ -561,12 +659,18 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
 // `order-3 hidden … lg:flex` grid-cell classes (rail is hidden on mobile),
 // while the desktop PanelGroup passes panel-fit classes (`flex-1`) and an
 // `onCollapse` handler that renders the header collapse toggle.
+const RAIL_TABS = [
+  { id: 'sections', label: 'Sections' },
+  { id: 'recent', label: 'Recent Exports' },
+];
+
 function WorkbenchRail({
   conversion,
   className = 'order-3 hidden lg:order-none lg:flex lg:h-[calc(100vh-57px)]',
   onCollapse,
   collapsed = false,
 }) {
+  const [activeTab, setActiveTab] = React.useState('recent');
   const recentExports = Array.isArray(conversion.exportHistory) ? conversion.exportHistory.slice(0, 4) : [];
   const sections = Array.isArray(conversion.renderedSections) ? conversion.renderedSections : [];
 
@@ -577,66 +681,77 @@ function WorkbenchRail({
       className={['flex-col overflow-y-auto bg-slate-950 px-3.5 py-[18px] text-white', className].filter(Boolean).join(' ')}
     >
       <div className="flex items-center gap-2">
-        <FolderOpen className="h-4 w-4 text-slate-400" aria-hidden="true" />
-        <h2 className="text-sm font-semibold">Recent exports</h2>
+        <div className="min-w-0 flex-1">
+          <PanelTabs
+            tabs={RAIL_TABS}
+            value={activeTab}
+            onChange={setActiveTab}
+            tone="dark"
+            ariaLabel="Recent exports and sections"
+          />
+        </div>
         {onCollapse && !collapsed ? (
-          <span className="ml-auto">
-            <CollapseToggle side="left" collapsed={collapsed} onToggle={onCollapse} />
-          </span>
+          <CollapseToggle side="left" collapsed={collapsed} onToggle={onCollapse} />
         ) : null}
       </div>
-      <p className="mt-2 text-xs leading-5 text-slate-400">
-        PDF artifacts only. Source spreadsheets are not stored.
-      </p>
 
-      <div className="mt-4 space-y-2">
-        {recentExports.length > 0 ? (
-          recentExports.map((item) => (
-            <a
-              key={item.id || item.supportId || item.createdAt}
-              href={item.pdfUrl || '#'}
-              className="block rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs transition hover:bg-white/10"
-            >
-              <span className="block truncate font-semibold text-white">{item.sourceFileName || item.supportId || 'Export'}</span>
-              <span className="mt-1 block text-slate-400">{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent render'}</span>
-            </a>
-          ))
-        ) : (
-          <div className="px-3 py-2 text-[12.5px] leading-5 text-slate-500">
-            No exports yet. Drop a spreadsheet to start.
-          </div>
-        )}
-      </div>
+      {activeTab === 'recent' ? (
+        <>
+          <p className="mt-3 text-xs leading-5 text-slate-400">
+            PDF artifacts only. Source spreadsheets are not stored.
+          </p>
 
-      <button
-        type="button"
-        onClick={conversion.handleRenderAnother}
-        className="mt-3 inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/20 px-3 text-[13px] font-medium text-slate-300 transition hover:border-white/30 hover:text-white"
-      >
-        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-        New export
-      </button>
-
-      <div className="mt-6 border-t border-white/10 pt-4">
-        <div className="flex items-center gap-2">
-          <Layers3 className="h-4 w-4 text-slate-400" aria-hidden="true" />
-          <h2 className="text-sm font-semibold">Sections</h2>
-        </div>
-        <div className="mt-3 space-y-2">
-          {sections.length > 0 ? (
-            sections.map((section) => (
-              <div key={section.label} className="flex items-center gap-2 text-xs text-slate-300">
-                <span className="flex h-5 w-5 items-center justify-center rounded bg-white/10 font-semibold text-white">
-                  {section.label}
-                </span>
-                <span className="truncate">{section.title}</span>
+          <div className="mt-4 space-y-2">
+            {recentExports.length > 0 ? (
+              recentExports.map((item) => (
+                <a
+                  key={item.id || item.supportId || item.createdAt}
+                  href={item.pdfUrl || '#'}
+                  className="block rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs transition hover:bg-white/10"
+                >
+                  <span className="block truncate font-semibold text-white">{item.sourceFileName || item.supportId || 'Export'}</span>
+                  <span className="mt-1 block text-slate-400">{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent render'}</span>
+                </a>
+              ))
+            ) : (
+              <div className="px-3 py-2 text-[12.5px] leading-5 text-slate-500">
+                No exports yet. Drop a spreadsheet to start.
               </div>
-            ))
-          ) : (
-            <p className="text-xs leading-5 text-slate-400">Sections appear after the first render.</p>
-          )}
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={conversion.handleRenderAnother}
+            className="mt-3 inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/20 px-3 text-[13px] font-medium text-slate-300 transition hover:border-white/30 hover:text-white"
+          >
+            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+            New export
+          </button>
+        </>
+      ) : (
+        <div className="mt-4">
+          <div className="flex items-center gap-2">
+            <Layers3 className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            <h2 className="text-sm font-semibold">Sections</h2>
+          </div>
+          <div className="mt-3 space-y-2">
+            {sections.length > 0 ? (
+              sections.map((section) => (
+                <div key={section.label} className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="flex h-5 w-5 items-center justify-center rounded bg-white/10 font-semibold text-white">
+                    {section.label}
+                  </span>
+                  <span className="truncate">{section.title}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-xs leading-5 text-slate-400">Sections appear after the first render.</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
       {!conversion.pdfBlob ? (
         <div className="mt-auto flex items-center gap-2 px-2 pb-1 pt-3 text-[11px] text-slate-600">
           <span className="h-1.5 w-1.5 rounded-full bg-green-600" />
@@ -646,6 +761,8 @@ function WorkbenchRail({
     </aside>
   );
 }
+
+export { WorkbenchRail };
 
 function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant }) {
   return (

@@ -26,10 +26,16 @@ const quota = { planType: 'api_enterprise', freeExportsLeft: null, isQuotaLocked
 
 afterEach(() => cleanup());
 
+// Branding lives behind the inspector's "Export" tab (Phase 3). Open it first.
+function openExportTab() {
+  fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+}
+
 describe('ConversionInspector — branding + logo controls', () => {
   test('branding toggle reflects includeBranding and flips it (one-click no-logo)', () => {
     const setIncludeBranding = vi.fn();
     render(<ConversionInspector conversion={makeConversion({ includeBranding: true, setIncludeBranding })} quota={quota} />);
+    openExportTab();
     const toggle = screen.getByTestId('app-branding-toggle');
     expect(toggle.checked).toBe(true);
     fireEvent.click(toggle);
@@ -38,6 +44,7 @@ describe('ConversionInspector — branding + logo controls', () => {
 
   test('renders the logo validation error when present', () => {
     render(<ConversionInspector conversion={makeConversion({ logoError: 'Logo trop lourd : 256 Ko maximum.' })} quota={quota} />);
+    openExportTab();
     expect(screen.getByTestId('app-logo-error').textContent).toMatch(/256 Ko/);
   });
 
@@ -47,12 +54,14 @@ describe('ConversionInspector — branding + logo controls', () => {
       conversion={makeConversion({ logoFile: new File(['x'], 'logo.png', { type: 'image/png' }), removeLogo })}
       quota={quota}
     />);
+    openExportTab();
     fireEvent.click(screen.getByTestId('app-logo-remove'));
     expect(removeLogo).toHaveBeenCalled();
   });
 
   test('no "Retirer le logo" button when no logo is selected', () => {
     render(<ConversionInspector conversion={makeConversion({ logoFile: null })} quota={quota} />);
+    openExportTab();
     expect(screen.queryByTestId('app-logo-remove')).toBeNull();
   });
 });
