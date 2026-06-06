@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import React from 'react';
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 import AppPage from '../app/page.jsx';
 
@@ -120,5 +120,43 @@ describe('/app custom groups — pinned columns are visible and movable (Option 
     const fixed = groups.find((g) => g.label === '__fixed__');
     expect(fixed.columns).toContain('Internal ID');  // still pinned
     expect(fixed.columns).not.toContain('Customer ID');
+  });
+});
+
+/**
+ * The column NAME carries the color of the group it is assigned to, matching the
+ * group pills (A=blue, B=green/emerald, C=amber, D=violet, cycling). Fixed columns
+ * (repeated in every section) stay neutral. The color tracks the live dropdown
+ * selection, so moving a column recolors its name immediately (no re-render).
+ */
+describe('/app custom groups — column name takes its group color', () => {
+  test('group-A columns render blue, group-B columns render emerald, fixed columns stay neutral', async () => {
+    await generate();
+    const box = await screen.findByTestId('app-custom-groups');
+
+    // A=[Region, Plan] -> blue ; B=[Email, Phone] -> emerald.
+    expect(within(box).getByText('Region').className).toContain('text-blue-700');
+    expect(within(box).getByText('Plan').className).toContain('text-blue-700');
+    expect(within(box).getByText('Email').className).toContain('text-emerald-700');
+    expect(within(box).getByText('Phone').className).toContain('text-emerald-700');
+
+    // Fixed columns belong to no single group -> no group color.
+    const customerId = within(box).getByText('Customer ID');
+    expect(customerId.className).not.toContain('text-blue-700');
+    expect(customerId.className).not.toContain('text-emerald-700');
+    expect(within(box).getByText('Internal ID').className).not.toContain('text-blue-700');
+  });
+
+  test('moving a fixed column into group A recolors its name to blue live (before re-render)', async () => {
+    await generate();
+    const box = await screen.findByTestId('app-custom-groups');
+
+    await act(async () => {
+      fireEvent.change(box.querySelector('select[aria-label="Group for Customer ID"]'), { target: { value: '0' } });
+    });
+
+    // Recolored from the draft alone — no second render call yet.
+    expect(renderCalls.length).toBe(1);
+    expect(within(box).getByText('Customer ID').className).toContain('text-blue-700');
   });
 });
