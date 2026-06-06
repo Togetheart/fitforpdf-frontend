@@ -283,8 +283,17 @@ async function copyText(text) {
   return copied;
 }
 
-// Parse the X-CleanSheet-Sections response header (JSON [{label,title}]).
-function parseSectionsHeader(raw) {
+// Header values cross HTTP as ASCII, so non-ASCII characters (e.g. the " · "
+// separator in auto-derived section titles) arrive percent-encoded ("%C2%B7").
+// Decode defensively: a string with no %-escapes is returned unchanged, and a
+// malformed escape falls back to the raw text instead of throwing.
+function safeDecodeText(value) {
+  if (typeof value !== 'string' || value.indexOf('%') === -1) return value;
+  try { return decodeURIComponent(value); } catch { return value; }
+}
+
+// Parse the X-CleanSheet-Sections response header (JSON [{label,title,columns}]).
+export function parseSectionsHeader(raw) {
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw);
@@ -293,8 +302,8 @@ function parseSectionsHeader(raw) {
       .filter((s) => s && typeof s.label === 'string' && s.label)
       .map((s) => ({
         label: s.label,
-        title: typeof s.title === 'string' ? s.title : '',
-        columns: Array.isArray(s.columns) ? s.columns.filter((c) => typeof c === 'string') : [],
+        title: typeof s.title === 'string' ? safeDecodeText(s.title) : '',
+        columns: Array.isArray(s.columns) ? s.columns.filter((c) => typeof c === 'string').map(safeDecodeText) : [],
       }));
   } catch {
     return [];
@@ -308,7 +317,7 @@ function parseFrozenColumnsHeader(raw) {
   try {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((c) => typeof c === 'string' && c);
+    return parsed.filter((c) => typeof c === 'string' && c).map(safeDecodeText);
   } catch {
     return [];
   }
