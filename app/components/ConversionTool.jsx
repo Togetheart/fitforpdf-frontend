@@ -92,7 +92,7 @@ function CustomGroupsControl({ conversion }) {
   if (allColumns.length === 0) {
     return (
       <p className="mt-1 text-[11.5px] leading-5 text-slate-400">
-        Render with grouping (Auto or Always split) to assign columns to your own groups.
+        Render with grouping (Auto or Always split) to assign columns to your own sections.
       </p>
     );
   }
@@ -114,15 +114,15 @@ function CustomGroupsControl({ conversion }) {
     { value: FIXED_TARGET, label: 'Fixed (every section)' },
     ...sectionDraft.map((s, i) => ({
       value: String(i),
-      label: s.title ? `Section ${s.title}` : `Group ${sectionLabel(i)}`,
+      label: s.title ? `Section ${s.title}` : `Section ${sectionLabel(i)}`,
     })),
-    { value: String(sectionDraft.length), label: 'New group' },
+    { value: String(sectionDraft.length), label: 'New section' },
   ];
 
   return (
     <div data-testid="app-custom-groups" className="mt-2 flex flex-col gap-1.5">
       <p className="text-[11.5px] leading-5 text-slate-400">
-        Move columns between groups, then update the preview. &ldquo;Fixed&rdquo; columns repeat in every section.
+        Move columns between sections, then update the preview. &ldquo;Fixed&rdquo; columns repeat in every section.
       </p>
       {allColumns.map((col) => (
         <div key={col} className="flex items-center gap-2">
@@ -135,7 +135,7 @@ function CustomGroupsControl({ conversion }) {
             ) : null}
           </span>
           <select
-            aria-label={`Group for ${col}`}
+            aria-label={`Section for ${col}`}
             value={targetOf(col)}
             onChange={(e) => {
               const v = e.target.value;
@@ -337,13 +337,13 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
                     ['bg-blue-600', 'bg-emerald-600', 'bg-amber-600', 'bg-violet-600'][i % 4],
                   ].join(' ')}
                 >
-                  Group {s.label}
+                  Section {s.label}
                 </span>
               ))}
             </div>
           ) : null}
           <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
-            <span>Custom groups</span>
+            <span>Custom sections</span>
             <StatusBadge tone="live">Live</StatusBadge>
           </div>
           <CustomGroupsControl conversion={conversion} />
