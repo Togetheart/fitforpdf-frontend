@@ -74,3 +74,16 @@ if (typeof window !== 'undefined' && !window.IntersectionObserver) {
     value: IntersectionObserverStub,
   });
 }
+
+// JSDOM does not implement ResizeObserver. react-resizable-panels (the
+// workbench resizable panels) observes its group element on mount, so the
+// desktop PanelGroup branch crashes in tests without this no-op stub.
+if (!global.ResizeObserver) {
+  class ResizeObserverStub {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  global.ResizeObserver = ResizeObserverStub;
+}
