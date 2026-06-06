@@ -122,15 +122,20 @@ describe('/app tool-first workbench shell', () => {
     render(<AppPage />);
     const inspector = screen.getByTestId('app-inspector');
     expect(within(inspector).getByText('Adjust output')).toBeTruthy();
-    expect(within(inspector).getByText('Report title')).toBeTruthy();
-    expect(within(inspector).getByText('Branding')).toBeTruthy();
-    // All Kunj controls (title, grouping, custom groups, section names, branding)
-    // are now Live — no "Soon" placeholders remain.
-    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(4);
-    expect(within(inspector).queryByText('Soon')).toBeNull();
+    // The header + bottom actions stay visible regardless of the active tab.
     expect(within(inspector).getByRole('button', { name: /Update preview/i })).toBeTruthy();
     expect(within(inspector).getByRole('button', { name: /Download PDF/i })).toBeTruthy();
     expect(within(inspector).getByRole('button', { name: /Render another file/i })).toBeTruthy();
+    // Sections tab is the default: grouping + custom groups + section names — all
+    // Live, no "Soon" placeholders.
+    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(2);
+    expect(within(inspector).queryByText('Soon')).toBeNull();
+    // Export tab (Phase 3) houses Report title + Branding — also all Live.
+    fireEvent.click(within(inspector).getByRole('tab', { name: 'Export' }));
+    expect(within(inspector).getByText('Report title')).toBeTruthy();
+    expect(within(inspector).getByText('Branding')).toBeTruthy();
+    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(2);
+    expect(within(inspector).queryByText('Soon')).toBeNull();
   });
 
   test('keeps inspector actions permanent below a scrollable options area', () => {
@@ -202,6 +207,8 @@ describe('/app tool-first workbench shell', () => {
     });
 
     render(<AppPage />);
+    // Footer text lives behind the inspector's "Export" tab (Phase 3).
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
     fireEvent.change(screen.getByLabelText(/Footer text/i), { target: { value: 'Prepared for ACME' } });
     fireEvent.change(screen.getByTestId('generate-file-input'), {
       target: { files: [new File(['a,b\n1,2'], 'customers.csv', { type: 'text/csv' })] },
@@ -261,6 +268,8 @@ describe('/app tool-first workbench shell', () => {
   test('exposes a pre-render Report title control (Kunj custom title)', () => {
     render(<AppPage />);
     expect(screen.getByTestId('app-inspector')).toBeTruthy();
+    // Report title lives behind the inspector's "Export" tab (Phase 3).
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
     const input = screen.getByLabelText(/Report title/i);
     expect(input).toBeTruthy();
     fireEvent.change(input, { target: { value: 'Acme Q4' } });

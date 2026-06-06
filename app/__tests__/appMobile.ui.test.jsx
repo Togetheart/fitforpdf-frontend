@@ -89,6 +89,8 @@ describe('/app workbench — mobile operability (Defect 28)', () => {
 
   test('Report title input is present and editable on mobile', () => {
     render(<AppPage />);
+    // Report title lives behind the inspector's "Export" tab (Phase 3).
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
     const titleInput = screen.getByLabelText(/Report title/i);
     expect(titleInput).toBeTruthy();
     // Editable: a change event must update the controlled value.
