@@ -102,8 +102,8 @@ describe('/app workbench — mobile operability (Defect 28)', () => {
     expect(group).toBeTruthy();
 
     const buttons = within(group).getAllByRole('button');
-    // Off / Auto / Force.
-    expect(buttons.length).toBe(3);
+    // Off / Auto (Force retired).
+    expect(buttons.length).toBe(2);
 
     const offButton = within(group).getByRole('button', { name: /^Off$/i });
     // Default columnMap is 'auto', so Off starts unpressed.

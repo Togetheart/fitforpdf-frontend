@@ -128,13 +128,13 @@ function buildUpstreamUrl(reqUrl, upstream, clientLocale = null) {
       target.searchParams.set('locale', 'en');
     }
   }
-  // Respect the caller's columnMap (off/auto/force); default to auto. Previously
-  // hardcoded to 'auto', which silently overrode the value — that made the
-  // /app grouping toggle a no-op. Whitelisted to avoid forwarding garbage.
+  // Respect the caller's columnMap (off/auto); default to auto. 'force' is retired
+  // (identical to auto), so legacy 'force' and any other value fall back to auto.
+  // Whitelisted to avoid forwarding garbage.
   const requestedColumnMap = source.searchParams.get('columnMap');
   target.searchParams.set(
     'columnMap',
-    ['off', 'auto', 'force'].includes(requestedColumnMap) ? requestedColumnMap : 'auto',
+    ['off', 'auto'].includes(requestedColumnMap) ? requestedColumnMap : 'auto',
   );
   return target;
 }

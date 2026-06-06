@@ -367,7 +367,8 @@ test('POST /api/render does not rewrite content-disposition for non-PDF upstream
 });
 
 test('POST /api/render forwards a user-chosen columnMap and rejects invalid values', async () => {
-  for (const [requested, expected] of [['force', 'force'], ['off', 'off'], ['bogus', 'auto']]) {
+  // 'force' is retired from the UI/docs but still accepted as a legacy alias for 'auto'.
+  for (const [requested, expected] of [['force', 'auto'], ['off', 'off'], ['bogus', 'auto']]) {
     const restoreEnv = setupEnv({
       CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
       NEATEXPORT_API_KEY: 'backend-key',
