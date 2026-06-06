@@ -152,19 +152,28 @@ describe('/app tool-first workbench shell', () => {
     expect(within(actions).getByRole('button', { name: /Download PDF/i })).toBeTruthy();
   });
 
-  test('uses mobile-first workbench ordering: canvas before inspector and rail hidden until desktop', () => {
+  test('mobile-first workbench: full-width center canvas plus off-canvas rail/inspector drawers (Phase 2)', () => {
+    // matchMedia mock here matches:false for every query, so useIsDesktop() is
+    // false and the workbench renders the MOBILE off-canvas-drawer layout.
     render(<AppPage />);
     expect(screen.getByTestId('app-workbench').className).toMatch(/min-h-screen/);
     expect(screen.getByTestId('app-workbench').className).toMatch(/lg:h-screen/);
-    expect(screen.getByTestId('tool').className).toMatch(/min-h-\[calc\(100vh-57px\)\]/);
-    expect(screen.getByTestId('tool').className).toMatch(/lg:h-\[calc\(100vh-57px\)\]/);
-    expect(screen.getByTestId('app-canvas').className).toMatch(/order-1/);
-    expect(screen.getByTestId('app-canvas').className).toMatch(/lg:overflow-y-auto/);
-    expect(screen.getByTestId('app-inspector').className).toMatch(/order-2/);
-    expect(screen.getByTestId('app-inspector').className).toMatch(/overflow-visible/);
-    expect(screen.getByTestId('app-inspector').className).toMatch(/lg:overflow-hidden/);
-    expect(screen.getByTestId('app-left-rail').className).toMatch(/hidden/);
-    expect(screen.getByTestId('app-left-rail').className).toMatch(/lg:flex/);
+    // The center workspace is full width and always rendered (not in a drawer).
+    expect(screen.getByTestId('app-canvas').className).toMatch(/w-full/);
+    // The rail + inspector are now off-canvas drawers: fixed, dialog-role panels
+    // that slide via translate-x and stay mounted regardless of open state.
+    const leftDrawer = screen.getByTestId('app-drawer-left');
+    const rightDrawer = screen.getByTestId('app-drawer-right');
+    expect(leftDrawer.getAttribute('role')).toBe('dialog');
+    expect(rightDrawer.getAttribute('role')).toBe('dialog');
+    expect(leftDrawer.className).toMatch(/fixed/);
+    expect(rightDrawer.className).toMatch(/fixed/);
+    // Closed by default: off-screen via translate-x-full / -translate-x-full.
+    expect(leftDrawer.className).toMatch(/-translate-x-full/);
+    expect(rightDrawer.className).toMatch(/translate-x-full/);
+    // The rail + inspector content live inside the drawers (still mounted).
+    expect(leftDrawer.contains(screen.getByTestId('app-left-rail'))).toBe(true);
+    expect(rightDrawer.contains(screen.getByTestId('app-inspector'))).toBe(true);
   });
 
   test('renders from the finalized center canvas after file selection', async () => {

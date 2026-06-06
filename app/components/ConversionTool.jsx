@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Code2, Download, FileText, Layers3, Plus, RefreshCw, Upload } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Code2, Download, FileText, Layers3, PanelLeft, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -1155,7 +1155,12 @@ function PdfPreviewPane({ pdfBlob, filename }) {
   );
 }
 
-function AppToolbar({ conversion, quota, session }) {
+// Drawer DOM ids shared by the mobile toggles (aria-controls) and the off-canvas
+// drawers (panel id) so the two are programmatically associated.
+const LEFT_DRAWER_ID = 'app-drawer-left';
+const RIGHT_DRAWER_ID = 'app-drawer-right';
+
+function AppToolbar({ conversion, quota, session, openDrawer = null, setOpenDrawer }) {
   const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
   const exportsLeft = Number.isFinite(quota.freeExportsLeft)
     ? quota.freeExportsLeft
@@ -1164,6 +1169,7 @@ function AppToolbar({ conversion, quota, session }) {
       : 3;
   const quotaLabel = isUnlimited ? 'Admin - unlimited' : `Free - ${exportsLeft} left`;
   const crumb = conversion.file?.name || (conversion.pdfBlob ? conversion.resolvedPdfFilename : 'New export');
+  const setDrawer = typeof setOpenDrawer === 'function' ? setOpenDrawer : () => {};
 
   return (
     <header
@@ -1180,6 +1186,33 @@ function AppToolbar({ conversion, quota, session }) {
         <span className="font-serif italic text-[15px] text-slate-950">{crumb}</span>
       </div>
       <div className="ml-auto flex items-center gap-3">
+        {/* Mobile-only drawer toggles. Each opens its off-canvas drawer (one at a
+            time): "Recent" -> left rail, "Options" -> right inspector. Hidden on
+            desktop (lg) where the resizable PanelGroup is used instead. */}
+        <button
+          type="button"
+          data-testid="app-drawer-toggle-left"
+          aria-label="Open recent exports panel"
+          aria-expanded={openDrawer === 'left'}
+          aria-controls={LEFT_DRAWER_ID}
+          onClick={() => setDrawer(openDrawer === 'left' ? null : 'left')}
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-[13px] font-semibold text-slate-950 transition hover:border-slate-950 hover:bg-slate-50 lg:hidden"
+        >
+          <PanelLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          <span className="hidden sm:inline">Recent</span>
+        </button>
+        <button
+          type="button"
+          data-testid="app-drawer-toggle-right"
+          aria-label="Open options panel"
+          aria-expanded={openDrawer === 'right'}
+          aria-controls={RIGHT_DRAWER_ID}
+          onClick={() => setDrawer(openDrawer === 'right' ? null : 'right')}
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-[13px] font-semibold text-slate-950 transition hover:border-slate-950 hover:bg-slate-50 lg:hidden"
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+          <span className="hidden sm:inline">Options</span>
+        </button>
         <a
           href="/developers"
           className="hidden min-h-9 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-[13px] font-semibold text-slate-950 transition hover:border-slate-950 hover:bg-slate-50 sm:inline-flex"
@@ -1388,11 +1421,118 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
   );
 }
 
+// One off-canvas drawer (mobile). Its content is ALWAYS mounted; open/closed is
+// expressed purely via the translate-x transition so the panels stay in the DOM
+// (preserving input state + keeping existing mobile content queries resolvable).
+// side: 'left' | 'right' — decides the slide direction + close-state transform.
+function MobileDrawer({ id, side, label, open, onClose, children }) {
+  const isLeft = side === 'left';
+  const closedTranslate = isLeft ? '-translate-x-full' : 'translate-x-full';
+  return (
+    <div
+      id={id}
+      role="dialog"
+      aria-label={label}
+      // A closed drawer is off-screen: mark it inert (removes its content from the
+      // a11y tree + focus order) and not a modal. aria-modal applies only while open.
+      {...(open ? { 'aria-modal': 'true' } : { inert: '' })}
+      data-testid={`app-drawer-${side}`}
+      data-open={open ? 'true' : 'false'}
+      className={[
+        'fixed top-[57px] bottom-0 z-50 flex w-[88vw] max-w-[360px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out lg:hidden',
+        isLeft ? 'left-0' : 'right-0',
+        open ? 'translate-x-0' : `${closedTranslate} pointer-events-none`,
+      ].join(' ')}
+    >
+      <div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-3">
+        <span className="text-[13px] font-semibold text-slate-700">{label}</span>
+        <button
+          type="button"
+          aria-label={`Close ${label} panel`}
+          onClick={onClose}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+        >
+          <X className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">{children}</div>
+    </div>
+  );
+}
+
+// Mobile (< lg) layout: a full-width center workspace plus the left rail + right
+// inspector rendered as fixed off-canvas DRAWERS that slide OVER the center, with
+// a shared scrim. One drawer open at a time (openDrawer is 'left' | 'right' | null,
+// owned by ConversionTool). Escape closes; body scroll is locked while open.
+function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer }) {
+  const isOpen = openDrawer === 'left' || openDrawer === 'right';
+  const close = React.useCallback(() => setOpenDrawer(null), [setOpenDrawer]);
+
+  // Escape closes the open drawer.
+  React.useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') close();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, close]);
+
+  // Lock body scroll while a drawer is open; restore on close / unmount.
+  React.useEffect(() => {
+    if (!isOpen) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [isOpen]);
+
+  return (
+    <div data-testid="tool" className="relative min-h-[calc(100vh-57px)] overflow-x-hidden">
+      <WorkbenchWorkspace conversion={conversion} quota={quota} className="w-full" />
+
+      {/* Scrim: only present while a drawer is open. Clicking it closes. */}
+      {isOpen ? (
+        <button
+          type="button"
+          aria-label="Close panel"
+          data-testid="app-drawer-scrim"
+          onClick={close}
+          className="fixed inset-0 top-[57px] z-40 bg-slate-950/40 lg:hidden"
+        />
+      ) : null}
+
+      {/* Both drawers stay mounted; translate-x shows/hides them. */}
+      <MobileDrawer
+        id={LEFT_DRAWER_ID}
+        side="left"
+        label="Recent exports"
+        open={openDrawer === 'left'}
+        onClose={close}
+      >
+        <WorkbenchRail conversion={conversion} className="flex h-full w-full" />
+      </MobileDrawer>
+
+      <MobileDrawer
+        id={RIGHT_DRAWER_ID}
+        side="right"
+        label="Options"
+        open={openDrawer === 'right'}
+        onClose={close}
+      >
+        <ConversionInspector conversion={conversion} quota={quota} className="h-full w-full border-t-0" />
+      </MobileDrawer>
+    </div>
+  );
+}
+
 export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark', showInspector = false, layout = 'inline' }) {
   const quota = useQuota();
   const conversion = useConversion({ quota });
   const session = useSession();
   const isDesktop = useIsDesktop();
+  // Which mobile off-canvas drawer is open: 'left' (rail), 'right' (inspector),
+  // or null. One at a time. Desktop ignores this (it uses the PanelGroup).
+  const [openDrawer, setOpenDrawer] = React.useState(null);
 
   // Load "Recent exports" on mount, and refresh after each render (renderId changes).
   // useConversion only fetched history on a manual status change / load-more, so the
@@ -1434,7 +1574,13 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
   if (layout === 'workbench') {
     return (
       <>
-        <AppToolbar conversion={conversion} quota={quota} session={session} />
+        <AppToolbar
+          conversion={conversion}
+          quota={quota}
+          session={session}
+          openDrawer={openDrawer}
+          setOpenDrawer={setOpenDrawer}
+        />
         {isDesktop ? (
           // Desktop (>= lg): resizable / collapsible PanelGroup. data-testid="tool"
           // is kept here so existing selectors that scope to the workbench still work.
@@ -1442,21 +1588,15 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
             <WorkbenchDesktopPanels conversion={conversion} quota={quota} />
           </div>
         ) : (
-          // Mobile (< lg): the unchanged stacked layout. Same content components as
-          // the desktop branch — no duplicated markup. The rail is hidden on mobile
-          // (it carries `hidden ... lg:flex`), matching the prior behavior exactly.
-          <div
-            data-testid="tool"
-            className="grid min-h-[calc(100vh-57px)] grid-cols-1 overflow-visible lg:h-[calc(100vh-57px)] lg:grid-cols-[264px_minmax(0,1fr)_320px] lg:overflow-hidden"
-          >
-            <WorkbenchRail conversion={conversion} />
-            <WorkbenchWorkspace
-              conversion={conversion}
-              quota={quota}
-              className="order-1 lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-y-auto"
-            />
-            <ConversionInspector conversion={conversion} quota={quota} />
-          </div>
+          // Mobile (< lg): full-width center workspace + off-canvas drawers (left
+          // rail / right inspector) sliding over it, with a scrim. Same content
+          // components as the desktop branch — no duplicated markup.
+          <WorkbenchMobileLayout
+            conversion={conversion}
+            quota={quota}
+            openDrawer={openDrawer}
+            setOpenDrawer={setOpenDrawer}
+          />
         )}
       </>
     );
