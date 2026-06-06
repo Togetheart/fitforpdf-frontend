@@ -6,6 +6,9 @@ import {
   isPageBurdenFail,
   normalizePageBurdenRecommendations,
   recommendationLabel,
+  reorder,
+  buildGroupingPayload,
+  reassignColumn,
 } from '../pageUiLogic.mjs';
 import { getPlanExhausted, QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
 import { useCheckout } from './useCheckout.mjs';
@@ -419,10 +422,15 @@ export default function useConversion({ quota }) {
   // Pinned/anchor columns from the last render (X-CleanSheet-Frozen-Columns).
   // Listed alongside section columns so every column is visible + assignable.
   const [renderedFrozenColumns, setRenderedFrozenColumns] = useState([]);
-  const [sectionTitleOverrides, setSectionTitleOverrides] = useState({});
-  // Custom column groups (Kunj T5): array of { label, columns } sent on the
-  // next render. null => use the engine's automatic grouping.
-  const [columnGroupsOverride, setColumnGroupsOverride] = useState(null);
+  // Position-based working copy of the sections (order + titles + column
+  // membership), re-synced from each render. The backend labels sections
+  // POSITIONALLY by columnGroups order, so we never key by label here.
+  // sectionDraft: ordered [{ columns, title }]; frozenDraft: pinned columns.
+  // sectionsCustomized: once the user tweaks sections we emit an explicit
+  // positional grouping on every render so the order/titles persist.
+  const [sectionDraft, setSectionDraft] = useState([]);
+  const [frozenDraft, setFrozenDraft] = useState([]);
+  const [sectionsCustomized, setSectionsCustomized] = useState(false);
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -534,19 +542,19 @@ export default function useConversion({ quota }) {
       if (!isDemoRender && logoFile) {
         formData.append('logo', logoFile);
       }
-      // Custom section names (Kunj) — keyed by label, only non-empty overrides.
-      if (!isDemoRender) {
-        const trimmedOverrides = {};
-        for (const [k, v] of Object.entries(sectionTitleOverrides)) {
-          if (typeof v === 'string' && v.trim()) trimmedOverrides[k] = v.trim();
+      // Section grouping (order + titles + membership). Once the user has tweaked
+      // sections, emit an explicit positional grouping every render: columnGroups
+      // in draft order + sectionTitles keyed by the POSITIONAL label the backend
+      // will assign. Idempotent across re-renders (no label drift).
+      if (!isDemoRender && sectionsCustomized && sectionDraft.length) {
+        const { columnGroups, sectionTitles } = buildGroupingPayload({
+          sectionDraft,
+          frozenColumns: frozenDraft,
+        });
+        if (columnGroups.length) formData.append('columnGroups', JSON.stringify(columnGroups));
+        if (Object.keys(sectionTitles).length) {
+          formData.append('sectionTitles', JSON.stringify(sectionTitles));
         }
-        if (Object.keys(trimmedOverrides).length) {
-          formData.append('sectionTitles', JSON.stringify(trimmedOverrides));
-        }
-      }
-      // Custom column groups (Kunj T5) — only when the user defined an override.
-      if (!isDemoRender && Array.isArray(columnGroupsOverride) && columnGroupsOverride.length) {
-        formData.append('columnGroups', JSON.stringify(columnGroupsOverride));
       }
 
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText, columnMap }), {
@@ -627,8 +635,21 @@ export default function useConversion({ quota }) {
       if (!isPdfResponse) { setError('PDF response is missing.'); return; }
 
       setPdfBlob(blob);
-      setRenderedSections(parseSectionsHeader(res.headers.get('x-cleansheet-sections')));
-      setRenderedFrozenColumns(parseFrozenColumnsHeader(res.headers.get('x-cleansheet-frozen-columns')));
+      const nextSections = parseSectionsHeader(res.headers.get('x-cleansheet-sections'));
+      const nextFrozen = parseFrozenColumnsHeader(res.headers.get('x-cleansheet-frozen-columns'));
+      setRenderedSections(nextSections);
+      setRenderedFrozenColumns(nextFrozen);
+      // Re-sync the position-based working copy from the render the backend just
+      // produced (sections are positional + in render order, titles echoed). This
+      // keeps the round-trip idempotent: a customized order/title we sent comes
+      // back baked in, so the draft mirrors it and persists on the next render.
+      setSectionDraft(
+        (Array.isArray(nextSections) ? nextSections : []).map((s) => ({
+          columns: Array.isArray(s.columns) ? s.columns.slice() : [],
+          title: typeof s.title === 'string' ? s.title : '',
+        })),
+      );
+      setFrozenDraft(Array.isArray(nextFrozen) ? nextFrozen.slice() : []);
       setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
@@ -739,8 +760,9 @@ export default function useConversion({ quota }) {
     setPdfBlob(null);
     setCompactSuggestion(null);
     // A new file invalidates any prior section/group customization.
-    setSectionTitleOverrides({});
-    setColumnGroupsOverride(null);
+    setSectionDraft([]);
+    setFrozenDraft([]);
+    setSectionsCustomized(false);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
   }
@@ -777,8 +799,9 @@ export default function useConversion({ quota }) {
     setCompactSuggestion(null);
     // Clearing the file invalidates the rendered structure too, so the
     // inspector's section/group controls don't linger on the old file.
-    setSectionTitleOverrides({});
-    setColumnGroupsOverride(null);
+    setSectionDraft([]);
+    setFrozenDraft([]);
+    setSectionsCustomized(false);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
   }
@@ -863,8 +886,9 @@ export default function useConversion({ quota }) {
     setShareState({ status: 'idle', jobId: null });
     // Drop the previous file's rendered structure so the inspector doesn't
     // show stale section/group controls before the next file is picked.
-    setSectionTitleOverrides({});
-    setColumnGroupsOverride(null);
+    setSectionDraft([]);
+    setFrozenDraft([]);
+    setSectionsCustomized(false);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
     if (typeof document === 'undefined') return;
@@ -888,6 +912,25 @@ export default function useConversion({ quota }) {
       flowId,
       isDemo: wasDemoLastUploadRef.current,
     });
+  }
+
+  // --- Section draft actions (position-based) ---
+  // Reorder sections (drag-and-drop), rename a section, or reassign a column to
+  // another section / Fixed. Each marks the sections as customized so the
+  // explicit positional grouping is sent on the next "Update preview".
+  function reorderSection(from, to) {
+    setSectionDraft((cur) => reorder(cur, from, to));
+    setSectionsCustomized(true);
+  }
+  function renameSection(index, title) {
+    setSectionDraft((cur) => cur.map((s, i) => (i === index ? { ...s, title } : s)));
+    setSectionsCustomized(true);
+  }
+  function reassignSectionColumn(column, target) {
+    const next = reassignColumn({ sectionDraft, frozenColumns: frozenDraft, column, target });
+    setSectionDraft(next.sectionDraft);
+    setFrozenDraft(next.frozenColumns);
+    setSectionsCustomized(true);
   }
 
   function handleLayoutChange(nextKey, nextChecked) {
@@ -1056,10 +1099,12 @@ export default function useConversion({ quota }) {
     removeLogo,
     renderedSections,
     renderedFrozenColumns,
-    sectionTitleOverrides,
-    setSectionTitleOverrides,
-    columnGroupsOverride,
-    setColumnGroupsOverride,
+    sectionDraft,
+    frozenDraft,
+    sectionsCustomized,
+    reorderSection,
+    renameSection,
+    reassignSectionColumn,
     // conversion
     isLoading,
     error,
