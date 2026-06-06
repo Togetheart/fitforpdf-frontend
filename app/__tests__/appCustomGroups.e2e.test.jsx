@@ -125,25 +125,25 @@ describe('/app custom groups — pinned columns are visible and movable (Option 
 
 /**
  * The column NAME carries the color of the group it is assigned to, matching the
- * group pills (A=blue, B=green/emerald, C=amber, D=violet, cycling). Fixed columns
- * (repeated in every section) stay neutral. The color tracks the live dropdown
- * selection, so moving a column recolors its name immediately (no re-render).
+ * group pills (A=blue, B=green, C=amber, D=red, cycling — mirrors the PDF palette).
+ * Fixed columns (repeated in every section) stay neutral. The color tracks the live
+ * dropdown selection, so moving a column recolors its name immediately (no re-render).
  */
 describe('/app custom groups — column name takes its group color', () => {
-  test('group-A columns render blue, group-B columns render emerald, fixed columns stay neutral', async () => {
+  test('group-A columns render blue, group-B columns render green, fixed columns stay neutral', async () => {
     await generate();
     const box = await screen.findByTestId('app-custom-groups');
 
-    // A=[Region, Plan] -> blue ; B=[Email, Phone] -> emerald.
+    // A=[Region, Plan] -> blue ; B=[Email, Phone] -> green.
     expect(within(box).getByText('Region').className).toContain('text-blue-700');
     expect(within(box).getByText('Plan').className).toContain('text-blue-700');
-    expect(within(box).getByText('Email').className).toContain('text-emerald-700');
-    expect(within(box).getByText('Phone').className).toContain('text-emerald-700');
+    expect(within(box).getByText('Email').className).toContain('text-green-700');
+    expect(within(box).getByText('Phone').className).toContain('text-green-700');
 
     // Fixed columns belong to no single group -> no group color.
     const customerId = within(box).getByText('Customer ID');
     expect(customerId.className).not.toContain('text-blue-700');
-    expect(customerId.className).not.toContain('text-emerald-700');
+    expect(customerId.className).not.toContain('text-green-700');
     expect(within(box).getByText('Internal ID').className).not.toContain('text-blue-700');
   });
 

@@ -8,7 +8,7 @@ import useSession from '../hooks/useSession.mjs';
 import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
-import { recommendationLabel } from '../pageUiLogic.mjs';
+import { recommendationLabel, sectionColorClasses } from '../pageUiLogic.mjs';
 import {
   DndContext,
   closestCenter,
@@ -71,10 +71,9 @@ function InspectorSection({ title, status, hint, children }) {
 const FIXED_TARGET = 'fixed';
 // Positional section label for index i: 0 -> 'A', 1 -> 'B', ...
 const sectionLabel = (i) => String.fromCharCode(65 + i);
-// Column-name text color per section index — mirrors the group pills
-// (['bg-blue-600','bg-emerald-600','bg-amber-600','bg-violet-600'] below), one
-// hue per group, cycling. The deeper -700 shade reads clearly on white.
-const GROUP_NAME_COLORS = ['text-blue-700', 'text-emerald-700', 'text-amber-700', 'text-violet-700'];
+// Section colors (pills + column names) come from the shared SECTION_COLOR_CLASSES
+// palette in pageUiLogic.mjs, which mirrors the backend SECTION_COLOR_PALETTE so the
+// workbench shows the EXACT colors the PDF prints (see sectionColorClasses).
 
 /*
  * CustomGroupsControl — assign EVERY column to a section, then re-render.
@@ -104,10 +103,10 @@ function CustomGroupsControl({ conversion }) {
     const idx = sectionDraft.findIndex((s) => (s.columns || []).includes(col));
     return idx >= 0 ? String(idx) : '0';
   };
-  // The column name takes its group's color; fixed columns (every section) stay neutral.
+  // The column name takes its section's color; fixed columns (every section) stay neutral.
   const nameColor = (col) => {
     const t = targetOf(col);
-    return t === FIXED_TARGET ? '' : GROUP_NAME_COLORS[Number(t) % GROUP_NAME_COLORS.length];
+    return t === FIXED_TARGET ? '' : sectionColorClasses(Number(t)).name;
   };
 
   const options = [
@@ -337,7 +336,7 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
                       key={s.label}
                       className={[
                         'rounded-full px-2.5 py-1 text-[11px] font-semibold text-white',
-                        ['bg-blue-600', 'bg-emerald-600', 'bg-amber-600', 'bg-violet-600'][i % 4],
+                        sectionColorClasses(i).pill,
                       ].join(' ')}
                     >
                       Section {s.label}

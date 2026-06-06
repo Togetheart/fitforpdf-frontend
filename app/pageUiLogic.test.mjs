@@ -12,6 +12,8 @@ import {
   buildGroupingPayload,
   reassignColumn,
   FIXED_GROUP_LABEL,
+  SECTION_COLOR_CLASSES,
+  sectionColorClasses,
 } from './pageUiLogic.mjs';
 import {
   canExport,
@@ -252,4 +254,27 @@ test('reassignColumn: target past the end creates a new section; emptied section
   });
   // 'only' left section 0 (now empty -> dropped) and became a new trailing section.
   assert.deepEqual(r.sectionDraft, [{ columns: ['b'], title: 'B' }, { columns: ['only'], title: '' }]);
+});
+
+// --- Section colors must mirror the backend PDF palette ---
+// Guards the headline fix: the workbench options show the EXACT colors the PDF
+// prints. The 4th section is RED (#EF4444 -> red-500), not violet, and the 2nd is
+// GREEN (#22C55E -> green-500), not emerald. Keep in sync with
+// fitforpdf-backend/src/pdfRenderer.js SECTION_COLOR_PALETTE.
+test('section color palette mirrors the backend PDF palette (A blue, B green, C amber, D red)', () => {
+  assert.equal(sectionColorClasses(0).pill, 'bg-blue-600');
+  assert.equal(sectionColorClasses(1).pill, 'bg-green-500');
+  assert.equal(sectionColorClasses(2).pill, 'bg-amber-500');
+  assert.equal(sectionColorClasses(3).pill, 'bg-red-500'); // D is RED, not violet
+  assert.equal(sectionColorClasses(4).pill, 'bg-violet-500');
+});
+
+test('section colors cycle and are bounds-safe', () => {
+  const n = SECTION_COLOR_CLASSES.length;
+  assert.equal(sectionColorClasses(n).pill, sectionColorClasses(0).pill); // wraps
+  assert.equal(sectionColorClasses('x').pill, SECTION_COLOR_CLASSES[0].pill); // non-finite -> first
+  for (const c of SECTION_COLOR_CLASSES) {
+    assert.match(c.pill, /^bg-/);
+    assert.match(c.name, /^text-/);
+  }
 });
