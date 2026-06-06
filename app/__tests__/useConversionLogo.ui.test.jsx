@@ -1,8 +1,8 @@
-import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import React from 'react';
 
-import useConversion from '../hooks/useConversion.mjs';
+import useConversion, { normalizeLogoFile } from '../hooks/useConversion.mjs';
 
 beforeEach(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -18,7 +18,7 @@ function Harness({ file }) {
     <div>
       <div data-testid="logo-name">{c.logoFile ? c.logoFile.name : 'none'}</div>
       <div data-testid="logo-error">{c.logoError || ''}</div>
-      <button type="button" onClick={() => c.handleLogoSelect(file)}>select</button>
+      <button type="button" onClick={() => { void c.handleLogoSelect(file); }}>select</button>
       <button type="button" onClick={() => c.removeLogo()}>remove</button>
     </div>
   );
@@ -28,33 +28,63 @@ const bigPng = () => new File([new Uint8Array(300 * 1024)], 'big.png', { type: '
 const smallPng = () => new File([new Uint8Array(10)], 'logo.png', { type: 'image/png' });
 const gif = () => new File([new Uint8Array(10)], 'a.gif', { type: 'image/gif' });
 
-describe('useConversion.handleLogoSelect — logo validation (no silent drop)', () => {
-  test('rejects a logo > 256 KB with a clear error and keeps no logo', () => {
-    render(<Harness file={bigPng()} />);
-    fireEvent.click(screen.getByText('select'));
-    expect(screen.getByTestId('logo-error').textContent).toMatch(/256 Ko/i);
-    expect(screen.getByTestId('logo-name').textContent).toBe('none');
-  });
-
-  test('rejects a non PNG/JPG file', () => {
+// jsdom has no createImageBitmap/canvas, so handleLogoSelect falls back to the raw file
+// and the 256 KB guard applies — the behaviour we want when the browser can't normalize.
+describe('useConversion.handleLogoSelect — validation + fallback', () => {
+  test('rejects a non PNG/JPG file', async () => {
     render(<Harness file={gif()} />);
     fireEvent.click(screen.getByText('select'));
-    expect(screen.getByTestId('logo-error').textContent).toMatch(/PNG ou JPG/i);
+    await waitFor(() => expect(screen.getByTestId('logo-error').textContent).toMatch(/PNG ou JPG/i));
     expect(screen.getByTestId('logo-name').textContent).toBe('none');
   });
 
-  test('accepts a valid small PNG and clears any error', () => {
+  test('rejects a > 256 KB logo when it cannot be normalized (fallback path)', async () => {
+    render(<Harness file={bigPng()} />);
+    fireEvent.click(screen.getByText('select'));
+    await waitFor(() => expect(screen.getByTestId('logo-error').textContent).toMatch(/256 Ko/i));
+    expect(screen.getByTestId('logo-name').textContent).toBe('none');
+  });
+
+  test('accepts a valid small PNG and clears any error', async () => {
     render(<Harness file={smallPng()} />);
     fireEvent.click(screen.getByText('select'));
-    expect(screen.getByTestId('logo-name').textContent).toBe('logo.png');
+    await waitFor(() => expect(screen.getByTestId('logo-name').textContent).toBe('logo.png'));
     expect(screen.getByTestId('logo-error').textContent).toBe('');
   });
 
-  test('removeLogo clears the selected logo', () => {
+  test('removeLogo clears the selected logo', async () => {
     render(<Harness file={smallPng()} />);
     fireEvent.click(screen.getByText('select'));
-    expect(screen.getByTestId('logo-name').textContent).toBe('logo.png');
+    await waitFor(() => expect(screen.getByTestId('logo-name').textContent).toBe('logo.png'));
     fireEvent.click(screen.getByText('remove'));
     expect(screen.getByTestId('logo-name').textContent).toBe('none');
+  });
+});
+
+describe('normalizeLogoFile — canvas re-encode to a baseline PNG', () => {
+  test('returns null when the browser cannot normalize (no createImageBitmap)', async () => {
+    expect(typeof createImageBitmap).not.toBe('function'); // jsdom default
+    const out = await normalizeLogoFile(smallPng());
+    expect(out).toBeNull();
+  });
+
+  test('re-encodes to a downscaled image/png File when canvas is available', async () => {
+    const origCIB = global.createImageBitmap;
+    const origGetContext = HTMLCanvasElement.prototype.getContext;
+    const origToBlob = HTMLCanvasElement.prototype.toBlob;
+    global.createImageBitmap = async () => ({ width: 2000, height: 800, close() {} });
+    HTMLCanvasElement.prototype.getContext = function getContext() { return { drawImage() {} }; };
+    HTMLCanvasElement.prototype.toBlob = function toBlob(cb) { cb(new Blob([new Uint8Array(64)], { type: 'image/png' })); };
+    try {
+      const out = await normalizeLogoFile(new File([new Uint8Array(5)], 'starbucks-logo.png', { type: 'image/png' }));
+      expect(out).toBeTruthy();
+      expect(out.type).toBe('image/png');
+      expect(out.name).toBe('starbucks-logo.png');
+      expect(out.size).toBeLessThanOrEqual(256 * 1024);
+    } finally {
+      global.createImageBitmap = origCIB;
+      HTMLCanvasElement.prototype.getContext = origGetContext;
+      HTMLCanvasElement.prototype.toBlob = origToBlob;
+    }
   });
 });
