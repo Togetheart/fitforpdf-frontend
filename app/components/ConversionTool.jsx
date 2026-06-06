@@ -71,6 +71,10 @@ function InspectorSection({ title, status, hint, children }) {
 const FIXED_TARGET = 'fixed';
 // Positional section label for index i: 0 -> 'A', 1 -> 'B', ...
 const sectionLabel = (i) => String.fromCharCode(65 + i);
+// Column-name text color per section index — mirrors the group pills
+// (['bg-blue-600','bg-emerald-600','bg-amber-600','bg-violet-600'] below), one
+// hue per group, cycling. The deeper -700 shade reads clearly on white.
+const GROUP_NAME_COLORS = ['text-blue-700', 'text-emerald-700', 'text-amber-700', 'text-violet-700'];
 
 /*
  * CustomGroupsControl — assign EVERY column to a section, then re-render.
@@ -100,6 +104,11 @@ function CustomGroupsControl({ conversion }) {
     const idx = sectionDraft.findIndex((s) => (s.columns || []).includes(col));
     return idx >= 0 ? String(idx) : '0';
   };
+  // The column name takes its group's color; fixed columns (every section) stay neutral.
+  const nameColor = (col) => {
+    const t = targetOf(col);
+    return t === FIXED_TARGET ? '' : GROUP_NAME_COLORS[Number(t) % GROUP_NAME_COLORS.length];
+  };
 
   const options = [
     { value: FIXED_TARGET, label: 'Fixed (every section)' },
@@ -118,7 +127,7 @@ function CustomGroupsControl({ conversion }) {
       {allColumns.map((col) => (
         <div key={col} className="flex items-center gap-2">
           <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-[12.5px] text-slate-700">
-            <span className="truncate">{col}</span>
+            <span className={nameColor(col) ? `truncate font-semibold ${nameColor(col)}` : 'truncate'}>{col}</span>
             {frozenSet.has(col) ? (
               <span className="shrink-0 rounded bg-slate-100 px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-slate-400">
                 fixed
