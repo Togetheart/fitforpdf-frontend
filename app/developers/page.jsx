@@ -52,7 +52,7 @@ const ENDPOINTS = [
 const RENDER_OPTIONS = [
   { key: 'mode', type: 'string', values: 'normal, compact, optimized', def: 'normal' },
   { key: 'branding', type: 'boolean', values: 'true, false', def: 'true' },
-  { key: 'columnMap', type: 'string', values: 'off, auto, force', def: 'off' },
+  { key: 'columnMap', type: 'string', values: 'off, auto', def: 'off' },
   { key: 'truncateLongText', type: 'boolean', values: 'true, false', def: 'false' },
   { key: 'locale', type: 'string', values: 'en, fr', def: 'en' },
   { key: 'pagination', type: 'boolean', values: 'true, false', def: 'true' },

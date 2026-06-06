@@ -307,7 +307,6 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
             {[
               { v: 'off', label: 'Off' },
               { v: 'auto', label: 'Auto' },
-              { v: 'force', label: 'Force' },
             ].map((opt, i) => {
               const active = conversion.columnMap === opt.v;
               return (
@@ -327,31 +326,39 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
               );
             })}
           </div>
-          {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
-            <div data-testid="app-group-pills" className="mt-2 flex flex-wrap gap-1.5">
-              {conversion.renderedSections.map((s, i) => (
-                <span
-                  key={s.label}
-                  className={[
-                    'rounded-full px-2.5 py-1 text-[11px] font-semibold text-white',
-                    ['bg-blue-600', 'bg-emerald-600', 'bg-amber-600', 'bg-violet-600'][i % 4],
-                  ].join(' ')}
-                >
-                  Section {s.label}
-                </span>
-              ))}
-            </div>
-          ) : null}
-          <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
-            <span>Custom sections</span>
-            <StatusBadge tone="live">Live</StatusBadge>
-          </div>
-          <CustomGroupsControl conversion={conversion} />
+          {/* Section customization is meaningful only when grouping is on. In
+              "Off" the backend ignores custom sections, so hide the whole block. */}
+          {conversion.columnMap !== 'off' && (
+            <>
+              {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
+                <div data-testid="app-group-pills" className="mt-2 flex flex-wrap gap-1.5">
+                  {conversion.renderedSections.map((s, i) => (
+                    <span
+                      key={s.label}
+                      className={[
+                        'rounded-full px-2.5 py-1 text-[11px] font-semibold text-white',
+                        ['bg-blue-600', 'bg-emerald-600', 'bg-amber-600', 'bg-violet-600'][i % 4],
+                      ].join(' ')}
+                    >
+                      Section {s.label}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+              <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
+                <span>Custom sections</span>
+                <StatusBadge tone="live">Live</StatusBadge>
+              </div>
+              <CustomGroupsControl conversion={conversion} />
+            </>
+          )}
         </InspectorSection>
 
-        <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Drag to reorder, rename the titles, then update preview.' : 'Available after the first render.'}>
-          <SectionNamesEditor conversion={conversion} />
-        </InspectorSection>
+        {conversion.columnMap !== 'off' && (
+          <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Drag to reorder, rename the titles, then update preview.' : 'Available after the first render.'}>
+            <SectionNamesEditor conversion={conversion} />
+          </InspectorSection>
+        )}
 
         <InspectorSection title="Branding" status="live" hint="Title, accent color, logo & footer for paid exports.">
           <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-slate-950">

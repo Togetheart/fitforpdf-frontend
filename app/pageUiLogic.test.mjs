@@ -60,9 +60,9 @@ test('compact CTA rerenders with mode=compact and columnMap default auto', () =>
   assert.equal(url.searchParams.get('columnMap'), 'auto');
 });
 
-test('columnMap is user-controllable (off/auto/force); invalid falls back to auto', () => {
+test('columnMap is user-controllable (off/auto); legacy/invalid (incl. force) falls back to auto', () => {
   assert.equal(new URL(buildRenderUrl('http://localhost:3000', 'normal', { columnMap: 'off' })).searchParams.get('columnMap'), 'off');
-  assert.equal(new URL(buildRenderUrl('http://localhost:3000', 'normal', { columnMap: 'force' })).searchParams.get('columnMap'), 'force');
+  assert.equal(new URL(buildRenderUrl('http://localhost:3000', 'normal', { columnMap: 'force' })).searchParams.get('columnMap'), 'auto');
   assert.equal(new URL(buildRenderUrl('http://localhost:3000', 'normal', { columnMap: 'bogus' })).searchParams.get('columnMap'), 'auto');
   assert.equal(new URL(buildRenderUrl('http://localhost:3000', 'normal')).searchParams.get('columnMap'), 'auto');
 });
