@@ -16,10 +16,17 @@ function getShareUrl(jobId) {
   return `${upstream.replace(/\/+$/, '')}/jobs/${encodeURIComponent(jobId)}/share`;
 }
 
-function extractAnonCookie(cookieHeader) {
+// Forward the anon device cookie AND the signed session cookie so the backend
+// resolves the LOGGED-IN account identity (sessionAuth) — a share belongs to the account.
+const FORWARDABLE_COOKIES = ['anon_id', 'ffp_session'];
+
+function extractForwardableCookies(cookieHeader) {
   if (!cookieHeader) return null;
-  const match = cookieHeader.split(';').map((c) => c.trim()).find((c) => c.startsWith('anon_id='));
-  return match || null;
+  const kept = cookieHeader
+    .split(';')
+    .map((c) => c.trim())
+    .filter((c) => FORWARDABLE_COOKIES.some((name) => c.startsWith(`${name}=`)));
+  return kept.length ? kept.join('; ') : null;
 }
 
 function buildHeaders(req) {
@@ -28,9 +35,9 @@ function buildHeaders(req) {
   if (apiKey) {
     headers['X-NEATEXPORT-KEY'] = apiKey;
   }
-  const anonCookie = extractAnonCookie(req?.headers?.get('cookie'));
-  if (anonCookie) {
-    headers.Cookie = anonCookie;
+  const forwardCookie = extractForwardableCookies(req?.headers?.get('cookie'));
+  if (forwardCookie) {
+    headers.Cookie = forwardCookie;
   }
   const forwardedFor = req?.headers?.get('x-forwarded-for');
   if (forwardedFor) {
