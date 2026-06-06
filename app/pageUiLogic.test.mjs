@@ -13,7 +13,9 @@ import {
   reassignColumn,
   FIXED_GROUP_LABEL,
   SECTION_COLOR_CLASSES,
+  SECTION_COLOR_HEXES,
   sectionColorClasses,
+  classesForHex,
 } from './pageUiLogic.mjs';
 import {
   canExport,
@@ -277,4 +279,84 @@ test('section colors cycle and are bounds-safe', () => {
     assert.match(c.pill, /^bg-/);
     assert.match(c.name, /^text-/);
   }
+});
+
+// --- Editable section colors (preset swatches) ---
+
+test('SECTION_COLOR_HEXES is index-aligned with SECTION_COLOR_CLASSES (strong hexes)', () => {
+  assert.equal(SECTION_COLOR_HEXES.length, SECTION_COLOR_CLASSES.length);
+  // Spot-check the palette mirrors the backend SECTION_COLOR_PALETTE strong hexes.
+  assert.equal(SECTION_COLOR_HEXES[0], '#2563EB'); // A blue
+  assert.equal(SECTION_COLOR_HEXES[1], '#22C55E'); // B green
+  assert.equal(SECTION_COLOR_HEXES[2], '#F59E0B'); // C amber
+  assert.equal(SECTION_COLOR_HEXES[3], '#EF4444'); // D red
+  for (const hex of SECTION_COLOR_HEXES) {
+    assert.match(hex, /^#[0-9A-F]{6}$/);
+  }
+});
+
+test('classesForHex maps a palette hex to its index-aligned classes (case-insensitive)', () => {
+  // Exact (upper) hit.
+  assert.deepEqual(classesForHex('#EF4444'), SECTION_COLOR_CLASSES[3]);
+  // Lower-case still matches.
+  assert.deepEqual(classesForHex('#8b5cf6'), SECTION_COLOR_CLASSES[4]);
+  // First palette entry.
+  assert.deepEqual(classesForHex('#2563EB'), SECTION_COLOR_CLASSES[0]);
+});
+
+test('classesForHex falls back to the first palette entry for unknown/blank/invalid hex', () => {
+  assert.deepEqual(classesForHex('#123456'), sectionColorClasses(0));
+  assert.deepEqual(classesForHex(''), sectionColorClasses(0));
+  assert.deepEqual(classesForHex(undefined), sectionColorClasses(0));
+  assert.deepEqual(classesForHex('not-a-hex'), sectionColorClasses(0));
+});
+
+test('buildGroupingPayload returns sectionColors for sections with a valid color, omits blank/invalid', () => {
+  const sectionDraft = [
+    { columns: ['cat'], title: 'Cat', color: '#EF4444' },
+    { columns: ['desc'], title: 'Descriptions' }, // no color -> omitted
+    { columns: ['color'], title: 'Colors', color: '' }, // blank -> omitted
+    { columns: ['size'], title: 'Sizes', color: 'nope' }, // invalid -> omitted
+    { columns: ['sku'], title: 'SKUs', color: '#8b5cf6' }, // lower-case kept
+  ];
+  const { sectionColors } = buildGroupingPayload({ sectionDraft, frozenColumns: [] });
+  assert.deepEqual(sectionColors, { A: '#EF4444', E: '#8b5cf6' });
+});
+
+test('buildGroupingPayload omits sectionColors map entries when no section has a color', () => {
+  const { sectionColors } = buildGroupingPayload({
+    sectionDraft: [{ columns: ['a'], title: 'A' }, { columns: ['b'], title: 'B' }],
+    frozenColumns: [],
+  });
+  assert.deepEqual(sectionColors, {});
+});
+
+test('reassignColumn preserves each section color field', () => {
+  const r = reassignColumn({
+    sectionDraft: [
+      { columns: ['a', 'x'], title: 'A', color: '#EF4444' },
+      { columns: ['b'], title: 'B', color: '#22C55E' },
+    ],
+    frozenColumns: [],
+    column: 'x',
+    target: 1,
+  });
+  assert.deepEqual(r.sectionDraft, [
+    { columns: ['a'], title: 'A', color: '#EF4444' },
+    { columns: ['b', 'x'], title: 'B', color: '#22C55E' },
+  ]);
+});
+
+test('reorder preserves the color field on moved sections (operates on whole objects)', () => {
+  const draft = [
+    { columns: ['a'], title: 'A', color: '#EF4444' },
+    { columns: ['b'], title: 'B', color: '#22C55E' },
+    { columns: ['c'], title: 'C', color: '#F59E0B' },
+  ];
+  const out = reorder(draft, 0, 2);
+  assert.deepEqual(out, [
+    { columns: ['b'], title: 'B', color: '#22C55E' },
+    { columns: ['c'], title: 'C', color: '#F59E0B' },
+    { columns: ['a'], title: 'A', color: '#EF4444' },
+  ]);
 });

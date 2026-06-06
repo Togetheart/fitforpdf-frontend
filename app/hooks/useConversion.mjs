@@ -547,13 +547,18 @@ export default function useConversion({ quota }) {
       // in draft order + sectionTitles keyed by the POSITIONAL label the backend
       // will assign. Idempotent across re-renders (no label drift).
       if (!isDemoRender && sectionsCustomized && sectionDraft.length) {
-        const { columnGroups, sectionTitles } = buildGroupingPayload({
+        const { columnGroups, sectionTitles, sectionColors } = buildGroupingPayload({
           sectionDraft,
           frozenColumns: frozenDraft,
         });
         if (columnGroups.length) formData.append('columnGroups', JSON.stringify(columnGroups));
         if (Object.keys(sectionTitles).length) {
           formData.append('sectionTitles', JSON.stringify(sectionTitles));
+        }
+        // Per-section colors the user picked from the preset palette (positional
+        // label -> hex). Omitted sections keep the default positional palette.
+        if (sectionColors && Object.keys(sectionColors).length) {
+          formData.append('sectionColors', JSON.stringify(sectionColors));
         }
       }
 
@@ -926,6 +931,14 @@ export default function useConversion({ quota }) {
     setSectionDraft((cur) => cur.map((s, i) => (i === index ? { ...s, title } : s)));
     setSectionsCustomized(true);
   }
+  // Pick (or clear) a section's color from the preset palette. An empty/invalid
+  // hex clears the choice so the section falls back to the default positional
+  // palette in both the workbench and the PDF.
+  function setSectionColor(index, hex) {
+    const color = typeof hex === 'string' ? hex : '';
+    setSectionDraft((cur) => cur.map((s, i) => (i === index ? { ...s, color } : s)));
+    setSectionsCustomized(true);
+  }
   function reassignSectionColumn(column, target) {
     const next = reassignColumn({ sectionDraft, frozenColumns: frozenDraft, column, target });
     setSectionDraft(next.sectionDraft);
@@ -1104,6 +1117,7 @@ export default function useConversion({ quota }) {
     sectionsCustomized,
     reorderSection,
     renameSection,
+    setSectionColor,
     reassignSectionColumn,
     // conversion
     isLoading,
