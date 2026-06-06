@@ -8,7 +8,7 @@ import useSession from '../hooks/useSession.mjs';
 import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
-import { recommendationLabel, sectionColorClasses } from '../pageUiLogic.mjs';
+import { recommendationLabel, sectionColorClasses, classesForHex, SECTION_COLOR_HEXES } from '../pageUiLogic.mjs';
 import {
   DndContext,
   closestCenter,
@@ -73,7 +73,13 @@ const FIXED_TARGET = 'fixed';
 const sectionLabel = (i) => String.fromCharCode(65 + i);
 // Section colors (pills + column names) come from the shared SECTION_COLOR_CLASSES
 // palette in pageUiLogic.mjs, which mirrors the backend SECTION_COLOR_PALETTE so the
-// workbench shows the EXACT colors the PDF prints (see sectionColorClasses).
+// workbench shows the EXACT colors the PDF prints (see sectionColorClasses). When a
+// section has a CHOSEN palette hex, that wins (classesForHex); otherwise the
+// positional default for its index applies.
+function sectionClasses(sectionDraft, i) {
+  const chosen = Array.isArray(sectionDraft) && sectionDraft[i] ? sectionDraft[i].color : null;
+  return chosen ? classesForHex(chosen) : sectionColorClasses(i);
+}
 
 /*
  * CustomGroupsControl — assign EVERY column to a section, then re-render.
@@ -103,10 +109,11 @@ function CustomGroupsControl({ conversion }) {
     const idx = sectionDraft.findIndex((s) => (s.columns || []).includes(col));
     return idx >= 0 ? String(idx) : '0';
   };
-  // The column name takes its section's color; fixed columns (every section) stay neutral.
+  // The column name takes its section's color (chosen swatch or positional default);
+  // fixed columns (every section) stay neutral.
   const nameColor = (col) => {
     const t = targetOf(col);
-    return t === FIXED_TARGET ? '' : sectionColorClasses(Number(t)).name;
+    return t === FIXED_TARGET ? '' : sectionClasses(sectionDraft, Number(t)).name;
   };
 
   const options = [
@@ -152,10 +159,56 @@ function CustomGroupsControl({ conversion }) {
   );
 }
 
+// A row of preset color swatches (+ a "default" clear option) for one section.
+// Picking a swatch calls onSetColor(index, hex); the chosen swatch is ringed.
+// The 1-based human number (index + 1) is used in the aria-labels so screen
+// readers / tests can target "section 1", "section 2", … unambiguously.
+function SectionColorSwatches({ index, color, onSetColor }) {
+  const chosen = String(color || '').trim().toUpperCase();
+  const num = index + 1;
+  return (
+    <div className="flex flex-wrap items-center gap-1" role="group" aria-label={`Color for section ${num}`}>
+      <button
+        type="button"
+        aria-label={`Default color for section ${num}`}
+        aria-pressed={chosen === ''}
+        title="Default color"
+        onClick={() => onSetColor(index, '')}
+        className={[
+          'flex h-5 w-5 items-center justify-center rounded-full border text-[10px] leading-none text-slate-400',
+          chosen === '' ? 'border-slate-400 ring-2 ring-slate-300' : 'border-slate-200 hover:border-slate-400',
+        ].join(' ')}
+      >
+        ✕
+      </button>
+      {SECTION_COLOR_HEXES.map((hex) => {
+        const active = chosen === hex.toUpperCase();
+        return (
+          <button
+            key={hex}
+            type="button"
+            aria-label={`Color section ${num} ${hex}`}
+            aria-pressed={active}
+            title={hex}
+            onClick={() => onSetColor(index, hex)}
+            style={{ backgroundColor: hex }}
+            className={[
+              'h-5 w-5 rounded-full border border-black/10 transition',
+              active ? 'ring-2 ring-offset-1 ring-slate-500' : 'hover:scale-110',
+            ].join(' ')}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 // One draggable + renamable section row. The `::` handle is the drag affordance
 // (so the title input stays editable). Reordering reaches preview + download via
-// the positional columnGroups order sent on the next "Update preview".
-function SortableSectionRow({ id, index, title, onRename }) {
+// the positional columnGroups order sent on the next "Update preview". Each row
+// also carries a preset color picker (swatches) whose choice colors the pill +
+// column names and is sent to the backend as the PDF section header color.
+function SortableSectionRow({ id, index, title, color, onRename, onSetColor }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -164,23 +217,28 @@ function SortableSectionRow({ id, index, title, onRename }) {
     zIndex: isDragging ? 10 : undefined,
   };
   return (
-    <div ref={setNodeRef} style={style} className="flex items-center gap-2">
-      <button
-        type="button"
-        aria-label={`Reorder section ${title || sectionLabel(index)}`}
-        className="cursor-grab touch-none select-none px-0.5 text-sm leading-none text-slate-300 hover:text-slate-500"
-        {...attributes}
-        {...listeners}
-      >
-        ::
-      </button>
-      <input
-        type="text"
-        value={title}
-        maxLength={80}
-        onChange={(e) => onRename(index, e.target.value)}
-        className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-9"
-      />
+    <div ref={setNodeRef} style={style} className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          aria-label={`Reorder section ${title || sectionLabel(index)}`}
+          className="cursor-grab touch-none select-none px-0.5 text-sm leading-none text-slate-300 hover:text-slate-500"
+          {...attributes}
+          {...listeners}
+        >
+          ::
+        </button>
+        <input
+          type="text"
+          value={title}
+          maxLength={80}
+          onChange={(e) => onRename(index, e.target.value)}
+          className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-blue-600 lg:min-h-9"
+        />
+      </div>
+      <div className="pl-5">
+        <SectionColorSwatches index={index} color={color} onSetColor={onSetColor} />
+      </div>
     </div>
   );
 }
@@ -235,7 +293,9 @@ function SectionNamesEditor({ conversion }) {
               id={ids[i]}
               index={i}
               title={typeof s.title === 'string' ? s.title : ''}
+              color={typeof s.color === 'string' ? s.color : ''}
               onRename={conversion.renameSection}
+              onSetColor={conversion.setSectionColor}
             />
           ))}
         </div>
@@ -336,7 +396,7 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
                       key={s.label}
                       className={[
                         'rounded-full px-2.5 py-1 text-[11px] font-semibold text-white',
-                        sectionColorClasses(i).pill,
+                        sectionClasses(conversion.sectionDraft, i).pill,
                       ].join(' ')}
                     >
                       Section {s.label}
@@ -354,7 +414,7 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
         </InspectorSection>
 
         {conversion.columnMap !== 'off' && (
-          <InspectorSection title="Section names" status="live" hint={conversion.pdfBlob ? 'Drag to reorder, rename the titles, then update preview.' : 'Available after the first render.'}>
+          <InspectorSection title="Section name & color" status="live" hint={conversion.pdfBlob ? 'Drag to reorder, rename, pick a color, then update preview.' : 'Available after the first render.'}>
             <SectionNamesEditor conversion={conversion} />
           </InspectorSection>
         )}

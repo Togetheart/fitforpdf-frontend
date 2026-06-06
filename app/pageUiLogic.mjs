@@ -125,10 +125,44 @@ export const SECTION_COLOR_CLASSES = [
   { pill: 'bg-amber-600', name: 'text-amber-800' },    // L amber-600
 ];
 
+// The strong section palette hexes, index-aligned with SECTION_COLOR_CLASSES and
+// mirroring the backend SECTION_COLOR_PALETTE (so a chosen swatch maps 1:1 to the
+// color the PDF section header prints). The swatch picker offers exactly these.
+export const SECTION_COLOR_HEXES = [
+  '#2563EB', // A blue
+  '#22C55E', // B green
+  '#F59E0B', // C amber
+  '#EF4444', // D red
+  '#8B5CF6', // E violet
+  '#0891B2', // F cyan
+  '#EC4899', // G pink
+  '#059669', // H emerald
+  '#DC2626', // I red-600
+  '#7C3AED', // J violet-600
+  '#0369A1', // K sky-700
+  '#D97706', // L amber-600
+];
+
 // The pill/name color classes for section index i (cycles through the palette).
 export function sectionColorClasses(i) {
   const idx = ((Number(i) % SECTION_COLOR_CLASSES.length) + SECTION_COLOR_CLASSES.length) % SECTION_COLOR_CLASSES.length;
   return SECTION_COLOR_CLASSES[Number.isFinite(Number(i)) ? idx : 0];
+}
+
+// Map a chosen palette hex to its {pill,name} classes by index into
+// SECTION_COLOR_HEXES (case-insensitive). A blank / unknown / invalid hex falls
+// back to the first palette entry so callers always get usable classes.
+export function classesForHex(hex) {
+  const normalized = String(hex || '').trim().toUpperCase();
+  const idx = SECTION_COLOR_HEXES.findIndex((h) => h.toUpperCase() === normalized);
+  return idx >= 0 ? SECTION_COLOR_CLASSES[idx] : sectionColorClasses(0);
+}
+
+// A chosen section color is valid only when it is one of the preset palette hexes.
+function isValidSectionColor(hex) {
+  if (typeof hex !== 'string') return false;
+  const normalized = hex.trim().toUpperCase();
+  return SECTION_COLOR_HEXES.some((h) => h.toUpperCase() === normalized);
 }
 
 // Positional section label for index i: 0 -> 'A', 1 -> 'B', ...
@@ -161,7 +195,14 @@ export function buildGroupingPayload({ sectionDraft, frozenColumns } = {}) {
   draft.forEach((s, i) => {
     if (typeof s.title === 'string' && s.title.trim()) sectionTitles[posLabel(i)] = s.title.trim();
   });
-  return { columnGroups, sectionTitles };
+  // sectionColors: positional label -> chosen palette hex, only for sections the
+  // user recolored with a valid preset swatch. Blank/invalid colors are skipped so
+  // those sections keep the default positional palette in the PDF.
+  const sectionColors = {};
+  draft.forEach((s, i) => {
+    if (isValidSectionColor(s.color)) sectionColors[posLabel(i)] = s.color;
+  });
+  return { columnGroups, sectionTitles, sectionColors };
 }
 
 // Move a column between sections / Fixed in the draft. `target` is 'fixed', an
@@ -172,6 +213,8 @@ export function reassignColumn({ sectionDraft, frozenColumns, column, target } =
   const col = column;
   let draft = (Array.isArray(sectionDraft) ? sectionDraft : []).map((s) => ({
     title: s.title,
+    // Carry the section's chosen color through column moves (was being dropped).
+    ...(s.color != null ? { color: s.color } : {}),
     columns: (Array.isArray(s.columns) ? s.columns : []).filter((c) => c !== col),
   }));
   let frozen = (Array.isArray(frozenColumns) ? frozenColumns : []).filter((c) => c !== col);

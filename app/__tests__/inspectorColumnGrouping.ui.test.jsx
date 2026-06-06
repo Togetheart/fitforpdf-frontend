@@ -42,20 +42,20 @@ describe('Column grouping — Force option removed', () => {
 });
 
 describe('Column grouping — "Off" hides section customization', () => {
-  test('Auto shows the pills, Custom sections list, and Section names', () => {
+  test('Auto shows the pills, Custom sections list, and the Section name & color editor', () => {
     render(<ConversionInspector conversion={makeConversion({ columnMap: 'auto' })} quota={quota} />);
     expect(screen.getByTestId('app-group-pills')).toBeTruthy();
     expect(screen.getByText('Custom sections')).toBeTruthy();
     expect(screen.getByTestId('app-custom-groups')).toBeTruthy();
-    expect(screen.getByText('Section names')).toBeTruthy();
+    expect(screen.getByText('Section name & color')).toBeTruthy();
   });
 
-  test('Off hides the pills, Custom sections list, and Section names', () => {
+  test('Off hides the pills, Custom sections list, and the Section name & color editor', () => {
     render(<ConversionInspector conversion={makeConversion({ columnMap: 'off' })} quota={quota} />);
     expect(screen.queryByTestId('app-group-pills')).toBeNull();
     expect(screen.queryByText('Custom sections')).toBeNull();
     expect(screen.queryByTestId('app-custom-groups')).toBeNull();
-    expect(screen.queryByText('Section names')).toBeNull();
+    expect(screen.queryByText('Section name & color')).toBeNull();
     // The toggle itself stays so the user can switch back to Auto.
     expect(screen.getByTestId('app-columnmap')).toBeTruthy();
   });
