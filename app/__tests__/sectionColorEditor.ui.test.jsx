@@ -37,44 +37,59 @@ const quota = { planType: 'free', freeExportsLeft: 2, isQuotaLocked: false };
 
 afterEach(() => cleanup());
 
-describe('Section name & color editor', () => {
+describe('Section name & color editor (native color picker)', () => {
   test('renames the inspector section "Section names" -> "Section name & color"', () => {
     render(<ConversionInspector conversion={makeConversion()} quota={quota} />);
     expect(screen.getByText('Section name & color')).toBeTruthy();
     expect(screen.queryByText('Section names')).toBeNull();
   });
 
-  test('renders a swatch picker with the preset palette per section row', () => {
+  test('renders a native color picker (type=color) per section row', () => {
     render(<ConversionInspector conversion={makeConversion()} quota={quota} />);
     const editor = screen.getByTestId('app-section-rename');
-    // Every preset hex is offered as a swatch for the first section (index 0).
-    for (const hex of SECTION_COLOR_HEXES) {
-      expect(within(editor).getByRole('button', { name: `Color section 1 ${hex}` })).toBeTruthy();
-    }
-    // Plus a "default" (clear) option per row.
-    expect(within(editor).getByRole('button', { name: 'Default color for section 1' })).toBeTruthy();
+    const pickers = within(editor).getAllByLabelText(/^Color for section /);
+    expect(pickers.length).toBe(2);
+    expect(pickers[0].getAttribute('type')).toBe('color');
   });
 
-  test('clicking a swatch calls setSectionColor with the row index and the chosen hex', () => {
+  test('changing the picker calls setSectionColor with the row index and the chosen hex (free-form)', () => {
     const conversion = makeConversion();
     render(<ConversionInspector conversion={conversion} quota={quota} />);
     const editor = screen.getByTestId('app-section-rename');
-    fireEvent.click(within(editor).getByRole('button', { name: 'Color section 2 #EF4444' }));
-    expect(conversion.setSectionColor).toHaveBeenCalledWith(1, '#EF4444');
+    fireEvent.change(within(editor).getByLabelText('Color for section 2'), { target: { value: '#123456' } });
+    expect(conversion.setSectionColor).toHaveBeenCalledWith(1, '#123456');
   });
 
-  test('clicking "default" calls setSectionColor with an empty hex (clears the choice)', () => {
-    const conversion = makeConversion();
+  test('the picker value reflects the chosen color, else the section positional default', () => {
+    const conversion = makeConversion({
+      sectionDraft: [
+        { title: 'Info', columns: ['c1'], color: '#123456' },
+        { title: 'Orders', columns: ['c2'] },
+      ],
+    });
     render(<ConversionInspector conversion={conversion} quota={quota} />);
     const editor = screen.getByTestId('app-section-rename');
-    fireEvent.click(within(editor).getByRole('button', { name: 'Default color for section 1' }));
+    expect(within(editor).getByLabelText('Color for section 1').value.toLowerCase()).toBe('#123456');
+    // No override -> positional default for index 1 = SECTION_COLOR_HEXES[1] (#22C55E).
+    expect(within(editor).getByLabelText('Color for section 2').value.toLowerCase())
+      .toBe(SECTION_COLOR_HEXES[1].toLowerCase());
+  });
+
+  test('"Reset" clears the chosen color (empty hex) for that section', () => {
+    const conversion = makeConversion({
+      sectionDraft: [
+        { title: 'Info', columns: ['c1'], color: '#EF4444' },
+        { title: 'Orders', columns: ['c2'] },
+      ],
+    });
+    render(<ConversionInspector conversion={conversion} quota={quota} />);
+    const editor = screen.getByTestId('app-section-rename');
+    fireEvent.click(within(editor).getByLabelText('Reset color for section 1'));
     expect(conversion.setSectionColor).toHaveBeenCalledWith(0, '');
   });
 
-  test('pills use the section CHOSEN color when set, else the positional palette', () => {
+  test('pills use the chosen color inline when set, else the positional palette class', () => {
     const conversion = makeConversion({
-      // Section A recolored red (#EF4444 = index 3 -> bg-red-500); B left default
-      // (index 1 -> bg-green-500).
       sectionDraft: [
         { title: 'Info', columns: ['c1'], color: '#EF4444' },
         { title: 'Orders', columns: ['c2'] },
@@ -83,7 +98,8 @@ describe('Section name & color editor', () => {
     render(<ConversionInspector conversion={conversion} quota={quota} />);
     const pills = screen.getByTestId('app-group-pills');
     const pillEls = within(pills).getAllByText(/^Section /);
-    expect(pillEls[0].className).toContain('bg-red-500'); // chosen
-    expect(pillEls[1].className).toContain('bg-green-500'); // positional default (B)
+    // jsdom normalizes inline colors to rgb(): #EF4444 -> rgb(239, 68, 68).
+    expect(pillEls[0].style.backgroundColor).toBe('rgb(239, 68, 68)'); // chosen -> inline
+    expect(pillEls[1].className).toContain('bg-green-500'); // default (index 1) -> class
   });
 });

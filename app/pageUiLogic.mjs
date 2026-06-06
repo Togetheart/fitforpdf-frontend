@@ -149,20 +149,12 @@ export function sectionColorClasses(i) {
   return SECTION_COLOR_CLASSES[Number.isFinite(Number(i)) ? idx : 0];
 }
 
-// Map a chosen palette hex to its {pill,name} classes by index into
-// SECTION_COLOR_HEXES (case-insensitive). A blank / unknown / invalid hex falls
-// back to the first palette entry so callers always get usable classes.
-export function classesForHex(hex) {
-  const normalized = String(hex || '').trim().toUpperCase();
-  const idx = SECTION_COLOR_HEXES.findIndex((h) => h.toUpperCase() === normalized);
-  return idx >= 0 ? SECTION_COLOR_CLASSES[idx] : sectionColorClasses(0);
-}
-
-// A chosen section color is valid only when it is one of the preset palette hexes.
-function isValidSectionColor(hex) {
-  if (typeof hex !== 'string') return false;
-  const normalized = hex.trim().toUpperCase();
-  return SECTION_COLOR_HEXES.some((h) => h.toUpperCase() === normalized);
+// A chosen section color is any valid #RRGGBB hex (free-form via the native color
+// picker). The preset hexes above are only the picker's per-section default value;
+// the user may pick any color. The backend accepts any #RRGGBB and derives a
+// matched/light tint for it (lightForStrong).
+export function isValidSectionColor(hex) {
+  return typeof hex === 'string' && /^#[0-9a-fA-F]{6}$/.test(hex.trim());
 }
 
 // Positional section label for index i: 0 -> 'A', 1 -> 'B', ...

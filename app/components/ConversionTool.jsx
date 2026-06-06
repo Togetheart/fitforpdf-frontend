@@ -8,7 +8,7 @@ import useSession from '../hooks/useSession.mjs';
 import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
 import { PAYG_PACKS } from '../siteCopy.mjs';
-import { recommendationLabel, sectionColorClasses, classesForHex, SECTION_COLOR_HEXES } from '../pageUiLogic.mjs';
+import { recommendationLabel, sectionColorClasses, SECTION_COLOR_HEXES } from '../pageUiLogic.mjs';
 import {
   DndContext,
   closestCenter,
@@ -71,14 +71,30 @@ function InspectorSection({ title, status, hint, children }) {
 const FIXED_TARGET = 'fixed';
 // Positional section label for index i: 0 -> 'A', 1 -> 'B', ...
 const sectionLabel = (i) => String.fromCharCode(65 + i);
-// Section colors (pills + column names) come from the shared SECTION_COLOR_CLASSES
-// palette in pageUiLogic.mjs, which mirrors the backend SECTION_COLOR_PALETTE so the
-// workbench shows the EXACT colors the PDF prints (see sectionColorClasses). When a
-// section has a CHOSEN palette hex, that wins (classesForHex); otherwise the
-// positional default for its index applies.
-function sectionClasses(sectionDraft, i) {
-  const chosen = Array.isArray(sectionDraft) && sectionDraft[i] ? sectionDraft[i].color : null;
-  return chosen ? classesForHex(chosen) : sectionColorClasses(i);
+// Section colors. Default (no override) uses the shared SECTION_COLOR_CLASSES palette
+// (Tailwind classes that mirror the backend SECTION_COLOR_PALETTE exactly). When a
+// section has a CHOSEN color (free-form, from the native picker), that exact hex is
+// applied INLINE (no Tailwind class can represent an arbitrary hex), so the workbench
+// shows precisely what the PDF will print.
+const SECTION_HEX_RE = /^#[0-9a-fA-F]{6}$/;
+function chosenSectionColor(sectionDraft, i) {
+  const c = Array.isArray(sectionDraft) && sectionDraft[i] ? sectionDraft[i].color : null;
+  return typeof c === 'string' && SECTION_HEX_RE.test(c.trim()) ? c.trim() : null;
+}
+// The color the picker shows for section i when there is no override (its positional default).
+function defaultSectionHex(i) {
+  const n = SECTION_COLOR_HEXES.length;
+  return SECTION_COLOR_HEXES[((Number(i) % n) + n) % n];
+}
+// Pill: chosen hex -> inline background; else the positional palette class.
+function sectionPillProps(sectionDraft, i) {
+  const hex = chosenSectionColor(sectionDraft, i);
+  return hex ? { style: { backgroundColor: hex }, className: '' } : { style: undefined, className: sectionColorClasses(i).pill };
+}
+// Column-name text: chosen hex -> inline color; else the positional palette class.
+function sectionNameProps(sectionDraft, i) {
+  const hex = chosenSectionColor(sectionDraft, i);
+  return hex ? { style: { color: hex }, className: 'truncate font-semibold' } : { style: undefined, className: `truncate font-semibold ${sectionColorClasses(i).name}` };
 }
 
 /*
@@ -109,11 +125,12 @@ function CustomGroupsControl({ conversion }) {
     const idx = sectionDraft.findIndex((s) => (s.columns || []).includes(col));
     return idx >= 0 ? String(idx) : '0';
   };
-  // The column name takes its section's color (chosen swatch or positional default);
-  // fixed columns (every section) stay neutral.
-  const nameColor = (col) => {
+  // The column name takes its section's color (chosen hex inline, or positional
+  // palette class); fixed columns (every section) stay neutral.
+  const nameProps = (col) => {
     const t = targetOf(col);
-    return t === FIXED_TARGET ? '' : sectionClasses(sectionDraft, Number(t)).name;
+    if (t === FIXED_TARGET) return { className: 'truncate', style: undefined };
+    return sectionNameProps(sectionDraft, Number(t));
   };
 
   const options = [
@@ -130,10 +147,12 @@ function CustomGroupsControl({ conversion }) {
       <p className="text-[11.5px] leading-5 text-slate-400">
         Move columns between sections, then update the preview. &ldquo;Fixed&rdquo; columns repeat in every section.
       </p>
-      {allColumns.map((col) => (
+      {allColumns.map((col) => {
+        const np = nameProps(col);
+        return (
         <div key={col} className="flex items-center gap-2">
           <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-[12.5px] text-slate-700">
-            <span className={nameColor(col) ? `truncate font-semibold ${nameColor(col)}` : 'truncate'}>{col}</span>
+            <span className={np.className} style={np.style}>{col}</span>
             {frozenSet.has(col) ? (
               <span className="shrink-0 rounded bg-slate-100 px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-slate-400">
                 fixed
@@ -154,51 +173,39 @@ function CustomGroupsControl({ conversion }) {
             ))}
           </select>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
-// A row of preset color swatches (+ a "default" clear option) for one section.
-// Picking a swatch calls onSetColor(index, hex); the chosen swatch is ringed.
-// The 1-based human number (index + 1) is used in the aria-labels so screen
-// readers / tests can target "section 1", "section 2", … unambiguously.
-function SectionColorSwatches({ index, color, onSetColor }) {
-  const chosen = String(color || '').trim().toUpperCase();
+// Native color picker for one section (free-form, like the Branding accent color).
+// Picking a color calls onSetColor(index, hex); "Reset" clears it back to the
+// section's positional default. The 1-based human number (index + 1) is used in the
+// aria-labels so screen readers / tests can target "section 1", "section 2", … .
+function SectionColorPicker({ index, color, onSetColor }) {
   const num = index + 1;
+  const chosen = typeof color === 'string' && SECTION_HEX_RE.test(color.trim()) ? color.trim() : null;
   return (
-    <div className="flex flex-wrap items-center gap-1" role="group" aria-label={`Color for section ${num}`}>
-      <button
-        type="button"
-        aria-label={`Default color for section ${num}`}
-        aria-pressed={chosen === ''}
-        title="Default color"
-        onClick={() => onSetColor(index, '')}
-        className={[
-          'flex h-5 w-5 items-center justify-center rounded-full border text-[10px] leading-none text-slate-400',
-          chosen === '' ? 'border-slate-400 ring-2 ring-slate-300' : 'border-slate-200 hover:border-slate-400',
-        ].join(' ')}
-      >
-        ✕
-      </button>
-      {SECTION_COLOR_HEXES.map((hex) => {
-        const active = chosen === hex.toUpperCase();
-        return (
-          <button
-            key={hex}
-            type="button"
-            aria-label={`Color section ${num} ${hex}`}
-            aria-pressed={active}
-            title={hex}
-            onClick={() => onSetColor(index, hex)}
-            style={{ backgroundColor: hex }}
-            className={[
-              'h-5 w-5 rounded-full border border-black/10 transition',
-              active ? 'ring-2 ring-offset-1 ring-slate-500' : 'hover:scale-110',
-            ].join(' ')}
-          />
-        );
-      })}
+    <div className="flex items-center gap-2">
+      <input
+        type="color"
+        aria-label={`Color for section ${num}`}
+        value={chosen || defaultSectionHex(index)}
+        onChange={(e) => onSetColor(index, e.target.value)}
+        className="h-7 w-9 cursor-pointer rounded border border-slate-200 bg-white"
+      />
+      <span className="text-[11.5px] text-slate-500">{chosen || 'Default'}</span>
+      {chosen ? (
+        <button
+          type="button"
+          aria-label={`Reset color for section ${num}`}
+          onClick={() => onSetColor(index, '')}
+          className="ml-auto text-[11px] text-blue-600"
+        >
+          Reset
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -237,7 +244,7 @@ function SortableSectionRow({ id, index, title, color, onRename, onSetColor }) {
         />
       </div>
       <div className="pl-5">
-        <SectionColorSwatches index={index} color={color} onSetColor={onSetColor} />
+        <SectionColorPicker index={index} color={color} onSetColor={onSetColor} />
       </div>
     </div>
   );
@@ -391,17 +398,18 @@ export function ConversionInspector({ conversion, quota, className = '' }) {
             <>
               {Array.isArray(conversion.renderedSections) && conversion.renderedSections.length > 0 ? (
                 <div data-testid="app-group-pills" className="mt-2 flex flex-wrap gap-1.5">
-                  {conversion.renderedSections.map((s, i) => (
-                    <span
-                      key={s.label}
-                      className={[
-                        'rounded-full px-2.5 py-1 text-[11px] font-semibold text-white',
-                        sectionClasses(conversion.sectionDraft, i).pill,
-                      ].join(' ')}
-                    >
-                      Section {s.label}
-                    </span>
-                  ))}
+                  {conversion.renderedSections.map((s, i) => {
+                    const pp = sectionPillProps(conversion.sectionDraft, i);
+                    return (
+                      <span
+                        key={s.label}
+                        style={pp.style}
+                        className={['rounded-full px-2.5 py-1 text-[11px] font-semibold text-white', pp.className].join(' ')}
+                      >
+                        Section {s.label}
+                      </span>
+                    );
+                  })}
                 </div>
               ) : null}
               <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
