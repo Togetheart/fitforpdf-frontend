@@ -25,6 +25,38 @@ import {
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
+const LOGO_MAX_DIM_PX = 512;
+
+// Re-encode a logo into a clean, downscaled, baseline 8-bit PNG via <canvas> so the
+// PDF renderer (PDFKit) can always embed it — PDFKit throws on interlaced/16-bit/exotic
+// PNGs and then silently falls back to the default mark. Returns a new File, or null
+// when the browser can't do it (server / jsdom) so the caller keeps the raw file.
+export async function normalizeLogoFile(file) {
+  if (!file || typeof document === 'undefined' || typeof createImageBitmap !== 'function') return null;
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    return null;
+  }
+  const srcW = bitmap.width || 1;
+  const srcH = bitmap.height || 1;
+  const scale = Math.min(1, LOGO_MAX_DIM_PX / Math.max(srcW, srcH));
+  const w = Math.max(1, Math.round(srcW * scale));
+  const h = Math.max(1, Math.round(srcH * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext && canvas.getContext('2d');
+  if (!ctx) { if (bitmap.close) bitmap.close(); return null; }
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  if (bitmap.close) bitmap.close();
+  if (typeof canvas.toBlob !== 'function') return null;
+  const blob = await new Promise((resolve) => { canvas.toBlob((b) => resolve(b), 'image/png'); });
+  if (!blob) return null;
+  const base = String(file.name || 'logo').replace(/\.[^.]+$/, '') || 'logo';
+  return new File([blob], `${base}.png`, { type: 'image/png' });
+}
 const CHECKOUT_COMING_SOON_MESSAGE = 'Payments coming soon. Contact us.';
 const HISTORY_PAGE_LIMIT = 10;
 
@@ -333,23 +365,39 @@ export default function useConversion({ quota }) {
   // the backend applies them only for entitled (paid) users.
   const [accentColor, setAccentColor] = useState('');
   const [logoFile, setLogoFile] = useState(null);
-  // Logo is paid branding; the backend SILENTLY drops anything > 256 KB or not a
-  // real PNG/JPEG. Validate at selection so the user gets a clear message instead
-  // of an export that quietly ignores their logo.
+  // Logo is paid branding. Two backend gotchas: (1) it drops anything > 256 KB or
+  // not PNG/JPEG; (2) PDFKit (the renderer) CANNOT embed many real-world PNGs
+  // (interlaced/Adam7, 16-bit, exotic color types) and silently falls back to the
+  // FitForPDF wordmark. So at selection we re-encode the logo through a <canvas>
+  // into a clean, downscaled, baseline 8-bit PNG that PDFKit always accepts — which
+  // also keeps it well under 256 KB. Falls back gracefully where canvas is absent.
   const [logoError, setLogoError] = useState('');
-  function handleLogoSelect(file) {
+  async function handleLogoSelect(file) {
     if (!file) { setLogoError(''); setLogoFile(null); return; }
     const type = String(file.type || '').toLowerCase();
     if (type !== 'image/png' && type !== 'image/jpeg') {
       setLogoError('Logo : format PNG ou JPG uniquement.');
       return;
     }
-    if (Number.isFinite(file.size) && file.size > 256 * 1024) {
-      setLogoError('Logo trop lourd : 256 Ko maximum.');
+    // Guard against decoding absurdly large inputs before we even try.
+    if (Number.isFinite(file.size) && file.size > 10 * 1024 * 1024) {
+      setLogoError('Logo trop lourd : 10 Mo maximum.');
+      return;
+    }
+    let out = file;
+    try {
+      const normalized = await normalizeLogoFile(file);
+      if (normalized) out = normalized;
+    } catch {
+      out = file; // canvas unavailable / decode failed → keep the raw file
+    }
+    // If normalization didn't shrink it (fallback path), enforce the backend cap.
+    if (Number.isFinite(out.size) && out.size > 256 * 1024) {
+      setLogoError('Logo trop lourd : 256 Ko maximum (essayez une image plus petite).');
       return;
     }
     setLogoError('');
-    setLogoFile(file);
+    setLogoFile(out);
   }
   function removeLogo() {
     setLogoFile(null);
