@@ -105,13 +105,28 @@ const organizationLd = {
 };
 
 export default function RootLayout({ children }) {
-  const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
   return (
     <html lang="en" className={lora.variable} suppressHydrationWarning>
       <head>
+        {/* Warm up the PostHog analytics origins so the deferred array.js +
+            ingestion calls skip the DNS+TLS handshake on first capture. */}
+        <link rel="preconnect" href="https://eu-assets.i.posthog.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://eu.i.posthog.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://eu-assets.i.posthog.com" />
+        <link rel="dns-prefetch" href="https://eu.i.posthog.com" />
         <link
           rel="preload"
           href="/fonts/satoshi-400.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {/* The hero H1 (LCP element) is font-semibold, served by the Satoshi
+            500 face (the @font-face spans 500–600). Preload it too, or the
+            most-visible weight swaps in late → FOUT + layout shift. */}
+        <link
+          rel="preload"
+          href="/fonts/satoshi-500.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
@@ -166,20 +181,10 @@ export default function RootLayout({ children }) {
         <ViewTransitions />
         <SiteShellGate>{children}</SiteShellGate>
         <Analytics />
-        {clarityId && (
-          <Script
-            id="microsoft-clarity"
-            strategy="afterInteractive"
-          >
-            {`(function(){
-  // Skip Clarity on localhost / preview deployments — same rationale as
-  // the PostHog hostname gate above (avoid dev sessions polluting prod).
-  var host = (typeof location !== 'undefined' ? location.hostname : '').toLowerCase();
-  if (!host || /^(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0)$/.test(host) || host.endsWith('.local') || /\\.vercel\\.app$/.test(host)) return;
-  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${clarityId}");
-})();`}
-          </Script>
-        )}
+        {/* Microsoft Clarity removed (perf): it was a SECOND full session
+            recorder running alongside PostHog's session_recording — redundant
+            DOM-serialization + a separate third-party origin. PostHog is the
+            system of record; re-enable Clarity only if its heatmaps are needed. */}
       </body>
     </html>
   );
