@@ -112,44 +112,44 @@ describe('Right inspector — Sections / Export tabs', () => {
   });
 });
 
-describe('Left rail — Sections / Recent Exports tabs', () => {
-  test('renders a tablist with "Sections" and "Recent Exports"; Recent Exports is the default', () => {
+describe('Left rail — Outline / Recent Exports tabs', () => {
+  test('renders a tablist with "Outline" and "Recent Exports"; Recent Exports is the default', () => {
     render(<WorkbenchRail conversion={makeRailConversion()} className="flex" />);
-    const tablist = screen.getByRole('tablist', { name: /recent exports and sections/i });
-    const sectionsTab = within(tablist).getByRole('tab', { name: 'Sections' });
+    const tablist = screen.getByRole('tablist', { name: /recent exports and outline/i });
+    const outlineTab = within(tablist).getByRole('tab', { name: 'Outline' });
     const recentTab = within(tablist).getByRole('tab', { name: 'Recent Exports' });
     expect(recentTab.getAttribute('aria-selected')).toBe('true');
-    expect(sectionsTab.getAttribute('aria-selected')).toBe('false');
+    expect(outlineTab.getAttribute('aria-selected')).toBe('false');
   });
 
   test('default Recent Exports tab shows the export list + New export button', () => {
     render(<WorkbenchRail conversion={makeRailConversion()} className="flex" />);
     expect(screen.getByText('march-leads.csv')).toBeTruthy();
     expect(screen.getByRole('button', { name: /New export/i })).toBeTruthy();
-    // Sections list rows are not shown by default.
+    // Outline rows are not shown by default.
     expect(screen.queryByText('Customer info')).toBeNull();
   });
 
-  test('clicking Sections reveals the rendered-sections list and hides recent exports', () => {
+  test('clicking Outline reveals the rendered-sections list and hides recent exports', () => {
     render(<WorkbenchRail conversion={makeRailConversion()} className="flex" />);
-    fireEvent.click(screen.getByRole('tab', { name: 'Sections' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'Outline' }));
     expect(screen.getByText('Customer info')).toBeTruthy();
     expect(screen.getByText('Orders')).toBeTruthy();
     expect(screen.queryByText('march-leads.csv')).toBeNull();
     expect(screen.queryByRole('button', { name: /New export/i })).toBeNull();
   });
 
-  test('Sections tab shows the empty state when there are no rendered sections', () => {
+  test('Outline tab shows the empty state when there are no rendered sections', () => {
     render(<WorkbenchRail conversion={makeRailConversion({ renderedSections: [] })} className="flex" />);
-    fireEvent.click(screen.getByRole('tab', { name: 'Sections' }));
-    expect(screen.getByText(/Sections appear after the first render\./i)).toBeTruthy();
+    fireEvent.click(screen.getByRole('tab', { name: 'Outline' }));
+    expect(screen.getByText(/The document outline appears after your first render\./i)).toBeTruthy();
   });
 
   test('the "Processed ephemerally" footer stays outside the tabs when there is no pdfBlob', () => {
     render(<WorkbenchRail conversion={makeRailConversion({ pdfBlob: null })} className="flex" />);
     expect(screen.getByText(/Processed ephemerally/i)).toBeTruthy();
     // Still present after switching tabs.
-    fireEvent.click(screen.getByRole('tab', { name: 'Sections' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'Outline' }));
     expect(screen.getByText(/Processed ephemerally/i)).toBeTruthy();
   });
 });

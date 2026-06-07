@@ -69,7 +69,7 @@ describe('/app tool-first workbench shell', () => {
     expect(screen.getByTestId('app-left-rail')).toBeTruthy();
     expect(screen.getByTestId('app-canvas')).toBeTruthy();
     expect(screen.getByTestId('app-inspector')).toBeTruthy();
-    expect(screen.getByRole('complementary', { name: /recent exports and sections/i })).toBeTruthy();
+    expect(screen.getByRole('complementary', { name: /recent exports and outline/i })).toBeTruthy();
     expect(screen.getByRole('complementary', { name: /conversion settings/i })).toBeTruthy();
   });
 
@@ -107,10 +107,10 @@ describe('/app tool-first workbench shell', () => {
   test('matches the finalized empty center canvas', () => {
     render(<AppPage />);
     const canvas = screen.getByTestId('app-canvas');
-    expect(within(canvas).getByRole('heading', { name: /Turn a messy export into a readable PDF/i })).toBeTruthy();
-    expect(within(canvas).getByText(/no cut-off columns/i)).toBeTruthy();
+    expect(within(canvas).getByRole('heading', { name: /Start a new export/i })).toBeTruthy();
+    expect(within(canvas).getByText(/Nothing cut off/i)).toBeTruthy();
     expect(within(canvas).getByText('Drop your Excel or CSV here')).toBeTruthy();
-    expect(within(canvas).getByText('New here?')).toBeTruthy();
+    expect(within(canvas).getByText('Try a sample')).toBeTruthy();
     expect(within(canvas).getByText(/id,name,region,plan,mrr/i)).toBeTruthy();
     // The demo-only "First screen / After render" mode switch was removed: it
     // had no onClick (dead control). State is driven by the render, not a toggle.
@@ -118,24 +118,27 @@ describe('/app tool-first workbench shell', () => {
     expect(within(canvas).queryByRole('button', { name: /After render/i })).toBeNull();
   });
 
-  test('shows finalized inspector sections (all Live) and bottom actions', () => {
+  test('shows the inspector header + a calm pre-render footer (no action buttons, no status badges)', () => {
     render(<AppPage />);
     const inspector = screen.getByTestId('app-inspector');
     expect(within(inspector).getByText('Adjust output')).toBeTruthy();
-    // The header + bottom actions stay visible regardless of the active tab.
-    expect(within(inspector).getByRole('button', { name: /Update preview/i })).toBeTruthy();
-    expect(within(inspector).getByRole('button', { name: /Download PDF/i })).toBeTruthy();
-    expect(within(inspector).getByRole('button', { name: /Render another file/i })).toBeTruthy();
-    // Sections tab is the default: grouping + custom groups + section names — all
-    // Live, no "Soon" placeholders.
-    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(2);
+    // Pre-render the canvas owns "Generate". The inspector footer carries NO action
+    // buttons — Download / Update preview / Render another all appear only once a PDF
+    // exists (a dimmed primary pre-render reads as broken).
+    expect(within(inspector).queryByRole('button', { name: /Download PDF/i })).toBeNull();
+    expect(within(inspector).queryByRole('button', { name: /Update preview/i })).toBeNull();
+    expect(within(inspector).queryByRole('button', { name: /Render another file/i })).toBeNull();
+    // Section editing (names/colors/custom grouping) is derived from the first render,
+    // so it stays absent pre-render — the panel stays calm.
+    expect(within(inspector).queryByText('Section name & color')).toBeNull();
+    expect(within(inspector).queryByText('Custom sections')).toBeNull();
+    // The per-section "Live"/"Soon" status badges were removed (noise when all live).
+    expect(within(inspector).queryByText('Live')).toBeNull();
     expect(within(inspector).queryByText('Soon')).toBeNull();
-    // Export tab (Phase 3) houses Report title + Branding — also all Live.
+    // Export tab (Phase 3) houses Report title + Branding.
     fireEvent.click(within(inspector).getByRole('tab', { name: 'Export' }));
     expect(within(inspector).getByText('Report title')).toBeTruthy();
     expect(within(inspector).getByText('Branding')).toBeTruthy();
-    expect(within(inspector).getAllByText('Live').length).toBeGreaterThanOrEqual(2);
-    expect(within(inspector).queryByText('Soon')).toBeNull();
   });
 
   test('keeps inspector actions permanent below a scrollable options area', () => {
@@ -149,7 +152,9 @@ describe('/app tool-first workbench shell', () => {
     expect(options.className).toMatch(/overflow-y-auto/);
     expect(actions.className).toMatch(/sticky/);
     expect(actions.className).toMatch(/bottom-0/);
-    expect(within(actions).getByRole('button', { name: /Download PDF/i })).toBeTruthy();
+    // Pre-render the action area carries the quota/pricing line (the action buttons
+    // themselves appear only once a PDF exists).
+    expect(within(actions).getByText(/View pricing/i)).toBeTruthy();
   });
 
   test('mobile-first workbench: full-width center canvas plus off-canvas rail/inspector drawers (Phase 2)', () => {
