@@ -258,16 +258,15 @@ test('reassignColumn: target past the end creates a new section; emptied section
 });
 
 // --- Section colors must mirror the backend PDF palette ---
-// Guards the headline fix: the workbench options show the EXACT colors the PDF
-// prints. The 4th section is RED (#EF4444 -> red-500), not violet, and the 2nd is
-// GREEN (#22C55E -> green-500), not emerald. Keep in sync with
-// fitforpdf-backend/src/pdfRenderer.js SECTION_COLOR_PALETTE.
-test('section color palette mirrors the backend PDF palette (A blue, B green, C amber, D red)', () => {
-  assert.equal(sectionColorClasses(0).pill, 'bg-blue-600');
-  assert.equal(sectionColorClasses(1).pill, 'bg-green-500');
-  assert.equal(sectionColorClasses(2).pill, 'bg-amber-500');
-  assert.equal(sectionColorClasses(3).pill, 'bg-red-500'); // D is RED, not violet
-  assert.equal(sectionColorClasses(4).pill, 'bg-violet-500');
+// Guards that the workbench options show the EXACT colors the PDF prints, using the
+// curated "inked" editorial palette (A ink-blue, B teal, C ochre, D rose, …). Keep
+// in sync with fitforpdf-backend/src/pdfRenderer.js SECTION_COLOR_PALETTE.
+test('section color palette mirrors the curated backend PDF palette (A ink-blue, B teal, C ochre, D rose)', () => {
+  assert.equal(sectionColorClasses(0).pill, 'bg-blue-700');
+  assert.equal(sectionColorClasses(1).pill, 'bg-teal-600');
+  assert.equal(sectionColorClasses(2).pill, 'bg-amber-600');
+  assert.equal(sectionColorClasses(3).pill, 'bg-rose-600');
+  assert.equal(sectionColorClasses(4).pill, 'bg-violet-600');
 });
 
 test('section colors cycle and are bounds-safe', () => {
@@ -285,10 +284,10 @@ test('section colors cycle and are bounds-safe', () => {
 test('SECTION_COLOR_HEXES is index-aligned with SECTION_COLOR_CLASSES (strong hexes)', () => {
   assert.equal(SECTION_COLOR_HEXES.length, SECTION_COLOR_CLASSES.length);
   // Spot-check the palette mirrors the backend SECTION_COLOR_PALETTE strong hexes.
-  assert.equal(SECTION_COLOR_HEXES[0], '#2563EB'); // A blue
-  assert.equal(SECTION_COLOR_HEXES[1], '#22C55E'); // B green
-  assert.equal(SECTION_COLOR_HEXES[2], '#F59E0B'); // C amber
-  assert.equal(SECTION_COLOR_HEXES[3], '#EF4444'); // D red
+  assert.equal(SECTION_COLOR_HEXES[0], '#1D4ED8'); // A ink blue
+  assert.equal(SECTION_COLOR_HEXES[1], '#0D9488'); // B teal
+  assert.equal(SECTION_COLOR_HEXES[2], '#D97706'); // C ochre
+  assert.equal(SECTION_COLOR_HEXES[3], '#E11D48'); // D rose
   for (const hex of SECTION_COLOR_HEXES) {
     assert.match(hex, /^#[0-9A-F]{6}$/);
   }

@@ -105,42 +105,43 @@ export const FIXED_GROUP_LABEL = '__fixed__';
 // fitforpdf-backend/src/pdfRenderer.js so the workbench shows the EXACT colors the
 // PDF prints. Indexed by section position (cycles). `pill` = the section's color as
 // a filled badge (white text, matches the PDF section bar); `name` = the same hue
-// in a readable shade for colored text on white. The Tailwind shades below equal
-// the backend hexes exactly: blue-600 #2563EB, green-500 #22C55E, amber-500 #F59E0B,
-// red-500 #EF4444, violet-500 #8B5CF6, cyan-600 #0891B2, pink-500 #EC4899,
-// emerald-600 #059669, red-600 #DC2626, violet-600 #7C3AED, sky-700 #0369A1,
-// amber-600 #D97706.
+// in a readable shade for colored text on white. Curated, deeper/"inked" editorial
+// palette (anchored on ink-blue + teal/ochre/rose accents). The Tailwind shades
+// equal the backend hexes exactly: blue-700 #1D4ED8, teal-600 #0D9488, amber-600
+// #D97706, rose-600 #E11D48, violet-600 #7C3AED, cyan-700 #0E7490, orange-700
+// #C2410C, emerald-700 #047857, fuchsia-700 #A21CAF, indigo-600 #4F46E5, sky-700
+// #0369A1, pink-700 #BE185D.
 export const SECTION_COLOR_CLASSES = [
-  { pill: 'bg-blue-600', name: 'text-blue-700' },      // A blue
-  { pill: 'bg-green-500', name: 'text-green-700' },    // B green
-  { pill: 'bg-amber-500', name: 'text-amber-700' },    // C amber
-  { pill: 'bg-red-500', name: 'text-red-600' },        // D red
-  { pill: 'bg-violet-500', name: 'text-violet-700' },  // E violet
-  { pill: 'bg-cyan-600', name: 'text-cyan-700' },      // F cyan
-  { pill: 'bg-pink-500', name: 'text-pink-700' },      // G pink
-  { pill: 'bg-emerald-600', name: 'text-emerald-700' }, // H emerald
-  { pill: 'bg-red-600', name: 'text-red-700' },        // I red-600
-  { pill: 'bg-violet-600', name: 'text-violet-800' },  // J violet-600
-  { pill: 'bg-sky-700', name: 'text-sky-800' },        // K sky-700
-  { pill: 'bg-amber-600', name: 'text-amber-800' },    // L amber-600
+  { pill: 'bg-blue-700', name: 'text-blue-700' },        // A ink blue
+  { pill: 'bg-teal-600', name: 'text-teal-700' },        // B teal
+  { pill: 'bg-amber-600', name: 'text-amber-700' },      // C ochre
+  { pill: 'bg-rose-600', name: 'text-rose-700' },        // D rose
+  { pill: 'bg-violet-600', name: 'text-violet-700' },    // E violet
+  { pill: 'bg-cyan-700', name: 'text-cyan-800' },        // F steel
+  { pill: 'bg-orange-700', name: 'text-orange-800' },    // G terracotta
+  { pill: 'bg-emerald-700', name: 'text-emerald-800' },  // H emerald
+  { pill: 'bg-fuchsia-700', name: 'text-fuchsia-800' },  // I plum
+  { pill: 'bg-indigo-600', name: 'text-indigo-700' },    // J indigo
+  { pill: 'bg-sky-700', name: 'text-sky-800' },          // K sky
+  { pill: 'bg-pink-700', name: 'text-pink-800' },        // L pink
 ];
 
 // The strong section palette hexes, index-aligned with SECTION_COLOR_CLASSES and
 // mirroring the backend SECTION_COLOR_PALETTE (so a chosen swatch maps 1:1 to the
 // color the PDF section header prints). The swatch picker offers exactly these.
 export const SECTION_COLOR_HEXES = [
-  '#2563EB', // A blue
-  '#22C55E', // B green
-  '#F59E0B', // C amber
-  '#EF4444', // D red
-  '#8B5CF6', // E violet
-  '#0891B2', // F cyan
-  '#EC4899', // G pink
-  '#059669', // H emerald
-  '#DC2626', // I red-600
-  '#7C3AED', // J violet-600
-  '#0369A1', // K sky-700
-  '#D97706', // L amber-600
+  '#1D4ED8', // A ink blue   (blue-700)
+  '#0D9488', // B teal       (teal-600)
+  '#D97706', // C ochre      (amber-600)
+  '#E11D48', // D rose       (rose-600)
+  '#7C3AED', // E violet     (violet-600)
+  '#0E7490', // F steel      (cyan-700)
+  '#C2410C', // G terracotta (orange-700)
+  '#047857', // H emerald    (emerald-700)
+  '#A21CAF', // I plum       (fuchsia-700)
+  '#4F46E5', // J indigo     (indigo-600)
+  '#0369A1', // K sky        (sky-700)
+  '#BE185D', // L pink       (pink-700)
 ];
 
 // The pill/name color classes for section index i (cycles through the palette).
