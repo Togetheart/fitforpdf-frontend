@@ -392,11 +392,18 @@ export default function Page() {
             <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
               Excel PDF Export vs fitforpdf
             </h2>
-            <p className="dropcap mx-auto mt-6 max-w-[58ch] text-left text-[15.5px] leading-[1.75] text-[var(--color-text)]">
-              Spreadsheets are built for machines, not readers. fitforpdf re-typesets a wide
-              export into a paginated PDF — anchor columns repeated on every page, an automatic
-              table of contents, and nothing cut off.
-            </p>
+            <div className="relative mx-auto mt-6 max-w-[58ch]">
+              <p className="dropcap text-left text-[15.5px] leading-[1.75] text-[var(--color-text)]">
+                Spreadsheets are built for machines, not readers. fitforpdf re-typesets a wide
+                export into a paginated PDF — anchor columns repeated on every page, an automatic
+                table of contents, and nothing cut off.
+              </p>
+              {/* Margin note (marginalia): in the left gutter on wide screens, stacks
+                  below the lede on smaller ones so the annotation is never lost. */}
+              <aside className="mt-3 text-left text-[11.5px] italic leading-snug text-[var(--color-muted)] xl:absolute xl:right-full xl:top-1.5 xl:mr-7 xl:mt-0 xl:w-[150px] xl:text-right">
+                Anchor columns repeat on every page — a row never loses its id or name.
+              </aside>
+            </div>
           </div>
           {/* Serif key figures — the trust pillars set as editorial numerals, split by thin ink rules. */}
           <div className="mx-auto grid max-w-xl grid-cols-3 divide-x divide-[#0F172A]/10 text-center">
