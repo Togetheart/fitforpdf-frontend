@@ -60,8 +60,8 @@ function StatusBadge({ tone, children }) {
 function InspectorSection({ title, status, hint, children }) {
   return (
     <section className="border-b border-slate-200/70 pb-4">
-      <div className="mb-1 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
-        <span>{title}</span>
+      <div className="mb-1 flex items-center gap-2 text-slate-950">
+        <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em] text-[#0F172A]">{title}</span>
         <StatusBadge tone={status}>{status === 'live' ? 'Live' : 'Soon'}</StatusBadge>
       </div>
       {hint ? <p className="mb-3 text-[11.5px] leading-5 text-slate-400">{hint}</p> : null}
@@ -1066,7 +1066,7 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
 
 function WorkbenchRenderedCanvas({ conversion }) {
   return (
-    <>
+    <div className="ffp-reveal">
       <div className="mb-[18px] flex max-w-[620px] items-center gap-3 rounded-[10px] border border-slate-200 bg-white px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
         <FileText className="h-5 w-5 text-slate-400" aria-hidden="true" />
         <div className="min-w-0">
@@ -1092,7 +1092,7 @@ function WorkbenchRenderedCanvas({ conversion }) {
         </span>
       </div>
       <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
-    </>
+    </div>
   );
 }
 
