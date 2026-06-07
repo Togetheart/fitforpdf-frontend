@@ -140,7 +140,9 @@ describe('Developers page — request access form', () => {
     render(<DevelopersPage />);
 
     mockFetchOnce(201, {
-      message: "Request received. We'll review it and send your API key within 24 hours.",
+      apiKey: 'ffp_live_0123456789abcdef0123456789abcdef',
+      trialRenders: 25,
+      message: 'Your API key is ready — 25 free renders to start.',
     });
 
     fireEvent.change(screen.getByPlaceholderText('Jane Smith'), {
@@ -156,9 +158,10 @@ describe('Developers page — request access form', () => {
     fireEvent.click(screen.getByRole('button', { name: /Request early access/ }));
 
     await waitFor(() => {
-      // Success state shows "You're on the list"
-      expect(screen.getByText(/on the list/i)).toBeTruthy();
+      // Self-serve: the key is provisioned instantly and shown on-screen.
+      expect(screen.getByText('Your API key is ready')).toBeTruthy();
     });
+    expect(screen.getByTestId('issued-api-key').textContent).toBe('ffp_live_0123456789abcdef0123456789abcdef');
 
     // Verify fetch was called with correct payload
     expect(global.fetch).toHaveBeenCalledWith('/api/request-access', {
@@ -194,11 +197,11 @@ describe('Developers page — request access form', () => {
     });
   });
 
-  test('shows duplicate request error (409 already_requested)', async () => {
+  test('shows duplicate error (409 already_provisioned)', async () => {
     render(<DevelopersPage />);
 
     mockFetchOnce(409, {
-      error: { code: 'already_requested', message: "A request for this email is already pending." },
+      error: { code: 'already_provisioned', message: 'This email already has an API key — check your inbox.' },
     });
 
     fireEvent.change(screen.getByPlaceholderText('Jane Smith'), {
@@ -211,7 +214,7 @@ describe('Developers page — request access form', () => {
     fireEvent.click(screen.getByRole('button', { name: /Request early access/ }));
 
     await waitFor(() => {
-      expect(screen.getByText(/already pending/i)).toBeTruthy();
+      expect(screen.getByText(/already has an API key/i)).toBeTruthy();
     });
   });
 

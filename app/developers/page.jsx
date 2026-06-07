@@ -161,6 +161,19 @@ function RequestAccessForm() {
   const [form, setForm] = useState({ name: '', email: '', useCase: '' });
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [errorMsg, setErrorMsg] = useState('');
+  const [issuedKey, setIssuedKey] = useState(null);
+  const [trialRenders, setTrialRenders] = useState(null);
+  const [copiedKey, setCopiedKey] = useState(false);
+
+  function copyKey() {
+    if (!issuedKey || typeof navigator === 'undefined' || !navigator.clipboard) return;
+    navigator.clipboard.writeText(issuedKey)
+      .then(() => {
+        setCopiedKey(true);
+        window.setTimeout(() => setCopiedKey(false), 1800);
+      })
+      .catch(() => {});
+  }
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -186,6 +199,8 @@ function RequestAccessForm() {
         return;
       }
 
+      setIssuedKey(typeof data?.apiKey === 'string' ? data.apiKey : null);
+      setTrialRenders(Number.isFinite(data?.trialRenders) ? data.trialRenders : null);
       setStatus('success');
     } catch {
       setErrorMsg('Network error. Please try again.');
@@ -194,28 +209,51 @@ function RequestAccessForm() {
   }
 
   if (status === 'success') {
+    const curl = `curl -X POST https://api.fitforpdf.com/v1/render \\\n  -H "X-FITFORPDF-KEY: ${issuedKey || 'ffp_live_...'}" \\\n  -F "file=@yourfile.csv" -o out.pdf`;
     return (
-      <section id="request-access" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-10 text-center">
+      <section id="request-access" className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-10 md:px-10">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
           <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
-        <h2 className="mt-4 text-lg font-semibold text-[var(--color-text)]">You&apos;re on the list</h2>
-        <p className="mt-2 text-sm text-[var(--color-muted)]">
-          We&apos;ll send your API key to{' '}
-          <strong className="font-semibold text-[var(--color-text)]">{form.email}</strong>{' '}
-          once your access is approved.
+        <h2 className="mt-4 text-center text-lg font-semibold text-[var(--color-text)]">Your API key is ready</h2>
+        <p className="mt-2 text-center text-sm text-[var(--color-muted)]">
+          {Number.isFinite(trialRenders) ? (
+            <><strong className="font-semibold text-[var(--color-text)]">{trialRenders} free renders</strong> to start. </>
+          ) : null}
+          We also emailed it to{' '}
+          <strong className="font-semibold text-[var(--color-text)]">{form.email}</strong>.
         </p>
-        <p className="mt-1 text-sm text-[var(--color-muted)]">
-          Early users get <strong className="font-semibold text-[var(--color-text)]">50 free exports</strong> to start.
+
+        {issuedKey ? (
+          <div className="mx-auto mt-6 max-w-xl">
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3">
+              <code data-testid="issued-api-key" className="truncate font-mono text-sm text-[var(--color-text)]">{issuedKey}</code>
+              <button
+                type="button"
+                onClick={copyKey}
+                className="shrink-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-1.5 text-xs font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]"
+              >
+                {copiedKey ? 'Copied ✓' : 'Copy'}
+              </button>
+            </div>
+            <p className="mt-2 text-center text-xs text-[var(--color-muted)]">
+              Save it now and keep it secret — it&apos;s also in your inbox.
+            </p>
+
+            <p className="mt-6 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+              Your first render
+            </p>
+            <pre className="mt-2 overflow-x-auto rounded-xl bg-[var(--color-text)] px-4 py-3 text-left text-xs leading-relaxed text-white">
+              <code>{curl}</code>
+            </pre>
+          </div>
+        ) : null}
+
+        <p className="mt-7 text-center text-sm text-[var(--color-muted)]">
+          Full reference is on this page above ↑ · need more? <a href="/contact" className="font-semibold text-[var(--color-text)] underline underline-offset-2">Talk to us</a>.
         </p>
-        <a
-          href="/"
-          className="mt-6 inline-block rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]"
-        >
-          Try the web app while you wait
-        </a>
       </section>
     );
   }
@@ -232,12 +270,12 @@ function RequestAccessForm() {
             Get your API key
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">
-            We&apos;re onboarding developers in small batches to ensure
-            quality and support. Early users get:
+            Get an instant key and make your first render in seconds — no approval,
+            no waiting. Every key includes:
           </p>
           <ul className="mt-6 space-y-3">
             {[
-              '50 free exports to test your integration',
+              'Free renders to test your integration',
               'Direct access to the engineering team',
               'Priority feature requests',
             ].map((item) => (
