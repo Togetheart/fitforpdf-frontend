@@ -1087,7 +1087,16 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
   );
 }
 
-function WorkbenchRenderedCanvas({ conversion }) {
+function WorkbenchRenderedCanvas({ conversion, quota }) {
+  // After a "Condense long text & retry", the export was made to fit by shortening
+  // long cells — a degraded result. We surface that honestly and turn it into the
+  // upgrade nudge (full, untruncated fidelity is the paid lever). Free users only:
+  // paid plans render in full, so they don't see this.
+  const isPaidPlan = Boolean(
+    quota && (quota.isUnlimited === true
+      || ['pro', 'credits', 'api_enterprise'].includes(quota.planType)),
+  );
+  const showCondensedNote = conversion.truncateLongText === true && !isPaidPlan;
   return (
     <div className="ffp-reveal">
       <div className="mb-[18px] flex max-w-[620px] items-center gap-3 rounded-[10px] border border-slate-200 bg-white px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
@@ -1106,6 +1115,21 @@ function WorkbenchRenderedCanvas({ conversion }) {
           Change file
         </button>
       </div>
+      {showCondensedNote ? (
+        <div
+          data-testid="condensed-upgrade-note"
+          className="mb-[18px] max-w-[620px] rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-[12.5px] leading-5 text-amber-900"
+        >
+          <span className="font-semibold">Long text was condensed to fit.</span>{' '}
+          Long cells were shortened to keep this export under the free page limit.{' '}
+          <a
+            href="/pricing"
+            className="font-semibold text-amber-900 underline decoration-amber-900/40 underline-offset-2 hover:decoration-amber-900"
+          >
+            Upgrade for full, untruncated text →
+          </a>
+        </div>
+      ) : null}
       <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-slate-500">
         <FileText className="h-3.5 w-3.5" aria-hidden="true" />
         Preview
@@ -1324,7 +1348,7 @@ function WorkbenchWorkspace({ conversion, quota, className = '' }) {
       className={['min-w-0 px-4 py-6 sm:px-8 sm:py-[30px]', className].filter(Boolean).join(' ')}
     >
       {conversion.pdfBlob ? (
-        <WorkbenchRenderedCanvas conversion={conversion} />
+        <WorkbenchRenderedCanvas conversion={conversion} quota={quota} />
       ) : (
         <WorkbenchEmptyCanvas conversion={conversion} quota={quota} />
       )}
