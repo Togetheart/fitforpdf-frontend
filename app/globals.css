@@ -44,6 +44,18 @@
   .ffp-reveal {
     animation: ffpReveal 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+
+  /* Editorial drop cap (lettrine) — large serif initial floated into a lede. */
+  .dropcap::first-letter {
+    float: left;
+    font-family: var(--font-lora), Georgia, serif;
+    font-weight: 700;
+    font-size: 3.1em;
+    line-height: 0.82;
+    padding-right: 0.09em;
+    margin-top: 0.06em;
+    color: var(--color-text, #0F172A);
+  }
 }
 
 @keyframes ffpReveal {
