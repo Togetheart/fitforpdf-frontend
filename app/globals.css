@@ -13,10 +13,32 @@
 
 @font-face {
   font-family: 'Satoshi';
+  src: url('/fonts/satoshi-500.woff2') format('woff2');
+  /* Satoshi ships no static 600, so font-semibold (600) used to fall back to 700
+     (full bold) — heavy + flat. Declaring this Medium face over 500–600 makes
+     font-medium AND font-semibold render as a true Medium; font-bold (700) stays
+     bold for real emphasis. Sharpens weight hierarchy sitewide. */
+  font-weight: 500 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
   src: url('/fonts/satoshi-700.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
   font-style: normal;
+}
+
+@layer utilities {
+  /* Warm "paper" surface: the brand cream + a very faint grayscale grain. Used for
+     the workbench gutter so the white panel cards read as paper on a desk. */
+  .bg-paper {
+    background-color: var(--color-bg-hero, #FAF8F5);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.035'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    background-repeat: repeat;
+  }
 }
 
 /* ── Design tokens (CSS custom properties) ──────────

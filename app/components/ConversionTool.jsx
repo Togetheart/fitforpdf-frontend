@@ -420,7 +420,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
     >
       <div className="shrink-0 bg-white pb-4">
         <div className="flex items-start gap-2">
-          <h2 className="text-[15px] font-bold text-slate-950">Adjust output</h2>
+          <h2 className="font-serif text-[18px] font-bold tracking-[-0.01em] text-[#0F172A]">Adjust output</h2>
           {onCollapse && !collapsed ? (
             <span className="ml-auto">
               <CollapseToggle side="right" collapsed={collapsed} onToggle={onCollapse} />
@@ -1319,7 +1319,7 @@ function WorkbenchWorkspace({ conversion, quota, className = '' }) {
 // match the light workbench theme.
 function WorkbenchResizeHandle() {
   return (
-    <PanelResizeHandle className="group/handle relative flex w-2 shrink-0 items-stretch justify-center bg-slate-100 outline-none">
+    <PanelResizeHandle className="group/handle relative flex w-2 shrink-0 items-stretch justify-center bg-transparent outline-none">
       <span
         aria-hidden="true"
         className="absolute inset-y-0 -left-1 -right-1 z-10"
@@ -1341,7 +1341,7 @@ function CollapsedEdgeReopen({ side, label, onExpand }) {
   return (
     <div
       data-testid={`workbench-${side}-reopen`}
-      className="flex h-full w-10 shrink-0 flex-col items-center bg-slate-100 py-2"
+      className="flex h-full w-10 shrink-0 flex-col items-center bg-transparent py-2"
     >
       <button
         type="button"
@@ -1416,9 +1416,9 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
   // gutter, with the gutter showing through the gaps + resize handles — the Anthropic
   // app look. CARD owns the rounding/inset so the shared content components are reused
   // untouched (their square corners are clipped by overflow-hidden).
-  const CARD = 'm-1.5 flex min-w-0 flex-1 overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5';
+  const CARD = 'm-1.5 flex min-w-0 flex-1 overflow-hidden rounded-xl bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_28px_-14px_rgba(15,23,42,0.14)] ring-1 ring-[#0F172A]/[0.07]';
   return (
-    <div className="flex h-[calc(100vh-57px)] w-full bg-slate-100">
+    <div className="bg-paper flex h-[calc(100vh-57px)] w-full">
       {leftCollapsed ? (
         <CollapsedEdgeReopen side="left" label="Expand left panel" onExpand={toggleLeft} />
       ) : null}
