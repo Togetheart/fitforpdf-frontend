@@ -128,8 +128,8 @@ WebP at 1600px max width. Expected: 2.3 MB → ~150–300 KB.
 |---|---|---|---|---|---|
 | 1 | Re-encode 2 hero PNGs to WebP @ 1600px | 15 min | – | **-1.5s LCP** | ✅ done (commit 59449e2 + later) |
 | 2 | Replace GSAP in `Section.jsx` with IO + CSS | 1 h | **-25 KB** ScrollTrigger | **-200 ms TBT** | ✅ done |
-| 3 | Replace GSAP in `AnimatedLogo`, `HeroHeadline`, `SpreadsheetCellsBackdrop` with CSS | 2 h | **-37 KB** (full gsap removal) | **-100 ms TBT** | ⏸ pending |
-| 4 | Audit Satoshi font loading | 15 min | – | small CLS gain | ⏸ pending |
+| 3 | Replace GSAP in `AnimatedLogo`, `HeroHeadline`, `SpreadsheetCellsBackdrop` with CSS | 2 h | **-37 KB** (full gsap removal) | **-100 ms TBT** | 🟡 partial (2026-06-07): `SpreadsheetCellsBackdrop` deleted (dead); `AnimatedLogo` + `HeroHeadline` now `import('gsap')` dynamically → gsap out of the synchronous first-load bundle (deferred chunk). Full CSS removal of the dependency still open. |
+| 4 | Audit Satoshi font loading | 15 min | – | small CLS gain | ✅ done (2026-06-07): preload the 500 face (LCP H1 weight) + `/fonts/*` immutable 1y cache |
 | 5 | Defer PostHog + Clarity post-load | partial | – | better FID | ✅ done (hostname-gated + modules trimmed in 59449e2) |
 | 6 | Server Components split of home page | 8 h | TBT save varies | minor | ❌ low ROI |
 
@@ -156,6 +156,40 @@ re-architecture.
 If we want real TBT gains, the better path is item #3 (drop the
 remaining 3 GSAP-based components → ~37 KB bundle cut) — which is
 strictly less invasive.
+
+## 2026-06-07 — render-perf quick-wins batch
+
+Field baseline at this point (PostHog RUM, marketing p75): LCP **1314ms** / FCP
+854ms / INP 68ms — all GOOD; CLS **0.21** = needs-improvement (the one real
+user-facing issue). So this batch targets CLS, caching, and dead weight rather
+than LCP (already healthy, down from the 4.18s baseline above).
+
+Shipped:
+- **Caching** (`next.config.mjs`): `/public` assets were `max-age=0,
+  must-revalidate` (a conditional request on every navigation). Now `/fonts/*`
+  = `immutable` 1y; static images = `max-age=86400, stale-while-revalidate`;
+  `images.minimumCacheTTL` = 1y for the `/_next/image` optimizer output.
+- **AVIF**: `images.formats = ['image/avif','image/webp']`.
+- **Session recorders**: dropped Microsoft Clarity from `layout.js` — it was a
+  2nd full session recorder alongside PostHog's `session_recording`. PostHog
+  stays as system of record.
+- **Resource hints**: `preconnect` + `dns-prefetch` to the PostHog origins
+  (`eu(-assets).i.posthog.com`); none existed before.
+- **GSAP**: see item #3 above (deferred via dynamic import; dead
+  `SpreadsheetCellsBackdrop` removed).
+- **Dead dep**: removed `posthog-js` (the React SDK in the never-mounted
+  `PostHogProvider`; runtime uses the inline array.js snippet via `window.posthog`).
+- **Polyfills**: added a modern `browserslist` (chrome/edge/ff ≥96, safari/iOS
+  ≥15) to trim the ~40KB-gzip legacy polyfills chunk. ⚠️ drops support for
+  pre-2021 browsers.
+- **CLS / images**: `VerticalPage` product shot raw `<img>` PNG → `next/image`
+  (AVIF/WebP + dimensions); intrinsic `width`/`height` added to the wordmark
+  logos (header/footer), the `BeforeAfterSlider` proof images, and the
+  `WallOfLove` brand visual; removed wasteful `priority` from the two
+  scroll-revealed (hidden-at-paint) product images; `sizes` + lower `quality`
+  on the decorative final-CTA background.
+- **Reduced motion**: gated the hero background `heroDrift` animation (was the
+  only motion slipping past the `prefers-reduced-motion` guard).
 
 ## Why this audit matters
 

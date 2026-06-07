@@ -24,6 +24,11 @@ export default function BeforeAfterSlider({
   onInteract,
   beforeLabel = 'Source spreadsheet',
   afterLabel = 'Ready to send',
+  // Intrinsic ratio of the "after" image so the slider reserves its box before
+  // the (lazy) images load — kills the CLS this section was contributing.
+  // Default matches the proof screenshots (all 1754×1241).
+  width = 1754,
+  height = 1241,
 }) {
   const containerRef = useRef(null);
   const [position, setPosition] = useState(initialPosition);
@@ -114,6 +119,8 @@ export default function BeforeAfterSlider({
         src={afterSrc}
         srcSet={afterSrcSet}
         alt={afterAlt}
+        width={width}
+        height={height}
         className="block h-auto w-full"
         draggable={false}
         loading="lazy"
@@ -132,6 +139,8 @@ export default function BeforeAfterSlider({
           src={beforeSrc}
           srcSet={beforeSrcSet}
           alt={beforeAlt}
+          width={width}
+          height={height}
           className="block h-full w-full object-cover object-left-top"
           draggable={false}
           loading="lazy"

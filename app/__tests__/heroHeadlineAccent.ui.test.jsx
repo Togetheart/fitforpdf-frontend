@@ -47,7 +47,7 @@ describe('HeroHeadline accent animation', () => {
     expect(secondLine.className).not.toContain('hero-accent--sections');
   });
 
-  test('animates accent at load when not reduced motion', () => {
+  test('animates accent at load when not reduced motion', async () => {
     configureMatchMedia(false);
     const timelineTo = vi.fn().mockReturnThis();
     const timeline = { to: timelineTo, kill: vi.fn() };
@@ -60,7 +60,9 @@ describe('HeroHeadline accent animation', () => {
 
     const accent = screen.getByTestId('hero-headline-accent');
     expect(accent.getAttribute('data-anim')).toBe('on');
-    expect(timelineSpy).toHaveBeenCalledTimes(1);
+    // GSAP is now dynamically imported (deferred chunk), so the timeline is
+    // created on a microtask after the effect runs — wait for it.
+    await vi.waitFor(() => expect(timelineSpy).toHaveBeenCalledTimes(1));
     expect(timelineTo).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
@@ -70,7 +72,7 @@ describe('HeroHeadline accent animation', () => {
     );
   });
 
-  test('keeps reduced-motion static and does not animate', () => {
+  test('keeps reduced-motion static and does not animate', async () => {
     cleanup();
     configureMatchMedia(true);
 
@@ -81,6 +83,9 @@ describe('HeroHeadline accent animation', () => {
 
     const accent = screen.getByTestId('hero-headline-accent');
     expect(accent.getAttribute('data-anim')).toBe('off');
+    // Reduced motion returns before the dynamic import — give any stray
+    // microtask a chance, then assert gsap was never loaded/used.
+    await Promise.resolve();
     expect(timelineSpy).not.toHaveBeenCalled();
   });
 });

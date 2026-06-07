@@ -174,7 +174,7 @@ export default function Page() {
                   width={1200}
                   height={800}
                   className="w-full block"
-                  priority
+                  sizes="600px"
                 />
               </div>
             </div>
@@ -216,7 +216,7 @@ export default function Page() {
               width={1200}
               height={800}
               className="w-full block"
-              priority
+              sizes="100vw"
             />
           </button>
         </div>
@@ -503,6 +503,8 @@ export default function Page() {
           alt=""
           aria-hidden="true"
           fill
+          sizes="100vw"
+          quality={45}
           className="object-cover"
         />
         <div className="absolute inset-0 bg-[#0a1628]/70" />
