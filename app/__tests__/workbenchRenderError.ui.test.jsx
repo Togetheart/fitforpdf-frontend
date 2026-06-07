@@ -85,4 +85,32 @@ describe('/app workbench dropzone surfaces render failures', () => {
     const box = await screen.findByTestId('generate-error');
     expect(within(box).getByText(/Boom specific error/i)).toBeTruthy();
   });
+
+  test('page-burden offers "Condense long text & retry" which re-renders with truncate_long_text=true', async () => {
+    renderResponder = pageBurdenResponse;
+    await selectFileAndGenerate();
+    await screen.findByTestId('generate-error');
+
+    const retry = await screen.findByTestId('generate-condense-retry');
+    // The render settles after a minimum progress delay; wait until it's clickable
+    // (its label flips "Condensing…" → "Condense long text & retry" at the same time).
+    await waitFor(() => expect(retry.disabled).toBe(false), { timeout: 3000 });
+    expect(retry.textContent).toMatch(/Condense long text & retry/i);
+
+    // The condensed re-render succeeds.
+    renderResponder = () => new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
+      status: 200,
+      headers: { 'content-type': 'application/pdf', 'content-disposition': 'attachment; filename="out.pdf"' },
+    });
+    await act(async () => { fireEvent.click(retry); });
+
+    await waitFor(() => {
+      const renderUrls = global.fetch.mock.calls
+        .map((c) => String(c[0]))
+        .filter((u) => u.includes('/api/render'));
+      expect(renderUrls.length).toBeGreaterThanOrEqual(2);
+      // The retry render must carry the condense flag the backend gate reads.
+      expect(renderUrls[renderUrls.length - 1]).toMatch(/truncate_long_text=true/);
+    }, { timeout: 3000 });
+  });
 });
