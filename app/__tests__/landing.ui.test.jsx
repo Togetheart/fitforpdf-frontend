@@ -214,7 +214,9 @@ describe('landing conversion-first structure', () => {
     const comparison = screen.getByTestId('section-comparison');
 
     expect(screen.getByText('Excel PDF Export vs fitforpdf')).toBeTruthy();
-    expect(screen.getByText('Stop fighting print settings. Get a presentable structured PDF in seconds.')).toBeTruthy();
+    // The editorial lede (drop cap) + the serif trust figures replaced the old subcopy.
+    expect(screen.getByText(/Spreadsheets are built for machines, not readers\./)).toBeTruthy();
+    expect(screen.getByText('files stored, ever')).toBeTruthy();
     // Comparison follows proof and upload in document order, before pricing.
     expect(proofSection.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
