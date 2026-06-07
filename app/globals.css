@@ -83,6 +83,23 @@
   --color-cta-hover: #1D4ED8;
   --color-badge-free: #F3F4F6;
   --color-badge-hot: #DBEAFE;
+
+  /* ── Semantic surface/line/status tokens (workbench + app chrome) ──
+   * Added so the workbench can theme cleanly instead of hardcoding
+   * slate shades and hex literals. Dark values live in [data-theme="dark"]. */
+  --color-surface: #FFFFFF;          /* cards / panels / toolbar wells */
+  --color-surface-sunken: #F8FAFC;   /* recessed wells (was slate-50) */
+  --color-surface-raised: #FFFFFF;   /* popovers / dropdowns */
+  --color-text-subtle: #94A3B8;      /* tertiary text (was slate-400) */
+  --color-line: #E5E7EB;             /* solid hairline (was slate-200) */
+  --color-line-strong: #0F172A;      /* emphatic border (was [#0F172A]) */
+  --color-accent-text: #FFFFFF;      /* text/icon on a filled accent */
+  --color-chip-bg: #F1F0ED;          /* warm neutral chip */
+  --color-warn-bg: #FFFBEB;   --color-warn-border: #FDE68A;  --color-warn-text: #B45309;
+  --color-success-bg: #ECFDF5; --color-success-border: #A7F3D0; --color-success-text: #047857;
+  --color-info-bg: #EFF6FF;   --color-info-border: #BFDBFE;  --color-info-text: #1D4ED8;
+  --color-danger-bg: #FFF1F2; --color-danger-border: #FECDD3; --color-danger-text: #BE123C;
+
   --radius-base: 12px;
   --radius-input: 10px;
   --radius-pill: 999px;
@@ -106,6 +123,21 @@
   --color-cta-hover: #2563EB;
   --color-badge-free: #1E293B;
   --color-badge-hot: #1E3A5F;
+
+  /* Dark counterparts for the semantic tokens above. */
+  --color-surface: #1A1D27;
+  --color-surface-sunken: #12141B;
+  --color-surface-raised: #1E2230;
+  --color-text-subtle: #64748B;
+  --color-line: rgba(255, 255, 255, 0.10);
+  --color-line-strong: #E2E8F0;
+  --color-accent-text: #0F172A;
+  --color-chip-bg: rgba(255, 255, 255, 0.06);
+  --color-warn-bg: rgba(245, 158, 11, 0.12);  --color-warn-border: rgba(245, 158, 11, 0.30); --color-warn-text: #FBBF24;
+  --color-success-bg: rgba(16, 185, 129, 0.12); --color-success-border: rgba(16, 185, 129, 0.32); --color-success-text: #6EE7B7;
+  --color-info-bg: rgba(59, 130, 246, 0.13);  --color-info-border: rgba(59, 130, 246, 0.32); --color-info-text: #93C5FD;
+  --color-danger-bg: rgba(244, 63, 94, 0.13); --color-danger-border: rgba(244, 63, 94, 0.32); --color-danger-text: #FDA4AF;
+
   --glass-spot-1: rgba(255, 255, 255, 0.06);
   --glass-spot-2: rgba(255, 255, 255, 0.03);
 }

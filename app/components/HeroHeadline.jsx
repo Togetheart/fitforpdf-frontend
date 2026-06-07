@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
 import { LANDING_COPY } from '../siteCopy.mjs';
 import Badge from './ui/Badge';
 
@@ -22,7 +21,10 @@ export default function HeroHeadline() {
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
 
-  // ── Gradient shimmer animation (UNCHANGED) ──
+  // ── Gradient shimmer animation ──
+  // GSAP (~37KB) is dynamically imported so it lands in a deferred chunk
+  // instead of the synchronous first-load bundle — it isn't needed to paint
+  // the headline, only to shimmer it after hydration.
   useEffect(() => {
     if (!hasWindow || reducedMotion) return;
 
@@ -30,19 +32,26 @@ export default function HeroHeadline() {
     if (!accentNode) return;
 
     let timeline = null;
-    timeline = gsap.timeline({
-      repeat: -1,
-      yoyo: true,
-      defaults: { ease: 'sine.inOut' },
-    });
+    let cancelled = false;
 
-    timeline.to(accentNode, {
-      backgroundPosition: '100% 50%',
-      filter: 'brightness(1.08)',
-      duration: 12,
+    import('gsap').then((mod) => {
+      if (cancelled) return;
+      const gsap = mod.gsap || mod.default;
+      timeline = gsap.timeline({
+        repeat: -1,
+        yoyo: true,
+        defaults: { ease: 'sine.inOut' },
+      });
+
+      timeline.to(accentNode, {
+        backgroundPosition: '100% 50%',
+        filter: 'brightness(1.08)',
+        duration: 12,
+      });
     });
 
     return () => {
+      cancelled = true;
       if (timeline) {
         timeline.kill();
       }

@@ -9,6 +9,9 @@ import useSession from '../hooks/useSession.mjs';
 import useIsDesktop from '../hooks/useIsDesktop.mjs';
 import UploadCard from './UploadCard';
 import AccountMenu from './AccountMenu';
+import AnimatedLogo from './AnimatedLogo';
+import ThemeToggle from './ThemeToggle';
+import PlanBadge from './ui/PlanBadge';
 import { PAYG_PACKS } from '../siteCopy.mjs';
 import { recommendationLabel, sectionColorClasses, SECTION_COLOR_HEXES } from '../pageUiLogic.mjs';
 import { renderPdfFirstPageImage } from '../lib/pdfPreviewImage.mjs';
@@ -48,11 +51,11 @@ const WORKBENCH_CREDIT_PACKS = PAYG_PACKS.filter((pack) => pack.id !== 'single')
 // pills were dropped — when every control is live, the badge is pure noise.
 function InspectorSection({ title, hint, children }) {
   return (
-    <section className="border-b border-[#0F172A]/[0.07] pb-5">
-      <div className="mb-1.5 text-[#0F172A]">
+    <section className="border-b border-[var(--color-line)] pb-5">
+      <div className="mb-1.5 text-[var(--color-text)]">
         <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
       </div>
-      {hint ? <p className="mb-3 text-[11.5px] leading-5 text-slate-400">{hint}</p> : null}
+      {hint ? <p className="mb-3 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">{hint}</p> : null}
       {children}
     </section>
   );
@@ -100,7 +103,7 @@ function PanelTabs({ tabs, value, onChange, tone = 'light', ariaLabel }) {
   const isDark = tone === 'dark';
   const wrapClass = isDark
     ? 'flex overflow-hidden rounded-lg border border-white/10 bg-white/5 p-0.5'
-    : 'flex overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-0.5';
+    : 'flex overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-0.5';
 
   return (
     <div role="tablist" aria-label={ariaLabel} onKeyDown={handleKeyDown} className={wrapClass}>
@@ -109,11 +112,11 @@ function PanelTabs({ tabs, value, onChange, tone = 'light', ariaLabel }) {
         const tabClass = isDark
           ? [
               'min-h-9 flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition lg:min-h-8',
-              active ? 'bg-white/10 font-semibold text-white' : 'bg-transparent text-slate-400 hover:text-white',
+              active ? 'bg-white/10 font-semibold text-white' : 'bg-transparent text-[var(--color-text-subtle)] hover:text-white',
             ].join(' ')
           : [
               'min-h-9 flex-1 rounded-md px-2 py-1.5 text-xs transition lg:min-h-8',
-              active ? 'bg-white font-semibold text-[#0F172A] shadow-sm' : 'bg-transparent text-slate-500 hover:text-[#0F172A]',
+              active ? 'bg-[var(--color-surface)] font-semibold text-[var(--color-text)] shadow-sm' : 'bg-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]',
             ].join(' ');
         return (
           <button
@@ -179,7 +182,7 @@ function CustomGroupsControl({ conversion }) {
 
   if (allColumns.length === 0) {
     return (
-      <p className="mt-1 text-[11.5px] leading-5 text-slate-400">
+      <p className="mt-1 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">
         Render with grouping (Auto or Always split) to assign columns to your own sections.
       </p>
     );
@@ -211,17 +214,17 @@ function CustomGroupsControl({ conversion }) {
 
   return (
     <div data-testid="app-custom-groups" className="mt-2 flex flex-col gap-1.5">
-      <p className="text-[11.5px] leading-5 text-slate-400">
+      <p className="text-[11.5px] leading-5 text-[var(--color-text-subtle)]">
         Move columns between sections, then update the preview. &ldquo;Fixed&rdquo; columns repeat in every section.
       </p>
       {allColumns.map((col) => {
         const np = nameProps(col);
         return (
         <div key={col} className="flex items-center gap-2">
-          <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-[12.5px] text-slate-700">
+          <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-[12.5px] text-[var(--color-text)]">
             <span className={np.className} style={np.style}>{col}</span>
             {frozenSet.has(col) ? (
-              <span className="shrink-0 rounded bg-slate-100 px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-slate-400">
+              <span className="shrink-0 rounded bg-[var(--color-surface-sunken)] px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-[var(--color-text-subtle)]">
                 fixed
               </span>
             ) : null}
@@ -233,7 +236,7 @@ function CustomGroupsControl({ conversion }) {
               const v = e.target.value;
               conversion.reassignSectionColumn(col, v === FIXED_TARGET ? FIXED_TARGET : Number(v));
             }}
-            className="min-h-11 rounded-lg border border-slate-200 bg-white px-2 text-[12.5px] text-slate-950 outline-none focus:border-[#0F172A] lg:min-h-8"
+            className="min-h-11 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)] lg:min-h-8"
           >
             {options.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -260,15 +263,15 @@ function SectionColorPicker({ index, color, onSetColor }) {
         aria-label={`Color for section ${num}`}
         value={chosen || defaultSectionHex(index)}
         onChange={(e) => onSetColor(index, e.target.value)}
-        className="h-7 w-9 cursor-pointer rounded border border-slate-200 bg-white"
+        className="h-7 w-9 cursor-pointer rounded border border-[var(--color-line)] bg-[var(--color-surface)]"
       />
-      <span className="text-[11.5px] text-slate-500">{chosen || 'Default'}</span>
+      <span className="text-[11.5px] text-[var(--color-muted)]">{chosen || 'Default'}</span>
       {chosen ? (
         <button
           type="button"
           aria-label={`Reset color for section ${num}`}
           onClick={() => onSetColor(index, '')}
-          className="ml-auto text-[11px] font-medium text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2 hover:decoration-[#0F172A]"
+          className="ml-auto text-[11px] font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]"
         >
           Reset
         </button>
@@ -296,7 +299,7 @@ function SortableSectionRow({ id, index, title, color, onRename, onSetColor }) {
         <button
           type="button"
           aria-label={`Reorder section ${title || sectionLabel(index)}`}
-          className="cursor-grab touch-none select-none px-0.5 text-sm leading-none text-slate-300 hover:text-slate-500"
+          className="cursor-grab touch-none select-none px-0.5 text-sm leading-none text-[var(--color-text-subtle)] hover:text-[var(--color-muted)]"
           {...attributes}
           {...listeners}
         >
@@ -307,7 +310,7 @@ function SortableSectionRow({ id, index, title, color, onRename, onSetColor }) {
           value={title}
           maxLength={80}
           onChange={(e) => onRename(index, e.target.value)}
-          className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950 outline-none focus:border-[#0F172A] lg:min-h-9"
+          className="min-h-11 min-w-0 flex-1 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-1.5 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)] lg:min-h-9"
         />
       </div>
       <div className="pl-5">
@@ -334,13 +337,13 @@ function SectionNamesEditor({ conversion }) {
       <div className="space-y-2 opacity-55">
         {['Customer info', 'Orders'].map((name) => (
           <div key={name} className="flex items-center gap-2">
-            <span className="text-sm leading-none text-slate-300">::</span>
+            <span className="text-sm leading-none text-[var(--color-text-subtle)]">::</span>
             <input
               type="text"
               value={name}
               disabled
               readOnly
-              className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12.5px] text-slate-950"
+              className="min-w-0 flex-1 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-1.5 text-[12.5px] text-[var(--color-text)]"
             />
           </div>
         ))}
@@ -402,20 +405,20 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
       aria-label="Conversion settings"
       data-testid="app-inspector"
       className={[
-        'order-2 flex min-h-[620px] flex-col overflow-visible bg-white px-[18px] pt-[22px] lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-hidden',
+        'order-2 flex min-h-[620px] flex-col overflow-visible bg-[var(--color-surface)] px-[18px] pt-[22px] lg:order-none lg:h-[calc(100vh-57px)] lg:overflow-hidden',
         className,
       ].filter(Boolean).join(' ')}
     >
-      <div className="shrink-0 bg-white pb-4">
+      <div className="shrink-0 bg-[var(--color-surface)] pb-4">
         <div className="flex items-start gap-2">
-          <h2 className="font-serif text-[18px] font-bold tracking-[-0.01em] text-[#0F172A]">Adjust output</h2>
+          <h2 className="font-serif text-[18px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Adjust output</h2>
           {onCollapse && !collapsed ? (
             <span className="ml-auto">
               <CollapseToggle side="right" collapsed={collapsed} onToggle={onCollapse} />
             </span>
           ) : null}
         </div>
-        <p className="mt-1 text-xs leading-5 text-slate-500">
+        <p className="mt-1 text-xs leading-5 text-[var(--color-muted)]">
           {conversion.pdfBlob
             ? 'Change anything, then update the preview. Re-render costs one export.'
             : 'Set options now, or refine them after your first render.'}
@@ -440,7 +443,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         {activeTab === 'sections' ? (
           <>
         <InspectorSection title="Column grouping" hint="How wide tables get split across pages.">
-          <div data-testid="app-columnmap" className="flex overflow-hidden rounded-lg border border-[#0F172A]/10">
+          <div data-testid="app-columnmap" className="flex overflow-hidden rounded-lg border border-[var(--color-line)]">
             {[
               { v: 'off', label: 'Off' },
               { v: 'auto', label: 'Auto' },
@@ -454,8 +457,8 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
                   onClick={() => conversion.setColumnMap(opt.v)}
                   className={[
                     'min-h-11 flex-1 px-2 py-1.5 text-xs transition lg:min-h-9',
-                    i > 0 ? 'border-l border-[#0F172A]/10' : '',
-                    active ? 'bg-[#0F172A]/[0.05] font-semibold text-[#0F172A]' : 'bg-white text-slate-500 hover:text-[#0F172A]',
+                    i > 0 ? 'border-l border-[var(--color-line)]' : '',
+                    active ? 'bg-[var(--color-surface-sunken)] font-semibold text-[var(--color-text)]' : 'bg-[var(--color-surface)] text-[var(--color-muted)] hover:text-[var(--color-text)]',
                   ].join(' ')}
                 >
                   {opt.label}
@@ -469,7 +472,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               already states they refine after the first render — so a short, positive
               reassurance is enough here. */}
           {!conversion.pdfBlob && conversion.columnMap !== 'off' ? (
-            <p className="mt-2 text-[11.5px] leading-5 text-slate-400">Auto suits most files.</p>
+            <p className="mt-2 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">Auto suits most files.</p>
           ) : null}
           {/* Section customization is meaningful only when grouping is on AND a
               render exists. In "Off" the backend ignores custom sections. */}
@@ -491,7 +494,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
                   })}
                 </div>
               ) : null}
-              <div className="mt-3 text-[13px] font-semibold text-[#0F172A]">Custom sections</div>
+              <div className="mt-3 text-[13px] font-semibold text-[var(--color-text)]">Custom sections</div>
               <CustomGroupsControl conversion={conversion} />
             </>
           )}
@@ -514,12 +517,12 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             onChange={(e) => conversion.setReportTitle(e.target.value)}
             placeholder="e.g. Acme Co. - Q4 2025 export"
             maxLength={200}
-            className="w-full rounded-lg border border-[#0F172A]/10 bg-white px-3 py-2 text-[12.5px] text-slate-950 outline-none focus:border-[#0F172A]"
+            className="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)]"
           />
         </InspectorSection>
 
         <InspectorSection title="Branding" hint="Title, accent color, logo & footer for paid exports.">
-          <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-slate-950">
+          <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Logo &amp; branding</span>
             <input
               type="checkbox"
@@ -530,8 +533,8 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               className="h-4 w-4 cursor-pointer"
             />
           </label>
-          <p className="mb-3 text-[11px] text-slate-400">Désactivé = PDF sans aucun logo (ni FitForPDF, ni le vôtre).</p>
-          <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-slate-950">
+          <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Désactivé = PDF sans aucun logo (ni FitForPDF, ni le vôtre).</p>
+          <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Accent color</span>
           </label>
           <div className="mb-3 flex items-center gap-2">
@@ -541,26 +544,26 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               aria-label="Accent color"
               value={/^#[0-9a-fA-F]{6}$/.test(conversion.accentColor) ? conversion.accentColor : '#2563EB'}
               onChange={(e) => conversion.setAccentColor(e.target.value)}
-              className="h-9 w-12 cursor-pointer rounded border border-slate-200 bg-white"
+              className="h-9 w-12 cursor-pointer rounded border border-[var(--color-line)] bg-[var(--color-surface)]"
             />
-            <span className="text-[12px] text-slate-500">{conversion.accentColor || 'Default'}</span>
+            <span className="text-[12px] text-[var(--color-muted)]">{conversion.accentColor || 'Default'}</span>
             {conversion.accentColor ? (
-              <button type="button" onClick={() => conversion.setAccentColor('')} className="ml-auto text-[11.5px] font-medium text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2 hover:decoration-[#0F172A]">Reset</button>
+              <button type="button" onClick={() => conversion.setAccentColor('')} className="ml-auto text-[11.5px] font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]">Reset</button>
             ) : null}
           </div>
-          <div className="mb-2 text-[13px] font-semibold text-slate-950">Logo</div>
+          <div className="mb-2 text-[13px] font-semibold text-[var(--color-text)]">Logo</div>
           <div className="mb-3">
             <input
               type="file"
               aria-label="Logo image (PNG or JPG)"
               accept="image/png,image/jpeg"
               onChange={(e) => conversion.handleLogoSelect(e.target.files?.[0] || null)}
-              className="block w-full text-[12px] text-slate-600 file:mr-2 file:min-h-9 file:rounded-lg file:border file:border-slate-200 file:bg-white file:px-3 file:text-[12px] file:font-semibold file:text-slate-700"
+              className="block w-full text-[12px] text-[var(--color-muted)] file:mr-2 file:min-h-9 file:rounded-lg file:border file:border-[var(--color-line)] file:bg-[var(--color-surface)] file:px-3 file:text-[12px] file:font-semibold file:text-[var(--color-text)]"
             />
             {conversion.logoError ? (
-              <p data-testid="app-logo-error" className="mt-1 text-[11px] font-medium text-red-600">{conversion.logoError}</p>
+              <p data-testid="app-logo-error" className="mt-1 text-[11px] font-medium text-[var(--color-danger-text)]">{conversion.logoError}</p>
             ) : (
-              <p className="mt-1 text-[11px] text-slate-400">
+              <p className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
                 {conversion.logoFile ? `Selected: ${conversion.logoFile.name}` : 'PNG or JPG, up to 256 KB.'}
               </p>
             )}
@@ -569,13 +572,13 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
                 type="button"
                 data-testid="app-logo-remove"
                 onClick={() => conversion.removeLogo()}
-                className="mt-1 text-[11.5px] font-medium text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2 hover:decoration-[#0F172A]"
+                className="mt-1 text-[11.5px] font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]"
               >
                 Retirer le logo
               </button>
             ) : null}
           </div>
-          <label htmlFor="app-footer-text" className="mb-2 block text-[13px] font-semibold text-slate-950">Footer text</label>
+          <label htmlFor="app-footer-text" className="mb-2 block text-[13px] font-semibold text-[var(--color-text)]">Footer text</label>
           <input
             id="app-footer-text"
             type="text"
@@ -584,9 +587,9 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             maxLength={120}
             onChange={(event) => conversion.setFooterText(event.target.value)}
             placeholder="Confidential - internal use"
-            className="w-full rounded-lg border border-[#0F172A]/10 bg-white px-3 py-2 text-[12.5px] text-slate-950 outline-none focus:border-[#0F172A]"
+            className="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)]"
           />
-          <p className="mt-2 text-[11px] text-slate-400">Branding applies to paid exports.</p>
+          <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">Branding applies to paid exports.</p>
         </InspectorSection>
           </>
         )}
@@ -595,7 +598,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
 
       <div
         data-testid="app-inspector-actions"
-        className="sticky bottom-0 z-10 -mx-[18px] mt-auto shrink-0 border-t border-[#0F172A]/[0.08] bg-white px-[18px] pb-[18px] pt-4 shadow-[0_-12px_28px_rgba(15,23,42,0.08)]"
+        className="sticky bottom-0 z-10 -mx-[18px] mt-auto shrink-0 border-t border-[var(--color-line)] bg-[var(--color-surface)] px-[18px] pb-[18px] pt-4 shadow-[0_-12px_28px_rgba(15,23,42,0.08)]"
       >
         {/* Hierarchy: Download is the one primary (solid). "Update preview" is the
             secondary re-render step (and states its cost). Pre-render the inspector
@@ -606,20 +609,20 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             type="button"
             onClick={() => conversion.handleSubmit({ preventDefault: () => {} })}
             disabled={conversion.isLoading || !conversion.file || quotaLocked}
-            className="mb-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[10px] border border-[#0F172A]/15 bg-white px-3 py-2 text-[13px] font-semibold text-[#0F172A] transition hover:bg-[#0F172A]/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mb-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-2 text-[13px] font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
             Update preview
-            <span className="text-[10px] font-medium text-slate-400">applies changes · 1 export</span>
+            <span className="text-[10px] font-medium text-[var(--color-text-subtle)]">applies changes · 1 export</span>
           </button>
         ) : (
-          <p className="mb-2 text-center text-[11.5px] leading-5 text-slate-400">
+          <p className="mb-2 text-center text-[11.5px] leading-5 text-[var(--color-text-subtle)]">
             Generate your file to download it and fine-tune sections here.
           </p>
         )}
         {quotaLocked ? (
-          <p data-testid="app-inspector-quota-lock" className="mb-2 text-center text-[11.5px] text-amber-700">
-            No exports left. <a href="/pricing" className="font-semibold text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2">Buy credits</a> to re-render.
+          <p data-testid="app-inspector-quota-lock" className="mb-2 text-center text-[11.5px] text-[var(--color-warn-text)]">
+            No exports left. <a href="/pricing" className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Buy credits</a> to re-render.
           </p>
         ) : null}
         {conversion.pdfBlob ? (
@@ -627,7 +630,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             type="button"
             onClick={conversion.handleDownloadAnyway}
             disabled={conversion.isLoading}
-            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[11px] bg-blue-600 px-3 py-3 text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(37,99,235,0.28)] transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[11px] bg-[var(--color-cta-bg)] px-3 py-3 text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(37,99,235,0.28)] transition hover:bg-[var(--color-cta-hover)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
             Download PDF
@@ -637,7 +640,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           <button
             type="button"
             onClick={conversion.handleRenderAnother}
-            className="mt-1 min-h-10 w-full rounded-lg bg-transparent px-3 py-2 text-[13px] font-medium text-slate-500 transition hover:text-[#0F172A]"
+            className="mt-1 min-h-10 w-full rounded-lg bg-transparent px-3 py-2 text-[13px] font-medium text-[var(--color-muted)] transition hover:text-[var(--color-text)]"
           >
             Render another file
           </button>
@@ -645,8 +648,8 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         {/* When quota is locked, the amber "No exports left · Buy credits" line above
             already states the plan status + pricing CTA — so we drop this duplicate. */}
         {!quotaLocked ? (
-          <div className="mt-1.5 text-center text-[11.5px] text-slate-400">
-            {quotaSummary} - <a href="/pricing" className="font-medium text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2">View pricing</a>
+          <div className="mt-1.5 text-center text-[11.5px] text-[var(--color-text-subtle)]">
+            {quotaSummary} - <a href="/pricing" className="font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">View pricing</a>
           </div>
         ) : null}
       </div>
@@ -700,7 +703,7 @@ function WorkbenchRail({
 
       {activeTab === 'recent' ? (
         <>
-          <p className="mt-3 text-xs leading-5 text-slate-400">
+          <p className="mt-3 text-xs leading-5 text-[var(--color-text-subtle)]">
             PDF artifacts only. Source spreadsheets are not stored.
           </p>
 
@@ -713,11 +716,11 @@ function WorkbenchRail({
                   className="block rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs transition hover:bg-white/10"
                 >
                   <span className="block truncate font-semibold text-white">{item.sourceFileName || item.supportId || 'Export'}</span>
-                  <span className="mt-1 block text-slate-400">{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent render'}</span>
+                  <span className="mt-1 block text-[var(--color-text-subtle)]">{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent render'}</span>
                 </a>
               ))
             ) : (
-              <div className="px-3 py-2 text-[12.5px] leading-5 text-slate-500">
+              <div className="px-3 py-2 text-[12.5px] leading-5 text-[var(--color-muted)]">
                 No exports yet. Drop a spreadsheet to start.
               </div>
             )}
@@ -726,7 +729,7 @@ function WorkbenchRail({
           <button
             type="button"
             onClick={conversion.handleRenderAnother}
-            className="mt-3 inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/20 px-3 text-[13px] font-medium text-slate-300 transition hover:border-white/30 hover:text-white"
+            className="mt-3 inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/20 px-3 text-[13px] font-medium text-[var(--color-text-subtle)] transition hover:border-white/30 hover:text-white"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             New export
@@ -735,13 +738,13 @@ function WorkbenchRail({
       ) : (
         <div className="mt-4">
           <div className="flex items-center gap-2">
-            <Layers3 className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            <Layers3 className="h-4 w-4 text-[var(--color-text-subtle)]" aria-hidden="true" />
             <h2 className="text-sm font-semibold">Outline</h2>
           </div>
           <div className="mt-3 space-y-2">
             {sections.length > 0 ? (
               sections.map((section) => (
-                <div key={section.label} className="flex items-center gap-2 text-xs text-slate-300">
+                <div key={section.label} className="flex items-center gap-2 text-xs text-[var(--color-text-subtle)]">
                   <span className="flex h-5 w-5 items-center justify-center rounded bg-white/10 font-semibold text-white">
                     {section.label}
                   </span>
@@ -749,14 +752,14 @@ function WorkbenchRail({
                 </div>
               ))
             ) : (
-              <p className="text-xs leading-5 text-slate-400">The document outline appears after your first render.</p>
+              <p className="text-xs leading-5 text-[var(--color-text-subtle)]">The document outline appears after your first render.</p>
             )}
           </div>
         </div>
       )}
 
       {!conversion.pdfBlob ? (
-        <div className="mt-auto flex items-center gap-2 px-2 pb-1 pt-3 text-[11px] text-slate-600">
+        <div className="mt-auto flex items-center gap-2 px-2 pb-1 pt-3 text-[11px] text-[var(--color-muted)]">
           <span className="h-1.5 w-1.5 rounded-full bg-green-600" />
           Processed ephemerally - never stored
         </div>
@@ -843,13 +846,13 @@ function WorkbenchQuotaPaywall({ conversion }) {
     <div
       role="alert"
       data-testid="workbench-quota-paywall"
-      className="mt-5 w-full max-w-[560px] rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-left"
+      className="mt-5 w-full max-w-[560px] rounded-[10px] border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] px-4 py-3 text-left"
     >
       <div className="flex gap-2">
-        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
+        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-warn-text)]" aria-hidden="true" />
         <div className="min-w-0">
-          <p className="text-[13px] font-bold text-amber-950">You've used your free exports.</p>
-          <p className="mt-1 text-[12.5px] leading-5 text-amber-900/80">
+          <p className="text-[13px] font-bold text-[var(--color-warn-text)]">You've used your free exports.</p>
+          <p className="mt-1 text-[12.5px] leading-5 text-[var(--color-warn-text)]">
             Buy credits to generate this PDF. Your selected file stays ready.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -862,7 +865,7 @@ function WorkbenchQuotaPaywall({ conversion }) {
                   event.stopPropagation();
                   conversion.handleBuyCreditsPack(pack.stripePackId);
                 }}
-                className="min-h-10 rounded-lg bg-slate-950 px-3 text-[12.5px] font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="min-h-10 rounded-lg bg-[var(--color-accent)] px-3 text-[12.5px] font-bold text-[var(--color-accent-text)] transition hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {pack.actionLabel}
               </button>
@@ -895,7 +898,7 @@ function WorkbenchDropzone({ conversion, quota }) {
   };
 
   return (
-    <div className="rounded-[12px] border border-[#0F172A]/10 bg-white p-3.5 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+    <div className="rounded-[12px] border border-[var(--color-line)] bg-[var(--color-surface)] p-3.5 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
       <div
         data-testid="generate-dropzone"
         role="button"
@@ -914,14 +917,14 @@ function WorkbenchDropzone({ conversion, quota }) {
           event.preventDefault();
           openPicker();
         }}
-        className="flex min-h-[356px] cursor-pointer flex-col items-center justify-center rounded-[11px] border border-dashed border-[#0F172A]/25 bg-[#0F172A]/[0.015] px-6 py-12 text-center outline-none transition hover:border-[#0F172A]/40 hover:bg-[#0F172A]/[0.03] focus-visible:border-[#0F172A]/40 focus-visible:ring-2 focus-visible:ring-[#0F172A]/30"
+        className="flex min-h-[356px] cursor-pointer flex-col items-center justify-center rounded-[11px] border border-dashed border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-6 py-12 text-center outline-none transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] focus-visible:border-[var(--color-line-strong)] focus-visible:ring-2 focus-visible:ring-[var(--color-line-strong)]"
       >
-        <Upload className="mb-4 h-10 w-10 text-[#0F172A]/40" strokeWidth={1.4} aria-hidden="true" />
-        <h2 className="max-w-[320px] text-[18px] font-semibold leading-tight text-[#0F172A]">
+        <Upload className="mb-4 h-10 w-10 text-[var(--color-text-subtle)]" strokeWidth={1.4} aria-hidden="true" />
+        <h2 className="max-w-[320px] text-[18px] font-semibold leading-tight text-[var(--color-text)]">
           {conversion.file ? conversion.file.name : 'Drop your Excel or CSV here'}
         </h2>
-        <p className="mt-2 text-[13.5px] text-slate-500">.xlsx, .xls, .csv - up to 4 MB</p>
-        <div className="my-[18px] text-[12.5px] text-slate-400">{hasFile ? 'ready' : 'or'}</div>
+        <p className="mt-2 text-[13.5px] text-[var(--color-muted)]">.xlsx, .xls, .csv - up to 4 MB</p>
+        <div className="my-[18px] text-[12.5px] text-[var(--color-text-subtle)]">{hasFile ? 'ready' : 'or'}</div>
         {hasFile ? (
           <>
             <div className="flex flex-wrap justify-center gap-2">
@@ -933,7 +936,7 @@ function WorkbenchDropzone({ conversion, quota }) {
                   void conversion.handleSubmit({ preventDefault: () => {} });
                 }}
                 disabled={conversion.isLoading || isQuotaLocked}
-                className="min-h-11 rounded-[10px] bg-blue-600 px-7 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="min-h-11 rounded-[10px] bg-[var(--color-cta-bg)] px-7 text-sm font-bold text-white transition hover:bg-[var(--color-cta-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {conversion.isLoading ? 'Generating...' : 'Generate PDF'}
               </button>
@@ -944,7 +947,7 @@ function WorkbenchDropzone({ conversion, quota }) {
                   openPicker();
                 }}
                 disabled={conversion.isLoading}
-                className="min-h-11 rounded-[10px] border border-[#0F172A]/15 bg-white px-5 text-sm font-semibold text-[#0F172A] transition hover:border-[#0F172A]/40 hover:bg-[#0F172A]/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+                className="min-h-11 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-5 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Change file
               </button>
@@ -959,7 +962,7 @@ function WorkbenchDropzone({ conversion, quota }) {
               openPicker();
             }}
             disabled={conversion.isLoading}
-            className="min-h-11 rounded-[10px] border border-[#0F172A]/15 bg-white px-7 text-sm font-semibold text-[#0F172A] transition hover:border-[#0F172A]/40 hover:bg-[#0F172A]/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-11 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-7 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Browse files
           </button>
@@ -969,19 +972,19 @@ function WorkbenchDropzone({ conversion, quota }) {
             data-testid="generate-error"
             role="alert"
             onClick={(event) => event.stopPropagation()}
-            className="mt-4 w-full max-w-[460px] rounded-[10px] border border-rose-200 bg-rose-50 px-4 py-3 text-left"
+            className="mt-4 w-full max-w-[460px] rounded-[10px] border border-[var(--color-danger-border)] bg-[var(--color-danger-bg)] px-4 py-3 text-left"
           >
             {conversion.failKind === 'page_burden' ? (
               <>
-                <p className="text-[13.5px] font-semibold text-rose-800">
+                <p className="text-[13.5px] font-semibold text-[var(--color-danger-text)]">
                   {conversion.pageBurdenCopy?.title
                     || 'This export is too large to render as a clean, sendable PDF.'}
                 </p>
                 {conversion.pageBurdenCopy?.description ? (
-                  <p className="mt-1 text-[12.5px] text-rose-700/90">{conversion.pageBurdenCopy.description}</p>
+                  <p className="mt-1 text-[12.5px] text-[var(--color-danger-text)]">{conversion.pageBurdenCopy.description}</p>
                 ) : null}
                 {Array.isArray(conversion.failureRecommendations) && conversion.failureRecommendations.length > 0 ? (
-                  <ul className="mt-2 list-disc space-y-0.5 pl-5 text-[12.5px] text-rose-700">
+                  <ul className="mt-2 list-disc space-y-0.5 pl-5 text-[12.5px] text-[var(--color-danger-text)]">
                     {conversion.failureRecommendations.map((token) => (
                       <li key={token}>{recommendationLabel(token)}</li>
                     ))}
@@ -999,23 +1002,23 @@ function WorkbenchDropzone({ conversion, quota }) {
                       if (!conversion.isLoading) void conversion.handleCondenseAndRetry?.();
                     }}
                     disabled={conversion.isLoading}
-                    className="mt-3 inline-flex min-h-10 items-center gap-1.5 rounded-[10px] bg-blue-600 px-4 text-[13px] font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-3 inline-flex min-h-10 items-center gap-1.5 rounded-[10px] bg-[var(--color-cta-bg)] px-4 text-[13px] font-bold text-white transition hover:bg-[var(--color-cta-hover)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {conversion.isLoading ? 'Condensing…' : 'Condense long text & retry'}
                   </button>
                 ) : (
-                  <p className="mt-3 text-[12.5px] text-rose-700/90">
+                  <p className="mt-3 text-[12.5px] text-[var(--color-danger-text)]">
                     Long text is already condensed and this export is still too large — try splitting the file or removing very long columns.
                   </p>
                 )}
               </>
             ) : (
-              <p className="text-[13.5px] font-medium text-rose-700">{conversion.error}</p>
+              <p className="text-[13.5px] font-medium text-[var(--color-danger-text)]">{conversion.error}</p>
             )}
           </div>
         ) : null}
 
-        <div className="mt-[22px] flex flex-wrap justify-center gap-x-[18px] gap-y-2 text-xs font-medium text-slate-500">
+        <div className="mt-[22px] flex flex-wrap justify-center gap-x-[18px] gap-y-2 text-xs font-medium text-[var(--color-muted)]">
           {['No storage', 'No LLM in the data path', 'EU-hosted'].map((item) => (
             <span key={item} className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-green-600" aria-hidden="true" />
@@ -1040,11 +1043,11 @@ function WorkbenchDropzone({ conversion, quota }) {
 
 function WorkbenchSampleCard({ conversion }) {
   return (
-    <aside className="flex min-h-[356px] flex-col rounded-[12px] border border-[#0F172A]/10 bg-white p-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
-      <h2 className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[#0F172A]">Try a sample</h2>
-      <p className="mb-3 mt-1 text-xs leading-5 text-slate-500">Preview a finished PDF from this CSV — no upload needed.</p>
-      <div className="flex-1 rounded-lg border border-[#0F172A]/10 bg-[#0F172A]/[0.02] p-3 font-mono text-[11px] leading-[1.8] text-slate-600">
-        <span className="text-slate-400">id,name,region,plan,mrr...</span>
+    <aside className="flex min-h-[356px] flex-col rounded-[12px] border border-[var(--color-line)] bg-[var(--color-surface)] p-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+      <h2 className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</h2>
+      <p className="mb-3 mt-1 text-xs leading-5 text-[var(--color-muted)]">Preview a finished PDF from this CSV — no upload needed.</p>
+      <div className="flex-1 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-3 font-mono text-[11px] leading-[1.8] text-[var(--color-muted)]">
+        <span className="text-[var(--color-text-subtle)]">id,name,region,plan,mrr...</span>
         <br />
         1,Northwind,EU,Pro,840
         <br />
@@ -1058,7 +1061,7 @@ function WorkbenchSampleCard({ conversion }) {
         type="button"
         onClick={conversion.handleTrySample}
         disabled={conversion.isLoading}
-        className="mt-3 inline-flex min-h-10 items-center gap-1.5 self-start text-[12.5px] font-semibold text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2 transition hover:decoration-[#0F172A] disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-3 inline-flex min-h-10 items-center gap-1.5 self-start text-[12.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 transition hover:decoration-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         Render this sample
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -1071,10 +1074,10 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
   return (
     <>
       <div className="mb-[22px] max-w-[600px]">
-        <h1 className="font-serif text-[27px] font-semibold tracking-[-0.01em] text-[#0F172A]">
+        <h1 className="font-serif text-[27px] font-semibold tracking-[-0.01em] text-[var(--color-text)]">
           Start a new export
         </h1>
-        <p className="mt-2 max-w-[60ch] text-[14.5px] leading-[1.55] text-slate-500">
+        <p className="mt-2 max-w-[60ch] text-[14.5px] leading-[1.55] text-[var(--color-muted)]">
           Drop a wide spreadsheet below — we split it into clean sections and repeat your key
           columns on every page. Nothing cut off.
         </p>
@@ -1099,18 +1102,18 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
   const showCondensedNote = conversion.truncateLongText === true && !isPaidPlan;
   return (
     <div className="ffp-reveal">
-      <div className="mb-[18px] flex max-w-[620px] items-center gap-3 rounded-[10px] border border-slate-200 bg-white px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
-        <FileText className="h-5 w-5 text-slate-400" aria-hidden="true" />
+      <div className="mb-[18px] flex max-w-[620px] items-center gap-3 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+        <FileText className="h-5 w-5 text-[var(--color-text-subtle)]" aria-hidden="true" />
         <div className="min-w-0">
-          <p className="truncate text-[13.5px] font-semibold text-slate-950">
+          <p className="truncate text-[13.5px] font-semibold text-[var(--color-text)]">
             {conversion.file?.name || conversion.resolvedPdfFilename}
           </p>
-          <p className="text-xs text-slate-500">Preview ready. Adjust output, then update preview.</p>
+          <p className="text-xs text-[var(--color-muted)]">Preview ready. Adjust output, then update preview.</p>
         </div>
         <button
           type="button"
           onClick={conversion.handleRenderAnother}
-          className="ml-auto inline-flex min-h-11 shrink-0 items-center px-1 text-[12.5px] font-semibold text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2 hover:decoration-[#0F172A] lg:min-h-0"
+          className="ml-auto inline-flex min-h-11 shrink-0 items-center px-1 text-[12.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)] lg:min-h-0"
         >
           Change file
         </button>
@@ -1118,22 +1121,22 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
       {showCondensedNote ? (
         <div
           data-testid="condensed-upgrade-note"
-          className="mb-[18px] max-w-[620px] rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-[12.5px] leading-5 text-amber-900"
+          className="mb-[18px] max-w-[620px] rounded-[10px] border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] px-4 py-3 text-[12.5px] leading-5 text-[var(--color-warn-text)]"
         >
           <span className="font-semibold">Long text was condensed to fit.</span>{' '}
           Long cells were shortened to keep this export under the free page limit.{' '}
           <a
             href="/pricing"
-            className="font-semibold text-amber-900 underline decoration-amber-900/40 underline-offset-2 hover:decoration-amber-900"
+            className="font-semibold text-[var(--color-warn-text)] underline decoration-[var(--color-warn-border)] underline-offset-2 hover:decoration-[var(--color-warn-text)]"
           >
             Upgrade for full, untruncated text →
           </a>
         </div>
       ) : null}
-      <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-slate-500">
+      <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-[var(--color-muted)]">
         <FileText className="h-3.5 w-3.5" aria-hidden="true" />
         Preview
-        <span className="ml-1 inline-flex items-center gap-1 text-[13.5px] normal-case tracking-normal text-green-700">
+        <span className="ml-1 inline-flex items-center gap-1 text-[13.5px] normal-case tracking-normal text-[var(--color-success-text)]">
           <span className="h-1.5 w-1.5 rounded-full bg-green-600" aria-hidden="true" />
           Ready
         </span>
@@ -1167,10 +1170,10 @@ export function PdfPreviewPane({ pdfBlob, filename }) {
 
   const safeFilename = filename || 'report.pdf';
   return (
-    <div className="mt-5 max-w-[620px] overflow-hidden rounded-[9px] border border-slate-200 bg-white shadow-[0_8px_40px_rgba(15,23,42,0.14)]">
-      <div className="flex items-center justify-between border-b border-slate-200 bg-white/80 px-4 py-2">
-        <p className="truncate text-sm font-semibold text-slate-800">Preview: {safeFilename}</p>
-        <span className="text-xs font-medium text-slate-500">PDF</span>
+    <div className="mt-5 max-w-[620px] overflow-hidden rounded-[9px] border border-[var(--color-line)] bg-[var(--color-surface)] shadow-[0_8px_40px_rgba(15,23,42,0.14)]">
+      <div className="flex items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-2">
+        <p className="truncate text-sm font-semibold text-[var(--color-text)]">Preview: {safeFilename}</p>
+        <span className="text-xs font-medium text-[var(--color-muted)]">PDF</span>
       </div>
       {/* Desktop: inline <object> embed (works on large screens). */}
       <object
@@ -1179,9 +1182,9 @@ export function PdfPreviewPane({ pdfBlob, filename }) {
         data={previewUrl}
         title={`PDF preview: ${safeFilename}`}
         type="application/pdf"
-        className="hidden h-[560px] w-full bg-white lg:block"
+        className="hidden h-[560px] w-full bg-[var(--color-surface)] lg:block"
       >
-        <div className="p-5 text-sm text-slate-600">
+        <div className="p-5 text-sm text-[var(--color-muted)]">
           PDF preview is not available in this browser. Use Download PDF to open it.
         </div>
       </object>
@@ -1230,8 +1233,8 @@ function MobilePdfPreview({ pdfBlob, previewUrl, filename }) {
       rel="noopener"
       data-testid="app-pdf-preview-mobile-open"
       className={variant === 'subtle'
-        ? 'inline-flex min-h-10 items-center justify-center gap-1.5 rounded-[10px] border border-slate-200 px-4 py-2 text-[13px] font-semibold text-slate-700'
-        : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-blue-600 px-5 py-2.5 text-sm font-bold text-white'}
+        ? 'inline-flex min-h-10 items-center justify-center gap-1.5 rounded-[10px] border border-[var(--color-line)] px-4 py-2 text-[13px] font-semibold text-[var(--color-text)]'
+        : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-[var(--color-cta-bg)] px-5 py-2.5 text-sm font-bold text-white'}
     >
       {label}
     </a>
@@ -1244,9 +1247,9 @@ function MobilePdfPreview({ pdfBlob, previewUrl, filename }) {
           src={imageUrl}
           alt={`First page preview: ${filename}`}
           data-testid="app-pdf-preview-mobile-image"
-          className="w-full max-w-[520px] rounded-md border border-slate-200 shadow-sm"
+          className="w-full max-w-[520px] rounded-md border border-[var(--color-line)] shadow-sm"
         />
-        <p className="text-xs text-slate-500">First page shown. Open the full PDF below.</p>
+        <p className="text-xs text-[var(--color-muted)]">First page shown. Open the full PDF below.</p>
         {openLink('Open full PDF', 'subtle')}
       </>
     );
@@ -1254,7 +1257,7 @@ function MobilePdfPreview({ pdfBlob, previewUrl, filename }) {
 
   return (
     <>
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-[var(--color-muted)]">
         {status === 'rendering' ? 'Preparing preview…' : 'Your PDF is ready.'}
       </p>
       {openLink('Open PDF')}
@@ -1268,31 +1271,54 @@ const LEFT_DRAWER_ID = 'app-drawer-left';
 const RIGHT_DRAWER_ID = 'app-drawer-right';
 
 function AppToolbar({ conversion, quota, session, openDrawer = null, setOpenDrawer }) {
-  const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
-  const exportsLeft = Number.isFinite(quota.freeExportsLeft)
-    ? quota.freeExportsLeft
-    : Number.isFinite(quota.freeExportsLimit)
-      ? quota.freeExportsLimit
-      : 3;
-  const quotaLabel = isUnlimited ? 'Admin - unlimited' : `Free - ${exportsLeft} left`;
-  const crumb = conversion.file?.name || (conversion.pdfBlob ? conversion.resolvedPdfFilename : 'New export');
+  // The breadcrumb only earns its place once there's a document to name. At the
+  // empty "New export" state it was pure noise next to the brand, so we drop it
+  // and let the centered mark stand alone (per design harmonization).
+  const crumb = conversion.file?.name
+    || (conversion.pdfBlob ? conversion.resolvedPdfFilename : null);
   const setDrawer = typeof setOpenDrawer === 'function' ? setOpenDrawer : () => {};
+
+  const railPillClass =
+    'inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 ' +
+    'text-[13px] font-semibold text-[var(--color-text)] transition ' +
+    'hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]';
 
   return (
     <header
       data-testid="app-toolbar"
-      className="flex h-[57px] items-center gap-4 border-b border-slate-200 bg-white px-4 sm:px-[22px]"
+      className="grid h-[57px] grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-[var(--color-line)] bg-[var(--color-bg-hero)] px-4 sm:px-[22px]"
     >
-      <a href="/" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-950">
-        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-        fitforpdf.com
-      </a>
-      <div className="hidden h-5 w-px bg-slate-200 sm:block" aria-hidden="true" />
-      <div className="text-base font-black tracking-tight text-slate-950">FitForPDF</div>
-      <div data-testid="app-crumb" className="min-w-0 truncate text-[13.5px] text-slate-500">
-        <span className="font-serif italic text-[15px] text-slate-950">{crumb}</span>
+      {/* Left zone: exit-to-site, then the document title once a file is loaded. */}
+      <div className="flex min-w-0 items-center gap-3 justify-self-start">
+        <a
+          href="/"
+          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--color-muted)] transition hover:text-[var(--color-text)]"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          <span className="hidden sm:inline">fitforpdf.com</span>
+        </a>
+        {crumb ? (
+          <>
+            <div className="hidden h-5 w-px bg-[var(--color-line)] sm:block" aria-hidden="true" />
+            <div data-testid="app-crumb" className="hidden min-w-0 truncate sm:block">
+              <span className="font-serif italic text-[15px] text-[var(--color-text)]">{crumb}</span>
+            </div>
+          </>
+        ) : null}
       </div>
-      <div className="ml-auto flex items-center gap-3">
+
+      {/* Center zone: the brand mark, truly centered (1fr | auto | 1fr grid).
+          Picto only — the wordmark stays on the marketing header. Links home. */}
+      <a
+        href="/"
+        aria-label="fitforpdf — accueil"
+        className="justify-self-center rounded-md transition hover:opacity-80"
+      >
+        <AnimatedLogo className="h-7 w-7" />
+      </a>
+
+      {/* Right zone: drawer toggles (mobile) · API · plan · theme · account. */}
+      <div className="flex items-center gap-3 justify-self-end">
         {/* Mobile-only drawer toggles. Each opens its off-canvas drawer (one at a
             time): "Recent" -> left rail, "Options" -> right inspector. Hidden on
             desktop (lg) where the resizable PanelGroup is used instead. */}
@@ -1303,7 +1329,7 @@ function AppToolbar({ conversion, quota, session, openDrawer = null, setOpenDraw
           aria-expanded={openDrawer === 'left'}
           aria-controls={LEFT_DRAWER_ID}
           onClick={() => setDrawer(openDrawer === 'left' ? null : 'left')}
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-[13px] font-semibold text-slate-950 transition hover:border-slate-950 hover:bg-slate-50 lg:hidden"
+          className={railPillClass + ' lg:hidden'}
         >
           <PanelLeft className="h-3.5 w-3.5" aria-hidden="true" />
           <span className="hidden sm:inline">Recent</span>
@@ -1315,21 +1341,21 @@ function AppToolbar({ conversion, quota, session, openDrawer = null, setOpenDraw
           aria-expanded={openDrawer === 'right'}
           aria-controls={RIGHT_DRAWER_ID}
           onClick={() => setDrawer(openDrawer === 'right' ? null : 'right')}
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-[13px] font-semibold text-slate-950 transition hover:border-slate-950 hover:bg-slate-50 lg:hidden"
+          className={railPillClass + ' lg:hidden'}
         >
           <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
           <span className="hidden sm:inline">Options</span>
         </button>
-        <a
-          href="/developers"
-          className="hidden min-h-9 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-[13px] font-semibold text-slate-950 transition hover:border-slate-950 hover:bg-slate-50 sm:inline-flex"
-        >
+        {/* API entry — same wording + "Free" signal as the marketing header. */}
+        <a href="/developers" className={'hidden sm:inline-flex ' + railPillClass}>
           <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-          Use the API
+          API
+          <span className="ml-0.5 rounded-full border border-[var(--color-success-border)] bg-[var(--color-success-bg)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-success-text)]">
+            Free
+          </span>
         </a>
-        <span data-testid="app-quota" className="rounded-full bg-[#F1F0ED] px-3 py-1.5 text-xs font-semibold text-slate-500">
-          {quotaLabel}
-        </span>
+        <PlanBadge quota={quota} className="hidden sm:inline-flex" />
+        <ThemeToggle />
         <AccountMenu account={session?.account || null} onLogout={session?.logout || (() => {})} />
       </div>
     </header>
@@ -1352,9 +1378,9 @@ function WorkbenchWorkspace({ conversion, quota, className = '' }) {
       ) : (
         <WorkbenchEmptyCanvas conversion={conversion} quota={quota} />
       )}
-      <div className="mt-6 flex items-center gap-2 text-[12.5px] text-slate-500">
+      <div className="mt-6 flex items-center gap-2 text-[12.5px] text-[var(--color-muted)]">
         <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-        Need this every week? <a href="/developers" className="font-semibold text-[#0F172A] underline decoration-[#0F172A]/30 underline-offset-2 hover:decoration-[#0F172A]">Automate it with the API</a>
+        Need this every week? <a href="/developers" className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]">Automate it with the API</a>
       </div>
     </section>
   );
@@ -1373,7 +1399,7 @@ function WorkbenchResizeHandle() {
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-9 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-slate-300 transition-colors group-hover/handle:bg-[#0F172A]/40 group-data-[resize-handle-state=drag]/handle:bg-[#0F172A]/60 group-focus-visible/handle:bg-[#0F172A]/60"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-9 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-text-subtle)] transition-colors group-hover/handle:bg-[var(--color-text)] group-data-[resize-handle-state=drag]/handle:bg-[var(--color-text)] group-focus-visible/handle:bg-[var(--color-text)]"
       />
     </PanelResizeHandle>
   );
@@ -1395,7 +1421,7 @@ function CollapsedEdgeReopen({ side, label, onExpand }) {
         aria-label={label}
         title={label}
         onClick={onExpand}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-slate-900"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-muted)] shadow-sm transition hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)]"
       >
         <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
       </button>
@@ -1422,8 +1448,8 @@ function CollapseToggle({ side, collapsed, onToggle }) {
       className={[
         'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition',
         isLeft
-          ? 'text-slate-400 hover:bg-white/10 hover:text-white'
-          : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700',
+          ? 'text-[var(--color-text-subtle)] hover:bg-white/10 hover:text-white'
+          : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)]',
       ].join(' ')}
     >
       <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
@@ -1463,7 +1489,7 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
   // gutter, with the gutter showing through the gaps + resize handles — the Anthropic
   // app look. CARD owns the rounding/inset so the shared content components are reused
   // untouched (their square corners are clipped by overflow-hidden).
-  const CARD = 'm-1.5 flex min-w-0 flex-1 overflow-hidden rounded-xl bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_28px_-14px_rgba(15,23,42,0.14)] ring-1 ring-[#0F172A]/[0.07]';
+  const CARD = 'm-1.5 flex min-w-0 flex-1 overflow-hidden rounded-xl bg-[var(--color-surface)] shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_28px_-14px_rgba(15,23,42,0.14)] ring-1 ring-[var(--color-line)]';
   return (
     <div className="bg-paper flex h-[calc(100vh-57px)] w-full">
       {leftCollapsed ? (
@@ -1499,7 +1525,7 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
         <WorkbenchResizeHandle />
 
         <Panel minSize={30} className="flex" data-testid="workbench-center-panel">
-          <div className={`${CARD} bg-white`}>
+          <div className={`${CARD} bg-[var(--color-surface)]`}>
             <WorkbenchWorkspace conversion={conversion} quota={quota} className="h-full flex-1 overflow-y-auto" />
           </div>
         </Panel>
@@ -1516,7 +1542,7 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
           onExpand={() => setRightCollapsed(false)}
           className="flex"
         >
-          <div className={`${CARD} bg-white`}>
+          <div className={`${CARD} bg-[var(--color-surface)]`}>
             <ConversionInspector
               conversion={conversion}
               quota={quota}
@@ -1553,18 +1579,18 @@ function MobileDrawer({ id, side, label, open, onClose, children }) {
       data-testid={`app-drawer-${side}`}
       data-open={open ? 'true' : 'false'}
       className={[
-        'fixed top-[57px] bottom-0 z-50 flex w-[88vw] max-w-[360px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out lg:hidden',
+        'fixed top-[57px] bottom-0 z-50 flex w-[88vw] max-w-[360px] flex-col bg-[var(--color-surface)] shadow-2xl transition-transform duration-300 ease-out lg:hidden',
         isLeft ? 'left-0' : 'right-0',
         open ? 'translate-x-0' : `${closedTranslate} pointer-events-none`,
       ].join(' ')}
     >
-      <div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-3">
-        <span className="text-[13px] font-semibold text-slate-700">{label}</span>
+      <div className="flex h-11 shrink-0 items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-surface)] px-3">
+        <span className="text-[13px] font-semibold text-[var(--color-text)]">{label}</span>
         <button
           type="button"
           aria-label={`Close ${label} panel`}
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--color-text-subtle)] transition hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)]"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -1718,7 +1744,7 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
 
   return (
     <>
-      {showInspector ? <ConversionInspector conversion={conversion} quota={quota} className="mb-5 min-h-0 rounded-xl border border-slate-200" /> : null}
+      {showInspector ? <ConversionInspector conversion={conversion} quota={quota} className="mb-5 min-h-0 rounded-xl border border-[var(--color-line)]" /> : null}
       {uploadSurface}
     </>
   );

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
 import { cn } from '../lib/cn.mjs';
 
 const BRACKET_SPREAD = 10; // px brackets start outward from final position
