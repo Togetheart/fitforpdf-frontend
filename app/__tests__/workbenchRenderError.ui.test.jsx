@@ -112,5 +112,8 @@ describe('/app workbench dropzone surfaces render failures', () => {
       // The retry render must carry the condense flag the backend gate reads.
       expect(renderUrls[renderUrls.length - 1]).toMatch(/truncate_long_text=true/);
     }, { timeout: 3000 });
+
+    // Free user + condensed result → honest upgrade nudge (gate the fidelity, not the fix).
+    expect(await screen.findByTestId('condensed-upgrade-note')).toBeTruthy();
   });
 });
