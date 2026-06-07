@@ -70,7 +70,7 @@ describe('Section name & color editor (native color picker)', () => {
     render(<ConversionInspector conversion={conversion} quota={quota} />);
     const editor = screen.getByTestId('app-section-rename');
     expect(within(editor).getByLabelText('Color for section 1').value.toLowerCase()).toBe('#123456');
-    // No override -> positional default for index 1 = SECTION_COLOR_HEXES[1] (#22C55E).
+    // No override -> positional default for index 1 = SECTION_COLOR_HEXES[1] (#0D9488).
     expect(within(editor).getByLabelText('Color for section 2').value.toLowerCase())
       .toBe(SECTION_COLOR_HEXES[1].toLowerCase());
   });
@@ -100,6 +100,6 @@ describe('Section name & color editor (native color picker)', () => {
     const pillEls = within(pills).getAllByText(/^Section /);
     // jsdom normalizes inline colors to rgb(): #EF4444 -> rgb(239, 68, 68).
     expect(pillEls[0].style.backgroundColor).toBe('rgb(239, 68, 68)'); // chosen -> inline
-    expect(pillEls[1].className).toContain('bg-green-500'); // default (index 1) -> class
+    expect(pillEls[1].className).toContain('bg-teal-600'); // default (index 1) -> class
   });
 });
