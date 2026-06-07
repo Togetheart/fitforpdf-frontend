@@ -388,7 +388,7 @@ export default function Page() {
       <Section id="comparison" index={4} bg="bg-hero">
         <div className="space-y-10">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
               Excel PDF Export vs fitforpdf
             </h2>
             <p className="mt-3 text-base text-muted max-w-xl mx-auto">
@@ -454,7 +454,7 @@ export default function Page() {
         testId="faq-section"
       >
         <div className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+          <h2 className="text-center font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
             Frequently asked questions
           </h2>
           <div className="divide-y divide-[var(--color-border)]">
@@ -481,7 +481,7 @@ export default function Page() {
         />
         <div className="absolute inset-0 bg-[#0a1628]/70" />
         <div className="relative z-10 mx-auto max-w-2xl text-center px-4">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-white">
             Your export is done.<br />The cleanup shouldn&apos;t be.
           </h2>
           <p className="mt-4 text-lg text-white/70">{LANDING_COPY.finalCtaCopy}</p>
