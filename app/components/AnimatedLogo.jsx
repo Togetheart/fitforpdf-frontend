@@ -25,27 +25,44 @@ export default function AnimatedLogo({ className }) {
     // Respect reduced-motion preference
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const bracketL = svg.querySelector('[data-bracket="left"]');
-    const bracketR = svg.querySelector('[data-bracket="right"]');
+    let cancelled = false;
+    let tl = null;
 
-    const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+    // GSAP (~37KB) is dynamically imported so it stays out of the synchronous
+    // first-load bundle on every page (this logo is in the header + footer).
+    // The intro is decorative — the SVG already renders in its final state, so
+    // a slightly-deferred play is fine and never blocks paint.
+    import('gsap').then((mod) => {
+      if (cancelled || !svgRef.current) return;
+      const gsap = mod.default || mod.gsap;
 
-    // Initial state: brackets spread wide, bars overflowing
-    gsap.set(bracketL, { x: -BRACKET_SPREAD });
-    gsap.set(bracketR, { x: BRACKET_SPREAD });
-    for (const bar of BARS) {
-      const el = svg.querySelector(bar.selector);
-      if (el) gsap.set(el, { attr: { width: bar.startWidth } });
-    }
+      const bracketL = svg.querySelector('[data-bracket="left"]');
+      const bracketR = svg.querySelector('[data-bracket="right"]');
 
-    // Animate: brackets squeeze inward, bars shrink to fit
-    tl.to(bracketL, { x: 0, duration: 0.7 }, 0)
-      .to(bracketR, { x: 0, duration: 0.7 }, 0);
+      tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
 
-    for (const bar of BARS) {
-      const el = svg.querySelector(bar.selector);
-      if (el) tl.to(el, { attr: { width: bar.finalWidth }, duration: 0.65 }, 0.08);
-    }
+      // Initial state: brackets spread wide, bars overflowing
+      gsap.set(bracketL, { x: -BRACKET_SPREAD });
+      gsap.set(bracketR, { x: BRACKET_SPREAD });
+      for (const bar of BARS) {
+        const el = svg.querySelector(bar.selector);
+        if (el) gsap.set(el, { attr: { width: bar.startWidth } });
+      }
+
+      // Animate: brackets squeeze inward, bars shrink to fit
+      tl.to(bracketL, { x: 0, duration: 0.7 }, 0)
+        .to(bracketR, { x: 0, duration: 0.7 }, 0);
+
+      for (const bar of BARS) {
+        const el = svg.querySelector(bar.selector);
+        if (el) tl.to(el, { attr: { width: bar.finalWidth }, duration: 0.65 }, 0.08);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      if (tl) tl.kill();
+    };
   }, []);
 
   return (
