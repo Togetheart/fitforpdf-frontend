@@ -18,7 +18,7 @@ export default function SiteFooter() {
         <div className="space-y-3">
           <a href="/" className="flex items-center gap-2 opacity-60 transition hover:opacity-100">
             <AnimatedLogo className="h-7 w-7" />
-            <img src="/fitforpdf@2x.webp" alt="fitforpdf" className="h-6 w-auto object-contain dark-invert" />
+            <img src="/fitforpdf@2x.webp" alt="fitforpdf" width={2990} height={790} className="h-6 w-auto object-contain dark-invert" />
           </a>
           <p className="text-xs text-[var(--color-muted)]">Rendering engine for wide business tables.</p>
           <p className="text-xs text-[var(--color-muted)]">

@@ -111,6 +111,8 @@ export default function WallOfLove() {
                 // crawler legacy) — only in-DOM uses got the WebP swap.
                 src="/og-image.webp"
                 alt=""
+                width={1600}
+                height={897}
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 style={{ minHeight: '160px', maxHeight: '220px' }}
                 loading="lazy"

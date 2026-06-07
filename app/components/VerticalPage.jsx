@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import PageHero from './PageHero';
 import Section from './ui/Section';
 import Button from './ui/Button';
@@ -46,11 +47,15 @@ export default function VerticalPage({
       {productImage && (
         <Section id="product-visual" bg="bg-hero" className="py-8 sm:py-12">
           <div className="mx-auto max-w-4xl">
-            <img
+            {/* next/image so the product shot is transcoded to AVIF/WebP and
+                carries intrinsic dimensions (no CLS) — was a raw 335KB PNG. */}
+            <Image
               src={productImage}
               alt="Excel spreadsheet transformed into a clean, structured PDF by fitforpdf"
-              className="w-full rounded-2xl border border-[var(--color-border)] shadow-lg"
-              loading="lazy"
+              width={1360}
+              height={680}
+              sizes="(max-width: 896px) 100vw, 896px"
+              className="h-auto w-full rounded-2xl border border-[var(--color-border)] shadow-lg"
             />
           </div>
         </Section>

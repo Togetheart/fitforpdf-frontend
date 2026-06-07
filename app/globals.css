@@ -662,7 +662,10 @@
   .feedback-bar-enter,
   .feedback-bar-exit,
   .apple-grid-bg::before,
-  .apple-grid-bg::after {
+  .apple-grid-bg::after,
+  /* hero background converging lines (applied inline as animate-[heroDrift…]
+     on the SVG) — the only motion that was slipping past this guard. */
+  [data-hero-bg-lines] svg {
     animation: none;
   }
 

@@ -63,6 +63,8 @@ export default function SiteHeader() {
             <img
               src="/fitforpdf@2x.webp"
               alt="fitforpdf"
+              width={2990}
+              height={790}
               className={cn(
                 'w-auto object-contain transition-all duration-300 translate-y-[2px] dark-invert',
                 scrolled ? 'h-6' : 'h-7',
