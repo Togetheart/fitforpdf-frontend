@@ -15,6 +15,25 @@ const nextConfig = {
     return config;
   },
 
+  // Security (F-5): baseline security response headers on every route. A strict
+  // Content-Security-Policy is intentionally NOT set here — it needs an inline-
+  // script/style inventory first (PostHog, theme-init) to avoid breakage, and is
+  // tracked as a follow-up. These headers are safe to ship as-is.
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+    ];
+  },
+
   // Reverse proxy for PostHog — bypasses ad-blockers
   async rewrites() {
     return [

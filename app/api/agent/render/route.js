@@ -1,4 +1,6 @@
 import { getNeatExportApiKey } from '../../../lib/backendKeys.js';
+import dns from 'node:dns/promises';
+import net from 'node:net';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,6 +27,57 @@ function filenameFromUrl(url) {
   } catch {
     return 'input.csv';
   }
+}
+
+function ipIsBlocked(ip) {
+  const v4 = ip.startsWith('::ffff:') ? ip.slice(7) : ip;
+  if (net.isIPv4(v4)) {
+    const [a, b] = v4.split('.').map(Number);
+    if (a === 0 || a === 10 || a === 127) return true;
+    if (a === 169 && b === 254) return true;        // link-local / cloud metadata
+    if (a === 172 && b >= 16 && b <= 31) return true; // 172.16/12
+    if (a === 192 && b === 168) return true;         // 192.168/16
+    if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT 100.64/10
+    return false;
+  }
+  const low = String(ip).toLowerCase();
+  if (low === '::1' || low === '::' || low === '0:0:0:0:0:0:0:1') return true;
+  if (low.startsWith('fe80') || low.startsWith('fc') || low.startsWith('fd')) return true;
+  return false;
+}
+
+// Security (M-2): only allow HTTPS URLs whose host resolves exclusively to
+// PUBLIC IPs. Blocks SSRF to loopback / link-local / cloud-metadata / RFC1918
+// targets. Throws an Error with .code = 'file_url_invalid' | 'file_url_blocked'.
+async function assertPublicHttpsUrl(rawUrl) {
+  let u;
+  try {
+    u = new URL(rawUrl);
+  } catch {
+    const e = new Error('invalid'); e.code = 'file_url_invalid'; throw e;
+  }
+  if (u.protocol !== 'https:') {
+    const e = new Error('invalid'); e.code = 'file_url_invalid'; throw e;
+  }
+  const host = u.hostname.replace(/^\[|\]$/g, '').toLowerCase();
+  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.internal')) {
+    const e = new Error('blocked'); e.code = 'file_url_blocked'; throw e;
+  }
+  let addresses;
+  if (net.isIP(host)) {
+    addresses = [host];
+  } else {
+    try {
+      const recs = await dns.lookup(host, { all: true });
+      addresses = recs.map((r) => r.address);
+    } catch {
+      const e = new Error('blocked'); e.code = 'file_url_blocked'; throw e;
+    }
+  }
+  if (!addresses.length || addresses.some(ipIsBlocked)) {
+    const e = new Error('blocked'); e.code = 'file_url_blocked'; throw e;
+  }
+  return u;
 }
 
 function parseNumberHeader(res, names) {
@@ -87,14 +140,30 @@ export async function POST(req) {
   const truncateLongText = Boolean(payload.truncate_long_text);
   const locale = payload.locale === 'fr' ? 'fr' : 'en';
 
-  /* ── 1. download file ──────────────────────────────────── */
+  /* ── 1. download file (SSRF-guarded; redirects followed manually and
+   *      re-validated each hop so an https URL can't 30x into an internal host) */
   let downloaded;
+  let currentUrl = fileUrl;
   try {
-    downloaded = await fetch(fileUrl, {
-      signal: AbortSignal.timeout(20000),
-      redirect: 'follow',
-    });
+    for (let hop = 0; hop < 4; hop += 1) {
+      await assertPublicHttpsUrl(currentUrl);
+      downloaded = await fetch(currentUrl, {
+        signal: AbortSignal.timeout(20000),
+        redirect: 'manual',
+      });
+      if (downloaded.status >= 300 && downloaded.status < 400) {
+        const location = downloaded.headers.get('location');
+        if (!location) break;
+        if (hop === 3) { const e = new Error('too_many_redirects'); e.code = 'file_url_blocked'; throw e; }
+        currentUrl = new URL(location, currentUrl).toString();
+        continue;
+      }
+      break;
+    }
   } catch (err) {
+    if (err && (err.code === 'file_url_invalid' || err.code === 'file_url_blocked')) {
+      return jsonError(400, err.code);
+    }
     return jsonError(502, 'file_download_failed', {
       message: err instanceof Error ? err.message : 'unknown',
     });

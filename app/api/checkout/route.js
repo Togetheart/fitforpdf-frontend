@@ -54,6 +54,25 @@ function normalizeCheckoutUrl(raw) {
   return `${normalized}/api/checkout`;
 }
 
+const ALLOWED_REDIRECT_HOSTS = new Set(['www.fitforpdf.com', 'fitforpdf.com']);
+
+// Security (F-3): only accept client-supplied Stripe redirect URLs that point at
+// our own domains; otherwise fall back to the server default. Stops an attacker
+// from minting a branded Stripe session that redirects victims to a phishing
+// page after a real payment.
+function safeRedirectUrl(raw, fallback) {
+  if (!raw || typeof raw !== 'string') return fallback;
+  try {
+    const u = new URL(raw);
+    if (u.protocol === 'https:' && ALLOWED_REDIRECT_HOSTS.has(u.hostname)) {
+      return u.toString();
+    }
+  } catch {
+    // fall through to fallback
+  }
+  return fallback;
+}
+
 function getIdempotencyKey(req, payload) {
   const header = req?.headers?.get?.('x-idempotency-key') || req?.headers?.get?.('idempotency-key');
   return (
@@ -90,8 +109,8 @@ export async function POST(req) {
 
   let checkoutResponse;
   try {
-    const successUrl = payload?.success_url || SUCCESS_URL;
-    const cancelUrl = payload?.cancel_url || CANCEL_URL;
+    const successUrl = safeRedirectUrl(payload?.success_url, SUCCESS_URL);
+    const cancelUrl = safeRedirectUrl(payload?.cancel_url, CANCEL_URL);
     const idempotencyKey = getIdempotencyKey(req, payload);
     checkoutResponse = await fetch(backendCheckoutUrl, {
       method: 'POST',
