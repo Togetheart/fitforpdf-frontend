@@ -4,6 +4,22 @@ import { randomUUID } from 'node:crypto';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+const ALLOWED_REDIRECT_HOSTS = new Set(['www.fitforpdf.com', 'fitforpdf.com']);
+// Security (F-3): only honor client-supplied Stripe redirect URLs on our own
+// domains; otherwise fall back to the server default (open-redirect / phishing).
+function safeRedirectUrl(raw, fallback) {
+  if (!raw || typeof raw !== 'string') return fallback;
+  try {
+    const u = new URL(raw);
+    if (u.protocol === 'https:' && ALLOWED_REDIRECT_HOSTS.has(u.hostname)) {
+      return u.toString();
+    }
+  } catch {
+    // fall through to fallback
+  }
+  return fallback;
+}
+
 function jsonResponse(status, body, headers = {}) {
   return new Response(JSON.stringify(body), {
     status,
@@ -87,8 +103,8 @@ export async function POST(req) {
 
   let upstreamResponse;
   try {
-    const successUrl = payload?.success_url || 'https://www.fitforpdf.com/success';
-    const cancelUrl = payload?.cancel_url || 'https://www.fitforpdf.com/';
+    const successUrl = safeRedirectUrl(payload?.success_url, 'https://www.fitforpdf.com/success');
+    const cancelUrl = safeRedirectUrl(payload?.cancel_url, 'https://www.fitforpdf.com/');
     const idempotencyKey = getIdempotencyKey(req, payload);
     upstreamResponse = await fetch(checkoutUrl, {
       method: 'POST',

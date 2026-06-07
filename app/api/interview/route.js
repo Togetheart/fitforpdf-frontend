@@ -29,6 +29,36 @@ function jsonResponse(status, body) {
   });
 }
 
+// Security (E-3): best-effort in-memory per-IP rate limit before the (paid)
+// Anthropic call. NOTE: on Vercel serverless this is per-instance, not global —
+// it throttles bursts on a warm instance but is NOT a complete control. A
+// durable limiter (Vercel KV / Upstash) + Cloudflare Turnstile on the interview
+// page are the recommended production hardening (tracked as follow-up).
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX = 12;
+const ALLOWED_ROLES = new Set(['user', 'assistant']);
+const MAX_CONTENT_LEN = 4000;
+const rateBuckets = new Map();
+
+function clientIp(request) {
+  const xff = request.headers.get('x-forwarded-for') || '';
+  return xff.split(',')[0].trim() || request.headers.get('x-real-ip') || 'unknown';
+}
+
+function rateLimited(ip) {
+  const now = Date.now();
+  const key = ip || 'unknown';
+  const hits = (rateBuckets.get(key) || []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  hits.push(now);
+  rateBuckets.set(key, hits);
+  if (rateBuckets.size > 5000) {
+    for (const [k, v] of rateBuckets) {
+      if (!v.some((t) => now - t < RATE_LIMIT_WINDOW_MS)) rateBuckets.delete(k);
+    }
+  }
+  return hits.length > RATE_LIMIT_MAX;
+}
+
 export async function POST(request) {
   const apiKey = process.env.INTERVIEW_FIT || process.env.interview_fit;
   if (!apiKey) {
@@ -50,6 +80,23 @@ export async function POST(request) {
   // Limit conversation length to prevent abuse
   if (messages.length > 30) {
     return jsonResponse(400, { error: 'Conversation too long' });
+  }
+
+  // Security (E-3): throttle + strictly validate each message before the paid
+  // Anthropic call so the endpoint can't be looped as a free LLM proxy.
+  if (rateLimited(clientIp(request))) {
+    return jsonResponse(429, { error: 'Too many requests' });
+  }
+  for (const m of messages) {
+    if (
+      !m || typeof m !== 'object'
+      || !ALLOWED_ROLES.has(m.role)
+      || typeof m.content !== 'string'
+      || m.content.length === 0
+      || m.content.length > MAX_CONTENT_LEN
+    ) {
+      return jsonResponse(400, { error: 'Invalid message' });
+    }
   }
 
   try {
