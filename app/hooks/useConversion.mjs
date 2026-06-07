@@ -496,6 +496,9 @@ export default function useConversion({ quota }) {
       flowIdOverride = null,
       skipProgress = false,
       sourceFile = null,
+      // Render-time override for "condense long text". Lets the page-burden retry
+      // condense THIS render without waiting on the async setTruncateLongText state.
+      truncateLongTextOverride = null,
     } = opts;
 
     if (!allowInFlight && renderInFlightRef.current) return;
@@ -562,7 +565,8 @@ export default function useConversion({ quota }) {
         }
       }
 
-      const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText, columnMap }), {
+      const effectiveTruncateLongText = truncateLongTextOverride === null ? truncateLongText : truncateLongTextOverride;
+      const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText: effectiveTruncateLongText, columnMap }), {
         method: 'POST',
         body: formData,
         headers: {
@@ -843,6 +847,21 @@ export default function useConversion({ quota }) {
     if (lastRequestMode === 'compact' && verdict === 'FAIL') return;
     if (!(await refreshQuotaAndBlockIfNeeded())) return;
     await submitRender('compact', { flowIdOverride: flowId || createFlowId() });
+  }
+
+  // Page-burden recovery: re-render the SAME file with long text condensed (each
+  // long cell capped to a few lines), which lowers the projected page count below
+  // the cap. Persists the toggle so the choice sticks, and passes an explicit
+  // override so THIS render condenses immediately (state setters are async). Only
+  // succeeds against a backend that honors truncateLongText at the page-burden gate.
+  async function handleCondenseAndRetry() {
+    if (isLoading || !file) return;
+    setTruncateLongText(true);
+    if (!(await refreshQuotaAndBlockIfNeeded())) return;
+    await submitRender('normal', {
+      truncateLongTextOverride: true,
+      flowIdOverride: flowId || createFlowId(),
+    });
   }
 
   function handleDownloadAnyway() {
@@ -1129,6 +1148,7 @@ export default function useConversion({ quota }) {
     handleSwitchToRealUpload,
     handleGenerateOptimized,
     handleGenerateCompact,
+    handleCondenseAndRetry,
     handleDownloadAnyway,
     handleRenderAnother,
     handlePostRenderPricingClick,

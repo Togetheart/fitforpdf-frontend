@@ -987,6 +987,27 @@ function WorkbenchDropzone({ conversion, quota }) {
                     ))}
                   </ul>
                 ) : null}
+                {/* One-click recovery: condense long text (cap tall cells to a few
+                    lines) and re-render the same file, which drops the projected
+                    page count under the cap. Hidden once already condensed. */}
+                {!conversion.truncateLongText ? (
+                  <button
+                    type="button"
+                    data-testid="generate-condense-retry"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      if (!conversion.isLoading) void conversion.handleCondenseAndRetry?.();
+                    }}
+                    disabled={conversion.isLoading}
+                    className="mt-3 inline-flex min-h-10 items-center gap-1.5 rounded-[10px] bg-blue-600 px-4 text-[13px] font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {conversion.isLoading ? 'Condensing…' : 'Condense long text & retry'}
+                  </button>
+                ) : (
+                  <p className="mt-3 text-[12.5px] text-rose-700/90">
+                    Long text is already condensed and this export is still too large — try splitting the file or removing very long columns.
+                  </p>
+                )}
               </>
             ) : (
               <p className="text-[13.5px] font-medium text-rose-700">{conversion.error}</p>
