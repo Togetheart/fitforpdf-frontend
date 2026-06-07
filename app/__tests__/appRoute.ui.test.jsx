@@ -75,9 +75,12 @@ describe('/app tool-first workbench shell', () => {
 
   test('matches the finalized app chrome structure', () => {
     render(<AppPage />);
-    expect(screen.getByText('FitForPDF')).toBeTruthy();
-    expect(screen.getByTestId('app-crumb').textContent).toMatch(/new export/i);
-    expect(screen.getByTestId('app-quota').textContent).toMatch(/free/i);
+    const toolbar = screen.getByTestId('app-toolbar');
+    // Brand is now the centered pictogram (the wordmark stays on the marketing
+    // header); the empty "New export" breadcrumb is dropped at the empty state.
+    expect(within(toolbar).getByRole('img', { name: /fitforpdf/i })).toBeTruthy();
+    expect(screen.queryByTestId('app-crumb')).toBeNull();
+    expect(screen.getByTestId('plan-badge').textContent).toMatch(/free/i);
     expect(screen.getByRole('link', { name: /se connecter/i }).getAttribute('href')).toBe('/login');
   });
 
@@ -98,7 +101,7 @@ describe('/app tool-first workbench shell', () => {
     render(<AppPage />);
 
     await waitFor(() => {
-      expect(screen.getByTestId('app-quota').textContent).toMatch(/Admin\s*-\s*unlimited/i);
+      expect(screen.getByTestId('plan-badge').textContent).toMatch(/Admin\s*[·-]\s*unlimited/i);
     });
 
     mock.restore();
@@ -251,7 +254,7 @@ describe('/app tool-first workbench shell', () => {
 
     render(<AppPage />);
     await waitFor(() => {
-      expect(screen.getByTestId('app-quota').textContent).toMatch(/Free - 0 left/i);
+      expect(screen.getByTestId('plan-badge').textContent).toMatch(/Free\s*[·-]\s*0\s*exports?/i);
     });
 
     fireEvent.change(screen.getByTestId('generate-file-input'), {

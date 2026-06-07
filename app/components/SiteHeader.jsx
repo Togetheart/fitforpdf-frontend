@@ -7,9 +7,18 @@ import Button from './ui/Button';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
 import AccountMenu from './AccountMenu';
+import PlanBadge from './ui/PlanBadge';
 import useSession from '../hooks/useSession.mjs';
+import useQuota from '../hooks/useQuota.mjs';
 
 const SCROLL_THRESHOLD = 16;
+
+// Mounted only when logged in, so the /api/quota fetch never fires for anonymous
+// marketing visitors. Surfaces the same plan/credits chip as the app toolbar.
+function LandingPlanBadge({ className }) {
+  const quota = useQuota();
+  return <PlanBadge quota={quota} className={className} />;
+}
 
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -82,7 +91,10 @@ export default function SiteHeader() {
               Contact
             </a>
             {account ? (
-              <AccountMenu account={account} onLogout={logout} />
+              <>
+                <LandingPlanBadge />
+                <AccountMenu account={account} onLogout={logout} />
+              </>
             ) : (
               <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/login">
                 Se connecter
