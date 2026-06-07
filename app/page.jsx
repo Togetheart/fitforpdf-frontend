@@ -20,7 +20,6 @@ import { JsonLd } from './components/JsonLd';
 import Image from 'next/image';
 
 import StickyMobileCTA from './components/StickyMobileCTA';
-import LeadCaptureModal from './components/LeadCaptureModal';
 import { scrollToTarget } from './lib/scrollToTarget.mjs';
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
@@ -378,11 +377,10 @@ export default function Page() {
           </div>{/* close apple-grid-bg dark card */}
         </div>{/* close max-w-[1040px] outer */}
       </section>
-      <LeadCaptureModal
-        trigger={Boolean(conversion.pdfBlob) && !conversion.wasDemoLastUpload}
-        renderId={conversion.renderId}
-        source="render_success"
-      />
+      {/* Lead-capture modal removed (2026-06-07): over 90 days it was shown 9× and
+          captured 0 emails (backend was a stub), while interrupting the high-intent
+          moment right after a successful render. Re-introduce later as a non-blocking
+          ask (e.g. an inline field at download) if retention work resumes. */}
 
       {/* Comparison table — explains the replacement before asking for money. */}
       <Section id="comparison" index={4} bg="bg-hero">
