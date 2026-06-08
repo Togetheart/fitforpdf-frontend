@@ -125,7 +125,9 @@ describe('/app tool-first workbench shell', () => {
     // No file yet → the zero-friction sample leads on mobile (its order-1 wrapper);
     // the upload card is order-2. Desktop stays upload-first via xl:order-* (CSS-only).
     expect(within(canvas).getByText('Try a sample').closest('.order-1')).toBeTruthy();
-    expect(within(canvas).getByText(/id,name,region,plan,mrr/i)).toBeTruthy();
+    // The sample preview is the actual rendered first page of the demo PDF (collapsed
+    // by default; jsdom ignores `hidden` so the image is still queryable).
+    expect(within(canvas).getByAltText(/finished sample PDF/i)).toBeTruthy();
     // The demo-only "First screen / After render" mode switch was removed: it
     // had no onClick (dead control). State is driven by the render, not a toggle.
     expect(within(canvas).queryByRole('button', { name: /First screen/i })).toBeNull();
