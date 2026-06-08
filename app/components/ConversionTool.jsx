@@ -248,6 +248,21 @@ function sectionNameProps(sectionDraft, i) {
  * preserved. Moving a column calls conversion.reassignSectionColumn(col, target)
  * where target is 'fixed', a section index, or the next index (new section).
  */
+// Animated "label + three pulsing dots" for in-progress buttons — a calm wait
+// affordance. The dots honor prefers-reduced-motion (see globals.css).
+function LoadingDots({ label }) {
+  return (
+    <span className="inline-flex items-center" aria-live="polite">
+      {label}
+      <span aria-hidden="true" className="ml-1.5 inline-flex items-end gap-[3px]">
+        <span className="ffp-loading-dot" />
+        <span className="ffp-loading-dot" />
+        <span className="ffp-loading-dot" />
+      </span>
+    </span>
+  );
+}
+
 function CustomGroupsControl({ conversion }) {
   const sectionDraft = Array.isArray(conversion.sectionDraft) ? conversion.sectionDraft : [];
   const frozenDraft = Array.isArray(conversion.frozenDraft) ? conversion.frozenDraft : [];
@@ -294,8 +309,10 @@ function CustomGroupsControl({ conversion }) {
       {allColumns.map((col) => {
         const np = nameProps(col);
         return (
-        <div key={col} className="flex items-center gap-2">
-          <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-[12.5px] text-[var(--color-text)]">
+        <div key={col} className="flex flex-col gap-1">
+          {/* Label sits ABOVE its dropdown so it's never truncated/hidden when
+              the panel is narrow (the select used to eat the row width). */}
+          <span className="flex items-center gap-1.5 text-[12.5px] text-[var(--color-text)]">
             <span className={np.className} style={np.style}>{col}</span>
             {frozenSet.has(col) ? (
               <span className="shrink-0 rounded bg-[var(--color-surface-sunken)] px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-[var(--color-text-subtle)]">
@@ -310,7 +327,7 @@ function CustomGroupsControl({ conversion }) {
               const v = e.target.value;
               conversion.reassignSectionColumn(col, v === FIXED_TARGET ? FIXED_TARGET : Number(v));
             }}
-            className="min-h-11 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)] lg:min-h-8"
+            className="min-h-11 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)] lg:min-h-9"
           >
             {options.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -1106,7 +1123,7 @@ function WorkbenchDropzone({ conversion, quota }) {
                 disabled={conversion.isLoading || isQuotaLocked}
                 className="min-h-11 rounded-[10px] bg-[var(--color-cta-bg)] px-7 text-sm font-bold text-white transition hover:bg-[var(--color-cta-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {conversion.isLoading ? 'Generating...' : 'Generate PDF'}
+                {conversion.isLoading ? <LoadingDots label="Generating" /> : 'Generate PDF'}
               </button>
               <button
                 type="button"
@@ -1172,7 +1189,7 @@ function WorkbenchDropzone({ conversion, quota }) {
                     disabled={conversion.isLoading}
                     className="mt-3 inline-flex min-h-10 items-center gap-1.5 rounded-[10px] bg-[var(--color-cta-bg)] px-4 text-[13px] font-bold text-white transition hover:bg-[var(--color-cta-hover)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {conversion.isLoading ? 'Condensing…' : 'Condense long text & retry'}
+                    {conversion.isLoading ? <LoadingDots label="Condensing" /> : 'Condense long text & retry'}
                   </button>
                 ) : (
                   <p className="mt-3 text-[12.5px] text-[var(--color-danger-text)]">
@@ -1320,7 +1337,7 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
             disabled={conversion.isLoading}
             className="mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-[8px] border border-[var(--color-info-border)] bg-[var(--color-surface)] px-3 text-[12.5px] font-semibold text-[var(--color-info-text)] transition hover:bg-[var(--color-info-bg)] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {conversion.isLoading ? 'Condensing…' : 'Condense and update preview'}
+            {conversion.isLoading ? <LoadingDots label="Condensing" /> : 'Condense and update preview'}
           </button>
         </div>
       ) : null}
@@ -1612,13 +1629,12 @@ function MobilePdfPreview({ pdfBlob, previewUrl, filename }) {
 const LEFT_DRAWER_ID = 'app-drawer-left';
 const RIGHT_DRAWER_ID = 'app-drawer-right';
 
-function AppToolbar({ conversion, quota, session, openDrawer = null, setOpenDrawer }) {
+function AppToolbar({ conversion, quota, session }) {
   // The breadcrumb only earns its place once there's a document to name. At the
   // empty "New export" state it was pure noise next to the brand, so we drop it
   // and let the centered mark stand alone (per design harmonization).
   const crumb = conversion.file?.name
     || (conversion.pdfBlob ? conversion.resolvedPdfFilename : null);
-  const setDrawer = typeof setOpenDrawer === 'function' ? setOpenDrawer : () => {};
 
   const railPillClass =
     'inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 ' +
@@ -1659,35 +1675,9 @@ function AppToolbar({ conversion, quota, session, openDrawer = null, setOpenDraw
         <AnimatedLogo className="h-7 w-7" />
       </a>
 
-      {/* Right zone: drawer toggles (mobile) · API · plan · theme · account. */}
+      {/* Right zone: API · plan · theme · account. (Mobile panel toggles live
+          in their own row below the header — see WorkbenchMobileLayout.) */}
       <div className="flex items-center gap-3 justify-self-end">
-        {/* Mobile-only drawer toggles. Each opens its off-canvas drawer (one at a
-            time): "Recent" -> left rail, "Options" -> right inspector. Hidden on
-            desktop (lg) where the resizable PanelGroup is used instead. */}
-        <button
-          type="button"
-          data-testid="app-drawer-toggle-left"
-          aria-label="Open recent exports panel"
-          aria-expanded={openDrawer === 'left'}
-          aria-controls={LEFT_DRAWER_ID}
-          onClick={() => setDrawer(openDrawer === 'left' ? null : 'left')}
-          className={railPillClass + ' lg:hidden'}
-        >
-          <PanelLeft className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="hidden sm:inline">Recent</span>
-        </button>
-        <button
-          type="button"
-          data-testid="app-drawer-toggle-right"
-          aria-label="Open options panel"
-          aria-expanded={openDrawer === 'right'}
-          aria-controls={RIGHT_DRAWER_ID}
-          onClick={() => setDrawer(openDrawer === 'right' ? null : 'right')}
-          className={railPillClass + ' lg:hidden'}
-        >
-          <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="hidden sm:inline">Options</span>
-        </button>
         {/* API entry — same wording + "Free" signal as the marketing header. */}
         <a href="/developers" className={'hidden sm:inline-flex ' + railPillClass}>
           <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -1970,6 +1960,36 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
 
   return (
     <div data-testid="tool" className="relative min-h-[calc(100vh-57px)] overflow-x-hidden">
+      {/* Panel toggles — moved out of the header into their own row so the header
+          stays uncluttered on mobile. "Recent" opens the left rail drawer,
+          "Options" the right inspector drawer. (Mobile layout only — desktop uses
+          the resizable PanelGroup.) */}
+      <div className="flex items-center gap-2 border-b border-[var(--color-line)] bg-[var(--color-bg-hero)] px-4 py-2">
+        <button
+          type="button"
+          data-testid="app-drawer-toggle-left"
+          aria-label="Open recent exports panel"
+          aria-expanded={openDrawer === 'left'}
+          aria-controls={LEFT_DRAWER_ID}
+          onClick={() => setOpenDrawer(openDrawer === 'left' ? null : 'left')}
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
+        >
+          <PanelLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          Recent
+        </button>
+        <button
+          type="button"
+          data-testid="app-drawer-toggle-right"
+          aria-label="Open options panel"
+          aria-expanded={openDrawer === 'right'}
+          aria-controls={RIGHT_DRAWER_ID}
+          onClick={() => setOpenDrawer(openDrawer === 'right' ? null : 'right')}
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+          Options
+        </button>
+      </div>
       <WorkbenchWorkspace conversion={conversion} quota={quota} className="w-full" />
 
       {/* Scrim: only present while a drawer is open. Clicking it closes. */}
@@ -2060,8 +2080,6 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
           conversion={conversion}
           quota={quota}
           session={session}
-          openDrawer={openDrawer}
-          setOpenDrawer={setOpenDrawer}
         />
         {isDesktop ? (
           // Desktop (>= lg): resizable / collapsible PanelGroup. data-testid="tool"
