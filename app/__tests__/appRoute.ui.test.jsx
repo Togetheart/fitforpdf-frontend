@@ -80,7 +80,8 @@ describe('/app tool-first workbench shell', () => {
     // header); the empty "New export" breadcrumb is dropped at the empty state.
     expect(within(toolbar).getByRole('img', { name: /fitforpdf/i })).toBeTruthy();
     expect(screen.queryByTestId('app-crumb')).toBeNull();
-    expect(screen.getByTestId('plan-badge').textContent).toMatch(/free/i);
+    // Plan/credits + API now live inside the account menu (anonymous → no menu);
+    // the header chrome is just picto · theme · the "Se connecter" entry.
     expect(screen.getByRole('link', { name: /se connecter/i }).getAttribute('href')).toBe('/login');
   });
 
@@ -101,7 +102,9 @@ describe('/app tool-first workbench shell', () => {
     render(<AppPage />);
 
     await waitFor(() => {
-      expect(screen.getByTestId('plan-badge').textContent).toMatch(/Admin\s*[·-]\s*unlimited/i);
+      // Plan/credits moved into the account menu; the inspector footer is the
+      // always-visible quota readout.
+      expect(screen.getByText(/Admin\s*-\s*unlimited/i)).toBeTruthy();
     });
 
     mock.restore();
@@ -340,7 +343,9 @@ describe('/app tool-first workbench shell', () => {
 
     render(<AppPage />);
     await waitFor(() => {
-      expect(screen.getByTestId('plan-badge').textContent).toMatch(/Free\s*[·-]\s*0\s*exports?/i);
+      // Free quota exhausted → the inspector surfaces the lock (the plan/credits
+      // badge now lives in the account menu, not the header).
+      expect(screen.getByTestId('app-inspector-quota-lock')).toBeTruthy();
     });
 
     fireEvent.change(screen.getByTestId('generate-file-input'), {

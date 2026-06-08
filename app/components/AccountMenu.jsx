@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { Code2 } from 'lucide-react';
+import PlanBadge from './ui/PlanBadge';
 
 function initials(email) {
   const local = String(email || '?').split('@')[0];
   return local.slice(0, 2).toUpperCase();
 }
 
-export default function AccountMenu({ account, onLogout }) {
+export default function AccountMenu({ account, onLogout, quota = null }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -46,9 +48,30 @@ export default function AccountMenu({ account, onLogout }) {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface-raised)] p-2 shadow-lg"
+          className="absolute right-0 z-50 mt-2 w-60 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface-raised)] p-2 shadow-lg"
         >
           <div className="truncate px-3 py-2 text-[13px] text-[var(--color-muted)]">{account.email}</div>
+          {quota ? (
+            <>
+              {/* Plan / credits + API — moved here from the toolbar so the bar
+                  stays uncluttered and these stay reachable on mobile. */}
+              <div className="px-3 py-1">
+                <PlanBadge quota={quota} />
+              </div>
+              <a
+                href="/developers"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-surface-sunken)]"
+              >
+                <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
+                API
+                <span className="ml-auto rounded-full border border-[var(--color-success-border)] bg-[var(--color-success-bg)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-success-text)]">
+                  Free
+                </span>
+              </a>
+              <div className="my-1 border-t border-[var(--color-line)]" aria-hidden="true" />
+            </>
+          ) : null}
           <a
             href="/account"
             onClick={() => setOpen(false)}
