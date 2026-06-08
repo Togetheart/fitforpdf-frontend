@@ -49,14 +49,21 @@ const WORKBENCH_CREDIT_PACKS = PAYG_PACKS.filter((pack) => pack.id !== 'single')
 
 // One labelled block in the inspector. The old per-section "Live"/"Soon" status
 // pills were dropped — when every control is live, the badge is pure noise.
-function InspectorSection({ title, hint, children }) {
+function InspectorSection({ title, hint, children, badge = null, locked = false }) {
   return (
     <section className="border-b border-[var(--color-line)] pb-5">
-      <div className="mb-1.5 text-[var(--color-text)]">
+      <div className="mb-1.5 flex items-center gap-2 text-[var(--color-text)]">
         <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
+        {badge ? (
+          <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">{badge}</span>
+        ) : null}
       </div>
       {hint ? <p className="mb-3 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">{hint}</p> : null}
-      {children}
+      {/* Free plans: controls stay visible (discoverability) but a disabled
+          fieldset dims + blocks them — no silent no-op, and an upsell teaser. */}
+      {locked ? (
+        <fieldset disabled className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
+      ) : children}
     </section>
   );
 }
@@ -395,6 +402,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
       ? quota.freeExportsLimit
       : 3;
   const planLabel = isUnlimited ? 'Admin' : quota.planType === 'pro' ? 'Pro' : quota.planType === 'credits' ? 'Credits' : 'Free';
+  // Paid (advanced) plans can use the branding/logo + layout controls; free
+  // plans see them locked (an unknown/loading plan is treated as free).
+  const canUseAdvanced = isUnlimited || (quota.planType ? String(quota.planType).toLowerCase() !== 'free' : false);
+  const proLocked = !canUseAdvanced;
   const quotaLocked = Boolean(quota.isQuotaLocked);
   const quotaSummary = isUnlimited
     ? 'Admin - unlimited'
@@ -521,7 +532,15 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           />
         </InspectorSection>
 
-        <InspectorSection title="Branding" hint="Title, accent color, logo & footer for paid exports.">
+        {proLocked ? (
+          <div data-testid="app-pro-upsell" className="mb-4 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-3 py-2.5 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">
+            <span className="font-semibold text-[var(--color-text)]">Pro feature.</span>{' '}
+            <a href="/pricing" className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Upgrade</a>{' '}
+            to add your own logo, a custom footer, and control the page layout.
+          </div>
+        ) : null}
+
+        <InspectorSection title="Branding" hint="Your logo, accent color &amp; footer. White-label your PDF (no FitForPDF mark)." badge={proLocked ? 'Pro' : null} locked={proLocked}>
           <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Logo &amp; branding</span>
             <input
@@ -551,7 +570,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               <button type="button" onClick={() => conversion.setAccentColor('')} className="ml-auto text-[11.5px] font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]">Reset</button>
             ) : null}
           </div>
-          <div className="mb-2 text-[13px] font-semibold text-[var(--color-text)]">Logo</div>
+          <div className="mb-2 text-[13px] font-semibold text-[var(--color-text)]">Your logo</div>
           <div className="mb-3">
             <input
               type="file"
@@ -592,7 +611,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">Branding applies to paid exports.</p>
         </InspectorSection>
 
-        <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, or the page footer.">
+        <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, or the page footer." badge={proLocked ? 'Pro' : null} locked={proLocked}>
           <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Summary page</span>
             <input

@@ -254,6 +254,8 @@ describe('/app tool-first workbench shell', () => {
 
     render(<AppPage />);
     fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+    // Paid plan: once the plan loads there is no Pro upsell and controls are usable.
+    await waitFor(() => expect(screen.queryByTestId('app-pro-upsell')).toBeNull());
     // Drop the summary page + the repeated headers; leave the footer on.
     fireEvent.click(screen.getByTestId('app-layout-overview-toggle'));
     fireEvent.click(screen.getByTestId('app-layout-headers-toggle'));
@@ -268,6 +270,31 @@ describe('/app tool-first workbench shell', () => {
       expect(renderCall?.options.body.get('keep_headers')).toBe('0');
       expect(renderCall?.options.body.get('keep_footer')).toBe('1');
     });
+
+    fetchMock.restore();
+  });
+
+  test('free plan locks branding & layout behind a Pro upsell in the workbench', async () => {
+    const fetchMock = mockFetch(({ url }) => {
+      if (url.includes('/api/quota')) {
+        return new Response(JSON.stringify({ plan_type: 'free', free_exports_left: 3, free: { limit: 3, remaining: 3 } }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      if (url.includes('/api/render')) return createPdfResponse();
+      return new Response('', { status: 404 });
+    });
+
+    render(<AppPage />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('app-pro-upsell')).toBeTruthy();
+    });
+    // Branding + Layout controls stay visible but are wrapped in a disabled fieldset.
+    expect(screen.getByTestId('app-branding-toggle').closest('fieldset')?.hasAttribute('disabled')).toBe(true);
+    expect(screen.getByTestId('app-layout-overview-toggle').closest('fieldset')?.hasAttribute('disabled')).toBe(true);
 
     fetchMock.restore();
   });
