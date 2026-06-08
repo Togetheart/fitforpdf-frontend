@@ -403,12 +403,12 @@ export default function useConversion({ quota }) {
     if (!file) { setLogoError(''); setLogoFile(null); return; }
     const type = String(file.type || '').toLowerCase();
     if (type !== 'image/png' && type !== 'image/jpeg') {
-      setLogoError('Logo : format PNG ou JPG uniquement.');
+      setLogoError('Logo: PNG or JPG only.');
       return;
     }
     // Guard against decoding absurdly large inputs before we even try.
     if (Number.isFinite(file.size) && file.size > 10 * 1024 * 1024) {
-      setLogoError('Logo trop lourd : 10 Mo maximum.');
+      setLogoError('Logo too large: 10 MB max.');
       return;
     }
     let out = file;
@@ -420,7 +420,7 @@ export default function useConversion({ quota }) {
     }
     // If normalization didn't shrink it (fallback path), enforce the backend cap.
     if (Number.isFinite(out.size) && out.size > 256 * 1024) {
-      setLogoError('Logo trop lourd : 256 Ko maximum (essayez une image plus petite).');
+      setLogoError('Logo too large: 256 KB max (try a smaller image).');
       return;
     }
     setLogoError('');

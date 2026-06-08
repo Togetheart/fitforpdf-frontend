@@ -43,12 +43,12 @@ describe('ConversionInspector — branding + logo controls', () => {
   });
 
   test('renders the logo validation error when present', () => {
-    render(<ConversionInspector conversion={makeConversion({ logoError: 'Logo trop lourd : 256 Ko maximum.' })} quota={quota} />);
+    render(<ConversionInspector conversion={makeConversion({ logoError: 'Logo too large: 256 KB max.' })} quota={quota} />);
     openExportTab();
-    expect(screen.getByTestId('app-logo-error').textContent).toMatch(/256 Ko/);
+    expect(screen.getByTestId('app-logo-error').textContent).toMatch(/256 KB/);
   });
 
-  test('shows "Retirer le logo" when a logo is set and calls removeLogo', () => {
+  test('shows "Remove logo" when a logo is set and calls removeLogo', () => {
     const removeLogo = vi.fn();
     render(<ConversionInspector
       conversion={makeConversion({ logoFile: new File(['x'], 'logo.png', { type: 'image/png' }), removeLogo })}
@@ -59,7 +59,7 @@ describe('ConversionInspector — branding + logo controls', () => {
     expect(removeLogo).toHaveBeenCalled();
   });
 
-  test('no "Retirer le logo" button when no logo is selected', () => {
+  test('no "Remove logo" button when no logo is selected', () => {
     render(<ConversionInspector conversion={makeConversion({ logoFile: null })} quota={quota} />);
     openExportTab();
     expect(screen.queryByTestId('app-logo-remove')).toBeNull();

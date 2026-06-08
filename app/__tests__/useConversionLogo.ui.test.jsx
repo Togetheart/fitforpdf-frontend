@@ -34,14 +34,14 @@ describe('useConversion.handleLogoSelect — validation + fallback', () => {
   test('rejects a non PNG/JPG file', async () => {
     render(<Harness file={gif()} />);
     fireEvent.click(screen.getByText('select'));
-    await waitFor(() => expect(screen.getByTestId('logo-error').textContent).toMatch(/PNG ou JPG/i));
+    await waitFor(() => expect(screen.getByTestId('logo-error').textContent).toMatch(/PNG or JPG/i));
     expect(screen.getByTestId('logo-name').textContent).toBe('none');
   });
 
   test('rejects a > 256 KB logo when it cannot be normalized (fallback path)', async () => {
     render(<Harness file={bigPng()} />);
     fireEvent.click(screen.getByText('select'));
-    await waitFor(() => expect(screen.getByTestId('logo-error').textContent).toMatch(/256 Ko/i));
+    await waitFor(() => expect(screen.getByTestId('logo-error').textContent).toMatch(/256 KB/i));
     expect(screen.getByTestId('logo-name').textContent).toBe('none');
   });
 
