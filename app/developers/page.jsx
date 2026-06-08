@@ -26,13 +26,12 @@ const ENDPOINTS = [
     auth: true,
     summary: 'Check your quota',
     description:
-      'Returns your current plan, usage, and remaining exports. A new self-serve key starts with 25 free render credits — that\'s the "credits" block, and it\'s what counts down as you render. The "free" block is the separate free-plan allowance, not your trial.',
+      'Returns your current plan, usage, and remaining exports. A new self-serve key starts with 25 free render credits — the "credits" block, which counts down as you render.',
     example: `curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
   ${BASE_URL}/quota`,
     response: `{
   "plan": "credits",
   "credits": { "remaining": 25 },
-  "free": { "limit": 50, "used": 0, "remaining": 50 },
   "pro": { "monthlyCap": 500, "usedInPeriod": 0 }
 }`,
   },
@@ -414,7 +413,7 @@ export default function DevelopersPage() {
             </svg>
           </a>
           <p className="text-xs text-[var(--color-muted)]">
-            <span className="font-semibold text-[var(--color-text)]">50 free renders</span>{' '}
+            <span className="font-semibold text-[var(--color-text)]">25 free renders</span>{' '}
             to start. No credit card, no approval — your key is instant.
           </p>
         </div>
@@ -712,7 +711,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
           <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">X-RateLimit-Limit</code>,{' '}
           <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">X-RateLimit-Remaining</code>, and{' '}
           <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">Retry-After</code> (on 429).
-          Maximum 50 columns and 5,000 rows per request.
+          Maximum 150 columns and 5,000 rows per request.
         </p>
         <p className="mt-3 text-xs text-[var(--color-muted)]">
           Designed for business reporting exports.
@@ -789,7 +788,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
           Start free. Scale when it matters.
         </h2>
         <p className="mb-8 text-sm text-[var(--color-muted)]">
-          50 renders included. Then predictable pricing as you grow.
+          25 renders included. Then predictable pricing as you grow.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -800,7 +799,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
             <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-                50 renders
+                25 renders
               </li>
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
