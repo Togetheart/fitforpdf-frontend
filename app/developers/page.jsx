@@ -26,13 +26,12 @@ const ENDPOINTS = [
     auth: true,
     summary: 'Check your quota',
     description:
-      'Returns your current plan, usage, and remaining exports. A new self-serve key starts with 25 free render credits — that\'s the "credits" block, and it\'s what counts down as you render. The "free" block is the separate free-plan allowance, not your trial.',
+      'Returns your current plan, usage, and remaining exports. A new self-serve key starts with 25 free render credits — the "credits" block, which counts down as you render.',
     example: `curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
   ${BASE_URL}/quota`,
     response: `{
   "plan": "credits",
   "credits": { "remaining": 25 },
-  "free": { "limit": 50, "used": 0, "remaining": 50 },
   "pro": { "monthlyCap": 500, "usedInPeriod": 0 }
 }`,
   },
@@ -159,7 +158,7 @@ function EndpointCard({ endpoint }) {
 }
 
 function RequestAccessForm() {
-  const [form, setForm] = useState({ name: '', email: '', useCase: '' });
+  const [form, setForm] = useState({ name: '', email: '' });
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [errorMsg, setErrorMsg] = useState('');
   const [issuedKey, setIssuedKey] = useState(null);
@@ -265,7 +264,7 @@ function RequestAccessForm() {
         {/* Left — value props */}
         <div className="flex-1 px-6 py-8 md:px-10 md:py-12 bg-[var(--color-bg-hero)]">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
-            Early access
+            Free API key
           </p>
           <h2 className="mt-3 text-2xl font-bold leading-tight text-[var(--color-text)] sm:text-3xl">
             Get your API key
@@ -332,21 +331,6 @@ function RequestAccessForm() {
                 className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
-            <div>
-              <label htmlFor="ra-usecase" className="block text-xs font-semibold text-[var(--color-text)]">
-                What are you building? <span className="font-[400] text-[var(--color-muted)]">(optional)</span>
-              </label>
-              <textarea
-                id="ra-usecase"
-                name="useCase"
-                rows={2}
-                value={form.useCase}
-                onChange={handleChange}
-                placeholder="e.g. Auto-generating client reports from our CRM"
-                className="mt-1.5 w-full resize-none rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-              />
-            </div>
-
             {errorMsg && (
               <p className="rounded-xl bg-red-50 px-4 py-3 text-xs text-red-700">{errorMsg}</p>
             )}
@@ -356,11 +340,11 @@ function RequestAccessForm() {
               disabled={status === 'submitting'}
               className="w-full rounded-xl bg-cta px-6 py-3.5 text-sm font-semibold text-cta-text transition hover:bg-cta-hover active:scale-[0.98] disabled:opacity-50"
             >
-              {status === 'submitting' ? 'Submitting\u2026' : 'Request early access'}
+              {status === 'submitting' ? 'Generating your key\u2026' : 'Get my API key'}
             </button>
 
             <p className="text-center text-xs text-[var(--color-muted)]">
-              Most requests approved within a few hours.
+              Instant \u2014 your key appears here in seconds. No approval, no waiting.
             </p>
           </form>
         </div>
@@ -429,8 +413,8 @@ export default function DevelopersPage() {
             </svg>
           </a>
           <p className="text-xs text-[var(--color-muted)]">
-            <span className="font-semibold text-[var(--color-text)]">50 free renders</span>{' '}
-            to start. No credit card. Most requests approved within hours.
+            <span className="font-semibold text-[var(--color-text)]">25 free renders</span>{' '}
+            to start. No credit card, no approval — your key is instant.
           </p>
         </div>
       </div>
@@ -449,7 +433,7 @@ export default function DevelopersPage() {
           <span className="font-semibold text-[var(--color-text)]">structured PDF sections</span>
         </div>
         <a href="#request-access" className="mt-3 inline-block text-xs text-[var(--color-muted)] underline underline-offset-2 hover:text-[var(--color-text)]">
-          Request access →
+          Get your key →
         </a>
       </section>
 
@@ -648,9 +632,9 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
   ${BASE_URL}/quota`}</CodeBlock>
         <p className="mt-3 text-xs text-[var(--color-muted)]">
           <a href="#request-access" className="underline underline-offset-2 hover:text-[var(--color-text)]">
-            Request early access
+            Get your free API key
           </a>{' '}
-          to get your key.
+          — instant, no approval.
         </p>
       </section>
 
@@ -727,7 +711,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
           <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">X-RateLimit-Limit</code>,{' '}
           <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">X-RateLimit-Remaining</code>, and{' '}
           <code className="rounded bg-[var(--color-bg-hero)] px-1.5 py-0.5 text-sm">Retry-After</code> (on 429).
-          Maximum 50 columns and 5,000 rows per request.
+          Maximum 150 columns and 5,000 rows per request.
         </p>
         <p className="mt-3 text-xs text-[var(--color-muted)]">
           Designed for business reporting exports.
@@ -804,7 +788,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
           Start free. Scale when it matters.
         </h2>
         <p className="mb-8 text-sm text-[var(--color-muted)]">
-          50 renders included. Then predictable pricing as you grow.
+          25 renders included. Then predictable pricing as you grow.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -815,7 +799,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
             <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-                50 renders
+                25 renders
               </li>
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
