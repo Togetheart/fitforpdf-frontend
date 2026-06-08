@@ -1224,30 +1224,50 @@ function WorkbenchDropzone({ conversion, quota }) {
 }
 
 function WorkbenchSampleCard({ conversion }) {
+  // Collapsible (collapsed by default, like the inspector's Options sections) so it
+  // never buries the upload on mobile — the header sits above the dropzone and the
+  // preview only expands on demand.
+  const [open, setOpen] = React.useState(false);
+  const contentId = React.useId();
   return (
-    <aside className="flex flex-col rounded-[12px] border border-[var(--color-line)] bg-[var(--color-surface)] p-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.08)] xl:min-h-[356px]">
-      <h2 className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</h2>
-      <p className="mb-3 mt-1 text-xs leading-5 text-[var(--color-muted)]">Preview a finished PDF from this CSV — no upload needed.</p>
-      <div className="flex-1 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-3 font-mono text-[11px] leading-[1.8] text-[var(--color-muted)]">
-        <span className="text-[var(--color-text-subtle)]">id,name,region,plan,mrr...</span>
-        <br />
-        1,Northwind,EU,Pro,840
-        <br />
-        2,Acme,US,Team,1240
-        <br />
-        3,Globex,EU,Pro,520
-        <br />
-        4,Initech,APAC,Free,0
-      </div>
+    <aside className="rounded-[12px] border border-[var(--color-line)] bg-[var(--color-surface)] p-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
       <button
         type="button"
-        onClick={conversion.handleTrySample}
-        disabled={conversion.isLoading}
-        className="mt-3 inline-flex min-h-10 items-center gap-1.5 self-start text-[12.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 transition hover:decoration-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-50"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="flex w-full items-center justify-between gap-2 text-left"
       >
-        Render this sample
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        <span className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</span>
+        <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
+      <div id={contentId} hidden={!open} className="mt-3">
+        <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">See a finished PDF — the real output, no upload needed.</p>
+        {/* The actual first page of the sample render (enterprise-invoices-demo.csv
+            -> .pdf), not a mock — so the preview matches what "Render this sample"
+            produces. Shares the proof screenshot used on the marketing page. */}
+        <div className="overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)]">
+          <img
+            src="/CSV/proof/overview.webp"
+            srcSet="/CSV/proof/overview.webp 1x, /CSV/proof/overview@2x.webp 2x"
+            alt="First page of the finished sample PDF"
+            width={1440}
+            height={1019}
+            loading="lazy"
+            decoding="async"
+            className="block h-auto w-full"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={conversion.handleTrySample}
+          disabled={conversion.isLoading}
+          className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-[12.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 transition hover:decoration-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Render this sample
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
+      </div>
     </aside>
   );
 }
