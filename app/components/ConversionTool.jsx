@@ -8,6 +8,7 @@ import useConversion from '../hooks/useConversion.mjs';
 import useSession from '../hooks/useSession.mjs';
 import useIsDesktop from '../hooks/useIsDesktop.mjs';
 import UploadCard from './UploadCard';
+import { trackPaywallEvent } from '../lib/analytics.mjs';
 import AccountMenu from './AccountMenu';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
@@ -537,7 +538,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         {proLocked ? (
           <div data-testid="app-pro-upsell" className="mb-4 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-3 py-2.5 text-[11.5px] leading-5 text-[var(--color-muted)]">
             <span className="font-semibold text-[var(--color-text)]">Pro feature.</span>{' '}
-            <button type="button" onClick={() => conversion.handleGoProCheckout?.()} className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Upgrade</button>{' '}
+            <button type="button" onClick={() => { trackPaywallEvent('paywall_upgrade_clicked', { surface: 'workbench_inspector' }); conversion.handleGoProCheckout?.(); }} className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Upgrade</button>{' '}
             to add your own logo, accent color, a custom footer, and control the page layout.
           </div>
         ) : null}
@@ -831,6 +832,7 @@ export { WorkbenchRail };
 function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant }) {
   return (
     <UploadCard
+      surface="workbench"
       toolTitle={toolTitle}
       toolSubcopy={resolvedSubcopy}
       file={conversion.file}
