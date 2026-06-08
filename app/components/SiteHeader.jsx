@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Code2, Menu, X } from 'lucide-react';
 import { cn } from '../lib/cn.mjs';
 import Button from './ui/Button';
 import AnimatedLogo from './AnimatedLogo';
@@ -77,12 +77,15 @@ export default function SiteHeader() {
               /developers had the highest pages/visitor of the site (8.5) but
               was buried in the nav. Direct-API audience deserves discovery. */}
           <nav className="hidden sm:flex items-center gap-6 text-sm text-[var(--color-muted)]">
+            {/* API promoted as a bordered pill — identical to the app toolbar
+                (Code2 + "Free"), so the marketing + app headers read as one product. */}
             <a
-              className="group inline-flex items-center gap-1.5 transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1"
               href="/developers"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
             >
+              <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
               API
-              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+              <span className="ml-0.5 rounded-full border border-[var(--color-success-border)] bg-[var(--color-success-bg)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-success-text)]">
                 Free
               </span>
             </a>
@@ -92,17 +95,12 @@ export default function SiteHeader() {
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/contact">
               Contact
             </a>
-            {account ? (
-              <>
-                <LandingPlanBadge />
-                <AccountMenu account={account} onLogout={logout} />
-              </>
-            ) : (
-              <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/login">
-                Se connecter
-              </a>
-            )}
+            {/* Right cluster mirrors the app toolbar order: exports/plan · dark · avatar.
+                AccountMenu shows the SN avatar when logged in and a styled
+                "Se connecter" pill when logged out — one consistent control. */}
+            {account ? <LandingPlanBadge /> : null}
             <ThemeToggle />
+            <AccountMenu account={account} onLogout={logout} />
             <Button variant="primary" href={account ? '/app' : '/#generate'} className="px-4 text-xs h-9">
               {account ? "Ouvrir l'app" : 'Try free'}
             </Button>
