@@ -251,10 +251,15 @@ describe('quota-driven plan state and paywall flows', () => {
     const overviewSwitch = screen.getByRole('switch', { name: 'Keep overview' });
     expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
 
+    // Credits (paid) plans are white-label by DEFAULT — the branding switch
+    // starts OFF, so the user no longer has to uncheck it.
+    expect(brandingSwitch.getAttribute('aria-checked')).toBe('false');
+
     fireEvent.click(brandingSwitch);
     fireEvent.click(overviewSwitch);
 
-    expect(brandingSwitch.getAttribute('aria-checked')).toBe('false');
+    // Paid plans can freely toggle branding back on (no upgrade nudge).
+    expect(brandingSwitch.getAttribute('aria-checked')).toBe('true');
     expect(overviewSwitch.getAttribute('aria-checked')).toBe('false');
     expect(screen.queryByTestId('branding-upgrade-nudge')).toBeNull();
 
