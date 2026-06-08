@@ -213,6 +213,7 @@ describe('quota-driven plan state and paywall flows', () => {
       return createJsonResponse(500, { error: 'unexpected' });
     });
 
+    window.posthog = { capture: vi.fn() };
     render(<LandingPage />);
     await waitFor(() => {
       expect(screen.getByTestId('quota-pill')).toBeTruthy();
@@ -225,11 +226,15 @@ describe('quota-driven plan state and paywall flows', () => {
     expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Buy credits' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Go Pro' })).toBeTruthy();
+    // The paywall attempt is now actually captured in PostHog (previously a no-op).
+    expect(window.posthog.capture).toHaveBeenCalledWith('paywall_branding_attempt', { surface: 'landing' });
 
     const layoutTitle = within(screen.getByTestId('setting-row-overview')).getByText('Keep overview');
     fireEvent.click(layoutTitle);
     expect(screen.getByTestId('branding-upgrade-nudge')).toBeTruthy();
+    expect(window.posthog.capture).toHaveBeenCalledWith('paywall_layout_attempt', { surface: 'landing' });
 
+    delete window.posthog;
     mock.restore();
   });
 

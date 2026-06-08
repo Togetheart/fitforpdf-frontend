@@ -226,6 +226,7 @@ describe('/app tool-first workbench shell', () => {
     render(<AppPage />);
     // Footer text lives behind the inspector's "Export" tab (Phase 3).
     fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Branding$/i })); // expand collapsed section
     fireEvent.change(screen.getByLabelText(/Footer text/i), { target: { value: 'Prepared for ACME' } });
     fireEvent.change(screen.getByTestId('generate-file-input'), {
       target: { files: [new File(['a,b\n1,2'], 'customers.csv', { type: 'text/csv' })] },
@@ -254,9 +255,13 @@ describe('/app tool-first workbench shell', () => {
 
     render(<AppPage />);
     fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
-    // Drop the summary page + the repeated headers; leave the footer on.
+    // Paid plan: once the plan loads there is no Pro upsell and controls are usable.
+    await waitFor(() => expect(screen.queryByTestId('app-pro-upsell')).toBeNull());
+    fireEvent.click(screen.getByRole('button', { name: /^Layout$/i })); // expand collapsed section
+    // Drop the summary page, repeated headers, and the footer.
     fireEvent.click(screen.getByTestId('app-layout-overview-toggle'));
     fireEvent.click(screen.getByTestId('app-layout-headers-toggle'));
+    fireEvent.click(screen.getByTestId('app-layout-footer-toggle'));
     fireEvent.change(screen.getByTestId('generate-file-input'), {
       target: { files: [new File(['a,b\n1,2'], 'customers.csv', { type: 'text/csv' })] },
     });
@@ -266,8 +271,57 @@ describe('/app tool-first workbench shell', () => {
       const renderCall = fetchMock.calls.find((call) => call.url.includes('/api/render'));
       expect(renderCall?.options.body.get('keep_overview')).toBe('0');
       expect(renderCall?.options.body.get('keep_headers')).toBe('0');
-      expect(renderCall?.options.body.get('keep_footer')).toBe('1');
+      expect(renderCall?.options.body.get('keep_footer')).toBe('0');
     });
+
+    fetchMock.restore();
+  });
+
+  test('inspector Export sections are collapsed by default and expand on click', async () => {
+    const fetchMock = mockFetch(({ url }) => {
+      if (url.includes('/api/quota')) {
+        return new Response(JSON.stringify({ plan_type: 'credits', credits: { remaining: 5 } }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      if (url.includes('/api/render')) return createPdfResponse();
+      return new Response('', { status: 404 });
+    });
+
+    render(<AppPage />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+    await waitFor(() => expect(screen.queryByTestId('app-pro-upsell')).toBeNull()); // credits plan loaded
+
+    // Branding starts collapsed: its content (footer text) is out of the a11y tree.
+    expect(screen.queryByRole('textbox', { name: /Footer text/i })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /^Branding$/i }));
+    expect(screen.getByRole('textbox', { name: /Footer text/i })).toBeTruthy();
+
+    fetchMock.restore();
+  });
+
+  test('free plan locks branding & layout behind a Pro upsell in the workbench', async () => {
+    const fetchMock = mockFetch(({ url }) => {
+      if (url.includes('/api/quota')) {
+        return new Response(JSON.stringify({ plan_type: 'free', free_exports_left: 3, free: { limit: 3, remaining: 3 } }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      if (url.includes('/api/render')) return createPdfResponse();
+      return new Response('', { status: 404 });
+    });
+
+    render(<AppPage />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('app-pro-upsell')).toBeTruthy();
+    });
+    // Branding + Layout controls stay visible but are wrapped in a disabled fieldset.
+    expect(screen.getByTestId('app-branding-toggle').closest('fieldset')?.hasAttribute('disabled')).toBe(true);
+    expect(screen.getByTestId('app-layout-overview-toggle').closest('fieldset')?.hasAttribute('disabled')).toBe(true);
 
     fetchMock.restore();
   });

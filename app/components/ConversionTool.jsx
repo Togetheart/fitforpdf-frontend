@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ArrowLeft, ArrowRight, Code2, Download, FileText, Layers3, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, ChevronDown, Code2, Download, FileText, Layers3, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
 import useSession from '../hooks/useSession.mjs';
 import useIsDesktop from '../hooks/useIsDesktop.mjs';
 import UploadCard from './UploadCard';
+import { trackPaywallEvent } from '../lib/analytics.mjs';
 import AccountMenu from './AccountMenu';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
@@ -49,14 +50,36 @@ const WORKBENCH_CREDIT_PACKS = PAYG_PACKS.filter((pack) => pack.id !== 'single')
 
 // One labelled block in the inspector. The old per-section "Live"/"Soon" status
 // pills were dropped — when every control is live, the badge is pure noise.
-function InspectorSection({ title, hint, children }) {
+function InspectorSection({ title, hint, children, badge = null, locked = false, defaultOpen = false }) {
+  const [open, setOpen] = React.useState(defaultOpen);
+  const contentId = React.useId();
   return (
     <section className="border-b border-[var(--color-line)] pb-5">
-      <div className="mb-1.5 text-[var(--color-text)]">
-        <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="mb-1.5 flex w-full items-center justify-between gap-2 text-left text-[var(--color-text)]"
+      >
+        <span className="flex items-center gap-2">
+          <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
+          {badge ? (
+            <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">{badge}</span>
+          ) : null}
+        </span>
+        <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </button>
+      {/* Collapsed via the hidden attribute (display:none) — keeps state, drops
+          the content from the a11y tree + tab order when closed. */}
+      <div id={contentId} hidden={!open}>
+        {hint ? <p className="mb-3 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">{hint}</p> : null}
+        {/* Free plans: controls stay visible (discoverability) but a disabled
+            fieldset dims + blocks them — no silent no-op, and an upsell teaser. */}
+        {locked ? (
+          <fieldset disabled aria-label={`${title} — Pro feature`} className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
+        ) : children}
       </div>
-      {hint ? <p className="mb-3 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">{hint}</p> : null}
-      {children}
     </section>
   );
 }
@@ -395,6 +418,12 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
       ? quota.freeExportsLimit
       : 3;
   const planLabel = isUnlimited ? 'Admin' : quota.planType === 'pro' ? 'Pro' : quota.planType === 'credits' ? 'Credits' : 'Free';
+  // Paid (advanced) plans can use the branding/logo + layout controls; free
+  // plans see them locked (an unknown/loading plan is treated as free).
+  const canUseAdvanced = isUnlimited || (quota.planType ? String(quota.planType).toLowerCase() !== 'free' : false);
+  // Defer to the loaded flag: until /api/quota resolves we leave controls
+  // unlocked, so a paid user never flashes the locked/upsell state on load.
+  const proLocked = quota.loaded ? !canUseAdvanced : false;
   const quotaLocked = Boolean(quota.isQuotaLocked);
   const quotaSummary = isUnlimited
     ? 'Admin - unlimited'
@@ -442,7 +471,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         <div className="flex flex-col gap-4 pb-4">
         {activeTab === 'sections' ? (
           <>
-        <InspectorSection title="Column grouping" hint="How wide tables get split across pages.">
+        <InspectorSection title="Column grouping" hint="How wide tables get split across pages." defaultOpen>
           <div data-testid="app-columnmap" className="flex overflow-hidden rounded-lg border border-[var(--color-line)]">
             {[
               { v: 'off', label: 'Off' },
@@ -521,7 +550,15 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           />
         </InspectorSection>
 
-        <InspectorSection title="Branding" hint="Title, accent color, logo & footer for paid exports.">
+        {proLocked ? (
+          <div data-testid="app-pro-upsell" className="mb-4 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-3 py-2.5 text-[11.5px] leading-5 text-[var(--color-muted)]">
+            <span className="font-semibold text-[var(--color-text)]">Pro feature.</span>{' '}
+            <button type="button" onClick={() => { trackPaywallEvent('paywall_upgrade_clicked', { surface: 'workbench_inspector' }); conversion.handleGoProCheckout?.(); }} className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Upgrade</button>{' '}
+            to add your own logo, accent color, a custom footer, and control the page layout.
+          </div>
+        ) : null}
+
+        <InspectorSection title="Branding" hint="Your logo, accent color &amp; footer. White-label your PDF (no FitForPDF mark)." badge={proLocked ? 'Pro' : null} locked={proLocked}>
           <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Logo &amp; branding</span>
             <input
@@ -530,7 +567,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-branding-toggle"
               checked={conversion.includeBranding !== false}
               onChange={(e) => conversion.setIncludeBranding(e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Désactivé = PDF sans aucun logo (ni FitForPDF, ni le vôtre).</p>
@@ -551,7 +588,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               <button type="button" onClick={() => conversion.setAccentColor('')} className="ml-auto text-[11.5px] font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]">Reset</button>
             ) : null}
           </div>
-          <div className="mb-2 text-[13px] font-semibold text-[var(--color-text)]">Logo</div>
+          <div className="mb-2 text-[13px] font-semibold text-[var(--color-text)]">Your logo</div>
           <div className="mb-3">
             <input
               type="file"
@@ -592,7 +629,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">Branding applies to paid exports.</p>
         </InspectorSection>
 
-        <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, or the page footer.">
+        <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, or the page footer." badge={proLocked ? 'Pro' : null} locked={proLocked}>
           <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Summary page</span>
             <input
@@ -601,7 +638,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-layout-overview-toggle"
               checked={conversion.layout?.overview !== false}
               onChange={(e) => conversion.handleLayoutChange('overview', e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
@@ -612,7 +649,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-layout-headers-toggle"
               checked={conversion.layout?.headers !== false}
               onChange={(e) => conversion.handleLayoutChange('headers', e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
@@ -623,7 +660,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-layout-footer-toggle"
               checked={conversion.layout?.footer !== false}
               onChange={(e) => conversion.handleLayoutChange('footer', e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">The summary page lists your sections; turn it off for a plain table.</p>
@@ -810,6 +847,7 @@ export { WorkbenchRail };
 function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant }) {
   return (
     <UploadCard
+      surface="workbench"
       toolTitle={toolTitle}
       toolSubcopy={resolvedSubcopy}
       file={conversion.file}

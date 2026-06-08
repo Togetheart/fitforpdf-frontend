@@ -16,6 +16,13 @@ function capture(event, properties) {
 
 // ── Public helpers ──────────────────────────────────────────
 
+// Generic upsell/paywall event (e.g. paywall_branding_attempt,
+// paywall_upgrade_clicked). `name` is the event; `properties` tags the surface.
+export function trackPaywallEvent(name, properties = {}) {
+  if (typeof name !== 'string' || !name) return;
+  capture(name, properties);
+}
+
 export function trackUploadStarted({ fileType, fileSize }) {
   capture('upload_started', { file_type: fileType, file_size: fileSize });
 }

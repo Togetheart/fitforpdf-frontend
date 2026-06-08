@@ -135,6 +135,9 @@ export default function useQuota() {
   const [showBuyCreditsPanel, setShowBuyCreditsPanel] = useState(false);
   const [paywallReason, setPaywallReason] = useState('');
   const [purchaseMessage, setPurchaseMessage] = useState('');
+  // False until the first /api/quota attempt resolves. Plan-gated UI defers to
+  // this so a paid user never flashes the "free/locked" state on load.
+  const [loaded, setLoaded] = useState(false);
 
   const isQuotaLocked = getPlanExhausted(planType, freeExportsLeft, remainingInPeriod);
 
@@ -159,6 +162,10 @@ export default function useQuota() {
     } catch {
       // keep current quota state when sync fails
       return null;
+    } finally {
+      // Resolved (success OR failure): an unknown plan after the attempt is
+      // treated as free, so we never leave paid controls unlocked indefinitely.
+      setLoaded(true);
     }
     return null;
   }
@@ -246,6 +253,7 @@ export default function useQuota() {
     usedInPeriod,
     periodLimit,
     isQuotaLocked,
+    loaded,
     paywallReason,
     setPaywallReason,
     purchaseMessage,

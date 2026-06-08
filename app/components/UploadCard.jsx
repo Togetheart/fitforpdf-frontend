@@ -14,6 +14,7 @@ import UploadDropzone from './UploadDropzone';
 import Switch from './ui/Switch';
 import { PAYG_PACKS } from '../siteCopy.mjs';
 import { recommendationLabel } from '../pageUiLogic.mjs';
+import { trackPaywallEvent } from '../lib/analytics.mjs';
 
 const PROGRESS_STEPS = ['Uploading', 'Structuring (column grouping)', 'Generating PDF'];
 const PROGRESS_STEP_STATES = {
@@ -566,6 +567,7 @@ export default function UploadCard({
   isPro = false,
   onUpgrade = () => {},
   onEvent = () => {},
+  surface = 'landing',
   onLayoutChange = () => {},
   layout = {
     overview: true,
@@ -653,6 +655,10 @@ export default function UploadCard({
   const currentFileName = file?.name || downloadedFileName;
 
   const trackEvent = (name) => {
+    // Fire to PostHog directly so the event is captured in prod (the onEvent
+    // prop below is an optional hook, only wired in tests). surface = where the
+    // paywall attempt happened (landing vs workbench).
+    trackPaywallEvent(name, { surface });
     if (typeof onEvent === 'function') onEvent(name);
   };
 
