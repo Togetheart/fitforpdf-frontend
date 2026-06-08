@@ -135,6 +135,15 @@ describe('/app workbench dropzone surfaces render failures', () => {
     const btn = await screen.findByTestId('condense-recovery-btn');
     await waitFor(() => expect(btn.disabled).toBe(false), { timeout: 3000 });
 
+    // Reworded into a neutral notice — not the old alarmist "long and dense /
+    // quality score" copy, and the CTA speaks to the actual effect.
+    expect(btn.textContent).toMatch(/Condense and update preview/i);
+    const advisory = screen.getByTestId('condense-recovery');
+    expect(advisory.textContent).toMatch(/Condensing long cells may shorten this PDF/i);
+    expect(advisory.textContent).not.toMatch(/quality score/i);
+    // No debug metrics on this response → the page-count fallback copy renders.
+    expect(advisory.textContent).toMatch(/This PDF came out long\./);
+
     // Clicking re-renders the same file with the condense flag.
     renderResponder = () => new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
       status: 200,
@@ -146,5 +155,26 @@ describe('/app workbench dropzone surfaces render failures', () => {
       expect(urls.length).toBeGreaterThanOrEqual(2);
       expect(urls[urls.length - 1]).toMatch(/truncate_long_text=true/);
     }, { timeout: 3000 });
+  });
+
+  test('the recovery advisory reports the page count when debug metrics carry it', async () => {
+    // Same FAIL-under-cap case, but the response carries debug metrics → the
+    // advisory's primary "{N} pages generated." branch renders (not the fallback).
+    renderResponder = () => new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
+      status: 200,
+      headers: {
+        'content-type': 'application/pdf',
+        'content-disposition': 'attachment; filename="out.pdf"',
+        'x-cleansheet-verdict': 'FAIL',
+        'x-cleansheet-score': '55',
+        'x-cleansheet-reasons': 'wrap_severe,overflow_cells',
+        'x-cleansheet-debug-metrics': JSON.stringify({ pageCount: 98 }),
+      },
+    });
+    await selectFileAndGenerate();
+
+    const advisory = await screen.findByTestId('condense-recovery');
+    expect(advisory.textContent).toMatch(/98 pages generated\./);
+    expect(advisory.textContent).not.toMatch(/came out long/i);
   });
 });
