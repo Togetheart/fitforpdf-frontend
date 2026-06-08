@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ArrowLeft, ArrowRight, Code2, Download, FileText, Layers3, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, ChevronDown, Code2, Download, FileText, Layers3, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -50,21 +50,36 @@ const WORKBENCH_CREDIT_PACKS = PAYG_PACKS.filter((pack) => pack.id !== 'single')
 
 // One labelled block in the inspector. The old per-section "Live"/"Soon" status
 // pills were dropped — when every control is live, the badge is pure noise.
-function InspectorSection({ title, hint, children, badge = null, locked = false }) {
+function InspectorSection({ title, hint, children, badge = null, locked = false, defaultOpen = false }) {
+  const [open, setOpen] = React.useState(defaultOpen);
+  const contentId = React.useId();
   return (
     <section className="border-b border-[var(--color-line)] pb-5">
-      <div className="mb-1.5 flex items-center gap-2 text-[var(--color-text)]">
-        <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
-        {badge ? (
-          <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">{badge}</span>
-        ) : null}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="mb-1.5 flex w-full items-center justify-between gap-2 text-left text-[var(--color-text)]"
+      >
+        <span className="flex items-center gap-2">
+          <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
+          {badge ? (
+            <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">{badge}</span>
+          ) : null}
+        </span>
+        <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </button>
+      {/* Collapsed via the hidden attribute (display:none) — keeps state, drops
+          the content from the a11y tree + tab order when closed. */}
+      <div id={contentId} hidden={!open}>
+        {hint ? <p className="mb-3 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">{hint}</p> : null}
+        {/* Free plans: controls stay visible (discoverability) but a disabled
+            fieldset dims + blocks them — no silent no-op, and an upsell teaser. */}
+        {locked ? (
+          <fieldset disabled aria-label={`${title} — Pro feature`} className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
+        ) : children}
       </div>
-      {hint ? <p className="mb-3 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">{hint}</p> : null}
-      {/* Free plans: controls stay visible (discoverability) but a disabled
-          fieldset dims + blocks them — no silent no-op, and an upsell teaser. */}
-      {locked ? (
-        <fieldset disabled aria-label={`${title} — Pro feature`} className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
-      ) : children}
     </section>
   );
 }
@@ -456,7 +471,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         <div className="flex flex-col gap-4 pb-4">
         {activeTab === 'sections' ? (
           <>
-        <InspectorSection title="Column grouping" hint="How wide tables get split across pages.">
+        <InspectorSection title="Column grouping" hint="How wide tables get split across pages." defaultOpen>
           <div data-testid="app-columnmap" className="flex overflow-hidden rounded-lg border border-[var(--color-line)]">
             {[
               { v: 'off', label: 'Off' },
