@@ -116,7 +116,15 @@ describe('/app tool-first workbench shell', () => {
     expect(within(canvas).getByRole('heading', { name: /Start a new export/i })).toBeTruthy();
     expect(within(canvas).getByText(/Nothing cut off/i)).toBeTruthy();
     expect(within(canvas).getByText('Drop your Excel or CSV here')).toBeTruthy();
+    // Mobile drops the un-tappable drag metaphor — both copy variants are in the DOM
+    // (jsdom keeps display:none nodes), pinning that the touch-first copy stays.
+    expect(within(canvas).getByText('Add your Excel or CSV')).toBeTruthy();
+    expect(within(canvas).getByText('Choose a file')).toBeTruthy();
+    expect(within(canvas).getByText('Browse files')).toBeTruthy();
     expect(within(canvas).getByText('Try a sample')).toBeTruthy();
+    // No file yet → the zero-friction sample leads on mobile (its order-1 wrapper);
+    // the upload card is order-2. Desktop stays upload-first via xl:order-* (CSS-only).
+    expect(within(canvas).getByText('Try a sample').closest('.order-1')).toBeTruthy();
     expect(within(canvas).getByText(/id,name,region,plan,mrr/i)).toBeTruthy();
     // The demo-only "First screen / After render" mode switch was removed: it
     // had no onClick (dead control). State is driven by the render, not a toggle.
@@ -175,17 +183,21 @@ describe('/app tool-first workbench shell', () => {
     expect(screen.getByTestId('app-workbench').className).toMatch(/lg:h-screen/);
     // The center workspace is full width and always rendered (not in a drawer).
     expect(screen.getByTestId('app-canvas').className).toMatch(/w-full/);
-    // The rail + inspector are now off-canvas drawers: fixed, dialog-role panels
-    // that slide via translate-x and stay mounted regardless of open state.
+    // The rail + inspector are now bottom-sheets: fixed, dialog-role panels that
+    // slide up from the bottom via translate-y and stay mounted regardless of state.
     const leftDrawer = screen.getByTestId('app-drawer-left');
     const rightDrawer = screen.getByTestId('app-drawer-right');
     expect(leftDrawer.getAttribute('role')).toBe('dialog');
     expect(rightDrawer.getAttribute('role')).toBe('dialog');
     expect(leftDrawer.className).toMatch(/fixed/);
     expect(rightDrawer.className).toMatch(/fixed/);
-    // Closed by default: off-screen via translate-x-full / -translate-x-full.
-    expect(leftDrawer.className).toMatch(/-translate-x-full/);
-    expect(rightDrawer.className).toMatch(/translate-x-full/);
+    // Closed by default: off-screen below the viewport via translate-y-full.
+    expect(leftDrawer.className).toMatch(/translate-y-full/);
+    expect(rightDrawer.className).toMatch(/translate-y-full/);
+    // Bottom-sheet shape (not a side drawer): full-width, rounded top, height-capped.
+    expect(leftDrawer.className).toMatch(/inset-x-0/);
+    expect(leftDrawer.className).toMatch(/rounded-t-2xl/);
+    expect(leftDrawer.className).toMatch(/max-h-\[85vh\]/);
     // The rail + inspector content live inside the drawers (still mounted).
     expect(leftDrawer.contains(screen.getByTestId('app-left-rail'))).toBe(true);
     expect(rightDrawer.contains(screen.getByTestId('app-inspector'))).toBe(true);
