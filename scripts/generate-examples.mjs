@@ -245,12 +245,16 @@ async function screenshotPdf(pdfPath, outDir) {
     await page.screenshot({ path: pngPath, type: 'png' });
     await page.close();
 
-    // Copy PNG as overview images (named .webp for consistency, browsers handle PNG data fine)
+    // Encode the screenshot to REAL WebP (previously the PNG bytes were copied
+    // into a .webp-named file — ~3× larger). Needs `cwebp` (libwebp) on PATH.
+    // The viewport is 1× (1200×900), so the @2x variant shares the same source;
+    // next/image re-optimizes these at request time anyway.
     const { copyFileSync } = await import('fs');
-    copyFileSync(pngPath, join(outDir, 'overview.webp'));
-    copyFileSync(pngPath, join(outDir, 'overview@2x.webp'));
+    const { execFileSync } = await import('child_process');
+    execFileSync('cwebp', ['-quiet', '-q', '82', pngPath, '-o', join(outDir, 'overview.webp')]);
+    copyFileSync(join(outDir, 'overview.webp'), join(outDir, 'overview@2x.webp'));
     unlinkSync(pngPath);
-    console.log(`  Screenshots saved`);
+    console.log(`  Screenshots saved (webp)`);
   } catch (err) {
     console.log(`  ⚠ Screenshot failed: ${err.message}`);
   }

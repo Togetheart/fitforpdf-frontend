@@ -116,13 +116,13 @@ export default function BrandPage() {
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="flex items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-10">
               <div className="flex items-center gap-3">
-                <img src="/fitforpdf-logo.svg" alt="fitforpdf logo mark" className="h-10 w-10" />
+                <img src="/fitforpdf-icon.svg" alt="fitforpdf logo mark" className="h-10 w-auto" />
                 <img src="/fitforpdf@2x.webp" alt="fitforpdf wordmark" className="h-8 w-auto object-contain dark-invert" />
               </div>
             </div>
             <div className="flex items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[#0F172A] p-10">
               <div className="flex items-center gap-3">
-                <img src="/fitforpdf-logo.svg" alt="fitforpdf logo mark" className="h-10 w-10 brightness-0 invert" />
+                <img src="/fitforpdf-icon.svg" alt="fitforpdf logo mark" className="h-10 w-auto brightness-0 invert" />
                 <img src="/fitforpdf@2x.webp" alt="fitforpdf wordmark" className="h-8 w-auto object-contain brightness-0 invert" />
               </div>
             </div>

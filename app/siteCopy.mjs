@@ -629,7 +629,7 @@ export const PRIVACY_PAGE_COPY = {
 
 export const SEO = {
   siteUrl: 'https://www.fitforpdf.com',
-  ogImage: 'https://www.fitforpdf.com/og-image.png',
+  ogImage: 'https://www.fitforpdf.com/og-image.jpg',
   home: {
     title: 'fitforpdf — Client-Ready PDFs from Excel & CSV',
     description: 'Turn wide Excel and CSV exports into client-ready PDFs with sections, pagination, and column grouping. 3 free exports. No account needed.',

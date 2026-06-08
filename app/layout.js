@@ -86,7 +86,7 @@ const organizationLd = {
   '@type': 'Organization',
   name: 'fitforpdf',
   url: SEO.siteUrl,
-  logo: `${SEO.siteUrl}/og-image.png`,
+  logo: `${SEO.siteUrl}/og-image.jpg`,
   sameAs: [
     'https://www.biofor.ai/org/fitforpdf',
     'https://www.linkedin.com/company/fitforpdf/',
