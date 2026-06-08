@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, ArrowLeft, ArrowRight, ChevronDown, Code2, Download, FileText, Layers3, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { AlertCircle, ArrowLeft, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, Layers3, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -751,6 +752,15 @@ const RAIL_TABS = [
   { id: 'recent', label: 'Recent Exports' },
 ];
 
+// Status pill for a recent-export item — surfaced only for the non-default states
+// (running / failed) so a list of completed exports stays clean. null → no pill.
+function recentExportStatus(item) {
+  const raw = String(item?.status || item?.exportState || '').toLowerCase();
+  if (raw.includes('fail')) return { label: 'Failed', cls: 'bg-red-500/20 text-red-200' };
+  if (raw.includes('run') || raw.includes('pending')) return { label: 'Running', cls: 'bg-amber-500/20 text-amber-200' };
+  return null;
+}
+
 function WorkbenchRail({
   conversion,
   className = 'order-3 hidden lg:order-none lg:flex lg:h-[calc(100vh-57px)]',
@@ -790,16 +800,42 @@ function WorkbenchRail({
 
           <div className="mt-4 space-y-2">
             {recentExports.length > 0 ? (
-              recentExports.map((item) => (
-                <a
-                  key={item.id || item.supportId || item.createdAt}
-                  href={item.pdfUrl || '#'}
-                  className="block rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs transition hover:bg-white/10"
-                >
-                  <span className="block truncate font-semibold text-white">{item.sourceFileName || item.supportId || 'Export'}</span>
-                  <span className="mt-1 block text-[var(--color-text-subtle)]">{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recent render'}</span>
-                </a>
-              ))
+              recentExports.map((item) => {
+                const isActive = Boolean(item.id) && item.id === conversion.renderId;
+                const when = item.createdAt ? new Date(item.createdAt) : null;
+                const status = recentExportStatus(item);
+                const href = item.pdfUrl && item.pdfUrl !== '#' ? item.pdfUrl : null;
+                const Tag = href ? 'a' : 'div';
+                return (
+                  <Tag
+                    key={item.id || item.supportId || item.createdAt}
+                    {...(href ? { href } : {})}
+                    data-testid="app-recent-export"
+                    data-active={isActive ? 'true' : undefined}
+                    aria-current={isActive ? 'true' : undefined}
+                    className={[
+                      'block rounded-lg border px-3 py-2 text-xs transition',
+                      isActive
+                        ? 'border-white/40 bg-white/15 ring-1 ring-inset ring-white/30'
+                        : 'border-white/10 bg-white/5',
+                      href ? 'hover:bg-white/10' : 'cursor-default',
+                    ].join(' ')}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="min-w-0 flex-1 truncate font-semibold text-white">{item.sourceFileName || item.supportId || 'Export'}</span>
+                      {status ? (
+                        <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${status.cls}`}>{status.label}</span>
+                      ) : null}
+                    </div>
+                    <span className="mt-1 block text-[var(--color-text-subtle)]">
+                      {when
+                        ? `${when.toLocaleDateString()} · ${when.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                        : 'Recent render'}
+                      {isActive ? <span className="ml-1.5 font-semibold text-white">· Current</span> : null}
+                    </span>
+                  </Tag>
+                );
+              })
             ) : (
               <div className="px-3 py-2 text-[12.5px] leading-5 text-[var(--color-muted)]">
                 No exports yet. Drop a spreadsheet to start.
@@ -1196,9 +1232,10 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
   const showCondenseRecovery = (verdict === 'FAIL' || verdict === 'WARN')
     && conversion.truncateLongText !== true
     && failReasons.some((r) => CONDENSE_HELPS.includes(r));
+  const pageCount = conversion.debugMetrics?.pageCount ?? conversion.debugMetrics?.page_count ?? null;
   return (
     <div className="ffp-reveal">
-      <div className="mb-[18px] flex max-w-[620px] items-center gap-3 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+      <div className="mb-[18px] flex max-w-full items-center gap-3 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
         <FileText className="h-5 w-5 text-[var(--color-text-subtle)]" aria-hidden="true" />
         <div className="min-w-0">
           <p className="truncate text-[13.5px] font-semibold text-[var(--color-text)]">
@@ -1217,11 +1254,11 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
       {showCondenseRecovery ? (
         <div
           data-testid="condense-recovery"
-          className="mb-[18px] max-w-[620px] rounded-[10px] border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] px-4 py-3 text-[12.5px] leading-5 text-[var(--color-warn-text)]"
+          className="mb-[18px] max-w-full rounded-[10px] border border-[var(--color-info-border)] bg-[var(--color-info-bg)] px-4 py-3 text-[12.5px] leading-5 text-[var(--color-info-text)]"
         >
           <p>
-            <span className="font-semibold">This export came out long and dense.</span>{' '}
-            Long text wrapped across many pages{conversion.confidence?.score != null ? ` (quality score ${conversion.confidence.score}/100)` : ''} — condensing long cells usually gives a cleaner, shorter PDF.
+            <span className="font-semibold">{pageCount ? `${pageCount} pages generated.` : 'This PDF came out long.'}</span>{' '}
+            Condensing long cells may shorten this PDF.
           </p>
           <button
             type="button"
@@ -1231,16 +1268,16 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
               if (!conversion.isLoading) void conversion.handleCondenseAndRetry?.();
             }}
             disabled={conversion.isLoading}
-            className="mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-[8px] bg-blue-600 px-3 text-[12.5px] font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-[8px] border border-[var(--color-info-border)] bg-[var(--color-surface)] px-3 text-[12.5px] font-semibold text-[var(--color-info-text)] transition hover:bg-[var(--color-info-bg)] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {conversion.isLoading ? 'Condensing…' : 'Condense long text & retry'}
+            {conversion.isLoading ? 'Condensing…' : 'Condense and update preview'}
           </button>
         </div>
       ) : null}
       {showCondensedNote ? (
         <div
           data-testid="condensed-upgrade-note"
-          className="mb-[18px] max-w-[620px] rounded-[10px] border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] px-4 py-3 text-[12.5px] leading-5 text-[var(--color-warn-text)]"
+          className="mb-[18px] max-w-full rounded-[10px] border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] px-4 py-3 text-[12.5px] leading-5 text-[var(--color-warn-text)]"
         >
           <span className="font-semibold">Long text was condensed to fit.</span>{' '}
           Long cells were shortened to keep this export under the free page limit.{' '}
@@ -1260,13 +1297,17 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
           Ready
         </span>
       </div>
-      <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} />
+      <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} pageCount={pageCount} />
     </div>
   );
 }
 
-export function PdfPreviewPane({ pdfBlob, filename }) {
+export function PdfPreviewPane({ pdfBlob, filename, pageCount = null }) {
   const [previewUrl, setPreviewUrl] = React.useState(null);
+  const [fullscreen, setFullscreen] = React.useState(false);
+  const dialogRef = React.useRef(null);
+  const triggerRef = React.useRef(null);
+  const closeRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!pdfBlob || typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') {
@@ -1283,25 +1324,105 @@ export function PdfPreviewPane({ pdfBlob, filename }) {
     };
   }, [pdfBlob]);
 
+  // Fullscreen overlay = a modal dialog: lock body scroll, move focus into the
+  // dialog on open, keep Tab inside it, and restore focus to the trigger on close.
+  // Escape dismisses (works regardless of focus). Mirrors the MobileDrawer modal.
+  React.useEffect(() => {
+    if (!fullscreen) return undefined;
+    const opener = triggerRef.current;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') { setFullscreen(false); return; }
+      if (e.key !== 'Tab' || !dialogRef.current) return;
+      const focusables = dialogRef.current.querySelectorAll(
+        'a[href], button:not([disabled]), object, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || !dialogRef.current.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !dialogRef.current.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      if (opener && typeof opener.focus === 'function' && document.contains(opener)) opener.focus();
+    };
+  }, [fullscreen]);
+
+  // A new render / removed file drops the preview — never leave the overlay open over nothing.
+  React.useEffect(() => {
+    if (!previewUrl) setFullscreen(false);
+  }, [previewUrl]);
+
   if (!previewUrl) {
     return null;
   }
 
   const safeFilename = filename || 'report.pdf';
+  const pageLabel = pageCount ? `${pageCount} ${pageCount === 1 ? 'page' : 'pages'}` : null;
+  const iconBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-muted)] transition hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)]';
+
   return (
-    <div className="mt-5 max-w-[620px] overflow-hidden rounded-[9px] border border-[var(--color-line)] bg-[var(--color-surface)] shadow-[0_8px_40px_rgba(15,23,42,0.14)]">
-      <div className="flex items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-2">
-        <p className="truncate text-sm font-semibold text-[var(--color-text)]">Preview: {safeFilename}</p>
-        <span className="text-xs font-medium text-[var(--color-muted)]">PDF</span>
+    <div className="mt-5 max-w-full overflow-hidden rounded-[9px] border border-[var(--color-line)] bg-[var(--color-surface)] shadow-[0_8px_40px_rgba(15,23,42,0.14)]">
+      <div className="flex items-center justify-between gap-2 border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-2">
+        <p className="min-w-0 truncate text-sm font-semibold text-[var(--color-text)]">
+          Preview: {safeFilename}
+          {pageLabel ? <span className="ml-2 font-normal text-[var(--color-muted)]">· {pageLabel}</span> : null}
+        </p>
+        <div className="flex shrink-0 items-center gap-1">
+          <button
+            ref={triggerRef}
+            type="button"
+            onClick={() => setFullscreen(true)}
+            data-testid="app-pdf-fullscreen"
+            aria-label="View preview fullscreen"
+            title="Fullscreen"
+            className={`hidden lg:inline-flex ${iconBtn}`}
+          >
+            <Maximize2 className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <a
+            href={previewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="app-pdf-open"
+            aria-label="Open PDF in a new tab"
+            title="Open in new tab"
+            className={iconBtn}
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <a
+            href={previewUrl}
+            download={safeFilename}
+            data-testid="app-pdf-download-inline"
+            aria-label="Download PDF"
+            title="Download"
+            className={iconBtn}
+          >
+            <Download className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </div>
       </div>
-      {/* Desktop: inline <object> embed (works on large screens). */}
+      {/* Desktop: inline <object> embed. The browser's native PDF engine provides
+          zoom / page navigation / search; Fullscreen + Open give a bigger surface. */}
       <object
         aria-label={`PDF preview: ${safeFilename}`}
         data-testid="app-pdf-preview"
         data={previewUrl}
         title={`PDF preview: ${safeFilename}`}
         type="application/pdf"
-        className="hidden h-[560px] w-full bg-[var(--color-surface)] lg:block"
+        className={`${fullscreen ? 'hidden' : 'hidden lg:block'} h-[calc(100vh-340px)] min-h-[480px] w-full bg-[var(--color-surface)]`}
       >
         <div className="p-5 text-sm text-[var(--color-muted)]">
           PDF preview is not available in this browser. Use Download PDF to open it.
@@ -1313,6 +1434,58 @@ export function PdfPreviewPane({ pdfBlob, filename }) {
       <div data-testid="app-pdf-preview-mobile" className="flex flex-col items-center gap-3 px-4 py-5 text-center lg:hidden">
         <MobilePdfPreview pdfBlob={pdfBlob} previewUrl={previewUrl} filename={safeFilename} />
       </div>
+
+      {fullscreen && typeof document !== 'undefined'
+        ? createPortal(
+            <div
+              ref={dialogRef}
+              tabIndex={-1}
+              className="fixed inset-0 z-[9999] flex flex-col bg-[var(--color-bg)]/95 backdrop-blur-xl"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`PDF preview: ${safeFilename}`}
+              data-testid="app-pdf-fullscreen-overlay"
+            >
+              <div className="flex items-center justify-between gap-2 border-b border-[var(--color-line)] px-4 py-2.5">
+                <p className="min-w-0 truncate text-sm font-semibold text-[var(--color-text)]">
+                  {safeFilename}
+                  {pageLabel ? <span className="ml-2 font-normal text-[var(--color-muted)]">· {pageLabel}</span> : null}
+                </p>
+                <div className="flex shrink-0 items-center gap-1">
+                  <a href={previewUrl} target="_blank" rel="noopener noreferrer" aria-label="Open PDF in a new tab" title="Open in new tab" className={iconBtn}>
+                    <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                  <a href={previewUrl} download={safeFilename} aria-label="Download PDF" title="Download" className={iconBtn}>
+                    <Download className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                  <button
+                    ref={closeRef}
+                    type="button"
+                    onClick={() => setFullscreen(false)}
+                    data-testid="app-pdf-fullscreen-close"
+                    aria-label="Close fullscreen"
+                    title="Close"
+                    className={iconBtn}
+                  >
+                    <X className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+              <object
+                aria-label={`PDF preview (fullscreen): ${safeFilename}`}
+                data={previewUrl}
+                title={`PDF preview (fullscreen): ${safeFilename}`}
+                type="application/pdf"
+                className="min-h-0 flex-1 bg-[var(--color-surface)]"
+              >
+                <div className="p-5 text-sm text-[var(--color-muted)]">
+                  PDF preview is not available in this browser. Use Download to open it.
+                </div>
+              </object>
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
