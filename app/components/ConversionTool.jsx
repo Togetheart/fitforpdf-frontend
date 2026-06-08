@@ -570,7 +570,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
-          <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Désactivé = PDF sans aucun logo (ni FitForPDF, ni le vôtre).</p>
+          <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Off = a plain PDF with no logo — neither FitForPDF&apos;s nor yours.</p>
           <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Accent color</span>
           </label>
@@ -590,13 +590,20 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           </div>
           <div className="mb-2 text-[13px] font-semibold text-[var(--color-text)]">Your logo</div>
           <div className="mb-3">
-            <input
-              type="file"
-              aria-label="Logo image (PNG or JPG)"
-              accept="image/png,image/jpeg"
-              onChange={(e) => conversion.handleLogoSelect(e.target.files?.[0] || null)}
-              className="block w-full text-[12px] text-[var(--color-muted)] file:mr-2 file:min-h-9 file:rounded-lg file:border file:border-[var(--color-line)] file:bg-[var(--color-surface)] file:px-3 file:text-[12px] file:font-semibold file:text-[var(--color-text)]"
-            />
+            {/* Custom control: the native file input renders the browser-locale
+                "Choisir le fichier" text and clashes with the UI — hide it (sr-only)
+                behind a styled label so the affordance reads "Upload logo". */}
+            <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 text-[12px] font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-surface-sunken)]">
+              <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+              {conversion.logoFile ? 'Change logo' : 'Upload logo'}
+              <input
+                type="file"
+                aria-label="Logo image (PNG or JPG)"
+                accept="image/png,image/jpeg"
+                onChange={(e) => conversion.handleLogoSelect(e.target.files?.[0] || null)}
+                className="sr-only"
+              />
+            </label>
             {conversion.logoError ? (
               <p data-testid="app-logo-error" className="mt-1 text-[11px] font-medium text-[var(--color-danger-text)]">{conversion.logoError}</p>
             ) : (
@@ -611,7 +618,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
                 onClick={() => conversion.removeLogo()}
                 className="mt-1 text-[11.5px] font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]"
               >
-                Retirer le logo
+                Remove logo
               </button>
             ) : null}
           </div>
