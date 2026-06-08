@@ -159,7 +159,7 @@ function EndpointCard({ endpoint }) {
 }
 
 function RequestAccessForm() {
-  const [form, setForm] = useState({ name: '', email: '', useCase: '' });
+  const [form, setForm] = useState({ name: '', email: '' });
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [errorMsg, setErrorMsg] = useState('');
   const [issuedKey, setIssuedKey] = useState(null);
@@ -265,7 +265,7 @@ function RequestAccessForm() {
         {/* Left — value props */}
         <div className="flex-1 px-6 py-8 md:px-10 md:py-12 bg-[var(--color-bg-hero)]">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
-            Early access
+            Free API key
           </p>
           <h2 className="mt-3 text-2xl font-bold leading-tight text-[var(--color-text)] sm:text-3xl">
             Get your API key
@@ -332,21 +332,6 @@ function RequestAccessForm() {
                 className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
-            <div>
-              <label htmlFor="ra-usecase" className="block text-xs font-semibold text-[var(--color-text)]">
-                What are you building? <span className="font-[400] text-[var(--color-muted)]">(optional)</span>
-              </label>
-              <textarea
-                id="ra-usecase"
-                name="useCase"
-                rows={2}
-                value={form.useCase}
-                onChange={handleChange}
-                placeholder="e.g. Auto-generating client reports from our CRM"
-                className="mt-1.5 w-full resize-none rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-              />
-            </div>
-
             {errorMsg && (
               <p className="rounded-xl bg-red-50 px-4 py-3 text-xs text-red-700">{errorMsg}</p>
             )}
@@ -356,11 +341,11 @@ function RequestAccessForm() {
               disabled={status === 'submitting'}
               className="w-full rounded-xl bg-cta px-6 py-3.5 text-sm font-semibold text-cta-text transition hover:bg-cta-hover active:scale-[0.98] disabled:opacity-50"
             >
-              {status === 'submitting' ? 'Submitting\u2026' : 'Request early access'}
+              {status === 'submitting' ? 'Generating your key\u2026' : 'Get my API key'}
             </button>
 
             <p className="text-center text-xs text-[var(--color-muted)]">
-              Most requests approved within a few hours.
+              Instant \u2014 your key appears here in seconds. No approval, no waiting.
             </p>
           </form>
         </div>
@@ -430,7 +415,7 @@ export default function DevelopersPage() {
           </a>
           <p className="text-xs text-[var(--color-muted)]">
             <span className="font-semibold text-[var(--color-text)]">50 free renders</span>{' '}
-            to start. No credit card. Most requests approved within hours.
+            to start. No credit card, no approval — your key is instant.
           </p>
         </div>
       </div>
@@ -449,7 +434,7 @@ export default function DevelopersPage() {
           <span className="font-semibold text-[var(--color-text)]">structured PDF sections</span>
         </div>
         <a href="#request-access" className="mt-3 inline-block text-xs text-[var(--color-muted)] underline underline-offset-2 hover:text-[var(--color-text)]">
-          Request access →
+          Get your key →
         </a>
       </section>
 
@@ -648,9 +633,9 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
   ${BASE_URL}/quota`}</CodeBlock>
         <p className="mt-3 text-xs text-[var(--color-muted)]">
           <a href="#request-access" className="underline underline-offset-2 hover:text-[var(--color-text)]">
-            Request early access
+            Get your free API key
           </a>{' '}
-          to get your key.
+          — instant, no approval.
         </p>
       </section>
 

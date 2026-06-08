@@ -118,12 +118,13 @@ describe('Developers page — documentation sections', () => {
 // ── Request access form ──────────────────────────────────────────
 
 describe('Developers page — request access form', () => {
-  test('renders form with name, email, and useCase fields', () => {
+  test('renders form with name and email fields (no use-case — self-serve, no manual review)', () => {
     render(<DevelopersPage />);
     // Actual placeholders from the component
     expect(screen.getByPlaceholderText('Jane Smith')).toBeTruthy();
     expect(screen.getByPlaceholderText('jane@company.com')).toBeTruthy();
-    expect(screen.getByPlaceholderText(/Auto-generating client reports/)).toBeTruthy();
+    // The "use case" field was dropped — there's no manual approval to inform.
+    expect(screen.queryByPlaceholderText(/Auto-generating client reports/)).toBeNull();
   });
 
   test('renders "Get your API key" heading', () => {
@@ -131,9 +132,9 @@ describe('Developers page — request access form', () => {
     expect(screen.getByText('Get your API key')).toBeTruthy();
   });
 
-  test('submit button says "Request early access"', () => {
+  test('submit button says "Get my API key"', () => {
     render(<DevelopersPage />);
-    expect(screen.getByRole('button', { name: /Request early access/ })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /Get my API key/ })).toBeTruthy();
   });
 
   test('submits form and shows success state', async () => {
@@ -151,11 +152,8 @@ describe('Developers page — request access form', () => {
     fireEvent.change(screen.getByPlaceholderText('jane@company.com'), {
       target: { value: 'jane@example.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText(/Auto-generating/), {
-      target: { value: 'CRM export reports' },
-    });
 
-    fireEvent.click(screen.getByRole('button', { name: /Request early access/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Get my API key/ }));
 
     await waitFor(() => {
       // Self-serve: the key is provisioned instantly and shown on-screen.
@@ -170,7 +168,6 @@ describe('Developers page — request access form', () => {
       body: JSON.stringify({
         name: 'Jane Doe',
         email: 'jane@example.com',
-        useCase: 'CRM export reports',
       }),
     });
   });
@@ -190,7 +187,7 @@ describe('Developers page — request access form', () => {
       target: { value: 'test@example.com' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /Request early access/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Get my API key/ }));
 
     await waitFor(() => {
       expect(screen.getByText(/valid email/i)).toBeTruthy();
@@ -211,7 +208,7 @@ describe('Developers page — request access form', () => {
       target: { value: 'jane@example.com' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /Request early access/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Get my API key/ }));
 
     await waitFor(() => {
       expect(screen.getByText(/already has an API key/i)).toBeTruthy();
@@ -230,7 +227,7 @@ describe('Developers page — request access form', () => {
       target: { value: 'jane@example.com' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /Request early access/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Get my API key/ }));
 
     await waitFor(() => {
       expect(screen.getByText(/network error/i)).toBeTruthy();
