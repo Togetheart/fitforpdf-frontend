@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { AlertCircle, ArrowLeft, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, History, Layers3, ListTree, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, Rows3, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, History, Layers3, ListTree, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, Rows3, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -13,7 +13,6 @@ import { trackPaywallEvent } from '../lib/analytics.mjs';
 import AccountMenu from './AccountMenu';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
-import PlanBadge from './ui/PlanBadge';
 import { PAYG_PACKS } from '../siteCopy.mjs';
 import { recommendationLabel, sectionColorClasses, SECTION_COLOR_HEXES } from '../pageUiLogic.mjs';
 import { renderPdfFirstPageImage } from '../lib/pdfPreviewImage.mjs';
@@ -1629,44 +1628,18 @@ function MobilePdfPreview({ pdfBlob, previewUrl, filename }) {
 const LEFT_DRAWER_ID = 'app-drawer-left';
 const RIGHT_DRAWER_ID = 'app-drawer-right';
 
-function AppToolbar({ conversion, quota, session }) {
-  // The breadcrumb only earns its place once there's a document to name. At the
-  // empty "New export" state it was pure noise next to the brand, so we drop it
-  // and let the centered mark stand alone (per design harmonization).
-  const crumb = conversion.file?.name
-    || (conversion.pdfBlob ? conversion.resolvedPdfFilename : null);
-
-  const railPillClass =
-    'inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 ' +
-    'text-[13px] font-semibold text-[var(--color-text)] transition ' +
-    'hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]';
-
+function AppToolbar({ quota, session }) {
   return (
     <header
       data-testid="app-toolbar"
       className="grid h-[57px] grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-[var(--color-line)] bg-[var(--color-bg-hero)] px-4 sm:px-[22px]"
     >
-      {/* Left zone: exit-to-site, then the document title once a file is loaded. */}
-      <div className="flex min-w-0 items-center gap-3 justify-self-start">
-        <a
-          href="/"
-          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--color-muted)] transition hover:text-[var(--color-text)]"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="hidden sm:inline">fitforpdf.com</span>
-        </a>
-        {crumb ? (
-          <>
-            <div className="hidden h-5 w-px bg-[var(--color-line)] sm:block" aria-hidden="true" />
-            <div data-testid="app-crumb" className="hidden min-w-0 truncate sm:block">
-              <span className="font-serif italic text-[15px] text-[var(--color-text)]">{crumb}</span>
-            </div>
-          </>
-        ) : null}
-      </div>
+      {/* Left zone: intentionally empty — keeps the picto centered in the
+          1fr | auto | 1fr grid. The back-link + filename crumb were dropped to
+          declutter; the picto IS the clickable brand mark (and exit-to-site). */}
+      <div aria-hidden="true" className="justify-self-start" />
 
-      {/* Center zone: the brand mark, truly centered (1fr | auto | 1fr grid).
-          Picto only — the wordmark stays on the marketing header. Links home. */}
+      {/* Center zone: the brand mark, truly centered. Clickable, links home. */}
       <a
         href="/"
         aria-label="fitforpdf — accueil"
@@ -1675,20 +1648,16 @@ function AppToolbar({ conversion, quota, session }) {
         <AnimatedLogo className="h-7 w-7" />
       </a>
 
-      {/* Right zone: API · plan · theme · account. (Mobile panel toggles live
-          in their own row below the header — see WorkbenchMobileLayout.) */}
+      {/* Right zone: just theme + account. API and plan/credits moved INTO the
+          account menu — keeps the bar uncluttered and (unlike the old pills,
+          which were hidden < sm) keeps them reachable on mobile. */}
       <div className="flex items-center gap-3 justify-self-end">
-        {/* API entry — same wording + "Free" signal as the marketing header. */}
-        <a href="/developers" className={'hidden sm:inline-flex ' + railPillClass}>
-          <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-          API
-          <span className="ml-0.5 rounded-full border border-[var(--color-success-border)] bg-[var(--color-success-bg)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-success-text)]">
-            Free
-          </span>
-        </a>
-        <PlanBadge quota={quota} className="hidden sm:inline-flex" />
         <ThemeToggle />
-        <AccountMenu account={session?.account || null} onLogout={session?.logout || (() => {})} />
+        <AccountMenu
+          account={session?.account || null}
+          onLogout={session?.logout || (() => {})}
+          quota={quota}
+        />
       </div>
     </header>
   );
@@ -1964,7 +1933,7 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
           stays uncluttered on mobile. "Recent" opens the left rail drawer,
           "Options" the right inspector drawer. (Mobile layout only — desktop uses
           the resizable PanelGroup.) */}
-      <div className="flex items-center gap-2 border-b border-[var(--color-line)] bg-[var(--color-bg-hero)] px-4 py-2">
+      <div className="flex items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-bg-hero)] px-4 py-2">
         <button
           type="button"
           data-testid="app-drawer-toggle-left"
@@ -2077,7 +2046,6 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
     return (
       <>
         <AppToolbar
-          conversion={conversion}
           quota={quota}
           session={session}
         />
