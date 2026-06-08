@@ -8,8 +8,8 @@ import AppPage from '../app/page.jsx';
  * Phase 2 — workbench mobile drawers.
  *
  * On a mobile viewport (matchMedia matches:true) the left rail + right inspector
- * become OFF-CANVAS DRAWERS that slide over the center workspace, instead of
- * stacking below it. This file forces the mobile branch (like appMobile.ui.test.jsx)
+ * become BOTTOM SHEETS that slide up from the bottom over the center workspace,
+ * instead of stacking below it. This file forces the mobile branch (like appMobile.ui.test.jsx)
  * and asserts the toggle + drawer + scrim behaviour:
  *   - the "Options" (right inspector) + "Recent" (left rail) toggles render, both
  *     closed (aria-expanded=false), and no scrim is shown initially;
@@ -17,7 +17,7 @@ import AppPage from '../app/page.jsx';
  *   - Escape closes; clicking the scrim closes;
  *   - opening the other toggle replaces the first (one drawer open at a time).
  *
- * Drawer content stays MOUNTED (shown/hidden via translate-x), so the inspector
+ * Sheet content stays MOUNTED (shown/hidden via translate-y), so the inspector
  * + rail testids are always present in the DOM.
  */
 

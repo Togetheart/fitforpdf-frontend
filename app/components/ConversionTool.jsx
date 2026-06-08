@@ -1103,7 +1103,9 @@ function WorkbenchDropzone({ conversion, quota }) {
           )}
         </h2>
         <p className="mt-2 text-[13.5px] text-[var(--color-muted)]">.xlsx, .xls, .csv - up to 4 MB</p>
-        <div className="my-[18px] text-[12.5px] text-[var(--color-text-subtle)]">{hasFile ? 'ready' : 'or'}</div>
+        {/* "or" bridges the drag affordance and the button — but there's no drag on
+            touch, so hide it on mobile (the "ready" status still shows once a file is in). */}
+        <div className={['my-[18px] text-[12.5px] text-[var(--color-text-subtle)]', hasFile ? '' : 'hidden sm:block'].join(' ')}>{hasFile ? 'ready' : 'or'}</div>
         {hasFile ? (
           <>
             <div className="flex flex-wrap justify-center gap-2">
@@ -1251,6 +1253,7 @@ function WorkbenchSampleCard({ conversion }) {
 }
 
 function WorkbenchEmptyCanvas({ conversion, quota }) {
+  const hasFile = Boolean(conversion.file);
   return (
     <>
       <div className="mb-[22px] max-w-[600px]">
@@ -1262,14 +1265,16 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
           columns on every page. Nothing cut off.
         </p>
       </div>
-      {/* On mobile, lead with the zero-friction sample (most phone visitors have
-          no spreadsheet handy); desktop keeps upload-first with the sample in the
-          250px side column. */}
+      {/* On mobile, lead with the zero-friction sample (most phone visitors have no
+          spreadsheet handy) — but once a file is picked, float the upload card (now
+          holding the Generate CTA) back to the top so the primary action isn't buried
+          under the sample. Desktop is pinned upload-first via xl:order-* (the sample
+          stays in the 250px side column). */}
       <div className="grid gap-[18px] xl:grid-cols-[minmax(0,1fr)_250px]">
-        <div className="order-2 min-w-0 xl:order-1">
+        <div className={`${hasFile ? 'order-1' : 'order-2'} min-w-0 xl:order-1`}>
           <WorkbenchDropzone conversion={conversion} quota={quota} />
         </div>
-        <div className="order-1 xl:order-2">
+        <div className={`${hasFile ? 'order-2' : 'order-1'} xl:order-2`}>
           <WorkbenchSampleCard conversion={conversion} />
         </div>
       </div>
@@ -1874,10 +1879,11 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
   );
 }
 
-// One off-canvas drawer (mobile). Its content is ALWAYS mounted; open/closed is
-// expressed purely via the translate-x transition so the panels stay in the DOM
-// (preserving input state + keeping existing mobile content queries resolvable).
-// side: 'left' | 'right' — decides the slide direction + close-state transform.
+// One mobile bottom sheet. Its content is ALWAYS mounted; open/closed is expressed
+// purely via the translate-y transition so the panels stay in the DOM (preserving
+// input state + keeping existing mobile content queries resolvable).
+// side: 'left' | 'right' — now only identifies which panel (rail vs inspector) for
+// the testid/id; both sheets slide up from the bottom edge.
 function MobileDrawer({ id, side, label, open, onClose, children }) {
   return (
     <div
@@ -1918,8 +1924,8 @@ function MobileDrawer({ id, side, label, open, onClose, children }) {
 }
 
 // Mobile (< lg) layout: a full-width center workspace plus the left rail + right
-// inspector rendered as fixed off-canvas DRAWERS that slide OVER the center, with
-// a shared scrim. One drawer open at a time (openDrawer is 'left' | 'right' | null,
+// inspector rendered as fixed BOTTOM SHEETS that slide up over the center, with
+// a shared scrim. One sheet open at a time (openDrawer is 'left' | 'right' | null,
 // owned by ConversionTool). Escape closes; body scroll is locked while open.
 function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer }) {
   const isOpen = openDrawer === 'left' || openDrawer === 'right';
@@ -1956,6 +1962,7 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
           aria-label="Open recent exports panel"
           aria-expanded={openDrawer === 'left'}
           aria-controls={LEFT_DRAWER_ID}
+          aria-haspopup="dialog"
           onClick={() => setOpenDrawer(openDrawer === 'left' ? null : 'left')}
           className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
         >
@@ -1968,6 +1975,7 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
           aria-label="Open options panel"
           aria-expanded={openDrawer === 'right'}
           aria-controls={RIGHT_DRAWER_ID}
+          aria-haspopup="dialog"
           onClick={() => setOpenDrawer(openDrawer === 'right' ? null : 'right')}
           className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
         >
@@ -1988,7 +1996,7 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
         />
       ) : null}
 
-      {/* Both drawers stay mounted; translate-x shows/hides them. */}
+      {/* Both sheets stay mounted; translate-y shows/hides them. */}
       <MobileDrawer
         id={LEFT_DRAWER_ID}
         side="left"
