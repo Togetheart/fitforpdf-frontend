@@ -7,18 +7,9 @@ import Button from './ui/Button';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
 import AccountMenu from './AccountMenu';
-import PlanBadge from './ui/PlanBadge';
 import useSession from '../hooks/useSession.mjs';
-import useQuota from '../hooks/useQuota.mjs';
 
 const SCROLL_THRESHOLD = 16;
-
-// Mounted only when logged in, so the /api/quota fetch never fires for anonymous
-// marketing visitors. Surfaces the same plan/credits chip as the app toolbar.
-function LandingPlanBadge({ className }) {
-  const quota = useQuota();
-  return <PlanBadge quota={quota} className={className} />;
-}
 
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -95,10 +86,11 @@ export default function SiteHeader() {
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/contact">
               Contact
             </a>
-            {/* Right cluster mirrors the app toolbar order: exports/plan · dark · avatar.
-                AccountMenu shows the SN avatar when logged in and a styled
-                "Se connecter" pill when logged out — one consistent control. */}
-            {account ? <LandingPlanBadge /> : null}
+            {/* The landing is marketing, not the app: the live exports/plan quota
+                lives in the app (at the point of work + the account menu), not as
+                chrome here. The offer ("3 free exports") is communicated in the hero
+                copy instead. AccountMenu shows the SN avatar when logged in and a
+                styled "Se connecter" pill when logged out — one consistent control. */}
             <ThemeToggle />
             <AccountMenu account={account} onLogout={logout} />
             <Button variant="primary" href={account ? '/app' : '/#generate'} className="px-4 text-xs h-9">
