@@ -240,6 +240,38 @@ describe('/app tool-first workbench shell', () => {
     fetchMock.restore();
   });
 
+  test('layout toggles in the workbench Export tab reach the render payload', async () => {
+    const fetchMock = mockFetch(({ url }) => {
+      if (url.includes('/api/quota')) {
+        return new Response(JSON.stringify({ plan_type: 'credits', credits: { remaining: 5 } }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      if (url.includes('/api/render')) return createPdfResponse();
+      return new Response('', { status: 404 });
+    });
+
+    render(<AppPage />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+    // Drop the summary page + the repeated headers; leave the footer on.
+    fireEvent.click(screen.getByTestId('app-layout-overview-toggle'));
+    fireEvent.click(screen.getByTestId('app-layout-headers-toggle'));
+    fireEvent.change(screen.getByTestId('generate-file-input'), {
+      target: { files: [new File(['a,b\n1,2'], 'customers.csv', { type: 'text/csv' })] },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Generate PDF/i }));
+
+    await waitFor(() => {
+      const renderCall = fetchMock.calls.find((call) => call.url.includes('/api/render'));
+      expect(renderCall?.options.body.get('keep_overview')).toBe('0');
+      expect(renderCall?.options.body.get('keep_headers')).toBe('0');
+      expect(renderCall?.options.body.get('keep_footer')).toBe('1');
+    });
+
+    fetchMock.restore();
+  });
+
   test('shows the quota paywall in the workbench instead of silently blocking generation', async () => {
     const fetchMock = mockFetch(({ url }) => {
       if (url.includes('/api/quota')) {

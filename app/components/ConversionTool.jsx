@@ -591,6 +591,43 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           />
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">Branding applies to paid exports.</p>
         </InspectorSection>
+
+        <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, or the page footer.">
+          <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
+            <span>Summary page</span>
+            <input
+              type="checkbox"
+              aria-label="Summary page"
+              data-testid="app-layout-overview-toggle"
+              checked={conversion.layout?.overview !== false}
+              onChange={(e) => conversion.handleLayoutChange('overview', e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+          </label>
+          <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
+            <span>Repeat headers on every page</span>
+            <input
+              type="checkbox"
+              aria-label="Repeat headers on every page"
+              data-testid="app-layout-headers-toggle"
+              checked={conversion.layout?.headers !== false}
+              onChange={(e) => conversion.handleLayoutChange('headers', e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+          </label>
+          <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
+            <span>Page footer</span>
+            <input
+              type="checkbox"
+              aria-label="Page footer"
+              data-testid="app-layout-footer-toggle"
+              checked={conversion.layout?.footer !== false}
+              onChange={(e) => conversion.handleLayoutChange('footer', e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+          </label>
+          <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">The summary page lists your sections; turn it off for a plain table.</p>
+        </InspectorSection>
           </>
         )}
       </div>
