@@ -138,6 +138,20 @@ export default function RootLayout({ children }) {
           type="font/woff2"
           crossOrigin="anonymous"
         />
+        {/* Global last-resort net for the async-crash class. A redeploy mid-spike
+            invalidates old hashed chunks → a dynamic import() from already-loaded
+            HTML throws a ChunkLoadError (unhandled rejection). Reload ONCE to pick
+            up the fresh manifest, sessionStorage-guarded so it can never loop.
+            Anything else is left alone. ~8 lines, no dependency. */}
+        <Script id="error-net" strategy="beforeInteractive">{`
+  (function(){
+    var KEY='ffp-chunk-reloaded';
+    function isChunk(msg,name){return name==='ChunkLoadError'||/Loading chunk|dynamically imported module|Importing a module script failed/i.test(msg||'');}
+    function reloadOnce(){try{if(!sessionStorage.getItem(KEY)){sessionStorage.setItem(KEY,'1');location.reload();}}catch(e){}}
+    window.addEventListener('unhandledrejection',function(e){var r=e&&e.reason;if(isChunk(r&&r.message,r&&r.name))reloadOnce();});
+    window.addEventListener('error',function(e){var x=e&&e.error;if(isChunk(e&&e.message,x&&x.name))reloadOnce();},true);
+  })();
+`}</Script>
         <Script id="theme-init" strategy="beforeInteractive">{`
   (function() {
     var t = localStorage.getItem('theme');
