@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { AlertCircle, ArrowLeft, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, Layers3, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, History, Layers3, ListTree, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, Rows3, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -98,7 +98,32 @@ function InspectorSection({ title, hint, children, badge = null, locked = false,
 // move focus + activate the previous/next tab (wrapping at the ends).
 function PanelTabs({ tabs, value, onChange, tone = 'light', ariaLabel }) {
   const refs = React.useRef([]);
+  const listRef = React.useRef(null);
+  const ghostRef = React.useRef(null);
+  const [iconOnly, setIconOnly] = React.useState(false);
   const index = Math.max(0, tabs.findIndex((t) => t.id === value));
+
+  // Collapse the strip to icons-only when it's too narrow to show the labels without
+  // clipping (e.g. the rail dragged thin so "Recent Exports" would wrap to "Recer/Expor").
+  // We measure each tab's natural icon+label width from an invisible ghost row and compare
+  // it to the available tablist width on every resize — robust to any label/screen size.
+  React.useLayoutEffect(() => {
+    const list = listRef.current;
+    const ghost = ghostRef.current;
+    if (!list || !ghost || typeof ResizeObserver === 'undefined') return undefined;
+    const recompute = () => {
+      const have = list.clientWidth;
+      if (!have) return; // no layout (e.g. jsdom) → keep labels
+      let widest = 0;
+      for (const span of ghost.children) widest = Math.max(widest, span.offsetWidth);
+      const needed = widest * tabs.length + 4; // + tablist p-0.5 padding (2px × 2)
+      setIconOnly(needed + 2 > have);
+    };
+    const observer = new ResizeObserver(recompute);
+    observer.observe(list);
+    recompute();
+    return () => observer.disconnect();
+  }, [tabs]);
 
   const focusTab = (i) => {
     const tab = tabs[i];
@@ -130,33 +155,58 @@ function PanelTabs({ tabs, value, onChange, tone = 'light', ariaLabel }) {
     : 'flex overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-0.5';
 
   return (
-    <div role="tablist" aria-label={ariaLabel} onKeyDown={handleKeyDown} className={wrapClass}>
-      {tabs.map((tab, i) => {
-        const active = tab.id === value;
-        const tabClass = isDark
-          ? [
-              'min-h-9 flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition lg:min-h-8',
-              active ? 'bg-white/10 font-semibold text-white' : 'bg-transparent text-[var(--color-text-subtle)] hover:text-white',
-            ].join(' ')
-          : [
-              'min-h-9 flex-1 rounded-md px-2 py-1.5 text-xs transition lg:min-h-8',
-              active ? 'bg-[var(--color-surface)] font-semibold text-[var(--color-text)] shadow-sm' : 'bg-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]',
-            ].join(' ');
-        return (
-          <button
-            key={tab.id}
-            ref={(node) => { refs.current[i] = node; }}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            tabIndex={active ? 0 : -1}
-            onClick={() => onChange(tab.id)}
-            className={tabClass}
-          >
-            {tab.label}
-          </button>
-        );
-      })}
+    <div className="relative">
+      {/* Invisible measurer: each tab's natural icon+label width (drives icon-only collapse). */}
+      <div
+        ref={ghostRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-0 -z-10 flex"
+        style={{ visibility: 'hidden' }}
+      >
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <span key={tab.id} className="inline-flex items-center gap-1.5 whitespace-nowrap px-2 text-xs">
+              {Icon ? <Icon className="h-3.5 w-3.5" aria-hidden="true" /> : null}
+              {tab.label}
+            </span>
+          );
+        })}
+      </div>
+      <div role="tablist" ref={listRef} aria-label={ariaLabel} onKeyDown={handleKeyDown} className={wrapClass}>
+        {tabs.map((tab, i) => {
+          const active = tab.id === value;
+          const Icon = tab.icon;
+          const tabClass = isDark
+            ? [
+                'min-h-9 flex-1 overflow-hidden rounded-md px-2 py-1.5 text-xs font-medium transition lg:min-h-8',
+                active ? 'bg-white/10 font-semibold text-white' : 'bg-transparent text-[var(--color-text-subtle)] hover:text-white',
+              ].join(' ')
+            : [
+                'min-h-9 flex-1 overflow-hidden rounded-md px-2 py-1.5 text-xs transition lg:min-h-8',
+                active ? 'bg-[var(--color-surface)] font-semibold text-[var(--color-text)] shadow-sm' : 'bg-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]',
+              ].join(' ');
+          return (
+            <button
+              key={tab.id}
+              ref={(node) => { refs.current[i] = node; }}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              aria-label={tab.label}
+              title={iconOnly ? tab.label : undefined}
+              tabIndex={active ? 0 : -1}
+              onClick={() => onChange(tab.id)}
+              className={tabClass}
+            >
+              <span className="flex min-w-0 items-center justify-center gap-1.5">
+                {Icon ? <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" /> : null}
+                {!iconOnly ? <span className="truncate">{tab.label}</span> : null}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -406,8 +456,8 @@ function SectionNamesEditor({ conversion }) {
 }
 
 const INSPECTOR_TABS = [
-  { id: 'sections', label: 'Sections' },
-  { id: 'export', label: 'Export' },
+  { id: 'sections', label: 'Sections', icon: Rows3 },
+  { id: 'export', label: 'Export', icon: SlidersHorizontal },
 ];
 
 export function ConversionInspector({ conversion, quota, className = '', onCollapse, collapsed = false }) {
@@ -748,8 +798,8 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
 // the inspector's "Sections" tab (where you EDIT them). Renaming it frees the word
 // "Section" to mean exactly one thing in the UI.
 const RAIL_TABS = [
-  { id: 'sections', label: 'Outline' },
-  { id: 'recent', label: 'Recent Exports' },
+  { id: 'sections', label: 'Outline', icon: ListTree },
+  { id: 'recent', label: 'Recent Exports', icon: History },
 ];
 
 // Status pill for a recent-export item — surfaced only for the non-default states

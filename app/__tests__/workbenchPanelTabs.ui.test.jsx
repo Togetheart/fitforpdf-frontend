@@ -67,6 +67,18 @@ describe('Right inspector — Sections / Export tabs', () => {
     expect(exportTab.getAttribute('aria-selected')).toBe('false');
   });
 
+  test('each tab carries an icon, and aria-label preserves the name when labels collapse to icon-only', () => {
+    render(<ConversionInspector conversion={makeInspectorConversion()} quota={quota} />);
+    const sectionsTab = screen.getByRole('tab', { name: 'Sections' });
+    const exportTab = screen.getByRole('tab', { name: 'Export' });
+    // Icon is rendered inside each tab button (lucide → <svg>).
+    expect(sectionsTab.querySelector('svg')).toBeTruthy();
+    expect(exportTab.querySelector('svg')).toBeTruthy();
+    // aria-label is the accessible-name anchor that survives narrow → icon-only.
+    expect(sectionsTab.getAttribute('aria-label')).toBe('Sections');
+    expect(exportTab.getAttribute('aria-label')).toBe('Export');
+  });
+
   test('default Sections tab shows Column grouping + Section name & color, hides Branding/Report title', () => {
     render(<ConversionInspector conversion={makeInspectorConversion()} quota={quota} />);
     expect(screen.getByTestId('app-columnmap')).toBeTruthy();
@@ -120,6 +132,16 @@ describe('Left rail — Outline / Recent Exports tabs', () => {
     const recentTab = within(tablist).getByRole('tab', { name: 'Recent Exports' });
     expect(recentTab.getAttribute('aria-selected')).toBe('true');
     expect(outlineTab.getAttribute('aria-selected')).toBe('false');
+  });
+
+  test('each tab carries an icon, and aria-label preserves the name when labels collapse to icon-only', () => {
+    render(<WorkbenchRail conversion={makeRailConversion()} className="flex" />);
+    const outlineTab = screen.getByRole('tab', { name: 'Outline' });
+    const recentTab = screen.getByRole('tab', { name: 'Recent Exports' });
+    expect(outlineTab.querySelector('svg')).toBeTruthy();
+    expect(recentTab.querySelector('svg')).toBeTruthy();
+    expect(outlineTab.getAttribute('aria-label')).toBe('Outline');
+    expect(recentTab.getAttribute('aria-label')).toBe('Recent Exports');
   });
 
   test('default Recent Exports tab shows the export list + New export button', () => {
