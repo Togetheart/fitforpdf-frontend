@@ -116,4 +116,35 @@ describe('/app workbench dropzone surfaces render failures', () => {
     // Free user + condensed result → honest upgrade nudge (gate the fidelity, not the fix).
     expect(await screen.findByTestId('condensed-upgrade-note')).toBeTruthy();
   });
+
+  test('a low-quality (FAIL) long-text render UNDER the cap surfaces the condense recovery', async () => {
+    // 200 OK PDF, but quality FAIL from long-text wrap/overflow (the 98-page case):
+    // under the page-burden cap, so no 422 — the recovery must still be offered.
+    renderResponder = () => new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
+      status: 200,
+      headers: {
+        'content-type': 'application/pdf',
+        'content-disposition': 'attachment; filename="out.pdf"',
+        'x-cleansheet-verdict': 'FAIL',
+        'x-cleansheet-score': '55',
+        'x-cleansheet-reasons': 'wrap_severe,overflow_cells',
+      },
+    });
+    await selectFileAndGenerate();
+
+    const btn = await screen.findByTestId('condense-recovery-btn');
+    await waitFor(() => expect(btn.disabled).toBe(false), { timeout: 3000 });
+
+    // Clicking re-renders the same file with the condense flag.
+    renderResponder = () => new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
+      status: 200,
+      headers: { 'content-type': 'application/pdf', 'content-disposition': 'attachment; filename="out.pdf"' },
+    });
+    await act(async () => { fireEvent.click(btn); });
+    await waitFor(() => {
+      const urls = global.fetch.mock.calls.map((c) => String(c[0])).filter((u) => u.includes('/api/render'));
+      expect(urls.length).toBeGreaterThanOrEqual(2);
+      expect(urls[urls.length - 1]).toMatch(/truncate_long_text=true/);
+    }, { timeout: 3000 });
+  });
 });

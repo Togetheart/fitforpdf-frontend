@@ -1137,6 +1137,20 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
       || ['pro', 'credits', 'api_enterprise'].includes(quota.planType)),
   );
   const showCondensedNote = conversion.truncateLongText === true && !isPaidPlan;
+
+  // Surface the condense recovery when a render came out low-quality (FAIL/WARN) from
+  // long-text bloat — and it isn't already condensed. Previously this one-click fix only
+  // appeared on the HARD page-burden cap (422); a file UNDER the cap that still renders to
+  // a bloated, cut-off PDF (e.g. 577 rows → 98 pages, score 55 → FAIL) got NO prompt.
+  // Shown to everyone — a page-heavy FAIL benefits from condensing on any plan.
+  const verdict = conversion.confidence?.verdict;
+  const failReasons = Array.isArray(conversion.confidence?.reasons) ? conversion.confidence.reasons : [];
+  // Reasons that condensing actually improves (shorter cells → less wrap/overflow, fewer
+  // pages, room for a bigger font). NOT column_collapse — that's a width problem.
+  const CONDENSE_HELPS = ['wrap_severe', 'high_wrap_rate', 'overflow_cells', 'high_truncation', 'max_row_height_hit', 'page_burden_high', 'small_font', 'min_font_low'];
+  const showCondenseRecovery = (verdict === 'FAIL' || verdict === 'WARN')
+    && conversion.truncateLongText !== true
+    && failReasons.some((r) => CONDENSE_HELPS.includes(r));
   return (
     <div className="ffp-reveal">
       <div className="mb-[18px] flex max-w-[620px] items-center gap-3 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
@@ -1155,6 +1169,29 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
           Change file
         </button>
       </div>
+      {showCondenseRecovery ? (
+        <div
+          data-testid="condense-recovery"
+          className="mb-[18px] max-w-[620px] rounded-[10px] border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] px-4 py-3 text-[12.5px] leading-5 text-[var(--color-warn-text)]"
+        >
+          <p>
+            <span className="font-semibold">This export came out long and dense.</span>{' '}
+            Long text wrapped across many pages{conversion.confidence?.score != null ? ` (quality score ${conversion.confidence.score}/100)` : ''} — condensing long cells usually gives a cleaner, shorter PDF.
+          </p>
+          <button
+            type="button"
+            data-testid="condense-recovery-btn"
+            onClick={(event) => {
+              event.stopPropagation();
+              if (!conversion.isLoading) void conversion.handleCondenseAndRetry?.();
+            }}
+            disabled={conversion.isLoading}
+            className="mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-[8px] bg-blue-600 px-3 text-[12.5px] font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {conversion.isLoading ? 'Condensing…' : 'Condense long text & retry'}
+          </button>
+        </div>
+      ) : null}
       {showCondensedNote ? (
         <div
           data-testid="condensed-upgrade-note"
