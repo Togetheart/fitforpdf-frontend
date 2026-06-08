@@ -25,13 +25,14 @@ const ENDPOINTS = [
     path: '/v1/quota',
     auth: true,
     summary: 'Check your quota',
-    description: 'Returns your current plan, usage, and remaining exports.',
+    description:
+      'Returns your current plan, usage, and remaining exports. A new self-serve key starts with 25 free render credits — that\'s the "credits" block, and it\'s what counts down as you render. The "free" block is the separate free-plan allowance, not your trial.',
     example: `curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
   ${BASE_URL}/quota`,
     response: `{
   "plan": "credits",
+  "credits": { "remaining": 25 },
   "free": { "limit": 50, "used": 0, "remaining": 50 },
-  "credits": { "remaining": 8 },
   "pro": { "monthlyCap": 500, "usedInPeriod": 0 }
 }`,
   },
