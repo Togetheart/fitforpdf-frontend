@@ -256,9 +256,10 @@ describe('/app tool-first workbench shell', () => {
     fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
     // Paid plan: once the plan loads there is no Pro upsell and controls are usable.
     await waitFor(() => expect(screen.queryByTestId('app-pro-upsell')).toBeNull());
-    // Drop the summary page + the repeated headers; leave the footer on.
+    // Drop the summary page, repeated headers, and the footer.
     fireEvent.click(screen.getByTestId('app-layout-overview-toggle'));
     fireEvent.click(screen.getByTestId('app-layout-headers-toggle'));
+    fireEvent.click(screen.getByTestId('app-layout-footer-toggle'));
     fireEvent.change(screen.getByTestId('generate-file-input'), {
       target: { files: [new File(['a,b\n1,2'], 'customers.csv', { type: 'text/csv' })] },
     });
@@ -268,7 +269,7 @@ describe('/app tool-first workbench shell', () => {
       const renderCall = fetchMock.calls.find((call) => call.url.includes('/api/render'));
       expect(renderCall?.options.body.get('keep_overview')).toBe('0');
       expect(renderCall?.options.body.get('keep_headers')).toBe('0');
-      expect(renderCall?.options.body.get('keep_footer')).toBe('1');
+      expect(renderCall?.options.body.get('keep_footer')).toBe('0');
     });
 
     fetchMock.restore();

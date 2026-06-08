@@ -62,7 +62,7 @@ function InspectorSection({ title, hint, children, badge = null, locked = false 
       {/* Free plans: controls stay visible (discoverability) but a disabled
           fieldset dims + blocks them — no silent no-op, and an upsell teaser. */}
       {locked ? (
-        <fieldset disabled className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
+        <fieldset disabled aria-label={`${title} — Pro feature`} className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
       ) : children}
     </section>
   );
@@ -405,7 +405,9 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
   // Paid (advanced) plans can use the branding/logo + layout controls; free
   // plans see them locked (an unknown/loading plan is treated as free).
   const canUseAdvanced = isUnlimited || (quota.planType ? String(quota.planType).toLowerCase() !== 'free' : false);
-  const proLocked = !canUseAdvanced;
+  // Defer to the loaded flag: until /api/quota resolves we leave controls
+  // unlocked, so a paid user never flashes the locked/upsell state on load.
+  const proLocked = quota.loaded ? !canUseAdvanced : false;
   const quotaLocked = Boolean(quota.isQuotaLocked);
   const quotaSummary = isUnlimited
     ? 'Admin - unlimited'
@@ -533,10 +535,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         </InspectorSection>
 
         {proLocked ? (
-          <div data-testid="app-pro-upsell" className="mb-4 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-3 py-2.5 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">
+          <div data-testid="app-pro-upsell" className="mb-4 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-3 py-2.5 text-[11.5px] leading-5 text-[var(--color-muted)]">
             <span className="font-semibold text-[var(--color-text)]">Pro feature.</span>{' '}
-            <a href="/pricing" className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Upgrade</a>{' '}
-            to add your own logo, a custom footer, and control the page layout.
+            <button type="button" onClick={() => conversion.handleGoProCheckout?.()} className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Upgrade</button>{' '}
+            to add your own logo, accent color, a custom footer, and control the page layout.
           </div>
         ) : null}
 
@@ -549,7 +551,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-branding-toggle"
               checked={conversion.includeBranding !== false}
               onChange={(e) => conversion.setIncludeBranding(e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Désactivé = PDF sans aucun logo (ni FitForPDF, ni le vôtre).</p>
@@ -620,7 +622,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-layout-overview-toggle"
               checked={conversion.layout?.overview !== false}
               onChange={(e) => conversion.handleLayoutChange('overview', e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
@@ -631,7 +633,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-layout-headers-toggle"
               checked={conversion.layout?.headers !== false}
               onChange={(e) => conversion.handleLayoutChange('headers', e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
@@ -642,7 +644,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               data-testid="app-layout-footer-toggle"
               checked={conversion.layout?.footer !== false}
               onChange={(e) => conversion.handleLayoutChange('footer', e.target.checked)}
-              className="h-4 w-4 cursor-pointer"
+              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">The summary page lists your sections; turn it off for a plain table.</p>
