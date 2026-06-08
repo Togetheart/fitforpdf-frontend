@@ -102,12 +102,11 @@ describe('Right inspector — Sections / Export tabs', () => {
     expect(screen.queryByText('Section name & color')).toBeNull();
   });
 
-  test('header, quota line and sticky action footer stay outside the tabs (always visible)', () => {
+  test('header and sticky action footer stay outside the tabs (always visible)', () => {
     render(<ConversionInspector conversion={makeInspectorConversion()} quota={quota} />);
     expect(screen.getByText('Adjust output')).toBeTruthy();
     expect(screen.getByRole('button', { name: /Update preview/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Download PDF/i })).toBeTruthy();
-    expect(screen.getByText(/Free - 2 exports left/i)).toBeTruthy();
     // Still there after switching tabs.
     fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
     expect(screen.getByText('Adjust output')).toBeTruthy();

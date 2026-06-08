@@ -11,6 +11,7 @@ import useIsDesktop from '../hooks/useIsDesktop.mjs';
 import UploadCard from './UploadCard';
 import { trackPaywallEvent } from '../lib/analytics.mjs';
 import AccountMenu from './AccountMenu';
+import PlanBadge from './ui/PlanBadge';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
 import { PAYG_PACKS } from '../siteCopy.mjs';
@@ -479,12 +480,6 @@ const INSPECTOR_TABS = [
 export function ConversionInspector({ conversion, quota, className = '', onCollapse, collapsed = false }) {
   const [activeTab, setActiveTab] = React.useState('sections');
   const isUnlimited = quota.planType === 'api_enterprise' || quota.isUnlimited === true;
-  const exportsLeft = Number.isFinite(quota.freeExportsLeft)
-    ? quota.freeExportsLeft
-    : Number.isFinite(quota.freeExportsLimit)
-      ? quota.freeExportsLimit
-      : 3;
-  const planLabel = isUnlimited ? 'Admin' : quota.planType === 'pro' ? 'Pro' : quota.planType === 'credits' ? 'Credits' : 'Free';
   // Paid (advanced) plans can use the branding/logo + layout controls; free
   // plans see them locked (an unknown/loading plan is treated as free).
   const canUseAdvanced = isUnlimited || (quota.planType ? String(quota.planType).toLowerCase() !== 'free' : false);
@@ -492,9 +487,6 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
   // unlocked, so a paid user never flashes the locked/upsell state on load.
   const proLocked = quota.loaded ? !canUseAdvanced : false;
   const quotaLocked = Boolean(quota.isQuotaLocked);
-  const quotaSummary = isUnlimited
-    ? 'Admin - unlimited'
-    : `${planLabel} - ${exportsLeft} exports left`;
 
   return (
     <aside
@@ -793,13 +785,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             Render another file
           </button>
         ) : null}
-        {/* When quota is locked, the amber "No exports left · Buy credits" line above
-            already states the plan status + pricing CTA — so we drop this duplicate. */}
-        {!quotaLocked ? (
-          <div className="mt-1.5 text-center text-[11.5px] text-[var(--color-text-subtle)]">
-            {quotaSummary} - <a href="/pricing" className="font-medium text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">View pricing</a>
-          </div>
-        ) : null}
+        {/* Exports-remaining is no longer shown here. It lives at the point of
+            work — the canvas quota chip (visible on desktop AND mobile, signed-in
+            AND anonymous) — plus the account menu as a reference. The inspector
+            keeps only the amber "No exports left" lock line above when exhausted. */}
       </div>
     </aside>
   );
@@ -1688,6 +1677,15 @@ function WorkbenchWorkspace({ conversion, quota, className = '' }) {
       data-testid="app-canvas"
       className={['min-w-0 px-4 py-6 sm:px-8 sm:py-[30px]', className].filter(Boolean).join(' ')}
     >
+      {/* Exports-remaining at the point of work — the one always-visible quota
+          readout (desktop + mobile, signed-in + anonymous). Gated on `loaded` so a
+          paid user never flashes "Free · 3". The account menu mirrors this chip as a
+          reference; the inspector no longer repeats it. */}
+      {quota?.loaded ? (
+        <div className="mb-4 flex justify-end">
+          <PlanBadge quota={quota} />
+        </div>
+      ) : null}
       {conversion.pdfBlob ? (
         <WorkbenchRenderedCanvas conversion={conversion} quota={quota} />
       ) : (

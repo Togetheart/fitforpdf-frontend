@@ -40,7 +40,7 @@ describe('ConversionInspector — single paywall message (no duplicate)', () => 
     expect(screen.queryByText(/Free - 0 exports left/i)).toBeNull();
   });
 
-  test('not locked: grey quota summary shows (and no amber lock line)', () => {
+  test('not locked: inspector shows neither a quota summary nor a lock line (quota moved to the canvas chip)', () => {
     render(
       <ConversionInspector
         conversion={makeConversion()}
@@ -48,7 +48,9 @@ describe('ConversionInspector — single paywall message (no duplicate)', () => 
       />,
     );
     expect(screen.queryByTestId('app-inspector-quota-lock')).toBeNull();
-    expect(screen.getByText(/View pricing/i)).toBeTruthy();
-    expect(screen.getByText(/Free - 2 exports left/i)).toBeTruthy();
+    // The exports-remaining readout moved OUT of the inspector to the canvas quota
+    // chip (so it's visible on mobile too); the inspector no longer repeats it.
+    expect(screen.queryByText(/View pricing/i)).toBeNull();
+    expect(screen.queryByText(/Free - 2 exports left/i)).toBeNull();
   });
 });

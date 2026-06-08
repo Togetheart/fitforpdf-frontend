@@ -102,9 +102,9 @@ describe('/app tool-first workbench shell', () => {
     render(<AppPage />);
 
     await waitFor(() => {
-      // Plan/credits moved into the account menu; the inspector footer is the
-      // always-visible quota readout.
-      expect(screen.getByText(/Admin\s*-\s*unlimited/i)).toBeTruthy();
+      // The quota readout lives at the point of work (the canvas quota chip) and in
+      // the account menu. The chip renders "Admin · unlimited" for api_enterprise.
+      expect(screen.getByTestId('plan-badge').textContent).toMatch(/Admin\s*[·-]\s*unlimited/i);
     });
 
     mock.restore();
@@ -147,7 +147,7 @@ describe('/app tool-first workbench shell', () => {
     expect(within(inspector).getByText('Branding')).toBeTruthy();
   });
 
-  test('keeps inspector actions permanent below a scrollable options area', () => {
+  test('keeps inspector actions permanent below a scrollable options area', async () => {
     render(<AppPage />);
     const inspector = screen.getByTestId('app-inspector');
     const options = screen.getByTestId('app-inspector-options');
@@ -158,9 +158,13 @@ describe('/app tool-first workbench shell', () => {
     expect(options.className).toMatch(/overflow-y-auto/);
     expect(actions.className).toMatch(/sticky/);
     expect(actions.className).toMatch(/bottom-0/);
-    // Pre-render the action area carries the quota/pricing line (the action buttons
-    // themselves appear only once a PDF exists).
-    expect(within(actions).getByText(/View pricing/i)).toBeTruthy();
+    // The exports-remaining readout moved OUT of the inspector to the point of work
+    // (the canvas quota chip), so it's visible on mobile too (where the inspector is
+    // a drawer). The action buttons still appear only once a PDF exists.
+    expect(within(actions).queryByText(/View pricing/i)).toBeNull();
+    await waitFor(() => {
+      expect(within(screen.getByTestId('app-canvas')).getByTestId('plan-badge')).toBeTruthy();
+    });
   });
 
   test('mobile-first workbench: full-width center canvas plus off-canvas rail/inspector drawers (Phase 2)', () => {
