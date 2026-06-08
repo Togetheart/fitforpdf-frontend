@@ -4,6 +4,7 @@ import React from 'react';
 import { useEffect, useRef } from 'react';
 import { LANDING_COPY } from '../siteCopy.mjs';
 import Badge from './ui/Badge';
+import loadGsap from '../lib/loadGsap.mjs';
 
 export default function HeroHeadline() {
   const accentRef = useRef(null);
@@ -34,9 +35,8 @@ export default function HeroHeadline() {
     let timeline = null;
     let cancelled = false;
 
-    import('gsap').then((mod) => {
-      if (cancelled) return;
-      const gsap = mod.gsap || mod.default;
+    loadGsap().then((gsap) => {
+      if (cancelled || !gsap) return;
       timeline = gsap.timeline({
         repeat: -1,
         yoyo: true,
@@ -48,6 +48,8 @@ export default function HeroHeadline() {
         filter: 'brightness(1.08)',
         duration: 12,
       });
+    }).catch(() => {
+      // Decorative shimmer — never surface a GSAP error as an unhandled rejection.
     });
 
     return () => {

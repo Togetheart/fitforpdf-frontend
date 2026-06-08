@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { cn } from '../lib/cn.mjs';
+import loadGsap from '../lib/loadGsap.mjs';
 
 const BRACKET_SPREAD = 10; // px brackets start outward from final position
 // Bar widths: start wide (overflowing), end at final logo size
@@ -32,9 +33,8 @@ export default function AnimatedLogo({ className }) {
     // first-load bundle on every page (this logo is in the header + footer).
     // The intro is decorative — the SVG already renders in its final state, so
     // a slightly-deferred play is fine and never blocks paint.
-    import('gsap').then((mod) => {
-      if (cancelled || !svgRef.current) return;
-      const gsap = mod.default || mod.gsap;
+    loadGsap().then((gsap) => {
+      if (cancelled || !gsap || !svgRef.current) return;
 
       const bracketL = svg.querySelector('[data-bracket="left"]');
       const bracketR = svg.querySelector('[data-bracket="right"]');
@@ -57,6 +57,9 @@ export default function AnimatedLogo({ className }) {
         const el = svg.querySelector(bar.selector);
         if (el) tl.to(el, { attr: { width: bar.finalWidth }, duration: 0.65 }, 0.08);
       }
+    }).catch(() => {
+      // Decorative intro — never let a GSAP runtime error escape as an
+      // unhandled rejection (the SVG already shows its final state).
     });
 
     return () => {
