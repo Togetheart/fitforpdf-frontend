@@ -171,17 +171,17 @@ describe('/app tool-first workbench shell', () => {
     expect(screen.getByTestId('app-workbench').className).toMatch(/lg:h-screen/);
     // The center workspace is full width and always rendered (not in a drawer).
     expect(screen.getByTestId('app-canvas').className).toMatch(/w-full/);
-    // The rail + inspector are now off-canvas drawers: fixed, dialog-role panels
-    // that slide via translate-x and stay mounted regardless of open state.
+    // The rail + inspector are now bottom-sheets: fixed, dialog-role panels that
+    // slide up from the bottom via translate-y and stay mounted regardless of state.
     const leftDrawer = screen.getByTestId('app-drawer-left');
     const rightDrawer = screen.getByTestId('app-drawer-right');
     expect(leftDrawer.getAttribute('role')).toBe('dialog');
     expect(rightDrawer.getAttribute('role')).toBe('dialog');
     expect(leftDrawer.className).toMatch(/fixed/);
     expect(rightDrawer.className).toMatch(/fixed/);
-    // Closed by default: off-screen via translate-x-full / -translate-x-full.
-    expect(leftDrawer.className).toMatch(/-translate-x-full/);
-    expect(rightDrawer.className).toMatch(/translate-x-full/);
+    // Closed by default: off-screen below the viewport via translate-y-full.
+    expect(leftDrawer.className).toMatch(/translate-y-full/);
+    expect(rightDrawer.className).toMatch(/translate-y-full/);
     // The rail + inspector content live inside the drawers (still mounted).
     expect(leftDrawer.contains(screen.getByTestId('app-left-rail'))).toBe(true);
     expect(rightDrawer.contains(screen.getByTestId('app-inspector'))).toBe(true);

@@ -637,7 +637,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
             />
           </label>
-          <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Off = a plain PDF with no logo — neither FitForPDF&apos;s nor yours.</p>
+          <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Off = a plain PDF with no logo — neither fitforpdf&apos;s nor yours.</p>
           <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Accent color</span>
           </label>
@@ -1101,11 +1101,17 @@ function WorkbenchDropzone({ conversion, quota }) {
           event.preventDefault();
           openPicker();
         }}
-        className="flex min-h-[356px] cursor-pointer flex-col items-center justify-center rounded-[11px] border border-dashed border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-6 py-12 text-center outline-none transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] focus-visible:border-[var(--color-line-strong)] focus-visible:ring-2 focus-visible:ring-[var(--color-line-strong)]"
+        className="flex min-h-[280px] cursor-pointer flex-col items-center justify-center rounded-[11px] border border-dashed border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-6 py-8 text-center outline-none transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] focus-visible:border-[var(--color-line-strong)] focus-visible:ring-2 focus-visible:ring-[var(--color-line-strong)] sm:min-h-[356px] sm:py-12"
       >
         <Upload className="mb-4 h-10 w-10 text-[var(--color-text-subtle)]" strokeWidth={1.4} aria-hidden="true" />
         <h2 className="max-w-[320px] text-[18px] font-semibold leading-tight text-[var(--color-text)]">
-          {conversion.file ? conversion.file.name : 'Drop your Excel or CSV here'}
+          {conversion.file ? conversion.file.name : (
+            <>
+              {/* You can't drag-and-drop on a touch device — lead with a tap action. */}
+              <span className="sm:hidden">Add your Excel or CSV</span>
+              <span className="hidden sm:inline">Drop your Excel or CSV here</span>
+            </>
+          )}
         </h2>
         <p className="mt-2 text-[13.5px] text-[var(--color-muted)]">.xlsx, .xls, .csv - up to 4 MB</p>
         <div className="my-[18px] text-[12.5px] text-[var(--color-text-subtle)]">{hasFile ? 'ready' : 'or'}</div>
@@ -1146,9 +1152,10 @@ function WorkbenchDropzone({ conversion, quota }) {
               openPicker();
             }}
             disabled={conversion.isLoading}
-            className="min-h-11 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-7 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-11 w-full rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-7 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
           >
-            Browse files
+            <span className="sm:hidden">Choose a file</span>
+            <span className="hidden sm:inline">Browse files</span>
           </button>
         )}
         {(conversion.failKind === 'page_burden' || conversion.error) ? (
@@ -1227,7 +1234,7 @@ function WorkbenchDropzone({ conversion, quota }) {
 
 function WorkbenchSampleCard({ conversion }) {
   return (
-    <aside className="flex min-h-[356px] flex-col rounded-[12px] border border-[var(--color-line)] bg-[var(--color-surface)] p-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.08)]">
+    <aside className="flex flex-col rounded-[12px] border border-[var(--color-line)] bg-[var(--color-surface)] p-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.08)] xl:min-h-[356px]">
       <h2 className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</h2>
       <p className="mb-3 mt-1 text-xs leading-5 text-[var(--color-muted)]">Preview a finished PDF from this CSV — no upload needed.</p>
       <div className="flex-1 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-3 font-mono text-[11px] leading-[1.8] text-[var(--color-muted)]">
@@ -1266,9 +1273,16 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
           columns on every page. Nothing cut off.
         </p>
       </div>
+      {/* On mobile, lead with the zero-friction sample (most phone visitors have
+          no spreadsheet handy); desktop keeps upload-first with the sample in the
+          250px side column. */}
       <div className="grid gap-[18px] xl:grid-cols-[minmax(0,1fr)_250px]">
-        <WorkbenchDropzone conversion={conversion} quota={quota} />
-        <WorkbenchSampleCard conversion={conversion} />
+        <div className="order-2 min-w-0 xl:order-1">
+          <WorkbenchDropzone conversion={conversion} quota={quota} />
+        </div>
+        <div className="order-1 xl:order-2">
+          <WorkbenchSampleCard conversion={conversion} />
+        </div>
       </div>
     </>
   );
@@ -1867,25 +1881,29 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
 // (preserving input state + keeping existing mobile content queries resolvable).
 // side: 'left' | 'right' — decides the slide direction + close-state transform.
 function MobileDrawer({ id, side, label, open, onClose, children }) {
-  const isLeft = side === 'left';
-  const closedTranslate = isLeft ? '-translate-x-full' : 'translate-x-full';
   return (
     <div
       id={id}
       role="dialog"
       aria-label={label}
-      // A closed drawer is off-screen: mark it inert (removes its content from the
+      // A closed sheet is off-screen: mark it inert (removes its content from the
       // a11y tree + focus order) and not a modal. aria-modal applies only while open.
       {...(open ? { 'aria-modal': 'true' } : { inert: '' })}
       data-testid={`app-drawer-${side}`}
       data-open={open ? 'true' : 'false'}
+      // Bottom sheet (mobile-native): slides up from the bottom edge, full width,
+      // rounded top, capped at 85vh; translate-y toggles show/hide. `side` only
+      // identifies which panel (rail vs inspector) — both sheet up from the bottom.
       className={[
-        'fixed top-[57px] bottom-0 z-50 flex w-[88vw] max-w-[360px] flex-col bg-[var(--color-surface)] shadow-2xl transition-transform duration-300 ease-out lg:hidden',
-        isLeft ? 'left-0' : 'right-0',
-        open ? 'translate-x-0' : `${closedTranslate} pointer-events-none`,
+        'fixed inset-x-0 bottom-0 z-50 flex max-h-[85vh] flex-col rounded-t-2xl bg-[var(--color-surface)] shadow-2xl transition-transform duration-300 ease-out lg:hidden',
+        open ? 'translate-y-0' : 'translate-y-full pointer-events-none',
       ].join(' ')}
     >
-      <div className="flex h-11 shrink-0 items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-surface)] px-3">
+      {/* Grab handle — bottom-sheet affordance. */}
+      <div className="flex shrink-0 justify-center pt-2.5" aria-hidden="true">
+        <span className="h-1 w-9 rounded-full bg-[var(--color-line-strong)]" />
+      </div>
+      <div className="flex h-11 shrink-0 items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4">
         <span className="text-[13px] font-semibold text-[var(--color-text)]">{label}</span>
         <button
           type="button"
@@ -1896,7 +1914,7 @@ function MobileDrawer({ id, side, label, open, onClose, children }) {
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">{children}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-[max(16px,env(safe-area-inset-bottom))]">{children}</div>
     </div>
   );
 }
