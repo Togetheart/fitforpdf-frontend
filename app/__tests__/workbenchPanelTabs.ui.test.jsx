@@ -102,6 +102,26 @@ describe('Right inspector — Sections / Export tabs', () => {
     expect(screen.queryByText('Section name & color')).toBeNull();
   });
 
+  test('logo size (S/M/L) control appears only with a logo and switches size', () => {
+    const setLogoSize = vi.fn();
+    // No logo → no size control.
+    const { unmount } = render(<ConversionInspector conversion={makeInspectorConversion()} quota={quota} />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+    expect(screen.queryByTestId('app-logo-size')).toBeNull();
+    unmount();
+    // With a logo → control shows; clicking a tier calls setLogoSize.
+    render(<ConversionInspector conversion={makeInspectorConversion({
+      logoFile: new File(['x'], 'logo.png', { type: 'image/png' }),
+      logoSize: 'medium',
+      setLogoSize,
+    })} quota={quota} />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
+    const group = screen.getByTestId('app-logo-size');
+    expect(within(group).getByText('medium').getAttribute('aria-checked')).toBe('true');
+    fireEvent.click(within(group).getByText('large'));
+    expect(setLogoSize).toHaveBeenCalledWith('large');
+  });
+
   test('header and sticky action footer stay outside the tabs (always visible)', () => {
     render(<ConversionInspector conversion={makeInspectorConversion()} quota={quota} />);
     expect(screen.getByText(/Change anything/i)).toBeTruthy();
