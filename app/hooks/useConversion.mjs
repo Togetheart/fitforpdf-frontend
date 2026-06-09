@@ -375,7 +375,7 @@ export default function useConversion({ quota }) {
   const [compactSuggestion, setCompactSuggestion] = useState(null);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
-  const [layout, setLayout] = useState({ overview: true, headers: true, footer: true });
+  const [layout, setLayout] = useState({ overview: true, headers: true, footer: true, sectionTitles: true });
   // Kunj control: custom report title (pre-render). Sent to the render route,
   // which forwards it to the engine (options.reportTitle). Empty => engine
   // falls back to the filename-derived title.
@@ -542,6 +542,7 @@ export default function useConversion({ quota }) {
       formData.append('keep_overview', layout.overview !== false ? '1' : '0');
       formData.append('keep_headers', layout.headers !== false ? '1' : '0');
       formData.append('keep_footer', layout.footer !== false ? '1' : '0');
+      formData.append('keep_section_titles', layout.sectionTitles !== false ? '1' : '0');
       formData.append('retain_consent', retainSourceConsent ? '1' : '0');
       formData.append('contacts_consent', contactsConsent ? '1' : '0');
       // Custom report title (Kunj). Only sent when set; demo renders skip it.
@@ -983,7 +984,7 @@ export default function useConversion({ quota }) {
   function handleLayoutChange(nextKey, nextChecked) {
     setLayout((current) => {
       if (!current || typeof current !== 'object') {
-        return { overview: true, headers: true, footer: true, [nextKey]: Boolean(nextChecked) };
+        return { overview: true, headers: true, footer: true, sectionTitles: true, [nextKey]: Boolean(nextChecked) };
       }
       return { ...current, [nextKey]: Boolean(nextChecked) };
     });

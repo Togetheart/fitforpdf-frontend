@@ -760,7 +760,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">Branding applies to paid exports.</p>
         </InspectorSection>
 
-        <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, or the page footer." badge={proLocked ? 'Pro' : null} locked={proLocked}>
+        <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, section titles, or the page footer." badge={proLocked ? 'Pro' : null} locked={proLocked}>
           <ToggleRow
             label="Summary page"
             testid="app-layout-overview-toggle"
@@ -778,6 +778,13 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             testid="app-layout-footer-toggle"
             checked={conversion.layout?.footer !== false}
             onChange={(next) => conversion.handleLayoutChange('footer', next)}
+          />
+          <ToggleRow
+            label="Section titles"
+            testid="app-layout-section-titles-toggle"
+            checked={conversion.layout?.sectionTitles !== false}
+            onChange={(next) => conversion.handleLayoutChange('sectionTitles', next)}
+            hint={'The big "SECTION N" block above each table. Off keeps just the column-header row.'}
           />
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">The summary page lists your sections; turn it off for a plain table.</p>
         </InspectorSection>
