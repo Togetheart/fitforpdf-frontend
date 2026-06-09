@@ -104,12 +104,12 @@ describe('Right inspector — Sections / Export tabs', () => {
 
   test('header and sticky action footer stay outside the tabs (always visible)', () => {
     render(<ConversionInspector conversion={makeInspectorConversion()} quota={quota} />);
-    expect(screen.getByText('Adjust output')).toBeTruthy();
+    expect(screen.getByText(/Change anything/i)).toBeTruthy();
     expect(screen.getByRole('button', { name: /Update preview/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Download PDF/i })).toBeTruthy();
     // Still there after switching tabs.
     fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
-    expect(screen.getByText('Adjust output')).toBeTruthy();
+    expect(screen.getByText(/Change anything/i)).toBeTruthy();
     expect(screen.getByRole('button', { name: /Download PDF/i })).toBeTruthy();
   });
 
