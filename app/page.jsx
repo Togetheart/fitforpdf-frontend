@@ -387,11 +387,11 @@ export default function Page() {
         <div className="space-y-10">
           <div className="text-center">
             <div className="mx-auto mb-5 h-px w-12 bg-[#0F172A]/20" aria-hidden="true" />
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
               Excel PDF Export vs fitforpdf
             </h2>
             <div className="relative mx-auto mt-6 max-w-[58ch]">
-              <p className="dropcap text-left text-[15.5px] leading-[1.75] text-[var(--color-text)]">
+              <p className="text-left text-[15.5px] leading-[1.75] text-[var(--color-text)]">
                 Spreadsheets are built for machines, not readers. fitforpdf re-typesets a wide
                 export into a paginated PDF — anchor columns repeated on every page, an automatic
                 table of contents, and nothing cut off.
@@ -406,15 +406,15 @@ export default function Page() {
           {/* Serif key figures — the trust pillars set as editorial numerals, split by thin ink rules. */}
           <div className="mx-auto grid max-w-xl grid-cols-3 divide-x divide-[#0F172A]/10 text-center">
             <div className="px-2">
-              <div className="font-serif text-[34px] font-bold leading-none text-[var(--color-text)]">0</div>
+              <div className="text-[34px] font-bold leading-none text-[var(--color-text)]">0</div>
               <div className="mt-1.5 text-[11.5px] leading-snug text-muted">files stored, ever</div>
             </div>
             <div className="px-2">
-              <div className="font-serif text-[34px] font-bold leading-none text-[var(--color-text)]">0</div>
+              <div className="text-[34px] font-bold leading-none text-[var(--color-text)]">0</div>
               <div className="mt-1.5 text-[11.5px] leading-snug text-muted">LLM in the data path</div>
             </div>
             <div className="px-2">
-              <div className="font-serif text-[34px] font-bold leading-none text-[var(--color-text)]">EU</div>
+              <div className="text-[34px] font-bold leading-none text-[var(--color-text)]">EU</div>
               <div className="mt-1.5 text-[11.5px] leading-snug text-muted">hosted</div>
             </div>
           </div>
@@ -479,7 +479,7 @@ export default function Page() {
         <div className="space-y-10">
           <div>
             <div className="mx-auto mb-5 h-px w-12 bg-[#0F172A]/20" aria-hidden="true" />
-            <h2 className="text-center font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
+            <h2 className="text-center text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-text)]">
               Frequently asked questions
             </h2>
           </div>
@@ -510,7 +510,7 @@ export default function Page() {
         <div className="absolute inset-0 bg-[#0a1628]/70" />
         <div className="relative z-10 mx-auto max-w-2xl text-center px-4">
           <div className="mx-auto mb-5 h-px w-12 bg-white/25" aria-hidden="true" />
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
             Your export is done.<br />The cleanup shouldn&apos;t be.
           </h2>
           <p className="mt-4 text-lg text-white/70">{LANDING_COPY.finalCtaCopy}</p>

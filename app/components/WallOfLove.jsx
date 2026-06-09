@@ -140,7 +140,7 @@ export default function WallOfLove() {
 
             {/* Quote mark */}
             <span
-              className="pointer-events-none absolute -top-1 right-5 select-none text-[5rem] font-serif leading-none text-blue-500/[0.07]"
+              className="pointer-events-none absolute -top-1 right-5 select-none text-[5rem] leading-none text-blue-500/[0.07]"
               aria-hidden="true"
             >
               &rdquo;

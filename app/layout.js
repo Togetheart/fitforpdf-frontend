@@ -1,15 +1,6 @@
 import Script from 'next/script';
-import { Lora } from 'next/font/google';
 import './globals.css';
 import SiteShellGate from './components/SiteShellGate';
-
-const lora = Lora({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-  variable: '--font-lora',
-});
 import ViewTransitions from './components/ViewTransitions';
 import { Analytics } from '@vercel/analytics/next';
 import { SEO } from './siteCopy.mjs';
@@ -106,7 +97,7 @@ const organizationLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={lora.variable} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Warm up the PostHog analytics origins so the deferred array.js +
             ingestion calls skip the DNS+TLS handshake on first capture. */}

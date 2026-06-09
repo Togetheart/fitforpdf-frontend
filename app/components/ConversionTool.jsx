@@ -64,7 +64,7 @@ function InspectorSection({ title, hint, children, badge = null, locked = false,
         className="mb-1.5 flex w-full items-center justify-between gap-2 text-left text-[var(--color-text)]"
       >
         <span className="flex items-center gap-2">
-          <span className="font-serif text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
+          <span className="text-[14.5px] font-bold tracking-[-0.01em]">{title}</span>
           {badge ? (
             <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">{badge}</span>
           ) : null}
@@ -1241,7 +1241,7 @@ function WorkbenchSampleCard({ conversion }) {
         aria-controls={contentId}
         className="flex w-full items-center justify-between gap-2 text-left"
       >
-        <span className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</span>
+        <span className="text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
       <div id={contentId} hidden={!open} className="mt-3">
@@ -1306,7 +1306,7 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
   return (
     <>
       <div className="mb-[22px] max-w-[600px]">
-        <h1 className="font-serif text-[27px] font-semibold tracking-[-0.01em] text-[var(--color-text)]">
+        <h1 className="text-[27px] font-semibold tracking-[-0.01em] text-[var(--color-text)]">
           Start a new export
         </h1>
         <p className="mt-2 max-w-[60ch] text-[14.5px] leading-[1.55] text-[var(--color-muted)]">
