@@ -89,9 +89,9 @@ function InspectorSection({ title, hint, children, badge = null, locked = false,
 // right, and the whole row is one 44px click + keyboard target (role="switch").
 // Replaces right-aligned native checkboxes — a right-aligned control reads as a
 // switch, whereas checkboxes are conventionally LEFT-aligned form controls. The
-// switch is "ink on paper": an ink track when on, a muted track when off, and a
-// theme-inverting knob (so it stays visible in dark mode, where --color-text is
-// light). As a <button> it is auto-disabled by InspectorSection's <fieldset
+// switch shows a blue track when on and a muted gray track when off (the prior
+// ink-on/ink-off pair was indistinguishable), plus a theme-inverting knob (so it stays
+// visible in dark mode). As a <button> it is auto-disabled by InspectorSection's <fieldset
 // disabled> when a section is Pro-locked.
 function ToggleRow({ label, checked, onChange, hint = null, testid, className = '' }) {
   return (
@@ -111,7 +111,9 @@ function ToggleRow({ label, checked, onChange, hint = null, testid, className = 
           className={[
             'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors duration-150 motion-reduce:transition-none',
             'group-focus-visible:ring-2 group-focus-visible:ring-[var(--color-line-strong)] group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-[var(--color-surface)]',
-            checked ? 'bg-[var(--color-text)]' : 'bg-[var(--color-line-strong)]',
+            // On = blue (clearly distinct), off = muted gray — the ink-on/ink-off pair was
+            // indistinguishable (both dark; only the knob moved).
+            checked ? 'bg-blue-600' : 'bg-[var(--color-line-strong)]',
           ].join(' ')}
         >
           <span
