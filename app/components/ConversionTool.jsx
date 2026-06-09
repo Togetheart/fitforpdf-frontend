@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { AlertCircle, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, History, Layers3, ListTree, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, Rows3, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowDown, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, History, Layers3, ListTree, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, Rows3, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -1242,15 +1242,33 @@ function WorkbenchSampleCard({ conversion }) {
         <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
       <div id={contentId} hidden={!open} className="mt-3">
-        <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">See a finished PDF — the real output, no upload needed.</p>
-        {/* The actual first page of the sample render (enterprise-invoices-demo.csv
-            -> .pdf), not a mock — so the preview matches what "Render this sample"
-            produces. Shares the proof screenshot used on the marketing page. */}
+        <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">Wide spreadsheet in, clean sectioned PDF out — the real sample, no upload needed.</p>
+
+        {/* BEFORE — the real source CSV (the actual enterprise-invoices-demo data, not
+            a mock). It scrolls sideways on purpose: that's the "wide table" problem. */}
+        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Your spreadsheet (CSV)</p>
+        <div className="overflow-x-auto rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-2.5">
+          <pre className="w-max font-mono text-[10px] leading-[1.7] text-[var(--color-muted)]">{`invoice_id,client_name,client_email,account_manager,segment,status,issue_date,due_date,currency,total_excl_vat,vat_rate,total_incl_vat,payment_terms,description,internal_notes
+INV-1001,Acme 1000,acme-1@example.com,Laura Stein,Enterprise,Paid,2026-01-02,2026-01-30,EUR,2000.00,20,2400.00,30 days,"This long description…",…
+INV-1002,Northline 1001,northline-2@example.com,Marc Dubois,SMB,Pending,2026-01-03,2026-01-31,EUR,2157.00,10,2372.70,45 days,"This long description…",…
+INV-1003,Blue Horizon 1002,blue-horizon-3@example.com,Sophie Klein,Startup,Overdue,2026-01-04,2026-02-01,EUR,2314.00,5,2429.70,30 days,"This long description…",…`}</pre>
+        </div>
+
+        {/* transform */}
+        <div className="my-2.5 flex items-center justify-center gap-2 text-[11px] font-semibold text-[var(--color-text-subtle)]">
+          <span className="h-px w-8 bg-[var(--color-line)]" aria-hidden="true" />
+          <span className="inline-flex items-center gap-1"><ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />fitforpdf</span>
+          <span className="h-px w-8 bg-[var(--color-line)]" aria-hidden="true" />
+        </div>
+
+        {/* AFTER — a real rendered page of the finished PDF (a clean data section, not
+            the table of contents) so the before/after shows the actual transformation. */}
+        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Finished PDF</p>
         <div className="overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)]">
           <img
-            src="/CSV/proof/overview.webp"
-            srcSet="/CSV/proof/overview.webp 1x, /CSV/proof/overview@2x.webp 2x"
-            alt="First page of the finished sample PDF"
+            src="/CSV/proof/section-a.webp"
+            srcSet="/CSV/proof/section-a.webp 1x, /CSV/proof/section-a@2x.webp 2x"
+            alt="A page of the finished sample PDF"
             width={1440}
             height={1019}
             loading="lazy"
