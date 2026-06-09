@@ -1241,43 +1241,48 @@ function WorkbenchSampleCard({ conversion }) {
         <span className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
-      <div id={contentId} hidden={!open} className="mt-3 max-w-[460px]">
+      <div id={contentId} hidden={!open} className="mt-3">
         <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">Wide spreadsheet in, clean sectioned PDF out — the real sample, no upload needed.</p>
 
-        {/* BEFORE — the real source CSV (the actual enterprise-invoices-demo data, not
-            a mock). It scrolls sideways on purpose: that's the "wide table" problem. */}
-        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Your spreadsheet (CSV)</p>
-        <div className="overflow-x-auto rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-2.5">
-          <pre className="w-max font-mono text-[10px] leading-[1.7] text-[var(--color-muted)]">{`invoice_id,client_name,client_email,account_manager,segment,status,issue_date,due_date,currency,total_excl_vat,vat_rate,total_incl_vat,payment_terms,description,internal_notes
+        {/* Before → after. Stacked on mobile (CSV ↓ PDF), side-by-side from sm up
+            (CSV → PDF) so it fills the full-width card without whitespace. */}
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-stretch sm:gap-3">
+          {/* BEFORE — the real enterprise-invoices-demo data (not a mock). Scrolls
+              sideways on purpose: that's the "wide table" problem we solve. */}
+          <div className="min-w-0 flex-1">
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Your spreadsheet (CSV)</p>
+            <div className="overflow-x-auto rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)] p-2.5">
+              <pre className="w-max font-mono text-[10px] leading-[1.7] text-[var(--color-muted)]">{`invoice_id,client_name,client_email,account_manager,segment,status,issue_date,due_date,currency,total_excl_vat,vat_rate,total_incl_vat,payment_terms,description,internal_notes
 INV-1001,Acme 1000,acme-1@example.com,Laura Stein,Enterprise,Paid,2026-01-02,2026-01-30,EUR,2000.00,20,2400.00,30 days,"This long description…",…
 INV-1002,Northline 1001,northline-2@example.com,Marc Dubois,SMB,Pending,2026-01-03,2026-01-31,EUR,2157.00,10,2372.70,45 days,"This long description…",…
 INV-1003,Blue Horizon 1002,blue-horizon-3@example.com,Sophie Klein,Startup,Overdue,2026-01-04,2026-02-01,EUR,2314.00,5,2429.70,30 days,"This long description…",…`}</pre>
-        </div>
+            </div>
+          </div>
 
-        {/* transform */}
-        <div className="my-2.5 flex items-center justify-center gap-2 text-[11px] font-semibold text-[var(--color-text-subtle)]">
-          <span className="h-px w-8 bg-[var(--color-line)]" aria-hidden="true" />
-          <span className="inline-flex items-center gap-1"><ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />fitforpdf</span>
-          <span className="h-px w-8 bg-[var(--color-line)]" aria-hidden="true" />
-        </div>
+          {/* transform marker — down when stacked, right when side-by-side */}
+          <div className="flex shrink-0 items-center justify-center text-[var(--color-text-subtle)] sm:pt-5" aria-hidden="true">
+            <ArrowDown className="h-4 w-4 sm:hidden" />
+            <ArrowRight className="hidden h-4 w-4 sm:block" />
+          </div>
 
-        {/* AFTER — a real rendered page of the finished PDF (a clean data section, not
-            the table of contents) so the before/after shows the actual transformation. */}
-        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Finished PDF</p>
-        {/* Capped teaser: show the TOP of the page (section header + first rows) at a
-            controlled height, so a full-page PDF never balloons the card / hides the CTA. */}
-        <div className="relative max-h-[230px] overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)]">
-          <img
-            src="/CSV/proof/section-a.webp"
-            srcSet="/CSV/proof/section-a.webp 1x, /CSV/proof/section-a@2x.webp 2x"
-            alt="A page of the finished sample PDF"
-            width={1440}
-            height={1019}
-            loading="lazy"
-            decoding="async"
-            className="block w-full"
-          />
-          <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--color-surface-sunken)] to-transparent" />
+          {/* AFTER — a real rendered data section of the finished PDF (not the TOC),
+              capped to a teaser of the top so a full page never balloons the card. */}
+          <div className="min-w-0 flex-1">
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Finished PDF</p>
+            <div className="relative max-h-[230px] overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)]">
+              <img
+                src="/CSV/proof/section-a.webp"
+                srcSet="/CSV/proof/section-a.webp 1x, /CSV/proof/section-a@2x.webp 2x"
+                alt="A page of the finished sample PDF"
+                width={1440}
+                height={1019}
+                loading="lazy"
+                decoding="async"
+                className="block w-full"
+              />
+              <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--color-surface-sunken)] to-transparent" />
+            </div>
+          </div>
         </div>
         <button
           type="button"
@@ -1306,16 +1311,16 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
           columns on every page. Nothing cut off.
         </p>
       </div>
-      {/* On mobile, lead with the zero-friction sample (most phone visitors have no
-          spreadsheet handy) — but once a file is picked, float the upload card (now
-          holding the Generate CTA) back to the top so the primary action isn't buried
-          under the sample. Desktop is pinned upload-first via xl:order-* (the sample
-          stays in the 250px side column). */}
-      <div className="grid gap-[18px] xl:grid-cols-[minmax(0,1fr)_250px]">
-        <div className={`${hasFile ? 'order-1' : 'order-2'} min-w-0 xl:order-1`}>
+      {/* Full-width stack: the before→after sample is too rich for a narrow side
+          column, so both cards span the full width at every size. Lead with the
+          zero-friction sample when there's no file; once a file is picked, float the
+          upload card (with the Generate CTA) back to the top. Desktop pins
+          upload-first via lg:order-*. */}
+      <div className="flex flex-col gap-[18px]">
+        <div className={`${hasFile ? 'order-1' : 'order-2'} min-w-0 lg:order-1`}>
           <WorkbenchDropzone conversion={conversion} quota={quota} />
         </div>
-        <div className={`${hasFile ? 'order-2' : 'order-1'} xl:order-2`}>
+        <div className={`${hasFile ? 'order-2' : 'order-1'} lg:order-2`}>
           <WorkbenchSampleCard conversion={conversion} />
         </div>
       </div>
