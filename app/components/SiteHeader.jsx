@@ -90,7 +90,7 @@ export default function SiteHeader() {
                 lives in the app (at the point of work + the account menu), not as
                 chrome here. The offer ("3 free exports") is communicated in the hero
                 copy instead. AccountMenu shows the SN avatar when logged in and a
-                styled "Se connecter" pill when logged out — one consistent control. */}
+                styled "Log in" pill when logged out — one consistent control. */}
             <ThemeToggle />
             <AccountMenu account={account} onLogout={logout} />
             <Button variant="primary" href={account ? '/app' : '/#generate'} className="px-4 text-xs h-9">
@@ -173,14 +173,14 @@ export default function SiteHeader() {
                 onClick={closeMenu}
                 className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
               >
-                Mon compte
+                My account
               </a>
               <button
                 type="button"
                 onClick={() => { closeMenu(); logout(); }}
                 className="rounded-lg px-3 py-3 text-left text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
               >
-                Se déconnecter
+                Log out
               </button>
             </>
           ) : (
@@ -189,7 +189,7 @@ export default function SiteHeader() {
               onClick={closeMenu}
               className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
             >
-              Se connecter
+              Log in
             </a>
           )}
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]">

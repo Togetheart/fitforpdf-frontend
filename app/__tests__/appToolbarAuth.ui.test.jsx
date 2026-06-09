@@ -14,10 +14,10 @@ describe('AppToolbar account entry', () => {
     });
   });
 
-  test('workbench shows "Se connecter" (not a hardcoded SN avatar) when logged out', async () => {
+  test('workbench shows "Log in" (not a hardcoded SN avatar) when logged out', async () => {
     render(<ConversionTool layout="workbench" />);
     await waitFor(() => {
-      expect(screen.getAllByRole('link', { name: /se connecter/i }).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByRole('link', { name: /log in/i }).length).toBeGreaterThanOrEqual(1);
     });
     expect(screen.queryByText('SN')).toBeNull();
   });

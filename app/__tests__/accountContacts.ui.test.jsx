@@ -49,17 +49,17 @@ describe('AccountPage contacts', () => {
     );
     render(<AccountPage />);
 
-    await waitFor(() => expect(screen.getByText(/Mes contacts/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/My contacts/)).toBeTruthy());
     await waitFor(() => expect(screen.getByText('Alice')).toBeTruthy());
     expect(screen.getByText('a@b.co')).toBeTruthy();
     expect(screen.getByText('Acme')).toBeTruthy();
     // count (1) rendered in the heading
     const row = screen.getByTestId('contact-row-k1');
     expect(row).toBeTruthy();
-    expect(screen.getByText(/Mes contacts \(1\)/)).toBeTruthy();
+    expect(screen.getByText(/My contacts \(1\)/)).toBeTruthy();
   });
 
-  test('renders an "Exporter CSV" anchor pointing at the export endpoint', async () => {
+  test('renders an "Export CSV" anchor pointing at the export endpoint', async () => {
     mockLoggedInWithContacts(
       [{ id: 'k1', name: 'Alice', email: 'a@b.co', phone: null, company: 'Acme', role: null }],
       1,
@@ -87,7 +87,7 @@ describe('AccountPage contacts', () => {
     });
   });
 
-  test('clicking "Tout supprimer" issues DELETE to /api/account/contacts', async () => {
+  test('clicking "Delete all" issues DELETE to /api/account/contacts', async () => {
     mockLoggedInWithContacts(
       [{ id: 'k1', name: 'Alice', email: 'a@b.co', phone: null, company: 'Acme', role: null }],
       1,
@@ -105,10 +105,10 @@ describe('AccountPage contacts', () => {
     });
   });
 
-  test('empty state renders "Aucun contact."', async () => {
+  test('empty state renders "No contacts."', async () => {
     mockLoggedInWithContacts([], 0);
     render(<AccountPage />);
     await waitFor(() => expect(screen.getByText('me@x.com')).toBeTruthy());
-    await waitFor(() => expect(screen.getByText(/aucun contact\./i)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/no contacts\./i)).toBeTruthy());
   });
 });
