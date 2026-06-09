@@ -137,7 +137,9 @@ describe('/app tool-first workbench shell', () => {
   test('shows the inspector header + a calm pre-render footer (no action buttons, no status badges)', () => {
     render(<AppPage />);
     const inspector = screen.getByTestId('app-inspector');
-    expect(within(inspector).getByText('Adjust output')).toBeTruthy();
+    // The "Adjust output" h2 was dropped (tabs now lead, mirroring the left rail);
+    // the panel's explicit subtitle is the always-visible header text.
+    expect(within(inspector).getByText(/Set options now/i)).toBeTruthy();
     // Pre-render the canvas owns "Generate". The inspector footer carries NO action
     // buttons — Download / Update preview / Render another all appear only once a PDF
     // exists (a dimmed primary pre-render reads as broken).
