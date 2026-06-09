@@ -21,7 +21,9 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Satoshi', '-apple-system', 'SF Pro Display', 'Segoe UI', 'sans-serif'],
-        serif: ['var(--font-lora)', 'Georgia', 'serif'],
+        // Serif (Lora) removed from the brand — alias to the sans stack so any stray
+        // `font-serif` stays on-brand (one typeface, no editorial/"manuscrit" voice).
+        serif: ['Satoshi', '-apple-system', 'SF Pro Display', 'Segoe UI', 'sans-serif'],
       },
       maxWidth: {
         wide: '1440px',

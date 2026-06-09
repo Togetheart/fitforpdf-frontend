@@ -15,7 +15,7 @@ export default function Error({ error, reset }) {
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
-      <p className="font-serif text-2xl font-bold tracking-tight text-[var(--color-text)]">
+      <p className="text-2xl font-bold tracking-tight text-[var(--color-text)]">
         Something went wrong.
       </p>
       <p className="mt-2 max-w-md text-sm leading-6 text-[var(--color-muted)]">
