@@ -1,17 +1,17 @@
 import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
-  title: 'Contact — fitforpdf',
+  title: 'Contact, fitforpdf',
   description: 'Get in touch with the fitforpdf team for questions, partnerships, or support.',
   alternates: { canonical: '/contact' },
   openGraph: {
-    title: 'Contact — fitforpdf',
+    title: 'Contact, fitforpdf',
     description: 'Get in touch with the fitforpdf team for questions, partnerships, or support.',
     url: 'https://www.fitforpdf.com/contact',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact — fitforpdf',
+    title: 'Contact, fitforpdf',
     description: 'Get in touch with the fitforpdf team for questions, partnerships, or support.',
   },
 };

@@ -27,7 +27,7 @@ afterEach(() => { cleanup(); vi.clearAllMocks(); });
 
 const blob = new Blob(['%PDF-1.4'], { type: 'application/pdf' });
 
-describe('PdfPreviewPane — inline first-page image on mobile', () => {
+describe('PdfPreviewPane, inline first-page image on mobile', () => {
   test('shows the rendered first-page image inline when rendering succeeds', async () => {
     renderPdfFirstPageImage.mockResolvedValue('data:image/png;base64,AAAA');
     render(<PdfPreviewPane pdfBlob={blob} filename="report.pdf" />);

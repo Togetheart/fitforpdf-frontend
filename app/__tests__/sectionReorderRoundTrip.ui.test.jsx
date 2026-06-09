@@ -128,7 +128,7 @@ async function settle() {
   await waitFor(() => expect(screen.getByTestId('loading').textContent).toBe('0'), { timeout: 4000 });
 }
 
-describe('section reorder v2 — rename + reorder round-trip (no drift)', () => {
+describe('section reorder v2, rename + reorder round-trip (no drift)', () => {
   test('a rename stays with its column after reorder, and does not drift on re-render', async () => {
     restoreFetch = installFetch();
     render(<Harness />);

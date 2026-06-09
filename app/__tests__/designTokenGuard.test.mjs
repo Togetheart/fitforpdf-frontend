@@ -65,7 +65,7 @@ test('components must not contain hardcoded accent hex colors', async () => {
 
   if (hexViolations.length > 0) {
     const details = hexViolations
-      .map((v) => `  ${v.file}:${v.line} — ${v.match}\n    ${v.context}`)
+      .map((v) => `  ${v.file}:${v.line}, ${v.match}\n    ${v.context}`)
       .join('\n');
     assert.fail(`Found ${hexViolations.length} hardcoded accent hex color(s) in components:\n${details}\n\nUse Tailwind accent tokens (bg-accent, text-accent, border-accent) instead.`);
   }
@@ -77,7 +77,7 @@ test('components must not use Tailwind !important overrides', async () => {
 
   if (importantViolations.length > 0) {
     const details = importantViolations
-      .map((v) => `  ${v.file}:${v.line} — ${v.match}\n    ${v.context}`)
+      .map((v) => `  ${v.file}:${v.line}, ${v.match}\n    ${v.context}`)
       .join('\n');
     assert.fail(`Found ${importantViolations.length} Tailwind !important override(s) in components:\n${details}\n\nUse proper token variants instead of !important.`);
   }
@@ -98,7 +98,7 @@ test('page files must not contain hardcoded accent hex colors', async () => {
 
   if (hexViolations.length > 0) {
     const details = hexViolations
-      .map((v) => `  ${v.file}:${v.line} — ${v.match}\n    ${v.context}`)
+      .map((v) => `  ${v.file}:${v.line}, ${v.match}\n    ${v.context}`)
       .join('\n');
     assert.fail(`Found ${hexViolations.length} hardcoded accent hex color(s) in pages:\n${details}\n\nUse Tailwind accent tokens instead.`);
   }
@@ -119,7 +119,7 @@ test('page files must not use Tailwind !important overrides', async () => {
 
   if (importantViolations.length > 0) {
     const details = importantViolations
-      .map((v) => `  ${v.file}:${v.line} — ${v.match}\n    ${v.context}`)
+      .map((v) => `  ${v.file}:${v.line}, ${v.match}\n    ${v.context}`)
       .join('\n');
     assert.fail(`Found ${importantViolations.length} Tailwind !important override(s) in pages:\n${details}\n\nUse proper token variants instead of !important.`);
   }

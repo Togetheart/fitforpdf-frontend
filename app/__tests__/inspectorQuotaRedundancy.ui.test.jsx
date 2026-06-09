@@ -25,7 +25,7 @@ function makeConversion() {
 
 afterEach(() => cleanup());
 
-describe('ConversionInspector — single paywall message (no duplicate)', () => {
+describe('ConversionInspector, single paywall message (no duplicate)', () => {
   test('quota locked: amber lock line shows, grey quota summary is hidden', () => {
     render(
       <ConversionInspector

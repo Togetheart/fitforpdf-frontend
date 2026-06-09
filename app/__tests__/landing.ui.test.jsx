@@ -77,7 +77,7 @@ describe('landing conversion-first structure', () => {
     expect(screen.queryByTestId('section-home-demo')).toBeNull();
   });
 
-  test('hero has no standalone CTA — upload card is the primary action', () => {
+  test('hero has no standalone CTA, upload card is the primary action', () => {
     const hero = screen.getByTestId('hero-section');
     expect(within(hero).queryByTestId('hero-primary-cta')).toBeNull();
     // Upload card now lives outside hero (proof-first flow)

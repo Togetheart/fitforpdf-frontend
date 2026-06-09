@@ -1,17 +1,17 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Terms of Use — fitforpdf',
+  title: 'Terms of Use, fitforpdf',
   description: 'Terms of use for the fitforpdf service. Convert Excel and CSV files into structured, readable PDFs.',
   alternates: { canonical: '/terms' },
   openGraph: {
-    title: 'Terms of Use — fitforpdf',
+    title: 'Terms of Use, fitforpdf',
     description: 'Terms of use for the fitforpdf service.',
     url: 'https://www.fitforpdf.com/terms',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Terms of Use — fitforpdf',
+    title: 'Terms of Use, fitforpdf',
     description: 'Terms of use for the fitforpdf service.',
   },
 };

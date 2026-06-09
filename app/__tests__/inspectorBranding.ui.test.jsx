@@ -31,7 +31,7 @@ function openExportTab() {
   fireEvent.click(screen.getByRole('tab', { name: 'Export' }));
 }
 
-describe('ConversionInspector — branding + logo controls', () => {
+describe('ConversionInspector, branding + logo controls', () => {
   test('branding toggle reflects includeBranding and flips it (one-click no-logo)', () => {
     const setIncludeBranding = vi.fn();
     render(<ConversionInspector conversion={makeConversion({ includeBranding: true, setIncludeBranding })} quota={quota} />);

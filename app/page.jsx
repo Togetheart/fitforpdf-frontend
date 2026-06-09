@@ -108,7 +108,7 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <JsonLd data={homeFaqLd} />
-      {/* Scroll spacer — desktop only for Apple-style sticky scroll sequence */}
+      {/* Scroll spacer, desktop only for Apple-style sticky scroll sequence */}
       <div className="h-[80svh] sm:h-[calc(100vh+140px)]">
         <PageHero
           heroTestId="hero-section"
@@ -120,12 +120,12 @@ export default function Page() {
           contentMaxWidthClassName="max-w-content"
           className="py-0 w-full sm:sticky sm:top-0"
         >
-          {/* Subtitle — stays visible throughout */}
+          {/* Subtitle, stays visible throughout */}
           <p className="hero-headline-line w-full max-w-3xl mx-auto text-base sm:text-lg text-muted">
             {LANDING_COPY.heroSubheadlineL2a}<br />{LANDING_COPY.heroSubheadlineL2b}
           </p>
 
-          {/* Hero CTA — stays visible throughout */}
+          {/* Hero CTA, stays visible throughout */}
           <div className="hero-headline-line flex flex-col items-center gap-3">
             <div className="flex items-center gap-3">
               <Button
@@ -160,7 +160,7 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Comparison reveal — desktop only: fades in during scroll phase 2 */}
+          {/* Comparison reveal, desktop only: fades in during scroll phase 2 */}
           <div
             data-hero-comparison
             className="hidden sm:block"
@@ -182,7 +182,7 @@ export default function Page() {
         </PageHero>
       </div>
 
-      {/* Mobile only: product image — scroll-driven reveal like desktop */}
+      {/* Mobile only: product image, scroll-driven reveal like desktop */}
       <div
         className="sm:hidden pb-6 px-4 -mt-8 relative z-10 bg-[var(--color-bg-hero)]"
       >
@@ -222,7 +222,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Featured on — BetaList badge */}
+      {/* Featured on, BetaList badge */}
       <div className="w-full py-6 relative z-10 bg-[var(--color-bg-hero)] flex items-center justify-center">
         <a
           href="https://betalist.com/startups/fitforpdf?utm_campaign=badge-fitforpdf&utm_medium=badge&utm_source=badge-featured"
@@ -242,7 +242,7 @@ export default function Page() {
         </a>
       </div>
 
-      {/* Visual demo — moved before the upload for "proof first" flow.
+      {/* Visual demo, moved before the upload for "proof first" flow.
           NOTE: bypasses the generic <Section> wrapper because Section's
           baked-in `py-10 sm:py-14` on its inner div added 100+px of unwanted
           trailing whitespace after ProofShowcase. We render the section
@@ -258,7 +258,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Upload tool — restructured: the dark navy area is no longer a
+      {/* Upload tool, restructured: the dark navy area is no longer a
           full-bleed section but a CONTAINED card floating on the page bg.
           Why: a full-width dark slab created an abrupt edge-to-edge color
           cut + no breathing room. As a contained card it reads as
@@ -276,7 +276,7 @@ export default function Page() {
         >
           <div className="apple-grid-bg relative overflow-hidden rounded-[24px] px-5 py-7 sm:px-9 sm:py-9 shadow-[0_18px_44px_-18px_rgba(12,18,34,0.45)]">
             <div className="apple-grid-noise" />
-            {/* Soft inner top highlight — adds depth + signals "premium card" */}
+            {/* Soft inner top highlight, adds depth + signals "premium card" */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
@@ -382,7 +382,7 @@ export default function Page() {
           moment right after a successful render. Re-introduce later as a non-blocking
           ask (e.g. an inline field at download) if retention work resumes. */}
 
-      {/* Comparison table — explains the replacement before asking for money. */}
+      {/* Comparison table, explains the replacement before asking for money. */}
       <Section id="comparison" index={4} bg="bg-hero">
         <div className="space-y-10">
           <div className="text-center">
@@ -393,17 +393,17 @@ export default function Page() {
             <div className="relative mx-auto mt-6 max-w-[58ch]">
               <p className="text-left text-[15.5px] leading-[1.75] text-[var(--color-text)]">
                 Spreadsheets are built for machines, not readers. fitforpdf re-typesets a wide
-                export into a paginated PDF — anchor columns repeated on every page, an automatic
+                export into a paginated PDF, anchor columns repeated on every page, an automatic
                 table of contents, and nothing cut off.
               </p>
               {/* Margin note (marginalia): in the left gutter on wide screens, stacks
                   below the lede on smaller ones so the annotation is never lost. */}
               <aside className="mt-3 text-left text-[11.5px] italic leading-snug text-[var(--color-muted)] xl:absolute xl:right-full xl:top-1.5 xl:mr-7 xl:mt-0 xl:w-[150px] xl:text-right">
-                Anchor columns repeat on every page — a row never loses its id or name.
+                Anchor columns repeat on every page, a row never loses its id or name.
               </aside>
             </div>
           </div>
-          {/* Serif key figures — the trust pillars set as editorial numerals, split by thin ink rules. */}
+          {/* Serif key figures, the trust pillars set as editorial numerals, split by thin ink rules. */}
           <div className="mx-auto grid max-w-xl grid-cols-3 divide-x divide-[#0F172A]/10 text-center">
             <div className="px-2">
               <div className="text-[34px] font-bold leading-none text-[var(--color-text)]">0</div>
@@ -456,7 +456,7 @@ export default function Page() {
         </div>
       </Section>
 
-      {/* Pricing plans — full width */}
+      {/* Pricing plans, full width */}
       <Section
         id={LANDING_COPY_KEYS.pricingPreview}
         index={6}

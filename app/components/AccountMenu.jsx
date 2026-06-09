@@ -53,7 +53,7 @@ export default function AccountMenu({ account, onLogout, quota = null }) {
           <div className="truncate px-3 py-2 text-[13px] text-[var(--color-muted)]">{account.email}</div>
           {quota ? (
             <>
-              {/* Plan / credits + API — moved here from the toolbar so the bar
+              {/* Plan / credits + API, moved here from the toolbar so the bar
                   stays uncluttered and these stay reachable on mobile. */}
               <div className="px-3 py-1">
                 <PlanBadge quota={quota} />

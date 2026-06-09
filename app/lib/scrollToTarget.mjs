@@ -32,8 +32,8 @@
  */
 
 const DEFAULT_HEADER_OFFSET = 80;     // sticky header + small breathing room
-const DEFAULT_CORRECTION_DELAY = 900; // ms — GSAP reveal is 700ms + margin
-const DEFAULT_CORRECTION_THRESHOLD = 40; // px — only correct if drift > this
+const DEFAULT_CORRECTION_DELAY = 900; // ms, GSAP reveal is 700ms + margin
+const DEFAULT_CORRECTION_THRESHOLD = 40; // px, only correct if drift > this
 
 /**
  * Smooth-scroll to the first matching element id, with offset + corrective

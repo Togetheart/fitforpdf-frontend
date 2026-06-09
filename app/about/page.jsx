@@ -4,19 +4,19 @@ import { SEO } from '../siteCopy.mjs';
 import { makeUtm, UTM_SOURCE, UTM_MEDIUM, UTM_CAMPAIGN } from '../lib/utm.mjs';
 
 export const metadata = {
-  title: 'About — fitforpdf',
+  title: 'About, fitforpdf',
   description:
     'Why FitForPDF exists, who built it, and what makes it different from a generic PDF library or an LLM wrapper.',
   alternates: { canonical: '/about' },
   openGraph: {
-    title: 'About — fitforpdf',
+    title: 'About, fitforpdf',
     description:
       'PDF rendering infrastructure for wide business tables. Built by Sébastien Neusch under BLVTR SASU (France).',
     url: 'https://www.fitforpdf.com/about',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About — fitforpdf',
+    title: 'About, fitforpdf',
     description:
       'PDF rendering infrastructure for wide business tables. Built by Sébastien Neusch under BLVTR SASU (France).',
   },
@@ -31,22 +31,22 @@ const aboutUtm = makeUtm({
 
 const BIOFOR_LINKS = [
   {
-    label: 'FitForPDF — Organization profile',
+    label: 'FitForPDF, Organization profile',
     href: 'https://www.biofor.ai/org/fitforpdf',
     source: 'biofor',
   },
   {
-    label: 'FitForPDF — LLM-readable profile',
+    label: 'FitForPDF, LLM-readable profile',
     href: 'https://www.biofor.ai/llm/org/fitforpdf',
     source: 'biofor',
   },
   {
-    label: 'Sébastien Neusch — Founder profile',
+    label: 'Sébastien Neusch, Founder profile',
     href: 'https://www.biofor.ai/sebastienneusch',
     source: 'biofor',
   },
   {
-    label: 'Sébastien Neusch — LLM-readable profile',
+    label: 'Sébastien Neusch, LLM-readable profile',
     href: 'https://www.biofor.ai/sebastienneusch/llm',
     source: 'biofor',
   },
@@ -80,7 +80,7 @@ const aboutPageLd = {
       url: 'https://www.linkedin.com/in/sebastienneusch/',
     },
     description:
-      'PDF rendering infrastructure for wide business tables — deterministic, EU-hosted, no LLM.',
+      'PDF rendering infrastructure for wide business tables, deterministic, EU-hosted, no LLM.',
   },
 };
 
@@ -101,14 +101,14 @@ export default function AboutPage() {
         <p className="mt-5 text-base leading-relaxed text-[var(--color-muted)]">
           Most &quot;Excel to PDF&quot; tools were built for documents, not for data.
           Feed them a 28-column CRM export or a quarterly audit sheet and the
-          result is broken — columns cut off, microscopic fonts, page breaks
+          result is broken, columns cut off, microscopic fonts, page breaks
           landing mid-row. FitForPDF was built specifically to fix that.
         </p>
 
-        {/* Founder note — photo placeholder slot + signed paragraph */}
+        {/* Founder note, photo placeholder slot + signed paragraph */}
         <section className="mt-12 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 sm:p-8">
           <div className="flex items-start gap-5">
-            {/* Photo placeholder — drop a real square photo at /founder.webp later */}
+            {/* Photo placeholder, drop a real square photo at /founder.webp later */}
             <div
               aria-hidden="true"
               className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-emerald-500 text-lg font-bold text-white"
@@ -161,7 +161,7 @@ export default function AboutPage() {
             <li>
               <span className="font-semibold text-[var(--color-text)]">No LLM in the pipeline.</span>{' '}
               File content never leaves the server. No OpenAI, Anthropic, or
-              Google API calls. The engine is 100% deterministic — same input,
+              Google API calls. The engine is 100% deterministic, same input,
               same PDF, every time.
             </li>
             <li>
@@ -204,7 +204,7 @@ export default function AboutPage() {
           </p>
           <p className="text-sm leading-relaxed text-[var(--color-muted)]">
             Operated by <strong className="font-semibold text-[var(--color-text)]">BLVTR SASU</strong>{' '}
-            — a French SASU registered for software publishing and developer
+           , a French SASU registered for software publishing and developer
             services.
           </p>
         </section>
@@ -215,7 +215,7 @@ export default function AboutPage() {
             Verified identity
           </h2>
           <p className="mb-4 text-sm leading-relaxed text-[var(--color-muted)]">
-            Machine-readable profiles for FitForPDF and its founder — useful
+            Machine-readable profiles for FitForPDF and its founder, useful
             for LLM-based citations and identity verification.
           </p>
           <ul className="space-y-2">
@@ -234,14 +234,14 @@ export default function AboutPage() {
           </ul>
         </section>
 
-        {/* CTA — strong, ends the page on action */}
+        {/* CTA, strong, ends the page on action */}
         <section className="mt-12 rounded-2xl bg-[var(--color-bg-hero)] px-6 py-10 text-center">
           <h2 className="text-xl font-semibold text-[var(--color-text)]">
             Stop reformatting spreadsheets by hand.
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-[var(--color-muted)]">
             Upload the file you already have. Get a structured PDF in seconds.
-            3 free exports — no account needed.
+            3 free exports, no account needed.
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
@@ -259,7 +259,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Secondary nav — quietly under the fold */}
+        {/* Secondary nav, quietly under the fold */}
         <nav className="mt-12 border-t border-[var(--color-border)] pt-8 text-sm text-[var(--color-muted)]">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
             More

@@ -29,7 +29,7 @@ export const SEO_ARTICLES = [
     eyebrow: 'Excel → PDF',
     title: 'Keep Excel Headers Repeating on Every PDF Page',
     description:
-      'How to make Excel header rows repeat on every PDF page — both manually via Print Titles and automatically with fitforpdf for multi-section reports.',
+      'How to make Excel header rows repeat on every PDF page, both manually via Print Titles and automatically with fitforpdf for multi-section reports.',
     h1: 'How to keep Excel headers repeating on every PDF page',
     lead:
       'A 200-row export with the header row only on page 1 is useless to a reader. Here is the manual fix in Excel, where it breaks, and how to automate it for wide tables.',
@@ -42,8 +42,8 @@ export const SEO_ARTICLES = [
       {
         h2: 'Where Print Titles stops working',
         list: [
-          'Wide tables that get split into column groups — the header rows repeat, but the column subset changes per page and the headers no longer match.',
-          'Multi-sheet workbooks — Print Titles is per-sheet, so combined PDFs lose consistency.',
+          'Wide tables that get split into column groups, the header rows repeat, but the column subset changes per page and the headers no longer match.',
+          'Multi-sheet workbooks, Print Titles is per-sheet, so combined PDFs lose consistency.',
           'Custom report sections where you want different headers per section.',
         ],
       },
@@ -60,22 +60,22 @@ export const SEO_ARTICLES = [
       },
       {
         q: 'Why do my Excel headers stop repeating after the first page in PDF?',
-        a: 'Most often because the headers were set as a freeze pane in the view, not as Print Titles. Freeze panes only affect on-screen scrolling — for printing/PDF you need the Page Layout → Print Titles dialog.',
+        a: 'Most often because the headers were set as a freeze pane in the view, not as Print Titles. Freeze panes only affect on-screen scrolling, for printing/PDF you need the Page Layout → Print Titles dialog.',
       },
       {
         q: 'Can I repeat both rows and columns when exporting to PDF?',
-        a: 'Yes — Print Titles has separate fields for "Rows to repeat at top" and "Columns to repeat at left". Use the columns option when you have wide tables where readers need an identifier column on every page.',
+        a: 'Yes, Print Titles has separate fields for "Rows to repeat at top" and "Columns to repeat at left". Use the columns option when you have wide tables where readers need an identifier column on every page.',
       },
     ],
     related: [
       { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
-      { label: 'Export audit Excel sheets to PDF — best practices', href: '/audit-report-excel-to-pdf-tips' },
+      { label: 'Export audit Excel sheets to PDF, best practices', href: '/audit-report-excel-to-pdf-tips' },
       { label: 'Convert CSV to structured, readable PDF', href: '/csv-to-structured-pdf' },
     ],
     cta: {
-      title: 'Headers always in place — automatically.',
+      title: 'Headers always in place, automatically.',
       body: 'Upload your Excel file and get a PDF where headers + identifier columns stay visible on every page. 3 free exports.',
-      label: 'Generate your first PDF — free',
+      label: 'Generate your first PDF, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -97,16 +97,16 @@ export const SEO_ARTICLES = [
       {
         h2: 'Manual workarounds and where they hit their limit',
         list: [
-          'Landscape A4 — buys you ~15 columns at readable size, then collapses.',
-          'A3 paper / custom 11×17 page — works if your reader prints to A3, but most don\'t.',
-          'Scale to Fit — works to ~25 columns but the result is unreadable (6pt text).',
-          'Split into print areas — works but breaks the audit trail (rows lose their identifier on the secondary print).',
+          'Landscape A4, buys you ~15 columns at readable size, then collapses.',
+          'A3 paper / custom 11×17 page, works if your reader prints to A3, but most don\'t.',
+          'Scale to Fit, works to ~25 columns but the result is unreadable (6pt text).',
+          'Split into print areas, works but breaks the audit trail (rows lose their identifier on the secondary print).',
         ],
       },
       {
         h2: 'Section-based layout: the only thing that scales',
         body:
-          'For 20+ columns, the only readable output is one where the table is split horizontally into named sections, each repeating the identifier columns. fitforpdf does this automatically — analysing your table and producing an overview page + sectioned PDF, with the identifier columns (like ID, Name, Date) reprinted on every section.',
+          'For 20+ columns, the only readable output is one where the table is split horizontally into named sections, each repeating the identifier columns. fitforpdf does this automatically, analysing your table and producing an overview page + sectioned PDF, with the identifier columns (like ID, Name, Date) reprinted on every section.',
       },
     ],
     faqs: [
@@ -116,7 +116,7 @@ export const SEO_ARTICLES = [
       },
       {
         q: 'Can I export a 30-column Excel sheet to PDF and still read it?',
-        a: 'Not with scale-to-fit. The only readable result for 30 columns is a sectioned PDF — three or four column groups, with the identifier columns (e.g. ID and Name) repeated on each section.',
+        a: 'Not with scale-to-fit. The only readable result for 30 columns is a sectioned PDF, three or four column groups, with the identifier columns (e.g. ID and Name) repeated on each section.',
       },
       {
         q: 'Do I need to restructure my spreadsheet before using fitforpdf?',
@@ -131,7 +131,7 @@ export const SEO_ARTICLES = [
     cta: {
       title: 'Wide tables, readable PDFs.',
       body: 'Upload a CSV or XLSX with up to 50 columns. Get a structured, readable PDF. 3 free exports.',
-      label: 'Try with your wide table — free',
+      label: 'Try with your wide table, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -146,12 +146,12 @@ export const SEO_ARTICLES = [
       'Excel\'s default PDF export silently clips columns that don\'t fit the page width. Here is how to verify what\'s being clipped, how to fix it for narrow files, and what to do when manual fixes give up.',
     sections: [
       {
-        h2: 'Step 1 — check what Excel is actually clipping',
+        h2: 'Step 1, check what Excel is actually clipping',
         body:
           'File → Print → Preview. Use the page navigation to walk every page. If your data goes past page 1 horizontally, Excel either splits it across separate pages (acceptable) or clips it entirely (broken). Most clipped exports never even get noticed until the client emails back.',
       },
       {
-        h2: 'Step 2 — manual fixes for ≤ 15 columns',
+        h2: 'Step 2, manual fixes for ≤ 15 columns',
         list: [
           'Page Layout → Orientation → Landscape.',
           'Page Layout → Margins → Narrow.',
@@ -160,9 +160,9 @@ export const SEO_ARTICLES = [
         ],
       },
       {
-        h2: 'Step 3 — for 16+ columns, switch strategy',
+        h2: 'Step 3, for 16+ columns, switch strategy',
         body:
-          'Scale-to-fit beyond 15 columns produces unreadable PDFs. The reliable approach is column-group sectioning: split the columns into thematic groups, each with the identifier columns repeated. fitforpdf does this without configuration — upload the XLSX, get the sectioned PDF.',
+          'Scale-to-fit beyond 15 columns produces unreadable PDFs. The reliable approach is column-group sectioning: split the columns into thematic groups, each with the identifier columns repeated. fitforpdf does this without configuration, upload the XLSX, get the sectioned PDF.',
       },
     ],
     faqs: [
@@ -187,7 +187,7 @@ export const SEO_ARTICLES = [
     cta: {
       title: 'Keep every column. No manual layout.',
       body: 'Upload your XLSX. Every column preserved, every row traceable. 3 free exports.',
-      label: 'Try with your XLSX — free',
+      label: 'Try with your XLSX, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -197,7 +197,7 @@ export const SEO_ARTICLES = [
     title: 'Fix: "Excel Print Area Too Wide" in PDF Exports',
     description:
       'The "print area too wide" warning in Excel means your data won\'t fit. Here\'s what causes it, the manual fixes, and the structured-section solution.',
-    h1: '"Print area too wide" in Excel — what it means and how to fix it',
+    h1: '"Print area too wide" in Excel, what it means and how to fix it',
     lead:
       'You hit Print, Excel warns the print area is too wide for the page, the PDF comes out clipped. The cause is almost always the same: too many columns for a single page. Here are your options.',
     sections: [
@@ -218,7 +218,7 @@ export const SEO_ARTICLES = [
       {
         h2: 'When manual fixes are not enough',
         body:
-          'Beyond ~15 columns, scaling further shrinks text below readable size. The reliable solution is to keep print scale at 100% and let the table flow into multiple sectioned pages, with identifier columns repeated on each. fitforpdf does this automatically — no Print Titles configuration needed.',
+          'Beyond ~15 columns, scaling further shrinks text below readable size. The reliable solution is to keep print scale at 100% and let the table flow into multiple sectioned pages, with identifier columns repeated on each. fitforpdf does this automatically, no Print Titles configuration needed.',
       },
     ],
     faqs: [
@@ -232,18 +232,18 @@ export const SEO_ARTICLES = [
       },
       {
         q: 'Is there a tool that handles "print area too wide" automatically?',
-        a: 'Yes — fitforpdf reads the file, decides on column-group sections instead of scaling, and produces a PDF where every column stays at readable size.',
+        a: 'Yes, fitforpdf reads the file, decides on column-group sections instead of scaling, and produces a PDF where every column stays at readable size.',
       },
     ],
     related: [
       { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
       { label: 'Wide table PDF export', href: '/wide-table-pdf-export' },
-      { label: 'Excel PDF text too small — fix', href: '/excel-pdf-text-too-small-fix' },
+      { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
     ],
     cta: {
       title: 'No more "too wide" warnings.',
       body: 'Drop the file in fitforpdf. Every column at readable size, every page numbered. 3 free exports.',
-      label: 'Fix your too-wide export — free',
+      label: 'Fix your too-wide export, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -252,7 +252,7 @@ export const SEO_ARTICLES = [
     eyebrow: 'Large CSV',
     title: 'Convert Large CSV Files (1000+ Rows) to PDF',
     description:
-      'How to convert large CSV files to a readable, paginated PDF — avoiding the formatting collapse that happens with Excel or generic converters.',
+      'How to convert large CSV files to a readable, paginated PDF, avoiding the formatting collapse that happens with Excel or generic converters.',
     h1: 'Converting a large CSV to a readable PDF',
     lead:
       'A 5,000-row CSV pasted into Excel and exported to PDF gives you a 200-page document with no headers on most pages, no row ranges, and broken column widths. Here is what to do instead.',
@@ -260,7 +260,7 @@ export const SEO_ARTICLES = [
       {
         h2: 'Why large CSV files break standard exports',
         body:
-          'CSV files have no formatting. When you open one in Excel, columns auto-size to their first few cells — usually wrong for the whole file. Header rows don\'t repeat unless you configure Print Titles. The resulting PDF is a wall of data with no structure.',
+          'CSV files have no formatting. When you open one in Excel, columns auto-size to their first few cells, usually wrong for the whole file. Header rows don\'t repeat unless you configure Print Titles. The resulting PDF is a wall of data with no structure.',
       },
       {
         h2: 'Manual setup for clean CSV-to-PDF',
@@ -275,7 +275,7 @@ export const SEO_ARTICLES = [
       {
         h2: 'Or: pipe the CSV directly to fitforpdf',
         body:
-          'fitforpdf accepts .csv directly — no XLSX conversion needed. It detects the delimiter, auto-fits columns, repeats headers on every page, paginates with row ranges ("Rows 1–50 of 5000 · Page 1 / 100"), and adds an overview page. For datasets above 5,000 rows, the API endpoint accepts streaming uploads.',
+          'fitforpdf accepts .csv directly, no XLSX conversion needed. It detects the delimiter, auto-fits columns, repeats headers on every page, paginates with row ranges ("Rows 1–50 of 5000 · Page 1 / 100"), and adds an overview page. For datasets above 5,000 rows, the API endpoint accepts streaming uploads.',
       },
     ],
     faqs: [
@@ -289,7 +289,7 @@ export const SEO_ARTICLES = [
       },
       {
         q: 'Can I include a summary or totals page when converting CSV to PDF?',
-        a: 'The PDF includes an overview page with the column list and row ranges per section. For computed totals (sums, averages), pre-compute them in your source data — fitforpdf renders what\'s in the CSV, it doesn\'t calculate.',
+        a: 'The PDF includes an overview page with the column list and row ranges per section. For computed totals (sums, averages), pre-compute them in your source data, fitforpdf renders what\'s in the CSV, it doesn\'t calculate.',
       },
     ],
     related: [
@@ -300,7 +300,7 @@ export const SEO_ARTICLES = [
     cta: {
       title: 'Large CSV → readable PDF in seconds.',
       body: 'Upload your CSV (any delimiter, up to 10 MB). Get a paginated, sectioned PDF. 3 free exports.',
-      label: 'Convert your CSV — free',
+      label: 'Convert your CSV, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -310,14 +310,14 @@ export const SEO_ARTICLES = [
     title: 'Fix Excel PDF Export with Text Too Small to Read',
     description:
       'Microscopic text in your Excel PDF? It\'s a symptom of Scale to Fit on a wide table. Here\'s how to fix it and stop sacrificing readability.',
-    h1: 'Excel PDF export text is too small to read — how to fix it',
+    h1: 'Excel PDF export text is too small to read, how to fix it',
     lead:
       'If your exported PDF requires zooming to 200% just to read cell values, the cause is almost always Scale to Fit applied to a table that\'s too wide for the page. Fixing the scale alone isn\'t enough.',
     sections: [
       {
         h2: 'Why "Scale to Fit" produces unreadable text',
         body:
-          'Excel\'s Scale to Fit shrinks the entire sheet — including font sizes — until it fits the page dimensions you specified. A 25-column sheet on landscape A4 gets crushed to roughly 6pt, where letters lose definition and decimal alignment becomes meaningless.',
+          'Excel\'s Scale to Fit shrinks the entire sheet, including font sizes, until it fits the page dimensions you specified. A 25-column sheet on landscape A4 gets crushed to roughly 6pt, where letters lose definition and decimal alignment becomes meaningless.',
       },
       {
         h2: 'The fix: stop scaling, start sectioning',
@@ -330,7 +330,7 @@ export const SEO_ARTICLES = [
       {
         h2: 'fitforpdf preserves text size automatically',
         body:
-          'Because fitforpdf splits wide tables horizontally into sections, every column gets the full page width to render at a readable size (10pt+ baseline). No scaling, no zoom required — the PDF is built to be read at 100%.',
+          'Because fitforpdf splits wide tables horizontally into sections, every column gets the full page width to render at a readable size (10pt+ baseline). No scaling, no zoom required, the PDF is built to be read at 100%.',
       },
     ],
     faqs: [
@@ -340,7 +340,7 @@ export const SEO_ARTICLES = [
       },
       {
         q: 'Can I just zoom in on the PDF and call it done?',
-        a: 'You can — but clients reading on a phone, projecting in a meeting, or printing won\'t. The right fix is to produce a PDF that\'s readable at 100% scale.',
+        a: 'You can, but clients reading on a phone, projecting in a meeting, or printing won\'t. The right fix is to produce a PDF that\'s readable at 100% scale.',
       },
       {
         q: 'What\'s the minimum font size fitforpdf uses?',
@@ -355,7 +355,7 @@ export const SEO_ARTICLES = [
     cta: {
       title: 'Stop shrinking. Start sectioning.',
       body: 'fitforpdf keeps every cell at readable size by structuring wide tables into sections. 3 free exports.',
-      label: 'Get a readable PDF — free',
+      label: 'Get a readable PDF, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -364,7 +364,7 @@ export const SEO_ARTICLES = [
     eyebrow: 'CRM workflows',
     title: 'Convert a CRM Export (HubSpot, Salesforce, Pipedrive) to PDF',
     description:
-      'Turn a wide CRM CSV export into a clean, client-ready PDF. Works with HubSpot, Salesforce, Pipedrive, Zoho — and any tool that exports wide contact/deal data.',
+      'Turn a wide CRM CSV export into a clean, client-ready PDF. Works with HubSpot, Salesforce, Pipedrive, Zoho, and any tool that exports wide contact/deal data.',
     h1: 'CRM export → client-ready PDF in seconds',
     lead:
       'CRM exports typically come with 20-40 columns: contact, account, deal, owner, stage, dates, source, custom fields, and a handful of UTM/metadata. They\'re unreadable in Excel\'s default PDF export. Here\'s the structured approach.',
@@ -380,7 +380,7 @@ export const SEO_ARTICLES = [
           'Hide internal-only columns (raw IDs, lifecycle scores, system timestamps).',
           'Reorder so identifier columns (Contact Name, Company, Deal Name) come first.',
           'Group related columns (all dates together, all amounts together).',
-          'Save as .csv or .xlsx — UTF-8 encoded.',
+          'Save as .csv or .xlsx, UTF-8 encoded.',
         ],
       },
       {
@@ -411,7 +411,7 @@ export const SEO_ARTICLES = [
     cta: {
       title: 'Send a CRM export your client can read.',
       body: 'Export from your CRM, upload to fitforpdf, get a clean PDF. 3 free exports.',
-      label: 'Convert your CRM export — free',
+      label: 'Convert your CRM export, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -420,7 +420,7 @@ export const SEO_ARTICLES = [
     eyebrow: 'Finance',
     title: 'Convert Financial Reports from Spreadsheet to PDF',
     description:
-      'Best practices for converting financial spreadsheets — P&L, balance sheets, rollforwards — to client-ready PDFs with proper pagination and totals visible.',
+      'Best practices for converting financial spreadsheets, P&L, balance sheets, rollforwards, to client-ready PDFs with proper pagination and totals visible.',
     h1: 'From spreadsheet to client-ready financial PDF',
     lead:
       'Finance teams ship the same export every month: a wide P&L or balance sheet, a quarterly rollforward, monthly KPIs. The PDF either gets cut off mid-account or shrunk to unreadable. Here\'s the pattern that works.',
@@ -437,7 +437,7 @@ export const SEO_ARTICLES = [
       {
         h2: 'Manual setup that helps',
         body:
-          'Freeze the account column. Set Print Titles to repeat the header row + the account column. Print at 100% scale. Add a footer with the report period and the entity. Switch to landscape and accept that you\'ll have multiple horizontal pages — that\'s a feature, not a bug.',
+          'Freeze the account column. Set Print Titles to repeat the header row + the account column. Print at 100% scale. Add a footer with the report period and the entity. Switch to landscape and accept that you\'ll have multiple horizontal pages, that\'s a feature, not a bug.',
       },
       {
         h2: 'The structured-section approach',
@@ -448,7 +448,7 @@ export const SEO_ARTICLES = [
     faqs: [
       {
         q: 'How do I keep subtotals visually distinct in a PDF export?',
-        a: 'Use Excel\'s built-in cell styles (Total, Heading 4) before exporting — fitforpdf preserves these styles by default. Avoid custom conditional formatting that depends on specific cell positions, since it doesn\'t survive sectioning.',
+        a: 'Use Excel\'s built-in cell styles (Total, Heading 4) before exporting, fitforpdf preserves these styles by default. Avoid custom conditional formatting that depends on specific cell positions, since it doesn\'t survive sectioning.',
       },
       {
         q: 'Can I include a board-meeting cover page automatically?',
@@ -456,18 +456,18 @@ export const SEO_ARTICLES = [
       },
       {
         q: 'Is the rendering audit-grade (deterministic)?',
-        a: 'Yes — same input file produces the same PDF, byte-identical, every time. No LLM step, no probabilistic layout decisions.',
+        a: 'Yes, same input file produces the same PDF, byte-identical, every time. No LLM step, no probabilistic layout decisions.',
       },
     ],
     related: [
       { label: 'FitForPDF for finance teams', href: '/for-finance' },
-      { label: 'Audit report Excel to PDF — best practices', href: '/audit-report-excel-to-pdf-tips' },
+      { label: 'Audit report Excel to PDF, best practices', href: '/audit-report-excel-to-pdf-tips' },
       { label: 'Wide table PDF export', href: '/wide-table-pdf-export' },
     ],
     cta: {
       title: 'Board-ready financial PDFs.',
       body: 'Upload your P&L or rollforward. Get a sectioned, decimal-aligned PDF in seconds. 3 free exports.',
-      label: 'Convert your financial report — free',
+      label: 'Convert your financial report, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -476,7 +476,7 @@ export const SEO_ARTICLES = [
     eyebrow: 'Multi-sheet Excel',
     title: 'Combine Multiple Excel Sheets into a Single PDF',
     description:
-      'How to combine multiple Excel sheets into one PDF with consistent formatting — using Excel\'s built-in option and an automated alternative.',
+      'How to combine multiple Excel sheets into one PDF with consistent formatting, using Excel\'s built-in option and an automated alternative.',
     h1: 'Combine multiple Excel sheets into a single PDF',
     lead:
       'A workbook with 6 tabs and 6 different layouts. You need one PDF that flows naturally between them. Here\'s the manual approach and where it falls short.',
@@ -489,16 +489,16 @@ export const SEO_ARTICLES = [
       {
         h2: 'Pre-export consistency checklist',
         list: [
-          'Group all sheets (Ctrl+click each tab), then set page setup once — applies to all.',
+          'Group all sheets (Ctrl+click each tab), then set page setup once, applies to all.',
           'Set Print Titles per sheet (since they\'re not shared across the group).',
           'Add a unified footer with workbook name + sheet name + page numbers.',
-          'Verify each sheet\'s print area is set correctly — Page Layout → Print Area → Set.',
+          'Verify each sheet\'s print area is set correctly, Page Layout → Print Area → Set.',
         ],
       },
       {
         h2: 'Automated multi-sheet handling',
         body:
-          'fitforpdf reads multi-sheet XLSX files and produces a single PDF with an overview page listing every sheet and a section per sheet. Each section gets its own sectioning logic based on the sheet\'s width — so a narrow summary tab stays portrait, a wide detail tab gets sectioned automatically.',
+          'fitforpdf reads multi-sheet XLSX files and produces a single PDF with an overview page listing every sheet and a section per sheet. Each section gets its own sectioning logic based on the sheet\'s width, so a narrow summary tab stays portrait, a wide detail tab gets sectioned automatically.',
       },
     ],
     faqs: [
@@ -512,7 +512,7 @@ export const SEO_ARTICLES = [
       },
       {
         q: 'Does fitforpdf preserve sheet names in the multi-sheet PDF?',
-        a: 'Yes — each sheet becomes a section with its tab name as the section title, and the overview page lists every sheet with page references.',
+        a: 'Yes, each sheet becomes a section with its tab name as the section title, and the overview page lists every sheet with page references.',
       },
     ],
     related: [
@@ -523,7 +523,7 @@ export const SEO_ARTICLES = [
     cta: {
       title: 'Multi-sheet workbook → one structured PDF.',
       body: 'Upload your XLSX (any number of sheets). Get a single PDF with an overview + section per sheet. 3 free exports.',
-      label: 'Combine your workbook — free',
+      label: 'Combine your workbook, free',
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -548,7 +548,7 @@ export const SEO_ARTICLES = [
           'Break mid-record: insert a hard break BEFORE each major section or record group.',
           'Header on page 1 only: Page Layout → Print Titles → "Rows to repeat at top".',
           'Section title orphaned: use the "Keep with next" workaround by inserting a hard break before the section, never after.',
-          'Page break in the middle of a long text cell: that\'s a row-height issue — set explicit row heights and use word wrap.',
+          'Page break in the middle of a long text cell: that\'s a row-height issue, set explicit row heights and use word wrap.',
         ],
       },
       {
@@ -579,7 +579,7 @@ export const SEO_ARTICLES = [
     cta: {
       title: 'Page breaks that respect your data.',
       body: 'fitforpdf paginates by record boundaries, with row ranges and section markers on every page. 3 free exports.',
-      label: 'Try better pagination — free',
+      label: 'Try better pagination, free',
     },
   },
 ];

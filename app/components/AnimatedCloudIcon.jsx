@@ -30,7 +30,7 @@ export default function AnimatedCloudIcon({ size = 32, className = 'text-muted' 
       aria-hidden="true"
       className={className}
     >
-      {/* Cloud outline — animated draw-on */}
+      {/* Cloud outline, animated draw-on */}
       <path
         d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"
         strokeDasharray={cloudLength}
@@ -39,7 +39,7 @@ export default function AnimatedCloudIcon({ size = 32, className = 'text-muted' 
           transition: drawn ? 'stroke-dashoffset 0.55s cubic-bezier(0.4,0,0.2,1)' : 'none',
         }}
       />
-      {/* Arrow — static, always visible */}
+      {/* Arrow, static, always visible */}
       <path d="M12 13v8" />
       <path d="m8 17 4-4 4 4" />
     </svg>

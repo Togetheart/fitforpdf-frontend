@@ -150,7 +150,7 @@ test('hero H1 headline copy uses validated "client-ready" + inclusive "your expo
   assert.equal(
     /excel/i.test(l1),
     false,
-    'H1 L1 must NOT mention Excel — too restrictive for SaaS/CRM ICPs (Abhinav signal)',
+    'H1 L1 must NOT mention Excel, too restrictive for SaaS/CRM ICPs (Abhinav signal)',
   );
   assert.equal(/cleanup/i.test(l2), true, 'H1 L2 must reference the cleanup pain');
 });

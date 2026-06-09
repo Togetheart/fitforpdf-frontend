@@ -35,7 +35,7 @@ beforeEach(() => {
 });
 afterEach(() => { restore?.(); cleanup(); vi.restoreAllMocks(); });
 
-describe('workbench — "Recent exports" auto-fetches on mount', () => {
+describe('workbench, "Recent exports" auto-fetches on mount', () => {
   test('GET /api/jobs is requested on mount (panel was previously never fetched)', async () => {
     const f = installFetch();
     restore = f.restore;

@@ -1,17 +1,17 @@
 import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
-  title: 'Changelog — fitforpdf',
+  title: 'Changelog, fitforpdf',
   description: "What's new in fitforpdf. Latest updates and features.",
   alternates: { canonical: '/changelog' },
   openGraph: {
-    title: 'Changelog — fitforpdf',
+    title: 'Changelog, fitforpdf',
     description: "What's new in fitforpdf. Latest updates and features.",
     url: 'https://www.fitforpdf.com/changelog',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Changelog — fitforpdf',
+    title: 'Changelog, fitforpdf',
     description: "What's new in fitforpdf. Latest updates and features.",
   },
 };

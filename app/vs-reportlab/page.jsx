@@ -25,24 +25,24 @@ const COMPARISON_ROWS = [
   ['Table handling', 'Manual table construction cell by cell', 'Automatic table detection and layout'],
   ['Column splitting', 'Must code column grouping logic manually', 'Automatic section grouping'],
   ['Page breaks', 'Manual calculation of row heights', 'Intelligent automatic pagination'],
-  ['Output quality', 'High — full pixel control', 'High — structured, client-ready documents'],
-  ['Learning curve', 'Steep — Platypus framework, Flowables, etc.', 'None — upload and go'],
+  ['Output quality', 'High, full pixel control', 'High, structured, client-ready documents'],
+  ['Learning curve', 'Steep, Platypus framework, Flowables, etc.', 'None, upload and go'],
   ['Language dependency', 'Python only', 'Language-agnostic REST API'],
 ];
 
 const PROS_AND_CONS = {
   pros: [
-    'Native Python library — no external dependencies',
+    'Native Python library, no external dependencies',
     'Fine-grained control over every element on the page',
     'Mature and battle-tested in enterprise environments',
     'Can generate complex multi-section reports',
   ],
   cons: [
-    'Verbose code — even simple tables require dozens of lines',
+    'Verbose code, even simple tables require dozens of lines',
     'Manual table splitting across pages is error-prone',
     'Steep learning curve with Platypus, Flowables, and Frames',
     'No automatic column intelligence for wide datasets',
-    'Python-only — not usable from other tech stacks without wrappers',
+    'Python-only, not usable from other tech stacks without wrappers',
   ],
 };
 

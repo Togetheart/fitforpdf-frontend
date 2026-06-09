@@ -249,7 +249,7 @@ function getVerdictIcon(verdict) {
 function getPostRenderStatus(verdict) {
   if (verdict === 'WARN') {
     return {
-      heading: 'PDF ready — quick check recommended',
+      heading: 'PDF ready, quick check recommended',
       detail: 'Download it and confirm the layout is acceptable before sending.',
       tone: 'warn',
       panelClass: 'border-white/10 bg-white/5',
@@ -259,7 +259,7 @@ function getPostRenderStatus(verdict) {
 
   if (verdict === 'FAIL') {
     return {
-      heading: 'PDF generated — review before sending',
+      heading: 'PDF generated, review before sending',
       detail: 'Open the PDF and confirm the layout before sending.',
       tone: 'warn',
       panelClass: 'border-rose-300/25 bg-rose-400/10',
@@ -816,7 +816,7 @@ export default function UploadCard({
           />
         </>
       )}
-      {/* Card header — ROI-style: badge + lock + title */}
+      {/* Card header, ROI-style: badge + lock + title */}
       <div className="mb-4 flex items-center justify-between w-full">
         <span data-testid="quota-pill" className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-400 tracking-wide" aria-label="remaining exports">
           {quotaText}
@@ -860,7 +860,7 @@ export default function UploadCard({
       )}
 
       <form className="relative" onSubmit={onSubmit}>
-        {/* ── The Pill — unmounted on the demo result state to keep a
+        {/* ── The Pill, unmounted on the demo result state to keep a
              single decision visible (Try with your file). ───────────── */}
         {!wasDemoLastUpload && !isRegularResult && (
         <div
@@ -876,7 +876,7 @@ export default function UploadCard({
             disabled={isLoading}
           />
 
-          {/* Gear + Generate — same row, Generate fills remaining space on mobile */}
+          {/* Gear + Generate, same row, Generate fills remaining space on mobile */}
           <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
           {/* Gear button */}
           <div ref={gearRef} className="relative shrink-0">
@@ -896,10 +896,10 @@ export default function UploadCard({
               </svg>
             </button>
 
-            {/* Gear button only — dropdown moved below pill */}
+            {/* Gear button only, dropdown moved below pill */}
           </div>
 
-          {/* Generate button — inside the pill */}
+          {/* Generate button, inside the pill */}
           {!isQuotaLocked && <Button
             type="submit"
             variant="primary"
@@ -910,7 +910,7 @@ export default function UploadCard({
             {isLoading ? (
               <>
                 <Loader2 aria-hidden="true" className="mr-1.5 h-4 w-4 animate-spin" />
-                {/* Always show label, including on mobile — silent spinners
+                {/* Always show label, including on mobile, silent spinners
                     cause anxiety. Mobile-audit fix. */}
                 <span>Generating…</span>
               </>
@@ -938,9 +938,9 @@ export default function UploadCard({
           </div>
         ) : null}
 
-        {/* Quota badge removed — now in card header */}
+        {/* Quota badge removed, now in card header */}
 
-        {/* ── Options dropdown — in document flow below pill ── */}
+        {/* ── Options dropdown, in document flow below pill ── */}
         {isOptionsExpanded ? (
           <div
             ref={optionsPanelRef}
@@ -1005,15 +1005,15 @@ export default function UploadCard({
               <SettingRow title="Keep headers" description="Keep repeated headers for multi-page outputs." checked={layout?.headers !== false} onChange={(v) => handleLayoutChange('headers', v)} rowTestId="setting-row-headers" disabled={isLoading} />
               <SettingRow title="Keep footer" description="Keep footer metadata in the exported PDF." checked={layout?.footer !== false} onChange={(v) => handleLayoutChange('footer', v)} rowTestId="setting-row-footer" disabled={isLoading} />
               <SettingRow title="Truncate long text" description="Auto-crops very long content to keep layout stable" checked={truncateLongText} onChange={onTruncateChange} rowTestId="setting-row-truncate" disabled={isLoading} />
-              <SettingRow title="Keep my source file (7 days)" description="Lets us improve the product and fix your export manually if it breaks. Optional — your file is deleted after 7 days." checked={retainSourceConsent} onChange={onRetainConsentChange} rowTestId="setting-row-retain-consent" disabled={isLoading} />
-              <SettingRow title="Save this file to build a contacts database (beta)" description="Lets us help you build a contacts base from this file. Kept until you delete it — manage it in your account." checked={contactsConsent} onChange={onContactsConsentChange} rowTestId="setting-row-contacts-consent" disabled={isLoading} showBottomBorder={false} />
+              <SettingRow title="Keep my source file (7 days)" description="Lets us improve the product and fix your export manually if it breaks. Optional, your file is deleted after 7 days." checked={retainSourceConsent} onChange={onRetainConsentChange} rowTestId="setting-row-retain-consent" disabled={isLoading} />
+              <SettingRow title="Save this file to build a contacts database (beta)" description="Lets us help you build a contacts base from this file. Kept until you delete it, manage it in your account." checked={contactsConsent} onChange={onContactsConsentChange} rowTestId="setting-row-contacts-consent" disabled={isLoading} showBottomBorder={false} />
             </div>
           </div>
         ) : null}
 
         {/* ── Below-pill zone ─────────────────────── */}
         <div className="mt-4 pb-2 flex flex-col items-center gap-3 text-center">
-          {/* Quota + Pro badge — unmounted in demo result state */}
+          {/* Quota + Pro badge, unmounted in demo result state */}
           {!wasDemoLastUpload && (
           <div className="flex flex-wrap items-center justify-center gap-2">
             {showBuyCredits ? (
@@ -1037,7 +1037,7 @@ export default function UploadCard({
           </div>
           )}
 
-          {/* Helper subcopy — hidden when quota badge already shows the same info */}
+          {/* Helper subcopy, hidden when quota badge already shows the same info */}
 
           {shouldShowDemoTry ? (
           <div data-testid="demo-try-row">
@@ -1085,7 +1085,7 @@ export default function UploadCard({
             <section data-testid="upload-paywall" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 space-y-4">
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-[var(--color-text)]">You've used your free exports.</p>
-                <p className="text-xs text-muted">Pick a credit pack — one-time purchase, no subscription.</p>
+                <p className="text-xs text-muted">Pick a credit pack, one-time purchase, no subscription.</p>
               </div>
               <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
                 {PAYWALL_PACKS.map((p, i) => (

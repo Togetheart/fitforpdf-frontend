@@ -107,7 +107,7 @@ function bodyEntries(options) {
   return out;
 }
 
-describe('/app workbench — end-to-end (real hook, mocked fetch)', () => {
+describe('/app workbench, end-to-end (real hook, mocked fetch)', () => {
   test('Generate renders, then "Update preview" actually fires a SECOND render (P1 regression)', async () => {
     await selectFileAndGenerate();
     // Preview appeared.

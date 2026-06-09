@@ -135,7 +135,7 @@ export default function VsPage({
         </div>
       </Section>
 
-      {/* See also — other comparisons & links */}
+      {/* See also, other comparisons & links */}
       <Section id="see-also" index={2} bg="bg-hero">
         <div className="space-y-6">
           <h2 className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text)]">

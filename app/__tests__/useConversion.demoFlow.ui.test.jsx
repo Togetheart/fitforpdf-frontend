@@ -111,7 +111,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('useConversion — demo → upload tracking', () => {
+describe('useConversion, demo → upload tracking', () => {
   test('wasDemoLastUpload is false on initial render', () => {
     let snapshot = null;
     render(<DemoFlowHarness onSnapshot={(c) => { snapshot = c; }} />);

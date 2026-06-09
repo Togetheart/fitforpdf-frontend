@@ -209,7 +209,7 @@ export default function AccountPage() {
               </table>
             </div>
             {contactsTotal > contacts.length ? (
-              <p className="mt-2 text-xs text-[var(--color-muted)]">Showing the first {contacts.length} of {contactsTotal} — export to get them all.</p>
+              <p className="mt-2 text-xs text-[var(--color-muted)]">Showing the first {contacts.length} of {contactsTotal}, export to get them all.</p>
             ) : null}
             <div className="mt-3 flex items-center gap-3 text-sm">
               <a

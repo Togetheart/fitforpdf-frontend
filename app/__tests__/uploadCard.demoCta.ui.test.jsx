@@ -42,7 +42,7 @@ function baseProps(overrides = {}) {
 
 afterEach(() => cleanup());
 
-describe('UploadCard — try-your-file CTA after demo', () => {
+describe('UploadCard, try-your-file CTA after demo', () => {
   test('renders the CTA when wasDemoLastUpload=true and result blob is present', () => {
     render(<UploadCard {...baseProps()} />);
     const cta = screen.getByTestId('try-your-file-cta');

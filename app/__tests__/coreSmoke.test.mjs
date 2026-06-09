@@ -69,7 +69,7 @@ describe('core smoke tests (live backend)', { skip: !BACKEND_URL && skip('SMOKE_
       body,
     });
 
-    assert.equal(res.status, 200, `Render failed: HTTP ${res.status} — ${await res.text().catch(() => '(no body)')}`);
+    assert.equal(res.status, 200, `Render failed: HTTP ${res.status}, ${await res.text().catch(() => '(no body)')}`);
 
     const contentType = res.headers.get('content-type') || '';
     assert.ok(

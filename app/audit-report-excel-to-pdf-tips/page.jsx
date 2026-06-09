@@ -40,7 +40,7 @@ const faqs = [
   },
   {
     q: 'Does fitforpdf preserve audit-trail integrity?',
-    a: 'Yes. Files are processed in EU servers, deleted immediately after rendering, never touched by any LLM. Row order, totals, and column data are preserved 1:1 — the engine only restructures layout, never data.',
+    a: 'Yes. Files are processed in EU servers, deleted immediately after rendering, never touched by any LLM. Row order, totals, and column data are preserved 1:1, the engine only restructures layout, never data.',
   },
 ];
 
@@ -55,7 +55,7 @@ const howToLd = {
     { '@type': 'HowToStep', name: 'Trim what reviewers do not need', text: 'Hide internal formula columns, draft tabs, and scratch calculations before exporting.' },
     { '@type': 'HowToStep', name: 'Lock reference columns to repeat', text: 'Page Layout → Print Titles → Columns to repeat at left: $A:$C (index, lead schedule, sample ID).' },
     { '@type': 'HowToStep', name: 'Pick the right orientation', text: 'Landscape for sheets up to ~15 columns. Beyond that, plan for sectioning.' },
-    { '@type': 'HowToStep', name: 'Print at 100% scale', text: 'Do not use Scale to Fit on audit data — small text breaks readability and erases tickmarks.' },
+    { '@type': 'HowToStep', name: 'Print at 100% scale', text: 'Do not use Scale to Fit on audit data, small text breaks readability and erases tickmarks.' },
     { '@type': 'HowToStep', name: 'Add a workpaper footer', text: 'Insert → Header & Footer → put the workpaper reference (e.g. A-1.2), date, preparer initials, page number.' },
     { '@type': 'HowToStep', name: 'Section wide tables', text: 'For 20+ columns, split into column groups with the identifier columns repeated. Tools like fitforpdf automate this.' },
   ],
@@ -108,7 +108,7 @@ export default function AuditPdfPage() {
           Audit reports aren&apos;t marketing decks. They carry tickmarks,
           cross-references, sign-offs, and totals that must reconcile across
           pages. Standard Excel export tools break this structure. Below are
-          six tested techniques — and where they hit their limit.
+          six tested techniques, and where they hit their limit.
         </p>
 
         {/* Tip 1 */}
@@ -148,9 +148,9 @@ export default function AuditPdfPage() {
           A quick heuristic:
         </p>
         <ul className="mb-8 list-disc space-y-1 pl-6 leading-relaxed text-[var(--color-muted)]">
-          <li><strong className="font-semibold text-[var(--color-text)]">Up to 8 columns</strong> — portrait works fine.</li>
-          <li><strong className="font-semibold text-[var(--color-text)]">9 to 15 columns</strong> — landscape, fit-to-1-page-wide.</li>
-          <li><strong className="font-semibold text-[var(--color-text)]">16+ columns</strong> — landscape is no longer enough. Plan to section (see tip 6).</li>
+          <li><strong className="font-semibold text-[var(--color-text)]">Up to 8 columns</strong>, portrait works fine.</li>
+          <li><strong className="font-semibold text-[var(--color-text)]">9 to 15 columns</strong>, landscape, fit-to-1-page-wide.</li>
+          <li><strong className="font-semibold text-[var(--color-text)]">16+ columns</strong>, landscape is no longer enough. Plan to section (see tip 6).</li>
         </ul>
 
         {/* Tip 4 */}
@@ -169,7 +169,7 @@ export default function AuditPdfPage() {
         </ul>
         <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
           Keep print scale at 100% and add an extra page instead. Reviewers
-          will read it — they won&apos;t read 6pt.
+          will read it, they won&apos;t read 6pt.
         </p>
 
         {/* Tip 5 */}
@@ -181,12 +181,12 @@ export default function AuditPdfPage() {
           Build a footer that always carries:
         </p>
         <ul className="mb-8 list-disc space-y-1 pl-6 leading-relaxed text-[var(--color-muted)]">
-          <li>Workpaper reference (e.g. <code className="rounded bg-[var(--color-bg)] px-1.5 py-0.5 text-sm">A-1.2</code>) — left.</li>
-          <li>Preparer initials + date — center.</li>
-          <li>Page <code className="rounded bg-[var(--color-bg)] px-1.5 py-0.5 text-sm">N of M</code> — right.</li>
+          <li>Workpaper reference (e.g. <code className="rounded bg-[var(--color-bg)] px-1.5 py-0.5 text-sm">A-1.2</code>), left.</li>
+          <li>Preparer initials + date, center.</li>
+          <li>Page <code className="rounded bg-[var(--color-bg)] px-1.5 py-0.5 text-sm">N of M</code>, right.</li>
         </ul>
 
-        {/* Tip 6 — the FitForPDF wedge */}
+        {/* Tip 6, the FitForPDF wedge */}
         <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]">
           6. For 20+ columns: section instead of shrink
         </h2>
@@ -197,9 +197,9 @@ export default function AuditPdfPage() {
           is to split horizontally:
         </p>
         <ul className="mb-3 list-disc space-y-1 pl-6 leading-relaxed text-[var(--color-muted)]">
-          <li><strong className="font-semibold text-[var(--color-text)]">Section A</strong> — identifier columns + opening balances</li>
-          <li><strong className="font-semibold text-[var(--color-text)]">Section B</strong> — identifier columns + variances + tickmarks</li>
-          <li><strong className="font-semibold text-[var(--color-text)]">Section C</strong> — identifier columns + notes + sign-off</li>
+          <li><strong className="font-semibold text-[var(--color-text)]">Section A</strong>, identifier columns + opening balances</li>
+          <li><strong className="font-semibold text-[var(--color-text)]">Section B</strong>, identifier columns + variances + tickmarks</li>
+          <li><strong className="font-semibold text-[var(--color-text)]">Section C</strong>, identifier columns + notes + sign-off</li>
         </ul>
         <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
           The identifier columns (index, account, amount) appear in every
@@ -213,7 +213,7 @@ export default function AuditPdfPage() {
             Doing this manually
           </p>
           <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-            All six tips above are achievable in Excel — and most senior
+            All six tips above are achievable in Excel, and most senior
             audit teams have a checklist exactly like this. But every export
             still takes 20 to 40 minutes of setup, and the result has to be
             redone every time the source data updates.
@@ -223,7 +223,7 @@ export default function AuditPdfPage() {
             sections by groups, repeats identifiers, adds the structured
             footer, and ships the PDF in seconds. The processing is
             deterministic, EU-hosted, and files are deleted right after
-            rendering — built for audit-grade confidentiality.
+            rendering, built for audit-grade confidentiality.
           </p>
         </section>
 
@@ -262,13 +262,13 @@ export default function AuditPdfPage() {
           </h2>
           <p className="mb-5 text-[var(--color-muted)]">
             Upload your Excel workpaper. Get a sectioned, identifier-locked
-            PDF in seconds. 3 free exports — no account needed.
+            PDF in seconds. 3 free exports, no account needed.
           </p>
           <a
             href="/#generate"
             className="inline-block rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/80"
           >
-            Generate your first audit PDF — free
+            Generate your first audit PDF, free
           </a>
         </section>
       </div>

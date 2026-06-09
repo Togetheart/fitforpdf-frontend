@@ -32,7 +32,7 @@ const quota = { planType: 'free', freeExportsLeft: 2, isQuotaLocked: false };
 
 afterEach(() => cleanup());
 
-describe('Column grouping — Force option removed', () => {
+describe('Column grouping, Force option removed', () => {
   test('toggle offers only Off and Auto (no Force)', () => {
     render(<ConversionInspector conversion={makeConversion()} quota={quota} />);
     expect(screen.getByRole('button', { name: 'Off' })).toBeTruthy();
@@ -41,7 +41,7 @@ describe('Column grouping — Force option removed', () => {
   });
 });
 
-describe('Column grouping — "Off" hides section customization', () => {
+describe('Column grouping, "Off" hides section customization', () => {
   test('Auto shows the pills, Custom sections list, and the Section name & color editor', () => {
     render(<ConversionInspector conversion={makeConversion({ columnMap: 'auto' })} quota={quota} />);
     expect(screen.getByTestId('app-group-pills')).toBeTruthy();

@@ -10,14 +10,14 @@ export const EXAMPLES = [
     source: 'data.gouv.fr',
     sourceUrl: 'https://www.data.gouv.fr/fr/datasets/irve-statique-engie-vianeo/',
     description:
-      'French EV charging station network — 40 columns covering location, operator, connector types, power output, and accessibility across 200 stations.',
+      'French EV charging station network, 40 columns covering location, operator, connector types, power output, and accessibility across 200 stations.',
     rows: 200,
     columns: 40,
     sections: 4,
     imageSrc: '/examples/irve-bornes-recharge/overview.webp',
     imageSrcSet:
       '/examples/irve-bornes-recharge/overview.webp 1x, /examples/irve-bornes-recharge/overview@2x.webp 2x',
-    imageAlt: 'PDF generated from Electric Vehicle Charging Stations data by fitforpdf — 40 columns split into 4 sections',
+    imageAlt: 'PDF generated from Electric Vehicle Charging Stations data by fitforpdf, 40 columns split into 4 sections',
     pdfHref: '/examples/irve-bornes-recharge/output.pdf',
   },
   {
@@ -26,14 +26,14 @@ export const EXAMPLES = [
     source: 'data.gouv.fr',
     sourceUrl: 'https://www.data.gouv.fr/fr/datasets/resultats-elections-europeennes-2024/',
     description:
-      '2024 European Parliament election results — 50 columns with votes per party, turnout, abstention rates, and blank/null ballots across 200 municipalities.',
+      '2024 European Parliament election results, 50 columns with votes per party, turnout, abstention rates, and blank/null ballots across 200 municipalities.',
     rows: 200,
     columns: 50,
     sections: 4,
     imageSrc: '/examples/elections-europeennes-2024/overview.webp',
     imageSrcSet:
       '/examples/elections-europeennes-2024/overview.webp 1x, /examples/elections-europeennes-2024/overview@2x.webp 2x',
-    imageAlt: 'PDF generated from European Election Results 2024 data by fitforpdf — 50 columns split into 4 sections',
+    imageAlt: 'PDF generated from European Election Results 2024 data by fitforpdf, 50 columns split into 4 sections',
     pdfHref: '/examples/elections-europeennes-2024/output.pdf',
   },
   {
@@ -42,14 +42,14 @@ export const EXAMPLES = [
     source: 'data.gouv.fr',
     sourceUrl: 'https://www.data.gouv.fr/fr/datasets/annuaire-des-etablissements-scolaires-orleans-metropole/',
     description:
-      'School directory for Orléans metropolitan area — 50 columns including school type, status, address, academic zone, and geographic coordinates across 265 establishments.',
+      'School directory for Orléans metropolitan area, 50 columns including school type, status, address, academic zone, and geographic coordinates across 265 establishments.',
     rows: 265,
     columns: 50,
     sections: 4,
     imageSrc: '/examples/annuaire-etablissements-scolaires/overview.webp',
     imageSrcSet:
       '/examples/annuaire-etablissements-scolaires/overview.webp 1x, /examples/annuaire-etablissements-scolaires/overview@2x.webp 2x',
-    imageAlt: 'PDF generated from School Directory (Orléans Métropole) data by fitforpdf — 50 columns split into 4 sections',
+    imageAlt: 'PDF generated from School Directory (Orléans Métropole) data by fitforpdf, 50 columns split into 4 sections',
     pdfHref: '/examples/annuaire-etablissements-scolaires/output.pdf',
   },
 ];

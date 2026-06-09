@@ -33,7 +33,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('Defect 26 — SiteShellGate composed chrome', () => {
+describe('Defect 26, SiteShellGate composed chrome', () => {
   test('on /app there is exactly one <main> and no marketing SiteHeader', () => {
     pathname = '/app';
 

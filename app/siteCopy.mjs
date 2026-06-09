@@ -10,7 +10,7 @@ export const LANDING_COPY = {
   // Abhinav (2026-04-15): "wide Excel tables become unreadable".
   heroSubheadlineL2a: 'Wide tables. Cut-off columns. Broken page breaks.',
   heroSubheadlineL2b: 'FitForPDF fixes all three: in one click.',
-  heroExample: 'Example: CRM export — 14 columns → 4 readable PDF sections',
+  heroExample: 'Example: CRM export, 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
   proofTimeSaved: 'Typically saves 30 to 45 min per export',
   proofSourceLine: 'Typical sources: Excel exports · CSV datasets · SaaS reports',
@@ -519,7 +519,7 @@ export const PRIVACY_PAGE_COPY = {
   heroLabel: 'PRIVACY',
   pageTitle: 'Your data.',
   pageTitleAccent: 'Not our business.',
-  pageSubtitle: 'fitforpdf processes files — it does not store them.',
+  pageSubtitle: 'fitforpdf processes files, it does not store them.',
   microLine: '100% deterministic pipeline. No LLMs, no AI providers, no data leaves the EU.',
 
   handlingTitle: 'How file handling works',
@@ -544,7 +544,7 @@ export const PRIVACY_PAGE_COPY = {
 
   dontDoTitle: "What we don't do",
   dontDo: [
-    'No LLM calls. No OpenAI, Anthropic, Google — your data never leaves our server.',
+    'No LLM calls. No OpenAI, Anthropic, Google, your data never leaves our server.',
     'We do not read your documents. No human or model training.',
     'We do not resell your data. Ever.',
   ],
@@ -597,7 +597,7 @@ export const PRIVACY_PAGE_COPY = {
     {
       id: 'ai-llm',
       q: 'Do you use AI or LLMs to process my files?',
-      a: 'No. The processing pipeline is 100% deterministic — a CSV parser, structural heuristics, and a PDF renderer. We make zero API calls to OpenAI, Anthropic, Google, or any other AI provider. Your file content never leaves our OVH server in France.',
+      a: 'No. The processing pipeline is 100% deterministic, a CSV parser, structural heuristics, and a PDF renderer. We make zero API calls to OpenAI, Anthropic, Google, or any other AI provider. Your file content never leaves our OVH server in France.',
     },
     {
       id: 'retention',
@@ -631,29 +631,29 @@ export const SEO = {
   siteUrl: 'https://www.fitforpdf.com',
   ogImage: 'https://www.fitforpdf.com/og-image.jpg',
   home: {
-    title: 'fitforpdf — Client-Ready PDFs from Excel & CSV',
+    title: 'fitforpdf, Client-Ready PDFs from Excel & CSV',
     description: 'Turn wide Excel and CSV exports into client-ready PDFs with sections, pagination, and column grouping. 3 free exports. No account needed.',
   },
   developers: {
-    title: 'fitforpdf API — Client-Ready PDFs from Excel & CSV',
+    title: 'fitforpdf API, Client-Ready PDFs from Excel & CSV',
     description: 'REST API to turn wide Excel and CSV tables into client-ready, structured PDFs for SaaS reporting, CRM exports, and data-heavy workflows.',
   },
   pricing: {
-    title: 'fitforpdf Pricing — Excel to PDF Export Plans',
+    title: 'fitforpdf Pricing, Excel to PDF Export Plans',
     description: '3 free exports. Pay-as-you-go packs from $19. Pro subscription at $29/mo for 500 exports.',
   },
   privacy: {
-    title: 'Privacy Policy — Your Data, Not Our Business',
-    description: 'fitforpdf uses a 100% deterministic pipeline — no LLMs, no OpenAI, no Anthropic. Files deleted immediately after processing. GDPR compliant. Data processed in France.',
+    title: 'Privacy Policy, Your Data, Not Our Business',
+    description: 'fitforpdf uses a 100% deterministic pipeline, no LLMs, no OpenAI, no Anthropic. Files deleted immediately after processing. GDPR compliant. Data processed in France.',
   },
   excelCutoff: {
     title: 'Fix Cut-Off Columns in Excel PDF Export',
-    description: 'Learn why Excel cuts off columns when exporting to PDF and how to fix it — with manual tips and structured PDF export via fitforpdf.',
+    description: 'Learn why Excel cuts off columns when exporting to PDF and how to fix it, with manual tips and structured PDF export via fitforpdf.',
     slug: 'excel-to-pdf-columns-cut-off',
   },
   fitOnePage: {
     title: 'How to Fit a Large Excel Sheet on One PDF Page',
-    description: 'Step-by-step guide to fit a large Excel sheet on one PDF page — manual scaling tips plus smarter structured export with fitforpdf.',
+    description: 'Step-by-step guide to fit a large Excel sheet on one PDF page, manual scaling tips plus smarter structured export with fitforpdf.',
     slug: 'fit-excel-sheet-on-one-page-pdf',
   },
   csvPdf: {
@@ -662,12 +662,12 @@ export const SEO = {
     slug: 'csv-to-structured-pdf',
   },
   auditPdf: {
-    title: 'Export Audit Excel Sheets to PDF — Best Practices',
-    description: 'Best practices for exporting audit Excel reports to PDF that clients can read — including tools like fitforpdf for structured output.',
+    title: 'Export Audit Excel Sheets to PDF, Best Practices',
+    description: 'Best practices for exporting audit Excel reports to PDF that clients can read, including tools like fitforpdf for structured output.',
     slug: 'audit-report-excel-to-pdf-tips',
   },
   examples: {
-    title: 'Real PDF Examples from Public Datasets — fitforpdf',
+    title: 'Real PDF Examples from Public Datasets, fitforpdf',
     description: 'See real PDFs generated from French government open data. Wide datasets with 20+ columns automatically structured into readable, paginated PDFs.',
     slug: 'examples',
   },
@@ -693,46 +693,46 @@ export const TESTIMONIAL_QUOTES = [
   {
     quote: "We stopped fixing Excel exports manually. This saved us hours every week.",
     role: "Head of Operations",
-    company: "B2B SaaS — CRM exports, 20+ columns",
+    company: "B2B SaaS, CRM exports, 20+ columns",
     icon: "ops",
     featured: true,
   },
   {
     quote: "I used to spend 45 minutes reformatting every quarterly report. Now it takes 10 seconds.",
     role: "Senior Auditor",
-    company: "Big 4 advisory — quarterly compliance reports",
+    company: "Big 4 advisory, quarterly compliance reports",
     icon: "audit",
     featured: false,
   },
   {
     quote: "Our CRM export has 28 columns. fitforpdf turns it into something I can actually send to clients.",
     role: "Account Manager",
-    company: "B2B SaaS — HubSpot/Salesforce exports",
+    company: "B2B SaaS, HubSpot/Salesforce exports",
     icon: "saas",
   },
   {
     quote: "Finally a tool that understands wide tables aren't meant to be shrunk to 6pt font.",
     role: "Finance Controller",
-    company: "Mid-cap — monthly P&L with 40+ columns",
+    company: "Mid-cap, monthly P&L with 40+ columns",
     icon: "finance",
   },
   {
     quote: "We integrated the API into our reporting pipeline in under an hour. PDF exports just work now.",
     role: "Product Engineer",
-    company: "Analytics platform — automated client reports",
+    company: "Analytics platform, automated client reports",
     icon: "dev",
     featured: true,
   },
   {
     quote: "Board presentations used to take a full day of copy-paste. Now I upload the Excel and it's done.",
     role: "Strategy Consultant",
-    company: "Consulting — board decks from raw data exports",
+    company: "Consulting, board decks from raw data exports",
     icon: "consulting",
   },
   {
     quote: "We stopped building internal PDF tooling. fitforpdf handles the edge cases we never could.",
     role: "Engineering Lead",
-    company: "Fintech — transaction reports for compliance",
+    company: "Fintech, transaction reports for compliance",
     icon: "dev",
   },
 ];

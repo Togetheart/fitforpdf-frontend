@@ -390,7 +390,7 @@ export default function useConversion({ quota }) {
   // the backend applies them only for entitled (paid) users.
   const [accentColor, setAccentColor] = useState('');
   const [logoFile, setLogoFile] = useState(null);
-  const [logoSize, setLogoSize] = useState('medium'); // small | medium | large — cover logo height
+  const [logoSize, setLogoSize] = useState('medium'); // small | medium | large, cover logo height
   // Logo is paid branding. Two backend gotchas: (1) it drops anything > 256 KB or
   // not PNG/JPEG; (2) PDFKit (the renderer) CANNOT embed many real-world PNGs
   // (interlaced/Adam7, 16-bit, exotic color types) and silently falls back to the

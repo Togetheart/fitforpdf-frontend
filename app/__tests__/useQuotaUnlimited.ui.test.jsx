@@ -33,7 +33,7 @@ function Harness() {
   );
 }
 
-describe('useQuota — an unlimited account is never paywalled', () => {
+describe('useQuota, an unlimited account is never paywalled', () => {
   test('applyQuotaExhaustion does NOT lock or downgrade an api_enterprise user (even on a stray 402)', async () => {
     // Backend says unlimited but free.remaining=0 (the always-computed field).
     mockQuota({ plan: 'api_enterprise', apiEnterprise: { unlimited: true }, free: { remaining: 0 } });

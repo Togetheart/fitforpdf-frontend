@@ -1,20 +1,20 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Legal Notice — fitforpdf',
+  title: 'Legal Notice, fitforpdf',
   description: "Legal notice for fitforpdf, pursuant to French law n°2004-575 of 21 June 2004 on confidence in the digital economy.",
   alternates: {
     canonical: '/mentions-legales',
     languages: { 'fr': '/mentions-legales' },
   },
   openGraph: {
-    title: 'Legal Notice — fitforpdf',
+    title: 'Legal Notice, fitforpdf',
     description: 'Legal notice for fitforpdf.',
     url: 'https://www.fitforpdf.com/mentions-legales',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Legal Notice — fitforpdf',
+    title: 'Legal Notice, fitforpdf',
     description: 'Legal notice for fitforpdf.',
   },
 };

@@ -135,7 +135,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('useConversion — post-render result contract', () => {
+describe('useConversion, post-render result contract', () => {
   test('OK render preserves verdict/flowId/renderId/pdfBlob and does not auto-download', async () => {
     const restoreFetch = mockFetch([
       ['/api/quota', quotaResponse],

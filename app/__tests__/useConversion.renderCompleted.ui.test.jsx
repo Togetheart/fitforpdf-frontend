@@ -145,7 +145,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('useConversion — render_completed funnel event', () => {
+describe('useConversion, render_completed funnel event', () => {
   test('fires render_completed once with full metrics on a successful render', async () => {
     const restoreFetch = mockFetch([
       ['/api/quota', quotaResponse],

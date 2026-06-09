@@ -2,12 +2,12 @@ import VerticalPage from '../components/VerticalPage';
 import { JsonLd } from '../components/JsonLd';
 
 export const metadata = {
-  title: 'PDF API for AI agents — FitForPDF',
+  title: 'PDF API for AI agents, FitForPDF',
   description:
     'Deterministic PDF rendering for AI agents. No LLM, no hallucinated numbers, same input always produces the same PDF. OpenAPI spec, MCP server, and agent-ready /render endpoint.',
   alternates: { canonical: '/for-agents' },
   openGraph: {
-    title: 'PDF API for AI agents — FitForPDF',
+    title: 'PDF API for AI agents, FitForPDF',
     description:
       'The deterministic PDF layer for AI agents. Send a file_url, get a client-ready PDF back. No LLM. Reproducible.',
     url: 'https://www.fitforpdf.com/for-agents',
@@ -29,7 +29,7 @@ const PAIN_POINTS = [
   {
     title: 'No stable contract for rendering',
     description:
-      'Most PDF libraries expect files, not URLs. No OpenAPI spec, no MCP integration, no JSON in/out — which forces fragile boilerplate in the agent loop.',
+      'Most PDF libraries expect files, not URLs. No OpenAPI spec, no MCP integration, no JSON in/out, which forces fragile boilerplate in the agent loop.',
   },
 ];
 

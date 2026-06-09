@@ -178,7 +178,7 @@ export default function PrivacyPage() {
       <JsonLd data={privacyFaqLd} />
       <JsonLd data={privacyBreadcrumbLd} />
 
-      {/* ── Hero — même structure que landing, section privacy ── */}
+      {/* ── Hero, même structure que landing, section privacy ── */}
       <PageHero
         variant="privacy"
         align="center"
@@ -201,7 +201,7 @@ export default function PrivacyPage() {
         </div>
       </PageHero>
 
-      {/* ── File handling — même grid pattern que "Client-ready means" ── */}
+      {/* ── File handling, même grid pattern que "Client-ready means" ── */}
       <Section id="privacy-handling" index={1} bg="bg-hero" className="pt-12 pb-20 sm:pt-16 sm:pb-28">
         <div className="text-center">
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--color-text)]">
@@ -227,7 +227,7 @@ export default function PrivacyPage() {
         </div>
       </Section>
 
-      {/* ── What we log + What we don't do — grille 2 colonnes ── */}
+      {/* ── What we log + What we don't do, grille 2 colonnes ── */}
       <Section id="privacy-logs" index={2} bg="bg-hero" className="py-20 sm:py-28">
         {/* Enfant unique du Section → grille 2 col avec hauteur égale */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
@@ -355,7 +355,7 @@ export default function PrivacyPage() {
         </div>
       </Section>
 
-      {/* ── FAQ — même pattern exact que landing ── */}
+      {/* ── FAQ, même pattern exact que landing ── */}
       <Section id="privacy-faq" index={6} bg="bg-hero" className="py-20 sm:py-28">
         <h2 className="text-center text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--color-text)]">
           Frequently asked questions

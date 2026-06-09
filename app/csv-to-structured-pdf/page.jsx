@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: 'Will fitforpdf preserve my CSV column structure?',
-    a: 'Yes — fitforpdf reads the CSV, groups columns into sections, and produces a paginated PDF where every column is readable.',
+    a: 'Yes, fitforpdf reads the CSV, groups columns into sections, and produces a paginated PDF where every column is readable.',
   },
 ];
 
@@ -79,13 +79,13 @@ export default function CsvPdfPage() {
         Convert CSV files to a structured, readable PDF
       </h1>
       <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
-        Large CSV files are hard to share as PDFs — columns overflow and layout breaks. This guide
+        Large CSV files are hard to share as PDFs, columns overflow and layout breaks. This guide
         shows how to convert CSV to a clean, structured PDF with proper sections and pagination.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Why CSV to PDF is hard</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        CSV files contain only raw data — no layout metadata. When you export a CSV directly to
+        CSV files contain only raw data, no layout metadata. When you export a CSV directly to
         PDF, the result is an unformatted text dump with no columns, no headers, and no pagination.
       </p>
 
@@ -105,7 +105,7 @@ export default function CsvPdfPage() {
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Structured PDF with fitforpdf</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         fitforpdf reads your CSV, detects wide column layouts, and automatically produces a
-        sectioned PDF — with an overview page, grouped column sections, and row ranges on every
+        sectioned PDF, with an overview page, grouped column sections, and row ranges on every
         page. No configuration needed.
       </p>
 
@@ -126,7 +126,7 @@ export default function CsvPdfPage() {
         <ul className="space-y-2 text-sm">
           <li><a href="/excel-to-pdf-columns-cut-off" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Fix cut-off columns in Excel PDF export</a></li>
           <li><a href="/fit-excel-sheet-on-one-page-pdf" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">How to fit a large Excel sheet on one PDF page</a></li>
-          <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF — best practices</a></li>
+          <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF, best practices</a></li>
         </ul>
       </nav>
 
@@ -139,7 +139,7 @@ export default function CsvPdfPage() {
           href="/"
           className="inline-block rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/80"
         >
-          Generate your first PDF — free
+          Generate your first PDF, free
         </a>
       </section>
     </div>
