@@ -2089,7 +2089,7 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
           aria-controls={LEFT_DRAWER_ID}
           aria-haspopup="dialog"
           onClick={() => setOpenDrawer(openDrawer === 'left' ? null : 'left')}
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
         >
           <PanelLeft className="h-3.5 w-3.5" aria-hidden="true" />
           Recent
@@ -2102,7 +2102,7 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
           aria-controls={RIGHT_DRAWER_ID}
           aria-haspopup="dialog"
           onClick={() => setOpenDrawer(openDrawer === 'right' ? null : 'right')}
-          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
         >
           <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
           Options
