@@ -26,7 +26,7 @@ const baseProps = {
 
 afterEach(() => cleanup());
 
-describe('UploadCard — unlimited plan never shows the Buy credits pill', () => {
+describe('UploadCard, unlimited plan never shows the Buy credits pill', () => {
   test('api_enterprise + 0 free exports → no quota-buy-slot', () => {
     render(<UploadCard {...baseProps} planType="api_enterprise" />);
     expect(screen.queryByTestId('quota-buy-slot')).toBeNull();

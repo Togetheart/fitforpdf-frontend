@@ -57,7 +57,7 @@ const quota = { planType: 'free', freeExportsLeft: 2, isQuotaLocked: false };
 
 afterEach(() => cleanup());
 
-describe('Right inspector — Sections / Export tabs', () => {
+describe('Right inspector, Sections / Export tabs', () => {
   test('renders a tablist with "Sections" and "Export" tabs; Sections is the default', () => {
     render(<ConversionInspector conversion={makeInspectorConversion()} quota={quota} />);
     const tablist = screen.getByRole('tablist', { name: /adjust output sections/i });
@@ -143,7 +143,7 @@ describe('Right inspector — Sections / Export tabs', () => {
   });
 });
 
-describe('Left rail — Outline / Recent Exports tabs', () => {
+describe('Left rail, Outline / Recent Exports tabs', () => {
   test('renders a tablist with "Outline" and "Recent Exports"; Recent Exports is the default', () => {
     render(<WorkbenchRail conversion={makeRailConversion()} className="flex" />);
     const tablist = screen.getByRole('tablist', { name: /recent exports and outline/i });

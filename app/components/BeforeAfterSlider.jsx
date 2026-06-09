@@ -112,7 +112,7 @@ export default function BeforeAfterSlider({
         if (e.key === 'ArrowRight') setPosition((p) => Math.min(100, p + 2));
       }}
     >
-      {/* After image (bottom layer — full width).
+      {/* After image (bottom layer, full width).
           Lazy-loaded: this slider is the 3rd section on the landing page (well
           below the fold). LCP audit fix. */}
       <img
@@ -127,7 +127,7 @@ export default function BeforeAfterSlider({
         decoding="async"
       />
 
-      {/* Before image (top layer — clipped, slightly dimmed for contrast) */}
+      {/* Before image (top layer, clipped, slightly dimmed for contrast) */}
       <div
         className="absolute inset-0"
         style={{

@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: 'How do I fit a wide Excel spreadsheet into a readable PDF?',
-    a: 'For sheets with many columns, landscape orientation and margin reduction help — but structured sectioning (grouping columns by theme) produces far more readable results.',
+    a: 'For sheets with many columns, landscape orientation and margin reduction help, but structured sectioning (grouping columns by theme) produces far more readable results.',
   },
   {
     q: 'Is fitting everything on one page always the best approach?',
@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: 'How does fitforpdf handle large sheets?',
-    a: 'fitforpdf groups columns into sections with repeated reference columns — each section fits on a page without scaling distortion.',
+    a: 'fitforpdf groups columns into sections with repeated reference columns, each section fits on a page without scaling distortion.',
   },
 ];
 
@@ -83,22 +83,22 @@ export default function FitOnePagePage() {
         manual steps and better automated solutions for large spreadsheets.
       </p>
 
-      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 1 — Page layout &amp; scaling</h2>
+      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 1, Page layout &amp; scaling</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Go to Page Layout → Scale to Fit and set Width to 1 page. This forces Excel to compress
         the sheet horizontally, but very wide sheets become unreadable.
       </p>
 
-      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 2 — Landscape orientation</h2>
+      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 2, Landscape orientation</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Switch to Landscape in Page Layout → Orientation. This gives you more horizontal space
         and works well for sheets up to about 15 columns.
       </p>
 
-      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 3 — Adjust margins &amp; page breaks</h2>
+      <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 3, Adjust margins &amp; page breaks</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Narrow margins (File → Print → Custom Margins) and manual page breaks (View → Page Break
-        Preview) let you control where content splits — but it requires careful manual tuning.
+        Preview) let you control where content splits, but it requires careful manual tuning.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Limitations of fitting on one page</h2>
@@ -111,7 +111,7 @@ export default function FitOnePagePage() {
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Smarter alternative: structured sections</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
         Instead of squeezing everything on one page, fitforpdf automatically splits wide sheets
-        into readable sections — each with its own page, repeated reference columns, and clear
+        into readable sections, each with its own page, repeated reference columns, and clear
         row ranges. The result is a professional, client-ready document.
       </p>
 
@@ -132,7 +132,7 @@ export default function FitOnePagePage() {
         <ul className="space-y-2 text-sm">
           <li><a href="/excel-to-pdf-columns-cut-off" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Fix cut-off columns in Excel PDF export</a></li>
           <li><a href="/csv-to-structured-pdf" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Convert CSV to structured, readable PDF</a></li>
-          <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF — best practices</a></li>
+          <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF, best practices</a></li>
         </ul>
       </nav>
 
@@ -145,7 +145,7 @@ export default function FitOnePagePage() {
           href="/"
           className="inline-block rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/80"
         >
-          Generate your first PDF — free
+          Generate your first PDF, free
         </a>
       </section>
     </div>

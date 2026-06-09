@@ -21,7 +21,7 @@ const history = [
   { id: 'render_999', sourceFileName: 'CSV • 15.3 KB', createdAt: '2026-06-08T09:05:00.000Z', status: 'failed', pdfUrl: '#' },
 ];
 
-describe('WorkbenchRail — recent exports identifiability', () => {
+describe('WorkbenchRail, recent exports identifiability', () => {
   test('marks the active export (matching renderId) with aria-current + a "Current" marker', () => {
     render(<WorkbenchRail conversion={makeConversion({ exportHistory: history, renderId: 'render_123' })} className="flex" />);
     const items = screen.getAllByTestId('app-recent-export');

@@ -32,11 +32,11 @@ const faqs = [
   },
   {
     q: 'Can I fix cut-off columns without a tool?',
-    a: 'You can adjust page scaling, orientation, and margins — but this often distorts layout for sheets with many columns.',
+    a: 'You can adjust page scaling, orientation, and margins, but this often distorts layout for sheets with many columns.',
   },
   {
     q: 'Does fitforpdf preserve all columns?',
-    a: 'Yes — fitforpdf restructures the sheet into sections, so no column is cut off. Reference columns (ID, Name) are repeated on each section for context.',
+    a: 'Yes, fitforpdf restructures the sheet into sections, so no column is cut off. Reference columns (ID, Name) are repeated on each section for context.',
   },
 ];
 
@@ -80,7 +80,7 @@ export default function ExcelCutoffPage() {
       </h1>
       <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
         Exporting a wide Excel sheet to PDF often results in cut-off columns. This guide explains
-        why it happens and how to fix it — with and without external tools.
+        why it happens and how to fix it, with and without external tools.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Why Excel PDF export breaks on wide sheets</h2>
@@ -105,7 +105,7 @@ export default function ExcelCutoffPage() {
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Structured export with fitforpdf</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        fitforpdf automatically groups wide columns into readable sections — each section fits on
+        fitforpdf automatically groups wide columns into readable sections, each section fits on
         a page with the reference columns (ID, Name) repeated. No manual layout needed.
       </p>
 
@@ -126,7 +126,7 @@ export default function ExcelCutoffPage() {
         <ul className="space-y-2 text-sm">
           <li><a href="/fit-excel-sheet-on-one-page-pdf" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">How to fit a large Excel sheet on one PDF page</a></li>
           <li><a href="/csv-to-structured-pdf" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Convert CSV to structured, readable PDF</a></li>
-          <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF — best practices</a></li>
+          <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF, best practices</a></li>
         </ul>
       </nav>
 
@@ -139,7 +139,7 @@ export default function ExcelCutoffPage() {
           href="/"
           className="inline-block rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/80"
         >
-          Generate your first PDF — free
+          Generate your first PDF, free
         </a>
       </section>
     </div>

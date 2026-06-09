@@ -87,7 +87,7 @@ describe('checkout smoke tests (live backend)', { skip: !BACKEND_URL && skip('SM
       assert.equal(
         responseText.includes('inactive'),
         false,
-        `Response contains "inactive" — Stripe price is archived: ${JSON.stringify(data)}`,
+        `Response contains "inactive", Stripe price is archived: ${JSON.stringify(data)}`,
       );
     });
   }

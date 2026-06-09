@@ -107,7 +107,7 @@ export default function HeroHeadline() {
     let phase2Current = 0;
     let rafId = 0;
     let running = true;
-    let settled = true; // true when lerps have converged — no RAF needed
+    let settled = true; // true when lerps have converged, no RAF needed
 
     const tick = () => {
       if (!running) return;
@@ -245,9 +245,9 @@ export default function HeroHeadline() {
           // = left→right): dark text, accent blue, accent blue at 50%.
           // This mirrors the three horizontal bars inside the logo mark.
           const PILLAR_CLASSES = [
-            'font-semibold text-[var(--color-text)]',           // NO LLM — top bar (dark)
-            'text-[var(--color-cta-bg)]',                       // ZERO STORAGE — mid bar (accent)
-            'text-[var(--color-cta-bg)] opacity-50',            // EU-HOSTED — bottom bar (accent faded)
+            'font-semibold text-[var(--color-text)]',           // NO LLM, top bar (dark)
+            'text-[var(--color-cta-bg)]',                       // ZERO STORAGE, mid bar (accent)
+            'text-[var(--color-cta-bg)] opacity-50',            // EU-HOSTED, bottom bar (accent faded)
           ];
           const pillars = LANDING_COPY.heroTrustEyebrow.split(' · ');
           return pillars.map((pillar, i) => (
@@ -266,7 +266,7 @@ export default function HeroHeadline() {
           <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
-          {/* Text container — clips on scroll, wraps on mobile */}
+          {/* Text container, clips on scroll, wraps on mobile */}
           <span ref={containerRef} className="inline-block text-center sm:whitespace-nowrap">
             <span
               ref={accentRef}
@@ -281,7 +281,7 @@ export default function HeroHeadline() {
           <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
-          {/* Full [F] logo — appears at center when brackets close */}
+          {/* Full [F] logo, appears at center when brackets close */}
           <svg
             ref={fBarsRef}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"

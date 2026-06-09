@@ -99,7 +99,7 @@ export default function AnimatedLogo({ className }) {
         strokeLinejoin="round"
       />
 
-      {/* F bars — start wide, shrink to fit inside brackets */}
+      {/* F bars, start wide, shrink to fit inside brackets */}
       <rect data-bar="top" x="11" y="8" width="26" height="5" rx="1.5" fill="currentColor" />
       <rect data-bar="mid" x="11" y="19" width="18" height="5" rx="1.5" fill="#2563EB" />
       <rect data-bar="bot" x="11" y="30" width="11" height="5" rx="1.5" fill="#2563EB" opacity="0.4" />

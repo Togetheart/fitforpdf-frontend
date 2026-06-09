@@ -48,7 +48,7 @@ export default function VerticalPage({
         <Section id="product-visual" bg="bg-hero" className="py-8 sm:py-12">
           <div className="mx-auto max-w-4xl">
             {/* next/image so the product shot is transcoded to AVIF/WebP and
-                carries intrinsic dimensions (no CLS) — was a raw 335KB PNG. */}
+                carries intrinsic dimensions (no CLS), was a raw 335KB PNG. */}
             <Image
               src={productImage}
               alt="Excel spreadsheet transformed into a clean, structured PDF by fitforpdf"

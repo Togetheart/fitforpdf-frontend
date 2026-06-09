@@ -43,7 +43,7 @@ afterEach(() => {
 });
 
 describe('home conversion-critical UI', () => {
-  test('hero has no standalone CTA — upload card is the primary action', () => {
+  test('hero has no standalone CTA, upload card is the primary action', () => {
     const hero = screen.getByTestId('hero-section');
 
     expect(screen.queryByTestId('hero-primary-cta')).toBeNull();

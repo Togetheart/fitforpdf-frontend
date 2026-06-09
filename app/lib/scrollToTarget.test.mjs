@@ -31,7 +31,7 @@ afterEach(async () => {
   await new Promise((r) => setTimeout(r, 80));
 });
 
-test('scrollToTarget — scrolls to first matching id with headerOffset', () => {
+test('scrollToTarget, scrolls to first matching id with headerOffset', () => {
   scrollToTarget(['generate', 'tool']);
   assert.equal(scrollCalls.length, 1);
   assert.equal(scrollCalls[0].behavior, 'smooth');
@@ -39,32 +39,32 @@ test('scrollToTarget — scrolls to first matching id with headerOffset', () => 
   assert.equal(scrollCalls[0].top, 2320);
 });
 
-test('scrollToTarget — falls back to second id when first not found', () => {
+test('scrollToTarget, falls back to second id when first not found', () => {
   scrollToTarget(['nonexistent', 'tool']);
   assert.equal(scrollCalls.length, 1);
   // 2200 - 80 = 2120
   assert.equal(scrollCalls[0].top, 2120);
 });
 
-test('scrollToTarget — no-op when no targets found', () => {
+test('scrollToTarget, no-op when no targets found', () => {
   scrollToTarget(['nope', 'also-nope']);
   assert.equal(scrollCalls.length, 0);
 });
 
-test('scrollToTarget — accepts custom headerOffset', () => {
+test('scrollToTarget, accepts custom headerOffset', () => {
   scrollToTarget(['generate'], { headerOffset: 200 });
   // 2400 - 200 = 2200
   assert.equal(scrollCalls[0].top, 2200);
 });
 
-test('scrollToTarget — clamps negative scroll positions to 0', () => {
+test('scrollToTarget, clamps negative scroll positions to 0', () => {
   document.getElementById('generate').getBoundingClientRect = () => ({ top: 50, bottom: 150, left: 0, right: 600, width: 600, height: 100 });
   scrollToTarget(['generate']);
   // 50 - 80 = -30 → clamped to 0
   assert.equal(scrollCalls[0].top, 0);
 });
 
-test('scrollToTarget — returns a cancel function that stops corrective scroll', async () => {
+test('scrollToTarget, returns a cancel function that stops corrective scroll', async () => {
   const cancel = scrollToTarget(['generate'], { correctionDelay: 50, correctionThreshold: 0 });
   assert.equal(typeof cancel, 'function');
   cancel();
@@ -73,7 +73,7 @@ test('scrollToTarget — returns a cancel function that stops corrective scroll'
   assert.equal(scrollCalls.length, 1);
 });
 
-test('scrollToTarget — corrective scroll fires when target drifts', async () => {
+test('scrollToTarget, corrective scroll fires when target drifts', async () => {
   scrollToTarget(['generate'], { correctionDelay: 30, correctionThreshold: 10 });
   // Simulate a layout shift between pass 1 and pass 2: move the target.
   document.getElementById('generate').getBoundingClientRect = () => ({ top: 3000, bottom: 3100, left: 0, right: 600, width: 600, height: 100 });
@@ -83,7 +83,7 @@ test('scrollToTarget — corrective scroll fires when target drifts', async () =
   assert.equal(scrollCalls[1].top, 2920);
 });
 
-test('scrollToTarget — user-initiated scroll cancels the corrective pass', async () => {
+test('scrollToTarget, user-initiated scroll cancels the corrective pass', async () => {
   scrollToTarget(['generate'], { correctionDelay: 50, correctionThreshold: 0 });
   // Simulate user wheel event before the corrective timer fires.
   window.dispatchEvent(new dom.window.Event('wheel'));

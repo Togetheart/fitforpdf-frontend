@@ -136,7 +136,7 @@ export default function PlanCard({
       )}
       aria-label={plan.title}
     >
-      {/* Badge — overflow-visible lets it sit on the edge */}
+      {/* Badge, overflow-visible lets it sit on the edge */}
       {isFeatured ? (
         <>
           <span aria-hidden="true" className="sr-only" data-testid="plan-credits" data-highlight="true" />
@@ -159,7 +159,7 @@ export default function PlanCard({
       {/* Title */}
       <HeadingTag className="text-xl font-semibold tracking-tight">{plan.title}</HeadingTag>
 
-      {/* Price hero — big visible price or topline */}
+      {/* Price hero, big visible price or topline */}
       <div className="mt-4">
         {pricePairs.length > 0 ? (
           <>
@@ -202,7 +202,7 @@ export default function PlanCard({
         </ul>
       ) : null}
 
-      {/* CTA — wrapped in relative z-10 so the visible button stays
+      {/* CTA, wrapped in relative z-10 so the visible button stays
           clickable on top of the full-card overlay below. */}
       {showAction ? (
         <div className="relative z-10 mt-6">{renderAction(plan)}</div>
@@ -213,7 +213,7 @@ export default function PlanCard({
         </p>
       ) : null}
 
-      {/* Full-card click intercept — LAST in DOM so it stacks above static
+      {/* Full-card click intercept, LAST in DOM so it stacks above static
           content without z-index gymnastics. Skipped when no CTA shown. */}
       {showAction ? renderCardOverlay(plan) : null}
     </Card>

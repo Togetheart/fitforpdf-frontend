@@ -187,7 +187,7 @@ export default function RootLayout({ children }) {
         <SiteShellGate>{children}</SiteShellGate>
         <Analytics />
         {/* Microsoft Clarity removed (perf): it was a SECOND full session
-            recorder running alongside PostHog's session_recording — redundant
+            recorder running alongside PostHog's session_recording, redundant
             DOM-serialization + a separate third-party origin. PostHog is the
             system of record; re-enable Clarity only if its heatmaps are needed. */}
       </body>

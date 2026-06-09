@@ -81,7 +81,7 @@ afterEach(() => {
 const optionsToggle = () => screen.getByRole('button', { name: 'Open options panel' });
 const recentToggle = () => screen.getByRole('button', { name: 'Open recent exports panel' });
 
-describe('/app workbench — mobile drawers (Phase 2)', () => {
+describe('/app workbench, mobile drawers (Phase 2)', () => {
   test('both toggles render closed; no scrim initially', () => {
     render(<AppPage />);
     expect(optionsToggle().getAttribute('aria-expanded')).toBe('false');

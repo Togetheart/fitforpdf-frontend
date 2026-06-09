@@ -19,7 +19,7 @@ export default function Error({ error, reset }) {
         Something went wrong.
       </p>
       <p className="mt-2 max-w-md text-sm leading-6 text-[var(--color-muted)]">
-        A part of the page failed to load. Nothing you uploaded is stored — your data was not affected.
+        A part of the page failed to load. Nothing you uploaded is stored, your data was not affected.
       </p>
       <div className="mt-6 flex items-center gap-3">
         <button

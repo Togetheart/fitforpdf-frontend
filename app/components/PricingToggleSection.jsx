@@ -81,7 +81,7 @@ export function PaygCard({ pack, onBuy, isLoading }) {
       style={isFeatured ? { border: '1px solid rgba(0,0,0,0.10)' } : {}}
     >
 
-      {/* Badge — centered above */}
+      {/* Badge, centered above */}
       {pack.badge ? (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
           <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-white shadow-sm whitespace-nowrap">
@@ -154,7 +154,7 @@ export function PaygCard({ pack, onBuy, isLoading }) {
         ))}
       </ul>
 
-      {/* CTA — visible button, z-10 so it stays clickable above the
+      {/* CTA, visible button, z-10 so it stays clickable above the
           full-card overlay below. */}
       <div className="relative z-10 mt-6">
         <button
@@ -246,7 +246,7 @@ export function ProSubscriptionCard({ billing, onSubscribe, isLoading }) {
         ))}
       </ul>
 
-      {/* CTA — visible button, z-10 above the overlay below. */}
+      {/* CTA, visible button, z-10 above the overlay below. */}
       <div className="relative z-10 mt-auto pt-8">
         <button
           type="button"
@@ -316,7 +316,7 @@ export function ProApiCard() {
         ))}
       </ul>
 
-      {/* CTA — visible link, z-10 above the overlay below. */}
+      {/* CTA, visible link, z-10 above the overlay below. */}
       <div className="relative z-10 mt-auto pt-8">
         <p className="mb-0.5 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof}</p>
         <p className="mb-3 text-center text-xs text-muted/60">{PRICING_PAGE_COPY.proApiSocialProof2}</p>
@@ -391,7 +391,7 @@ export function EnterpriseCard() {
         ))}
       </ul>
 
-      {/* CTA — visible link, z-10 above the overlay below. */}
+      {/* CTA, visible link, z-10 above the overlay below. */}
       <div className="relative z-10 mt-auto pt-8">
         <a
           href="/contact"
@@ -472,7 +472,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
       {/* ── Pay-as-you-go view ── */}
       {mode === 'payg' ? (
         <div className="space-y-8">
-          {/* PAYG tagline — rule divider style */}
+          {/* PAYG tagline, rule divider style */}
           <div className="flex items-center justify-center gap-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--color-border)] max-w-[80px]" />
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
@@ -523,7 +523,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
             <p className="text-sm text-muted">{PRICING_PAGE_COPY.proSubTagline}</p>
           </div>
 
-          {/* Billing toggle — dark pill variant */}
+          {/* Billing toggle, dark pill variant */}
           <div className="flex justify-center">
             <PillToggle options={billingOptions} value={billing} onChange={setBilling} size="sm" />
           </div>

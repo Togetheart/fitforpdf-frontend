@@ -41,7 +41,7 @@ afterEach(() => {
 
 // ── Page structure ───────────────────────────────────────────────
 
-describe('Developers page — documentation sections', () => {
+describe('Developers page, documentation sections', () => {
   test('renders the page title and API base URL', () => {
     render(<DevelopersPage />);
     // API base URL appears multiple times (hero + code samples), use getAllByText
@@ -117,8 +117,8 @@ describe('Developers page — documentation sections', () => {
 
 // ── Request access form ──────────────────────────────────────────
 
-describe('Developers page — request access form', () => {
-  test('renders form with name and email fields (no use-case — self-serve, no manual review)', () => {
+describe('Developers page, request access form', () => {
+  test('renders form with name and email fields (no use-case, self-serve, no manual review)', () => {
     render(<DevelopersPage />);
     // Actual placeholders from the component
     expect(screen.getByPlaceholderText('Jane Smith')).toBeTruthy();
@@ -143,7 +143,7 @@ describe('Developers page — request access form', () => {
     mockFetchOnce(201, {
       apiKey: 'ffp_live_0123456789abcdef0123456789abcdef',
       trialRenders: 25,
-      message: 'Your API key is ready — 25 free renders to start.',
+      message: 'Your API key is ready, 25 free renders to start.',
     });
 
     fireEvent.change(screen.getByPlaceholderText('Jane Smith'), {
@@ -198,7 +198,7 @@ describe('Developers page — request access form', () => {
     render(<DevelopersPage />);
 
     mockFetchOnce(409, {
-      error: { code: 'already_provisioned', message: 'This email already has an API key — check your inbox.' },
+      error: { code: 'already_provisioned', message: 'This email already has an API key, check your inbox.' },
     });
 
     fireEvent.change(screen.getByPlaceholderText('Jane Smith'), {

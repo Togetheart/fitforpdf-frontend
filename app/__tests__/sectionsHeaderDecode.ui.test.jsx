@@ -2,7 +2,7 @@ import { describe, test, expect } from 'vitest';
 
 import { parseSectionsHeader } from '../hooks/useConversion.mjs';
 
-describe('parseSectionsHeader — decodes percent-encoded section titles', () => {
+describe('parseSectionsHeader, decodes percent-encoded section titles', () => {
   test('decodes %C2%B7 (·) back to the middle dot in titles', () => {
     const raw = JSON.stringify([
       { label: 'C', title: 'Color %C2%B7 Size %C2%B7 Availability', columns: ['Color', 'Size', 'Availability'] },

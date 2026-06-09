@@ -18,7 +18,7 @@ afterEach(() => { cleanup(); document.body.style.overflow = ''; });
 
 const blob = new Blob(['%PDF-1.4'], { type: 'application/pdf' });
 
-describe('PdfPreviewPane — viewer chrome', () => {
+describe('PdfPreviewPane, viewer chrome', () => {
   test('shows the page count, pluralized', () => {
     render(<PdfPreviewPane pdfBlob={blob} filename="report.pdf" pageCount={26} />);
     expect(screen.getByText(/26 pages/)).toBeTruthy();

@@ -30,7 +30,7 @@ const gif = () => new File([new Uint8Array(10)], 'a.gif', { type: 'image/gif' })
 
 // jsdom has no createImageBitmap/canvas, so handleLogoSelect falls back to the raw file
 // and the 256 KB guard applies — the behaviour we want when the browser can't normalize.
-describe('useConversion.handleLogoSelect — validation + fallback', () => {
+describe('useConversion.handleLogoSelect, validation + fallback', () => {
   test('rejects a non PNG/JPG file', async () => {
     render(<Harness file={gif()} />);
     fireEvent.click(screen.getByText('select'));
@@ -61,7 +61,7 @@ describe('useConversion.handleLogoSelect — validation + fallback', () => {
   });
 });
 
-describe('normalizeLogoFile — canvas re-encode to a baseline PNG', () => {
+describe('normalizeLogoFile, canvas re-encode to a baseline PNG', () => {
   test('returns null when the browser cannot normalize (no createImageBitmap)', async () => {
     expect(typeof createImageBitmap).not.toBe('function'); // jsdom default
     const out = await normalizeLogoFile(smallPng());

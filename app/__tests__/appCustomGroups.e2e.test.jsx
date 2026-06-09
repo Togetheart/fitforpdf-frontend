@@ -90,7 +90,7 @@ async function generate() {
   );
 }
 
-describe('/app custom groups — pinned columns are visible and movable (Option A)', () => {
+describe('/app custom groups, pinned columns are visible and movable (Option A)', () => {
   test('lists pinned columns (tagged Fixed) alongside the section columns', async () => {
     await generate();
     const box = await screen.findByTestId('app-custom-groups');
@@ -129,7 +129,7 @@ describe('/app custom groups — pinned columns are visible and movable (Option 
  * Fixed columns (repeated in every section) stay neutral. The color tracks the live
  * dropdown selection, so moving a column recolors its name immediately (no re-render).
  */
-describe('/app custom groups — column name takes its group color', () => {
+describe('/app custom groups, column name takes its group color', () => {
   test('group-A columns render blue, group-B columns render teal, fixed columns stay neutral', async () => {
     await generate();
     const box = await screen.findByTestId('app-custom-groups');
@@ -165,7 +165,7 @@ describe('/app custom groups — column name takes its group color', () => {
  * Terminology is unified on "Section" (the PDF output concept, already used by the
  * dropdowns and the "Section names" editor) — no more "Group" in the visible copy.
  */
-describe('/app custom groups — panel uses "Section" terminology, not "Group"', () => {
+describe('/app custom groups, panel uses "Section" terminology, not "Group"', () => {
   test('pills, header, option, aria-label and hint all say "Section"', async () => {
     await generate();
     const box = await screen.findByTestId('app-custom-groups');

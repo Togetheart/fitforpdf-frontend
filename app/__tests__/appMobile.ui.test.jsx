@@ -77,7 +77,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('/app workbench — mobile operability (Defect 28)', () => {
+describe('/app workbench, mobile operability (Defect 28)', () => {
   test('renders on a mobile viewport without throwing, with the left rail in the DOM', () => {
     expect(() => render(<AppPage />)).not.toThrow();
     // The left rail is hidden via CSS on mobile (hidden lg:flex) but must still

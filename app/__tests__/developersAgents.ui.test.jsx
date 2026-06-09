@@ -6,7 +6,7 @@ import DevelopersPage from '../developers/page.jsx';
 
 afterEach(() => cleanup());
 
-describe('/developers — AI agents section', () => {
+describe('/developers, AI agents section', () => {
   test('has a dedicated "For AI agents" section', () => {
     render(<DevelopersPage />);
     const section = screen.getByTestId('developers-agents-section');

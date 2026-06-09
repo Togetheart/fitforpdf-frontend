@@ -22,22 +22,22 @@ export const metadata = {
 const COMPARISON_ROWS = [
   ['Tabular data handling', 'No table awareness', 'Built specifically for tabular data'],
   ['Setup complexity', 'Headless Chrome + Node.js + scripts', 'Upload a file or call the API'],
-  ['Resource usage', 'Heavy — full browser instance per render', 'Lightweight API call'],
+  ['Resource usage', 'Heavy, full browser instance per render', 'Lightweight API call'],
   ['Column layout', 'Manual HTML/CSS table styling', 'Automatic column grouping'],
   ['Page breaks', 'CSS page-break rules, often unpredictable', 'Intelligent automatic pagination'],
   ['Reference columns', 'Must duplicate in HTML per page', 'Pinned and repeated automatically'],
-  ['Infrastructure', 'Self-hosted headless Chrome', 'Managed service — no infrastructure'],
+  ['Infrastructure', 'Self-hosted headless Chrome', 'Managed service, no infrastructure'],
 ];
 
 const PROS_AND_CONS = {
   pros: [
-    'Full browser rendering — supports any web content',
+    'Full browser rendering, supports any web content',
     'Highly flexible for custom layouts and styling',
     'Active open-source project with strong community',
     'Can screenshot, test, and automate beyond PDF generation',
   ],
   cons: [
-    'Heavy resource footprint — runs a full Chrome instance',
+    'Heavy resource footprint, runs a full Chrome instance',
     'No built-in table or column intelligence',
     'Requires writing and maintaining HTML templates for data',
     'Page breaks in tables are unpredictable without manual tuning',

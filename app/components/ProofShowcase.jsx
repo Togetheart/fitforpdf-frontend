@@ -63,7 +63,7 @@ const FEATURES = [
     color: '#2563EB',
   },
   {
-    title: 'No manual work — jump to any section',
+    title: 'No manual work, jump to any section',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
@@ -79,42 +79,42 @@ const CSV_TABS = [
     label: 'Overview',
     src: '/CSV/proof/overview.webp',
     srcSet: '/CSV/proof/overview.webp 1x, /CSV/proof/overview@2x.webp 2x',
-    alt: 'fitforpdf structured document — overview page with all columns',
+    alt: 'fitforpdf structured document, overview page with all columns',
   },
   {
     id: 'section-a',
     label: 'Section A',
     src: '/CSV/proof/section-a.webp',
     srcSet: '/CSV/proof/section-a.webp 1x, /CSV/proof/section-a@2x.webp 2x',
-    alt: 'fitforpdf structured document — section A: Contact information',
+    alt: 'fitforpdf structured document, section A: Contact information',
   },
   {
     id: 'section-b',
     label: 'Section B',
     src: '/CSV/proof/section-b.webp',
     srcSet: '/CSV/proof/section-b.webp 1x, /CSV/proof/section-b@2x.webp 2x',
-    alt: 'fitforpdf structured document — section B: Financial details',
+    alt: 'fitforpdf structured document, section B: Financial details',
   },
   {
     id: 'section-c',
     label: 'Section C',
     src: '/CSV/proof/section-c.webp',
     srcSet: '/CSV/proof/section-c.webp 1x, /CSV/proof/section-c@2x.webp 2x',
-    alt: 'fitforpdf structured document — section C: Invoice ID, Client, Payment Terms',
+    alt: 'fitforpdf structured document, section C: Invoice ID, Client, Payment Terms',
   },
   {
     id: 'section-d',
     label: 'Section D',
     src: '/CSV/proof/section-d.webp',
     srcSet: '/CSV/proof/section-d.webp 1x, /CSV/proof/section-d@2x.webp 2x',
-    alt: 'fitforpdf structured document — section D: Descriptions',
+    alt: 'fitforpdf structured document, section D: Descriptions',
   },
   {
     id: 'section-e',
     label: 'Section E',
     src: '/CSV/proof/section-e.webp',
     srcSet: '/CSV/proof/section-e.webp 1x, /CSV/proof/section-e@2x.webp 2x',
-    alt: 'fitforpdf structured document — section E: Notes & comments',
+    alt: 'fitforpdf structured document, section E: Notes & comments',
   },
 ];
 
@@ -124,42 +124,42 @@ const XLSX_TABS = [
     label: 'Overview',
     src: '/proof/overview.webp',
     srcSet: '/proof/overview.webp 1x, /proof/overview@2x.webp 2x',
-    alt: 'fitforpdf structured document from Excel — overview page with all sections',
+    alt: 'fitforpdf structured document from Excel, overview page with all sections',
   },
   {
     id: 'section-a',
     label: 'Section A',
     src: '/proof/section-a.webp',
     srcSet: '/proof/section-a.webp 1x, /proof/section-a@2x.webp 2x',
-    alt: 'fitforpdf structured document from Excel — section A: Contact details',
+    alt: 'fitforpdf structured document from Excel, section A: Contact details',
   },
   {
     id: 'section-b',
     label: 'Section B',
     src: '/proof/section-b.webp',
     srcSet: '/proof/section-b.webp 1x, /proof/section-b@2x.webp 2x',
-    alt: 'fitforpdf structured document from Excel — section B: Location & address',
+    alt: 'fitforpdf structured document from Excel, section B: Location & address',
   },
   {
     id: 'section-c',
     label: 'Section C',
     src: '/proof/section-c.webp',
     srcSet: '/proof/section-c.webp 1x, /proof/section-c@2x.webp 2x',
-    alt: 'fitforpdf structured document from Excel — section C: Text content',
+    alt: 'fitforpdf structured document from Excel, section C: Text content',
   },
   {
     id: 'section-d',
     label: 'Section D',
     src: '/proof/section-d.webp',
     srcSet: '/proof/section-d.webp 1x, /proof/section-d@2x.webp 2x',
-    alt: 'fitforpdf structured document from Excel — section D: Descriptions',
+    alt: 'fitforpdf structured document from Excel, section D: Descriptions',
   },
   {
     id: 'section-e',
     label: 'Section E',
     src: '/proof/section-e.webp',
     srcSet: '/proof/section-e.webp 1x, /proof/section-e@2x.webp 2x',
-    alt: 'fitforpdf structured document from Excel — section E: Role & position',
+    alt: 'fitforpdf structured document from Excel, section E: Role & position',
   },
 ];
 
@@ -187,7 +187,7 @@ const FORMAT_CONFIGS = {
     inputDescription: 'Hard to read at full width.',
     beforeImage: '/Excel/xlxs.webp',
     beforeSrcSet: '/Excel/xlxs.webp 1x, /Excel/xlxs@2x.webp 2x',
-    beforeAlt: 'Excel file exported as PDF — unreadable overflow',
+    beforeAlt: 'Excel file exported as PDF, unreadable overflow',
     sourceLink: null,
     sourceLinkLabel: null,
     tabs: XLSX_TABS,
@@ -201,11 +201,11 @@ const FORMATS = ['xlsx', 'csv'];
 // Matches SECTION_COLOR_PALETTE from pdfRenderer.js (index 0–4)
 const TAB_COLORS_HEX = [
   '#FFFFFF',   // Overview
-  '#2563EB',   // Section A — blue
-  '#22C55E',   // Section B — green
-  '#F59E0B',   // Section C — amber
-  'rgb(239,68,68)',   // Section D — red (Tailwind red-500)
-  '#8B5CF6',   // Section E — violet
+  '#2563EB',   // Section A, blue
+  '#22C55E',   // Section B, green
+  '#F59E0B',   // Section C, amber
+  'rgb(239,68,68)',   // Section D, red (Tailwind red-500)
+  '#8B5CF6',   // Section E, violet
 ];
 
 export default function ProofShowcase() {
@@ -309,7 +309,7 @@ export default function ProofShowcase() {
         <StatPill>{LANDING_COPY.proofTimeSaved}</StatPill>
       </p>
 
-      {/* Format selector — segmented control */}
+      {/* Format selector, segmented control */}
       <div
         data-testid="format-selector"
         className="flex items-center justify-center"
@@ -361,7 +361,7 @@ export default function ProofShowcase() {
         data-testid="home-preview-card"
         className="home-preview-float w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 md:p-8 shadow-sm transition-shadow duration-300 hover:shadow-[0_2px_40px_rgba(0,0,0,0.11)]"
       >
-        {/* Tab buttons — Apple pill style */}
+        {/* Tab buttons, Apple pill style */}
         <div
           className="w-full overflow-x-auto scrollbar-none rounded-full -mx-1 px-1"
           ref={(el) => {
@@ -382,7 +382,7 @@ export default function ProofShowcase() {
             className="relative flex items-center rounded-full p-1"
             style={{ minWidth: 'max-content' }}
           >
-            {/* Sliding indicator — colored pill */}
+            {/* Sliding indicator, colored pill */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute rounded-full"

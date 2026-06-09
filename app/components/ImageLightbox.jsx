@@ -110,7 +110,7 @@ const ImageLightbox = forwardRef(function ImageLightbox({ src, srcSet, alt, clas
                 </svg>
               </button>
 
-              {/* Image — fills viewport with padding */}
+              {/* Image, fills viewport with padding */}
               <div className="absolute inset-6 top-14 flex items-center justify-center">
                 <img
                   src={activeSrc}

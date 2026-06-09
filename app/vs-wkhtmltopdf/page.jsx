@@ -27,7 +27,7 @@ const COMPARISON_ROWS = [
   ['Reference columns', 'Must be coded into each page', 'Pinned and repeated automatically'],
   ['Setup', 'Install binary + write HTML templates', 'Upload a file, done'],
   ['Maintenance', 'Deprecated, no active development', 'Managed service, always up to date'],
-  ['Table awareness', 'None — renders raw HTML', 'Built for tabular data'],
+  ['Table awareness', 'None, renders raw HTML', 'Built for tabular data'],
 ];
 
 const PROS_AND_CONS = {
@@ -35,10 +35,10 @@ const PROS_AND_CONS = {
     'Open-source with a long track record',
     'Converts any HTML to PDF',
     'Works as a CLI tool in automated pipelines',
-    'No runtime cost — runs locally',
+    'No runtime cost, runs locally',
   ],
   cons: [
-    'Officially deprecated — no longer maintained',
+    'Officially deprecated, no longer maintained',
     'No column intelligence or table-aware layout',
     'Requires writing and maintaining HTML templates',
     'Page breaks must be manually configured in CSS',

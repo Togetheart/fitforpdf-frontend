@@ -76,7 +76,7 @@ const CONSULTANTS_FAQ_LD = {
       name: 'What happens when the data changes?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Upload the updated file and get a new PDF immediately. No re-formatting needed — the layout adapts automatically.',
+        text: 'Upload the updated file and get a new PDF immediately. No re-formatting needed, the layout adapts automatically.',
       },
     },
     {

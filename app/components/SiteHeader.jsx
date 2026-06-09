@@ -44,7 +44,7 @@ export default function SiteHeader() {
         )}
       >
         <div className="mx-auto flex w-full max-w-[1520px] items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-12">
-          <a href="/" className="flex items-center gap-2" aria-label="fitforpdf — accueil">
+          <a href="/" className="flex items-center gap-2" aria-label="fitforpdf, accueil">
             <AnimatedLogo
               className={cn(
                 'transition-all duration-300',
@@ -63,12 +63,12 @@ export default function SiteHeader() {
             />
           </a>
 
-          {/* Desktop nav — hidden on mobile */}
+          {/* Desktop nav, hidden on mobile */}
           {/* `API` is promoted left-most + decorated with a "Free" pill because
               /developers had the highest pages/visitor of the site (8.5) but
               was buried in the nav. Direct-API audience deserves discovery. */}
           <nav className="hidden sm:flex items-center gap-6 text-sm text-[var(--color-muted)]">
-            {/* API promoted as a bordered pill — identical to the app toolbar
+            {/* API promoted as a bordered pill, identical to the app toolbar
                 (Code2 + "Free"), so the marketing + app headers read as one product. */}
             <a
               href="/developers"
@@ -90,7 +90,7 @@ export default function SiteHeader() {
                 lives in the app (at the point of work + the account menu), not as
                 chrome here. The offer ("3 free exports") is communicated in the hero
                 copy instead. AccountMenu shows the SN avatar when logged in and a
-                styled "Log in" pill when logged out — one consistent control. */}
+                styled "Log in" pill when logged out, one consistent control. */}
             <ThemeToggle />
             <AccountMenu account={account} onLogout={logout} />
             <Button variant="primary" href={account ? '/app' : '/#generate'} className="px-4 text-xs h-9">
@@ -98,7 +98,7 @@ export default function SiteHeader() {
             </Button>
           </nav>
 
-          {/* Hamburger — visible on mobile only. h-11 w-11 = 44px hit target
+          {/* Hamburger, visible on mobile only. h-11 w-11 = 44px hit target
               (iOS HIG minimum). Was h-9 w-9 = 36px. */}
           <button
             type="button"
@@ -113,7 +113,7 @@ export default function SiteHeader() {
         </div>
       </header>
 
-      {/* Frosted glass backdrop — fades in with menu */}
+      {/* Frosted glass backdrop, fades in with menu */}
       <div
         className={cn(
           'fixed inset-0 z-40 sm:hidden transition-all duration-300',

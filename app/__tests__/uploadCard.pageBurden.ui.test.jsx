@@ -48,7 +48,7 @@ function renderWithPageBurdenFail(overrides = {}) {
 
 afterEach(() => cleanup());
 
-describe('UploadCard — page burden FAIL surface', () => {
+describe('UploadCard, page burden FAIL surface', () => {
   test('renders the page-burden title and description', () => {
     renderWithPageBurdenFail();
     expect(

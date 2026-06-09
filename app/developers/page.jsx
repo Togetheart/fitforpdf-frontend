@@ -26,7 +26,7 @@ const ENDPOINTS = [
     auth: true,
     summary: 'Check your quota',
     description:
-      'Returns your current plan, usage, and remaining exports. A new self-serve key starts with 25 free render credits — the "credits" block, which counts down as you render.',
+      'Returns your current plan, usage, and remaining exports. A new self-serve key starts with 25 free render credits, the "credits" block, which counts down as you render.',
     example: `curl -H "X-FITFORPDF-KEY: ffp_live_..." \\
   ${BASE_URL}/quota`,
     response: `{
@@ -87,7 +87,7 @@ const USE_CASES = [
 ];
 
 const DIFFERENTIATORS = [
-  { label: 'Splits wide tables into sections', desc: 'No more cut-off columns — wide tables are restructured into readable grouped sections.' },
+  { label: 'Splits wide tables into sections', desc: 'No more cut-off columns, wide tables are restructured into readable grouped sections.' },
   { label: 'Preserves key columns across sections', desc: 'Identifier columns stay visible on every section so records stay linked.' },
   { label: 'Full-width text rendering', desc: 'Every column gets the space it needs. No cramped cells or truncated values.' },
   { label: 'Automatic pagination', desc: 'Page breaks follow record boundaries, not arbitrary row counts.' },
@@ -239,7 +239,7 @@ function RequestAccessForm() {
               </button>
             </div>
             <p className="mt-2 text-center text-xs text-[var(--color-muted)]">
-              Save it now and keep it secret — it&apos;s also in your inbox.
+              Save it now and keep it secret, it&apos;s also in your inbox.
             </p>
 
             <p className="mt-6 text-left text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
@@ -261,7 +261,7 @@ function RequestAccessForm() {
   return (
     <section id="request-access" className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-sm">
       <div className="flex flex-col md:flex-row">
-        {/* Left — value props */}
+        {/* Left, value props */}
         <div className="flex-1 px-6 py-8 md:px-10 md:py-12 bg-[var(--color-bg-hero)]">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-blue-600">
             Free API key
@@ -270,7 +270,7 @@ function RequestAccessForm() {
             Get your API key
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">
-            Get an instant key and make your first render in seconds — no approval,
+            Get an instant key and make your first render in seconds, no approval,
             no waiting. Every key includes:
           </p>
           <ul className="mt-6 space-y-3">
@@ -294,7 +294,7 @@ function RequestAccessForm() {
         {/* Divider */}
         <div className="hidden md:block w-px bg-[var(--color-border)]" />
 
-        {/* Right — form */}
+        {/* Right, form */}
         <div className="flex-1 border-t border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-8 md:border-t-0 md:px-10 md:py-12">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -360,10 +360,10 @@ export default function DevelopersPage() {
 
       {/* Hero */}
       <div className="mb-14">
-        {/* Brand visual — converted from raw <img> (1.4 MB PNG, was the LCP
+        {/* Brand visual, converted from raw <img> (1.4 MB PNG, was the LCP
             element for this page) to <Image> with priority + automatic
             webp/avif conversion. Cuts the image payload by ~80% on this
-            high-engagement page (8.5 pages/visitor — see mobile audit). */}
+            high-engagement page (8.5 pages/visitor, see mobile audit). */}
         <div className="mb-8 relative h-48 sm:h-56 overflow-hidden rounded-2xl">
           <Image
             // brand-origami.webp = 58K vs .png 1.4MB (24× smaller).
@@ -398,7 +398,7 @@ export default function DevelopersPage() {
           </span>
         </div>
 
-        {/* Primary hero CTA — Free API key.
+        {/* Primary hero CTA, Free API key.
             Pushed up here because /developers landings used to bury this anchor
             at the very bottom of the page. Promoted to first-fold to convert
             the high-intent dev audience (8.5 pages/visitor) before they bounce. */}
@@ -414,7 +414,7 @@ export default function DevelopersPage() {
           </a>
           <p className="text-xs text-[var(--color-muted)]">
             <span className="font-semibold text-[var(--color-text)]">25 free renders</span>{' '}
-            to start. No credit card, no approval — your key is instant.
+            to start. No credit card, no approval, your key is instant.
           </p>
         </div>
       </div>
@@ -552,7 +552,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
         </h2>
         <div className="space-y-3 text-sm leading-relaxed text-[var(--color-muted)]">
           <p>
-            Standard PDF libraries — wkhtmltopdf, Puppeteer, ReportLab — were built for documents,
+            Standard PDF libraries, wkhtmltopdf, Puppeteer, ReportLab, were built for documents,
             not data. Feed them a 20-column CRM export and you get cut-off columns, microscopic text,
             and broken page flows that no client wants to read.
           </p>
@@ -634,7 +634,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
           <a href="#request-access" className="underline underline-offset-2 hover:text-[var(--color-text)]">
             Get your free API key
           </a>{' '}
-          — instant, no approval.
+         , instant, no approval.
         </p>
       </section>
 

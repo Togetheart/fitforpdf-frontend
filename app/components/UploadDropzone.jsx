@@ -116,7 +116,7 @@ export default function UploadDropzone({
             <div className="flex w-full flex-col items-center gap-1.5 text-center sm:flex-row sm:items-center sm:gap-2.5 sm:text-left">
               <AnimatedCloudIcon size={20} className="shrink-0 text-blue-500" />
               <div className="min-w-0 w-full sm:w-auto">
-                {/* Mobile-aware copy: "Drop here" is misleading on touch — show
+                {/* Mobile-aware copy: "Drop here" is misleading on touch, show
                     "Tap to choose file" instead. Picked up the gap during the
                     mobile-funnel audit (29% mobile visitors, 9× fewer pages). */}
                 <p className="text-sm font-medium text-[var(--color-text)]">

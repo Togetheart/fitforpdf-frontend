@@ -105,7 +105,7 @@ async function mountDesktopWorkbench() {
   await waitFor(() => expect(renderCalls.length).toBe(1), { timeout: 3000 });
 }
 
-describe('/app workbench — desktop resizable / collapsible panels (Phase 1)', () => {
+describe('/app workbench, desktop resizable / collapsible panels (Phase 1)', () => {
   test('desktop renders resize handles (role="separator")', async () => {
     await mountDesktopWorkbench();
     const separators = await screen.findAllByRole('separator');

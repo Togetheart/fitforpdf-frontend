@@ -2,17 +2,17 @@ import React from 'react';
 import SiteShell from '../components/SiteShell';
 
 export const metadata = {
-  title: 'Brand Guidelines — fitforpdf',
+  title: 'Brand Guidelines, fitforpdf',
   description: 'Design system, colors, typography, and brand assets for fitforpdf.',
   alternates: { canonical: '/brand' },
   openGraph: {
-    title: 'Brand Guidelines — fitforpdf',
+    title: 'Brand Guidelines, fitforpdf',
     description: 'Design system, colors, typography, and brand assets for fitforpdf.',
     url: 'https://www.fitforpdf.com/brand',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Brand Guidelines — fitforpdf',
+    title: 'Brand Guidelines, fitforpdf',
     description: 'Design system, colors, typography, and brand assets for fitforpdf.',
   },
 };
@@ -164,7 +164,7 @@ export default function BrandPage() {
           <div className="space-y-2">
             <div className="flex items-baseline gap-3">
               <span className="text-4xl font-bold tracking-tight text-[var(--color-text)]">Satoshi</span>
-              <span className="text-sm text-[var(--color-muted)]">by Fontshare — self-hosted</span>
+              <span className="text-sm text-[var(--color-muted)]">by Fontshare, self-hosted</span>
             </div>
             <p className="text-sm text-[var(--color-muted)]">
               Fallbacks: -apple-system, SF Pro Display, Segoe UI, sans-serif

@@ -90,7 +90,7 @@ async function settle() {
   await waitFor(() => expect(screen.getByTestId('loading').textContent).toBe('0'), { timeout: 4000 });
 }
 
-describe('useConversion — sectionColors wire contract', () => {
+describe('useConversion, sectionColors wire contract', () => {
   test('appends sectionColors JSON to FormData after a swatch is chosen', async () => {
     restoreFetch = installFetch();
     render(<Harness />);

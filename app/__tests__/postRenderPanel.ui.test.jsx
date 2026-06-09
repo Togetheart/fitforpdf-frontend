@@ -78,7 +78,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('PostRenderPanel — UploadCard success state', () => {
+describe('PostRenderPanel, UploadCard success state', () => {
   test('shows the success heading, score, verdict, pages and shape', () => {
     render(<UploadCard {...baseProps()} />);
     const panel = screen.getByTestId('post-render-panel');
@@ -106,7 +106,7 @@ describe('PostRenderPanel — UploadCard success state', () => {
     })} />);
 
     const panel = screen.getByTestId('post-render-panel');
-    expect(panel.textContent).toContain('PDF ready — quick check recommended');
+    expect(panel.textContent).toContain('PDF ready, quick check recommended');
     expect(panel.textContent).toContain('Download it and confirm the layout is acceptable before sending.');
     expect(panel.textContent).not.toContain('Your client-ready PDF is ready');
     expect(panel.textContent).not.toContain('Some columns may need');

@@ -71,14 +71,14 @@ function InspectorSection({ title, hint, children, badge = null, locked = false,
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
-      {/* Collapsed via the hidden attribute (display:none) — keeps state, drops
+      {/* Collapsed via the hidden attribute (display:none), keeps state, drops
           the content from the a11y tree + tab order when closed. */}
       <div id={contentId} hidden={!open}>
         {hint ? <p className="mb-3 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">{hint}</p> : null}
         {/* Free plans: controls stay visible (discoverability) but a disabled
-            fieldset dims + blocks them — no silent no-op, and an upsell teaser. */}
+            fieldset dims + blocks them, no silent no-op, and an upsell teaser. */}
         {locked ? (
-          <fieldset disabled aria-label={`${title} — Pro feature`} className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
+          <fieldset disabled aria-label={`${title}, Pro feature`} className="m-0 min-w-0 border-0 p-0 opacity-60">{children}</fieldset>
         ) : children}
       </div>
     </section>
@@ -599,7 +599,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           {/* Pre-render: keep it calm. The toggle is the one pre-render choice;
               section names, colors and custom grouping are derived from the first
               render, so they appear only once a PDF exists. The inspector header
-              already states they refine after the first render — so a short, positive
+              already states they refine after the first render, so a short, positive
               reassurance is enough here. */}
           {!conversion.pdfBlob && conversion.columnMap !== 'off' ? (
             <p className="mt-2 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">Auto suits most files.</p>
@@ -665,7 +665,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             testid="app-branding-toggle"
             checked={conversion.includeBranding !== false}
             onChange={(next) => conversion.setIncludeBranding(next)}
-            hint="Off = a plain PDF with no logo — neither fitforpdf's nor yours."
+            hint="Off = a plain PDF with no logo, neither fitforpdf's nor yours."
             className="mb-3"
           />
           <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-[var(--color-text)]">
@@ -688,7 +688,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           <div className="mb-2 text-[13px] font-semibold text-[var(--color-text)]">Your logo</div>
           <div className="mb-3">
             {/* Custom control: the native file input renders the browser-locale
-                "Choisir le fichier" text and clashes with the UI — hide it (sr-only)
+                "Choisir le fichier" text and clashes with the UI, hide it (sr-only)
                 behind a styled label so the affordance reads "Upload logo". */}
             <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 text-[12px] font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-surface-sunken)]">
               <Upload className="h-3.5 w-3.5" aria-hidden="true" />
@@ -792,7 +792,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
       >
         {/* Hierarchy: Download is the one primary (solid). "Update preview" is the
             secondary re-render step (and states its cost). Pre-render the inspector
-            doesn't compete with the canvas's Generate button — it just states what
+            doesn't compete with the canvas's Generate button, it just states what
             the buttons will do. */}
         {conversion.pdfBlob ? (
           <button
@@ -836,8 +836,8 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           </button>
         ) : null}
         {/* Exports-remaining is no longer shown here. It lives at the point of
-            work — the canvas quota chip (visible on desktop AND mobile, signed-in
-            AND anonymous) — plus the account menu as a reference. The inspector
+            work, the canvas quota chip (visible on desktop AND mobile, signed-in
+            AND anonymous), plus the account menu as a reference. The inspector
             keeps only the amber "No exports left" lock line above when exhausted. */}
       </div>
     </aside>
@@ -882,7 +882,7 @@ function WorkbenchRail({
       data-testid="app-left-rail"
       className={['flex-col overflow-y-auto bg-[#0F172A] px-3.5 py-[18px] text-white', className].filter(Boolean).join(' ')}
     >
-      {/* Collapse toggle on the LEFT edge — mirrors the inspector's toggle (right
+      {/* Collapse toggle on the LEFT edge, mirrors the inspector's toggle (right
           edge), so the two panels' pictos face outward symmetrically. */}
       <div className="flex items-center gap-2">
         {onCollapse && !collapsed ? (
@@ -899,7 +899,7 @@ function WorkbenchRail({
         </div>
       </div>
 
-      {/* Explicit subtitle below the tabs (tab-aware) — mirrors the inspector header. */}
+      {/* Explicit subtitle below the tabs (tab-aware), mirrors the inspector header. */}
       <p className="mt-3 text-xs leading-5 text-[var(--color-text-subtle)]">
         {activeTab === 'recent'
           ? 'PDF artifacts only. Source spreadsheets are not stored.'
@@ -1151,14 +1151,14 @@ function WorkbenchDropzone({ conversion, quota }) {
         <h2 className="max-w-[320px] text-[18px] font-semibold leading-tight text-[var(--color-text)]">
           {conversion.file ? conversion.file.name : (
             <>
-              {/* You can't drag-and-drop on a touch device — lead with a tap action. */}
+              {/* You can't drag-and-drop on a touch device, lead with a tap action. */}
               <span className="sm:hidden">Add your Excel or CSV</span>
               <span className="hidden sm:inline">Drop your Excel or CSV here</span>
             </>
           )}
         </h2>
         <p className="mt-2 text-[13.5px] text-[var(--color-muted)]">.xlsx, .xls, .csv - up to 4 MB</p>
-        {/* "or" bridges the drag affordance and the button — but there's no drag on
+        {/* "or" bridges the drag affordance and the button, but there's no drag on
             touch, so hide it on mobile (the "ready" status still shows once a file is in). */}
         <div className={['my-[18px] text-[12.5px] text-[var(--color-text-subtle)]', hasFile ? '' : 'hidden sm:block'].join(' ')}>{hasFile ? 'ready' : 'or'}</div>
         {hasFile ? (
@@ -1245,7 +1245,7 @@ function WorkbenchDropzone({ conversion, quota }) {
                   </button>
                 ) : (
                   <p className="mt-3 text-[12.5px] text-[var(--color-danger-text)]">
-                    Long text is already condensed and this export is still too large — try splitting the file or removing very long columns.
+                    Long text is already condensed and this export is still too large, try splitting the file or removing very long columns.
                   </p>
                 )}
               </>
@@ -1291,18 +1291,18 @@ function WorkbenchSampleCard({ conversion }) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls={contentId}
-        className="flex w-full items-center justify-between gap-2 text-left"
+        className="flex w-full items-center justify-center gap-2 text-center"
       >
         <span className="text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
       <div id={contentId} hidden={!open} className="mt-3">
-        <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">Wide spreadsheet in, clean sectioned PDF out — the real sample, no upload needed.</p>
+        <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">Wide spreadsheet in, clean sectioned PDF out, the real sample, no upload needed.</p>
 
         {/* Before → after. Stacked on mobile (CSV ↓ PDF), side-by-side from sm up
             (CSV → PDF) so it fills the full-width card without whitespace. */}
         <div className="flex flex-col gap-2.5 sm:flex-row sm:items-stretch sm:gap-3">
-          {/* BEFORE — the real enterprise-invoices-demo data (not a mock). Scrolls
+          {/* BEFORE, the real enterprise-invoices-demo data (not a mock). Scrolls
               sideways on purpose: that's the "wide table" problem we solve. */}
           <div className="min-w-0 flex-1">
             <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Your spreadsheet (CSV)</p>
@@ -1314,13 +1314,13 @@ INV-1003,Blue Horizon 1002,blue-horizon-3@example.com,Sophie Klein,Startup,Overd
             </div>
           </div>
 
-          {/* transform marker — down when stacked, right when side-by-side */}
+          {/* transform marker, down when stacked, right when side-by-side */}
           <div className="flex shrink-0 items-center justify-center text-[var(--color-text-subtle)] sm:pt-5" aria-hidden="true">
             <ArrowDown className="h-4 w-4 sm:hidden" />
             <ArrowRight className="hidden h-4 w-4 sm:block" />
           </div>
 
-          {/* AFTER — a real rendered data section of the finished PDF (not the TOC),
+          {/* AFTER, a real rendered data section of the finished PDF (not the TOC),
               capped to a teaser of the top so a full page never balloons the card. */}
           <div className="min-w-0 flex-1">
             <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Finished PDF</p>
@@ -1357,12 +1357,12 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
   const hasFile = Boolean(conversion.file);
   return (
     <>
-      <div className="mb-[22px] max-w-[600px]">
+      <div className="mb-[22px] max-w-[600px] mx-auto text-center">
         <h1 className="text-[27px] font-semibold tracking-[-0.01em] text-[var(--color-text)]">
           Start a new export
         </h1>
-        <p className="mt-2 max-w-[60ch] text-[14.5px] leading-[1.55] text-[var(--color-muted)]">
-          Drop a wide spreadsheet below — we split it into clean sections and repeat your key
+        <p className="mt-2 max-w-[60ch] mx-auto text-[14.5px] leading-[1.55] text-[var(--color-muted)]">
+          Drop a wide spreadsheet below, we split it into clean sections and repeat your key
           columns on every page. Nothing cut off.
         </p>
       </div>
@@ -1620,7 +1620,7 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null, onEditOpti
         </div>
       </object>
       {/* Mobile browsers (esp. iOS Safari) render an empty <object> box, so on
-          small screens we render the first page to an image instead — a real
+          small screens we render the first page to an image instead, a real
           inline preview that works everywhere. */}
       <div data-testid="app-pdf-preview-mobile" className="flex flex-col items-center gap-3 px-4 py-5 text-center lg:hidden">
         <MobilePdfPreview pdfBlob={pdfBlob} previewUrl={previewUrl} filename={safeFilename} />
@@ -1759,7 +1759,7 @@ function AppToolbar({ quota, session }) {
       data-testid="app-toolbar"
       className="grid h-[57px] grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-[var(--color-line)] bg-[var(--color-bg-hero)] px-4 sm:px-[22px]"
     >
-      {/* Left zone: intentionally empty — keeps the picto centered in the
+      {/* Left zone: intentionally empty, keeps the picto centered in the
           1fr | auto | 1fr grid. The back-link + filename crumb were dropped to
           declutter; the picto IS the clickable brand mark (and exit-to-site). */}
       <div aria-hidden="true" className="justify-self-start" />
@@ -1767,14 +1767,14 @@ function AppToolbar({ quota, session }) {
       {/* Center zone: the brand mark, truly centered. Clickable, links home. */}
       <a
         href="/"
-        aria-label="fitforpdf — accueil"
+        aria-label="fitforpdf, accueil"
         className="justify-self-center rounded-md transition hover:opacity-80"
       >
         <AnimatedLogo className="h-7 w-7" />
       </a>
 
       {/* Right zone: just theme + account. API and plan/credits moved INTO the
-          account menu — keeps the bar uncluttered and (unlike the old pills,
+          account menu, keeps the bar uncluttered and (unlike the old pills,
           which were hidden < sm) keeps them reachable on mobile. */}
       <div className="flex items-center gap-3 justify-self-end">
         <ThemeToggle />
@@ -1799,7 +1799,7 @@ function WorkbenchWorkspace({ conversion, quota, className = '', onEditOptions }
       data-testid="app-canvas"
       className={['min-w-0 px-4 py-6 sm:px-8 sm:py-[30px]', className].filter(Boolean).join(' ')}
     >
-      {/* Exports-remaining at the point of work — the one always-visible quota
+      {/* Exports-remaining at the point of work, the one always-visible quota
           readout (desktop + mobile, signed-in + anonymous). Gated on `loaded` so a
           paid user never flashes "Free · 3". The account menu mirrors this chip as a
           reference; the inspector no longer repeats it. */}
@@ -2037,7 +2037,7 @@ function MobileDrawer({ id, side, label, open, onClose, children }) {
         open ? 'translate-y-0' : 'translate-y-full pointer-events-none',
       ].join(' ')}
     >
-      {/* Grab handle — bottom-sheet affordance. */}
+      {/* Grab handle, bottom-sheet affordance. */}
       <div className="flex shrink-0 justify-center pt-2.5" aria-hidden="true">
         <span className="h-1 w-9 rounded-full bg-[var(--color-line-strong)]" />
       </div>
@@ -2085,9 +2085,9 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
 
   return (
     <div data-testid="tool" className="relative min-h-[calc(100vh-57px)] overflow-x-hidden">
-      {/* Panel toggles — moved out of the header into their own row so the header
+      {/* Panel toggles, moved out of the header into their own row so the header
           stays uncluttered on mobile. "Recent" opens the left rail drawer,
-          "Options" the right inspector drawer. (Mobile layout only — desktop uses
+          "Options" the right inspector drawer. (Mobile layout only, desktop uses
           the resizable PanelGroup.) */}
       <div className="flex items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-bg-hero)] px-4 py-2">
         <button

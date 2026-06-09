@@ -62,7 +62,7 @@ export default function LoginPage() {
       )}
 
       <p className="mt-6 text-xs text-[var(--color-muted)]">
-        You can also continue without an account — guest mode stays available.
+        You can also continue without an account, guest mode stays available.
       </p>
     </main>
   );
