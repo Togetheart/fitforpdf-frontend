@@ -716,6 +716,33 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
                 Remove logo
               </button>
             ) : null}
+            {conversion.logoFile ? (
+              <div className="mt-2" data-testid="app-logo-size">
+                <span className="mb-1 block text-[11.5px] font-medium text-[var(--color-text-subtle)]">Logo size on the cover</span>
+                <div role="radiogroup" aria-label="Logo size" className="inline-flex overflow-hidden rounded-md border border-[var(--color-line)]">
+                  {['small', 'medium', 'large'].map((size) => {
+                    const active = (conversion.logoSize || 'medium') === size;
+                    return (
+                      <button
+                        key={size}
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        onClick={() => conversion.setLogoSize(size)}
+                        className={[
+                          'min-h-8 px-3 text-[12px] font-medium capitalize transition',
+                          active
+                            ? 'bg-[var(--color-text)] text-white'
+                            : 'bg-[var(--color-surface)] text-[var(--color-muted)] hover:text-[var(--color-text)]',
+                        ].join(' ')}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
           </div>
           <label htmlFor="app-footer-text" className="mb-2 block text-[13px] font-semibold text-[var(--color-text)]">Footer text</label>
           <input
