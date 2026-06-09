@@ -1494,6 +1494,8 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null, onEditOpti
   const safeFilename = filename || 'report.pdf';
   const pageLabel = pageCount ? `${pageCount} ${pageCount === 1 ? 'page' : 'pages'}` : null;
   const iconBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-muted)] transition hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)]';
+  // Download is the primary action of the preview → solid blue, white icon.
+  const downloadBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-cta-bg)] text-white transition hover:bg-[var(--color-cta-hover)]';
 
   return (
     <div className="mt-5 max-w-full overflow-hidden rounded-[9px] border border-[var(--color-line)] bg-[var(--color-surface)] shadow-[0_8px_40px_rgba(15,23,42,0.14)]">
@@ -1503,8 +1505,8 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null, onEditOpti
           {pageLabel ? <span className="ml-2 font-normal text-[var(--color-muted)]">· {pageLabel}</span> : null}
         </p>
         <div className="flex shrink-0 items-center gap-1">
-          {/* Edit = jump to "Adjust output" (the Options panel). Only wired where the
-              panel isn't already on screen — i.e. mobile, where it opens the sheet. */}
+          {/* Edit = jump to "Adjust output". Mobile: opens the Options bottom-sheet.
+              Desktop: expands the inspector (if collapsed) + scrolls it into view. */}
           {onEditOptions ? (
             <button
               type="button"
@@ -1545,7 +1547,7 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null, onEditOpti
             data-testid="app-pdf-download-inline"
             aria-label="Download PDF"
             title="Download"
-            className={iconBtn}
+            className={downloadBtn}
           >
             <Download className="h-4 w-4" aria-hidden="true" />
           </a>
@@ -1592,7 +1594,7 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null, onEditOpti
                   <a href={previewUrl} target="_blank" rel="noopener noreferrer" aria-label="Open PDF in a new tab" title="Open in new tab" className={iconBtn}>
                     <ExternalLink className="h-4 w-4" aria-hidden="true" />
                   </a>
-                  <a href={previewUrl} download={safeFilename} aria-label="Download PDF" title="Download" className={iconBtn}>
+                  <a href={previewUrl} download={safeFilename} aria-label="Download PDF" title="Download" className={downloadBtn}>
                     <Download className="h-4 w-4" aria-hidden="true" />
                   </a>
                   <button
@@ -1907,7 +1909,15 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
 
         <Panel minSize={30} className="flex" data-testid="workbench-center-panel">
           <div className={`${CARD} bg-[var(--color-surface)]`}>
-            <WorkbenchWorkspace conversion={conversion} quota={quota} className="h-full flex-1 overflow-y-auto" />
+            <WorkbenchWorkspace
+              conversion={conversion}
+              quota={quota}
+              className="h-full flex-1 overflow-y-auto"
+              onEditOptions={() => {
+                rightRef.current?.expand();
+                document.querySelector('[data-testid="app-inspector"]')?.scrollIntoView({ block: 'nearest' });
+              }}
+            />
           </div>
         </Panel>
 
