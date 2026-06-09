@@ -1241,7 +1241,7 @@ function WorkbenchSampleCard({ conversion }) {
         <span className="font-serif text-[15px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Try a sample</span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
-      <div id={contentId} hidden={!open} className="mt-3">
+      <div id={contentId} hidden={!open} className="mt-3 max-w-[460px]">
         <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">Wide spreadsheet in, clean sectioned PDF out — the real sample, no upload needed.</p>
 
         {/* BEFORE — the real source CSV (the actual enterprise-invoices-demo data, not
@@ -1264,7 +1264,9 @@ INV-1003,Blue Horizon 1002,blue-horizon-3@example.com,Sophie Klein,Startup,Overd
         {/* AFTER — a real rendered page of the finished PDF (a clean data section, not
             the table of contents) so the before/after shows the actual transformation. */}
         <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--color-text-subtle)]">Finished PDF</p>
-        <div className="overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)]">
+        {/* Capped teaser: show the TOP of the page (section header + first rows) at a
+            controlled height, so a full-page PDF never balloons the card / hides the CTA. */}
+        <div className="relative max-h-[230px] overflow-hidden rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-sunken)]">
           <img
             src="/CSV/proof/section-a.webp"
             srcSet="/CSV/proof/section-a.webp 1x, /CSV/proof/section-a@2x.webp 2x"
@@ -1273,8 +1275,9 @@ INV-1003,Blue Horizon 1002,blue-horizon-3@example.com,Sophie Klein,Startup,Overd
             height={1019}
             loading="lazy"
             decoding="async"
-            className="block h-auto w-full"
+            className="block w-full"
           />
+          <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--color-surface-sunken)] to-transparent" />
         </div>
         <button
           type="button"
