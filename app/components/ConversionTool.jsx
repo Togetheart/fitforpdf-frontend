@@ -830,7 +830,12 @@ function WorkbenchRail({
       data-testid="app-left-rail"
       className={['flex-col overflow-y-auto bg-[#0F172A] px-3.5 py-[18px] text-white', className].filter(Boolean).join(' ')}
     >
+      {/* Collapse toggle on the LEFT edge — mirrors the inspector's toggle (right
+          edge), so the two panels' pictos face outward symmetrically. */}
       <div className="flex items-center gap-2">
+        {onCollapse && !collapsed ? (
+          <CollapseToggle side="left" collapsed={collapsed} onToggle={onCollapse} />
+        ) : null}
         <div className="min-w-0 flex-1">
           <PanelTabs
             tabs={RAIL_TABS}
@@ -840,9 +845,6 @@ function WorkbenchRail({
             ariaLabel="Recent exports and outline"
           />
         </div>
-        {onCollapse && !collapsed ? (
-          <CollapseToggle side="left" collapsed={collapsed} onToggle={onCollapse} />
-        ) : null}
       </div>
 
       {/* Explicit subtitle below the tabs (tab-aware) — mirrors the inspector header. */}
