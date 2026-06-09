@@ -85,6 +85,48 @@ function InspectorSection({ title, hint, children, badge = null, locked = false,
   );
 }
 
+// A settings-row toggle: the label sits on the left, an on-brand switch on the
+// right, and the whole row is one 44px click + keyboard target (role="switch").
+// Replaces right-aligned native checkboxes — a right-aligned control reads as a
+// switch, whereas checkboxes are conventionally LEFT-aligned form controls. The
+// switch is "ink on paper": an ink track when on, a muted track when off, and a
+// theme-inverting knob (so it stays visible in dark mode, where --color-text is
+// light). As a <button> it is auto-disabled by InspectorSection's <fieldset
+// disabled> when a section is Pro-locked.
+function ToggleRow({ label, checked, onChange, hint = null, testid, className = '' }) {
+  return (
+    <div className={['py-0.5', className].filter(Boolean).join(' ')}>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        aria-label={label}
+        data-testid={testid}
+        onClick={() => onChange(!checked)}
+        className="group flex min-h-11 w-full items-center justify-between gap-3 text-left text-[13px] font-semibold text-[var(--color-text)] outline-none disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <span>{label}</span>
+        <span
+          aria-hidden="true"
+          className={[
+            'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors duration-150 motion-reduce:transition-none',
+            'group-focus-visible:ring-2 group-focus-visible:ring-[var(--color-line-strong)] group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-[var(--color-surface)]',
+            checked ? 'bg-[var(--color-text)]' : 'bg-[var(--color-line-strong)]',
+          ].join(' ')}
+        >
+          <span
+            className={[
+              'inline-block h-4 w-4 rounded-full bg-[var(--color-surface)] shadow-sm transition-transform duration-150 motion-reduce:transition-none',
+              checked ? 'translate-x-[18px]' : 'translate-x-0.5',
+            ].join(' ')}
+          />
+        </span>
+      </button>
+      {hint ? <p className="mt-0.5 text-[11px] text-[var(--color-text-subtle)]">{hint}</p> : null}
+    </div>
+  );
+}
+
 // PanelTabs — a small, accessible segmented control used at the top of each
 // workbench side panel to group its controls (mirrors the Off/Auto toggle for
 // the light inspector; a subtle white/10 highlight for the dark rail).
@@ -616,18 +658,14 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         ) : null}
 
         <InspectorSection title="Branding" hint="Your logo, accent color &amp; footer. White-label your PDF (no FitForPDF mark)." badge={proLocked ? 'Pro' : null} locked={proLocked}>
-          <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
-            <span>Logo &amp; branding</span>
-            <input
-              type="checkbox"
-              aria-label="Logo & branding"
-              data-testid="app-branding-toggle"
-              checked={conversion.includeBranding !== false}
-              onChange={(e) => conversion.setIncludeBranding(e.target.checked)}
-              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
-            />
-          </label>
-          <p className="mb-3 text-[11px] text-[var(--color-text-subtle)]">Off = a plain PDF with no logo — neither fitforpdf&apos;s nor yours.</p>
+          <ToggleRow
+            label="Logo & branding"
+            testid="app-branding-toggle"
+            checked={conversion.includeBranding !== false}
+            onChange={(next) => conversion.setIncludeBranding(next)}
+            hint="Off = a plain PDF with no logo — neither fitforpdf's nor yours."
+            className="mb-3"
+          />
           <label htmlFor="app-accent-color" className="mb-2 flex items-center gap-2 text-[13px] font-semibold text-[var(--color-text)]">
             <span>Accent color</span>
           </label>
@@ -694,39 +732,24 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         </InspectorSection>
 
         <InspectorSection title="Layout" hint="Drop the summary page, repeated headers, or the page footer." badge={proLocked ? 'Pro' : null} locked={proLocked}>
-          <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
-            <span>Summary page</span>
-            <input
-              type="checkbox"
-              aria-label="Summary page"
-              data-testid="app-layout-overview-toggle"
-              checked={conversion.layout?.overview !== false}
-              onChange={(e) => conversion.handleLayoutChange('overview', e.target.checked)}
-              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
-            />
-          </label>
-          <label className="mb-2 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
-            <span>Repeat headers on every page</span>
-            <input
-              type="checkbox"
-              aria-label="Repeat headers on every page"
-              data-testid="app-layout-headers-toggle"
-              checked={conversion.layout?.headers !== false}
-              onChange={(e) => conversion.handleLayoutChange('headers', e.target.checked)}
-              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
-            />
-          </label>
-          <label className="mb-1 flex items-center justify-between gap-2 text-[13px] font-semibold text-[var(--color-text)]">
-            <span>Page footer</span>
-            <input
-              type="checkbox"
-              aria-label="Page footer"
-              data-testid="app-layout-footer-toggle"
-              checked={conversion.layout?.footer !== false}
-              onChange={(e) => conversion.handleLayoutChange('footer', e.target.checked)}
-              className="h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
-            />
-          </label>
+          <ToggleRow
+            label="Summary page"
+            testid="app-layout-overview-toggle"
+            checked={conversion.layout?.overview !== false}
+            onChange={(next) => conversion.handleLayoutChange('overview', next)}
+          />
+          <ToggleRow
+            label="Repeat headers on every page"
+            testid="app-layout-headers-toggle"
+            checked={conversion.layout?.headers !== false}
+            onChange={(next) => conversion.handleLayoutChange('headers', next)}
+          />
+          <ToggleRow
+            label="Page footer"
+            testid="app-layout-footer-toggle"
+            checked={conversion.layout?.footer !== false}
+            onChange={(next) => conversion.handleLayoutChange('footer', next)}
+          />
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">The summary page lists your sections; turn it off for a plain table.</p>
         </InspectorSection>
           </>

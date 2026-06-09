@@ -37,7 +37,10 @@ describe('ConversionInspector — branding + logo controls', () => {
     render(<ConversionInspector conversion={makeConversion({ includeBranding: true, setIncludeBranding })} quota={quota} />);
     openExportTab();
     const toggle = screen.getByTestId('app-branding-toggle');
-    expect(toggle.checked).toBe(true);
+    // Now an accessible switch (role="switch" + aria-checked) rather than a
+    // right-aligned native checkbox.
+    expect(toggle.getAttribute('role')).toBe('switch');
+    expect(toggle.getAttribute('aria-checked')).toBe('true');
     fireEvent.click(toggle);
     expect(setIncludeBranding).toHaveBeenCalledWith(false);
   });
