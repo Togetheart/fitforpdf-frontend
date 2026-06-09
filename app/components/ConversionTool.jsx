@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { AlertCircle, ArrowDown, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, History, Layers3, ListTree, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, RefreshCw, Rows3, SlidersHorizontal, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowDown, ArrowRight, ChevronDown, Code2, Download, ExternalLink, FileText, History, Layers3, ListTree, Maximize2, PanelLeft, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Pencil, Plus, RefreshCw, Rows3, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
@@ -497,16 +497,24 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         className,
       ].filter(Boolean).join(' ')}
     >
+      {/* Header mirrors the left rail: tabs at the top + collapse toggle in the same
+          row, then an explicit subtitle below. (Symmetry: both panels lead with tabs.) */}
       <div className="shrink-0 bg-[var(--color-surface)] pb-4">
-        <div className="flex items-start gap-2">
-          <h2 className="font-serif text-[18px] font-bold tracking-[-0.01em] text-[var(--color-text)]">Adjust output</h2>
+        <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <PanelTabs
+              tabs={INSPECTOR_TABS}
+              value={activeTab}
+              onChange={setActiveTab}
+              tone="light"
+              ariaLabel="Adjust output sections"
+            />
+          </div>
           {onCollapse && !collapsed ? (
-            <span className="ml-auto">
-              <CollapseToggle side="right" collapsed={collapsed} onToggle={onCollapse} />
-            </span>
+            <CollapseToggle side="right" collapsed={collapsed} onToggle={onCollapse} />
           ) : null}
         </div>
-        <p className="mt-1 text-xs leading-5 text-[var(--color-muted)]">
+        <p className="mt-3 text-xs leading-5 text-[var(--color-muted)]">
           {conversion.pdfBlob
             ? 'Change anything, then update the preview. Re-render costs one export.'
             : 'Set options now, or refine them after your first render.'}
@@ -517,16 +525,6 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         data-testid="app-inspector-options"
         className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1"
       >
-        <div className="mb-4">
-          <PanelTabs
-            tabs={INSPECTOR_TABS}
-            value={activeTab}
-            onChange={setActiveTab}
-            tone="light"
-            ariaLabel="Adjust output sections"
-          />
-        </div>
-
         <div className="flex flex-col gap-4 pb-4">
         {activeTab === 'sections' ? (
           <>
@@ -832,7 +830,12 @@ function WorkbenchRail({
       data-testid="app-left-rail"
       className={['flex-col overflow-y-auto bg-[#0F172A] px-3.5 py-[18px] text-white', className].filter(Boolean).join(' ')}
     >
+      {/* Collapse toggle on the LEFT edge — mirrors the inspector's toggle (right
+          edge), so the two panels' pictos face outward symmetrically. */}
       <div className="flex items-center gap-2">
+        {onCollapse && !collapsed ? (
+          <CollapseToggle side="left" collapsed={collapsed} onToggle={onCollapse} />
+        ) : null}
         <div className="min-w-0 flex-1">
           <PanelTabs
             tabs={RAIL_TABS}
@@ -842,17 +845,17 @@ function WorkbenchRail({
             ariaLabel="Recent exports and outline"
           />
         </div>
-        {onCollapse && !collapsed ? (
-          <CollapseToggle side="left" collapsed={collapsed} onToggle={onCollapse} />
-        ) : null}
       </div>
+
+      {/* Explicit subtitle below the tabs (tab-aware) — mirrors the inspector header. */}
+      <p className="mt-3 text-xs leading-5 text-[var(--color-text-subtle)]">
+        {activeTab === 'recent'
+          ? 'PDF artifacts only. Source spreadsheets are not stored.'
+          : 'Jump to any section of your rendered PDF.'}
+      </p>
 
       {activeTab === 'recent' ? (
         <>
-          <p className="mt-3 text-xs leading-5 text-[var(--color-text-subtle)]">
-            PDF artifacts only. Source spreadsheets are not stored.
-          </p>
-
           <div className="mt-4 space-y-2">
             {recentExports.length > 0 ? (
               recentExports.map((item) => {
@@ -1328,7 +1331,7 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
   );
 }
 
-function WorkbenchRenderedCanvas({ conversion, quota }) {
+function WorkbenchRenderedCanvas({ conversion, quota, onEditOptions }) {
   // After a "Condense long text & retry", the export was made to fit by shortening
   // long cells — a degraded result. We surface that honestly and turn it into the
   // upgrade nudge (full, untruncated fidelity is the paid lever). Free users only:
@@ -1417,12 +1420,12 @@ function WorkbenchRenderedCanvas({ conversion, quota }) {
           Ready
         </span>
       </div>
-      <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} pageCount={pageCount} />
+      <PdfPreviewPane pdfBlob={conversion.pdfBlob} filename={conversion.resolvedPdfFilename} pageCount={pageCount} onEditOptions={onEditOptions} />
     </div>
   );
 }
 
-export function PdfPreviewPane({ pdfBlob, filename, pageCount = null }) {
+export function PdfPreviewPane({ pdfBlob, filename, pageCount = null, onEditOptions = null }) {
   const [previewUrl, setPreviewUrl] = React.useState(null);
   const [fullscreen, setFullscreen] = React.useState(false);
   const dialogRef = React.useRef(null);
@@ -1491,6 +1494,8 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null }) {
   const safeFilename = filename || 'report.pdf';
   const pageLabel = pageCount ? `${pageCount} ${pageCount === 1 ? 'page' : 'pages'}` : null;
   const iconBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-muted)] transition hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)]';
+  // Download is the primary action of the preview → solid blue, white icon.
+  const downloadBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-cta-bg)] text-white transition hover:bg-[var(--color-cta-hover)]';
 
   return (
     <div className="mt-5 max-w-full overflow-hidden rounded-[9px] border border-[var(--color-line)] bg-[var(--color-surface)] shadow-[0_8px_40px_rgba(15,23,42,0.14)]">
@@ -1500,6 +1505,20 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null }) {
           {pageLabel ? <span className="ml-2 font-normal text-[var(--color-muted)]">· {pageLabel}</span> : null}
         </p>
         <div className="flex shrink-0 items-center gap-1">
+          {/* Edit = jump to "Adjust output". Mobile: opens the Options bottom-sheet.
+              Desktop: expands the inspector (if collapsed) + scrolls it into view. */}
+          {onEditOptions ? (
+            <button
+              type="button"
+              onClick={onEditOptions}
+              data-testid="app-pdf-edit"
+              aria-label="Adjust output"
+              title="Adjust output"
+              className={iconBtn}
+            >
+              <Pencil className="h-4 w-4" aria-hidden="true" />
+            </button>
+          ) : null}
           <button
             ref={triggerRef}
             type="button"
@@ -1528,7 +1547,7 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null }) {
             data-testid="app-pdf-download-inline"
             aria-label="Download PDF"
             title="Download"
-            className={iconBtn}
+            className={downloadBtn}
           >
             <Download className="h-4 w-4" aria-hidden="true" />
           </a>
@@ -1575,7 +1594,7 @@ export function PdfPreviewPane({ pdfBlob, filename, pageCount = null }) {
                   <a href={previewUrl} target="_blank" rel="noopener noreferrer" aria-label="Open PDF in a new tab" title="Open in new tab" className={iconBtn}>
                     <ExternalLink className="h-4 w-4" aria-hidden="true" />
                   </a>
-                  <a href={previewUrl} download={safeFilename} aria-label="Download PDF" title="Download" className={iconBtn}>
+                  <a href={previewUrl} download={safeFilename} aria-label="Download PDF" title="Download" className={downloadBtn}>
                     <Download className="h-4 w-4" aria-hidden="true" />
                   </a>
                   <button
@@ -1721,7 +1740,7 @@ function AppToolbar({ quota, session }) {
 // desktop PanelGroup and the mobile stacked layout so the markup lives once.
 // `className` lets each branch own its sizing: the grid uses `order-1 … lg:…`
 // for the stacked/grid cell, the panel uses `h-full` to fill its Panel.
-function WorkbenchWorkspace({ conversion, quota, className = '' }) {
+function WorkbenchWorkspace({ conversion, quota, className = '', onEditOptions }) {
   return (
     <section
       aria-label="Upload and PDF workspace"
@@ -1738,7 +1757,7 @@ function WorkbenchWorkspace({ conversion, quota, className = '' }) {
         </div>
       ) : null}
       {conversion.pdfBlob ? (
-        <WorkbenchRenderedCanvas conversion={conversion} quota={quota} />
+        <WorkbenchRenderedCanvas conversion={conversion} quota={quota} onEditOptions={onEditOptions} />
       ) : (
         <WorkbenchEmptyCanvas conversion={conversion} quota={quota} />
       )}
@@ -1890,7 +1909,15 @@ function WorkbenchDesktopPanels({ conversion, quota }) {
 
         <Panel minSize={30} className="flex" data-testid="workbench-center-panel">
           <div className={`${CARD} bg-[var(--color-surface)]`}>
-            <WorkbenchWorkspace conversion={conversion} quota={quota} className="h-full flex-1 overflow-y-auto" />
+            <WorkbenchWorkspace
+              conversion={conversion}
+              quota={quota}
+              className="h-full flex-1 overflow-y-auto"
+              onEditOptions={() => {
+                rightRef.current?.expand();
+                document.querySelector('[data-testid="app-inspector"]')?.scrollIntoView({ block: 'nearest' });
+              }}
+            />
           </div>
         </Panel>
 
@@ -2029,7 +2056,7 @@ function WorkbenchMobileLayout({ conversion, quota, openDrawer, setOpenDrawer })
           Options
         </button>
       </div>
-      <WorkbenchWorkspace conversion={conversion} quota={quota} className="w-full" />
+      <WorkbenchWorkspace conversion={conversion} quota={quota} className="w-full" onEditOptions={() => setOpenDrawer('right')} />
 
       {/* Scrim: only present while a drawer is open. Clicking it closes. */}
       {isOpen ? (
