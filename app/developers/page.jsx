@@ -633,8 +633,8 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
         <p className="mt-3 text-xs text-[var(--color-muted)]">
           <a href="#request-access" className="underline underline-offset-2 hover:text-[var(--color-text)]">
             Get your free API key
-          </a>{' '}
-         , instant, no approval.
+          </a>,
+          instant, no approval.
         </p>
       </section>
 

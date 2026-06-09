@@ -92,8 +92,8 @@ export default function MentionsLegalesPage() {
           The processing of personal data is described in our{' '}
           <a href="/privacy" className="underline decoration-[var(--color-border)] underline-offset-2 transition hover:text-[var(--color-text)]">
             privacy policy
-          </a>
-          , in compliance with GDPR (EU) 2016/679.
+          </a>,
+          in compliance with GDPR (EU) 2016/679.
         </p>
         <p>
           To exercise your rights or for any data-related enquiry:{' '}
