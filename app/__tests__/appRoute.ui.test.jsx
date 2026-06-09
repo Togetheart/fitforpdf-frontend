@@ -281,10 +281,11 @@ describe('/app tool-first workbench shell', () => {
     // Paid plan: once the plan loads there is no Pro upsell and controls are usable.
     await waitFor(() => expect(screen.queryByTestId('app-pro-upsell')).toBeNull());
     fireEvent.click(screen.getByRole('button', { name: /^Layout$/i })); // expand collapsed section
-    // Drop the summary page, repeated headers, and the footer.
+    // Drop the summary page, repeated headers, the footer, and the section titles.
     fireEvent.click(screen.getByTestId('app-layout-overview-toggle'));
     fireEvent.click(screen.getByTestId('app-layout-headers-toggle'));
     fireEvent.click(screen.getByTestId('app-layout-footer-toggle'));
+    fireEvent.click(screen.getByTestId('app-layout-section-titles-toggle'));
     fireEvent.change(screen.getByTestId('generate-file-input'), {
       target: { files: [new File(['a,b\n1,2'], 'customers.csv', { type: 'text/csv' })] },
     });
@@ -295,6 +296,7 @@ describe('/app tool-first workbench shell', () => {
       expect(renderCall?.options.body.get('keep_overview')).toBe('0');
       expect(renderCall?.options.body.get('keep_headers')).toBe('0');
       expect(renderCall?.options.body.get('keep_footer')).toBe('0');
+      expect(renderCall?.options.body.get('keep_section_titles')).toBe('0');
     });
 
     fetchMock.restore();
