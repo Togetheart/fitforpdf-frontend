@@ -88,18 +88,18 @@ export default function AccountPage() {
   }
 
   if (loading || !account) {
-    return <main className="mx-auto w-full max-w-md px-6 py-16 text-sm text-[var(--color-muted)]">Chargement…</main>;
+    return <main className="mx-auto w-full max-w-md px-6 py-16 text-sm text-[var(--color-muted)]">Loading…</main>;
   }
 
   const plan = (quota && quota.plan) || 'free';
   const isUnlimited = plan === 'api_enterprise' || (quota && quota.apiEnterprise && quota.apiEnterprise.unlimited);
   function remainingFor() {
-    if (!quota) return { label: 'Crédits restants', value: 0 };
-    if (plan === 'pro') return { label: 'Exports restants ce mois', value: Number.isFinite(quota.pro?.remainingInPeriod) ? quota.pro.remainingInPeriod : 0 };
-    if (plan === 'api_starter') return { label: 'Appels restants ce mois', value: Number.isFinite(quota.apiStarter?.remainingInPeriod) ? quota.apiStarter.remainingInPeriod : 0 };
-    if (plan === 'api_scale') return { label: 'Appels restants ce mois', value: Number.isFinite(quota.apiScale?.remainingInPeriod) ? quota.apiScale.remainingInPeriod : 0 };
-    if (plan === 'credits') return { label: 'Crédits restants', value: Number.isFinite(quota.credits?.remaining) ? quota.credits.remaining : 0 };
-    return { label: 'Exports gratuits restants', value: Number.isFinite(quota.free?.remaining) ? quota.free.remaining : 0 };
+    if (!quota) return { label: 'Credits left', value: 0 };
+    if (plan === 'pro') return { label: 'Exports left this month', value: Number.isFinite(quota.pro?.remainingInPeriod) ? quota.pro.remainingInPeriod : 0 };
+    if (plan === 'api_starter') return { label: 'Calls left this month', value: Number.isFinite(quota.apiStarter?.remainingInPeriod) ? quota.apiStarter.remainingInPeriod : 0 };
+    if (plan === 'api_scale') return { label: 'Calls left this month', value: Number.isFinite(quota.apiScale?.remainingInPeriod) ? quota.apiScale.remainingInPeriod : 0 };
+    if (plan === 'credits') return { label: 'Credits left', value: Number.isFinite(quota.credits?.remaining) ? quota.credits.remaining : 0 };
+    return { label: 'Free exports left', value: Number.isFinite(quota.free?.remaining) ? quota.free.remaining : 0 };
   }
   const remaining = remainingFor();
 
@@ -111,27 +111,27 @@ export default function AccountPage() {
         const data = await res.json();
         if (data && data.url) { window.location.assign(data.url); return; }
       }
-      setBillingError('Facturation indisponible pour le moment.');
+      setBillingError('Billing is unavailable right now.');
     } catch {
-      setBillingError('Facturation indisponible pour le moment.');
+      setBillingError('Billing is unavailable right now.');
     }
   }
 
   return (
     <main className="mx-auto w-full max-w-md px-6 py-16">
-      <h1 className="text-2xl font-black tracking-tight text-[var(--color-text)]">Mon compte</h1>
+      <h1 className="text-2xl font-black tracking-tight text-[var(--color-text)]">My account</h1>
       <dl className="mt-8 space-y-3 text-sm">
         <div className="flex justify-between"><dt className="text-[var(--color-muted)]">Email</dt><dd className="font-medium text-[var(--color-text)]">{account.email}</dd></div>
-        <div className="flex justify-between"><dt className="text-[var(--color-muted)]">Plan</dt><dd className="font-medium text-[var(--color-text)]">{isUnlimited ? 'Illimité (admin)' : plan}</dd></div>
+        <div className="flex justify-between"><dt className="text-[var(--color-muted)]">Plan</dt><dd className="font-medium text-[var(--color-text)]">{isUnlimited ? 'Unlimited (admin)' : plan}</dd></div>
         {!isUnlimited ? (
           <div className="flex justify-between"><dt className="text-[var(--color-muted)]">{remaining.label}</dt><dd className="font-medium text-[var(--color-text)]">{remaining.value}</dd></div>
         ) : null}
       </dl>
 
       <section className="mt-10">
-        <h2 className="text-sm font-semibold text-[var(--color-text)]">Vos fichiers conservés</h2>
+        <h2 className="text-sm font-semibold text-[var(--color-text)]">Your stored files</h2>
         {retainedItems.length === 0 ? (
-          <p className="mt-3 text-sm text-[var(--color-muted)]">Aucun fichier conservé.</p>
+          <p className="mt-3 text-sm text-[var(--color-muted)]">No stored files.</p>
         ) : (
           <ul className="mt-3 space-y-3 text-sm">
             {retainedItems.map((item) => {
@@ -141,9 +141,9 @@ export default function AccountPage() {
                   <div className="min-w-0">
                     <p className="truncate font-medium text-[var(--color-text)]">{item.original_name}</p>
                     {expiry ? (
-                      <p className="text-xs text-[var(--color-muted)]">expire le {expiry}</p>
+                      <p className="text-xs text-[var(--color-muted)]">expires {expiry}</p>
                     ) : (
-                      <p className="text-xs text-[var(--color-muted)]">Conservé jusqu'à suppression</p>
+                      <p className="text-xs text-[var(--color-muted)]">Kept until deleted</p>
                     )}
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
@@ -151,7 +151,7 @@ export default function AccountPage() {
                       className="underline text-[var(--color-text)] hover:text-[var(--color-muted)]"
                       href={'/api/account/retained-sources/' + item.id}
                     >
-                      Télécharger
+                      Download
                     </a>
                     <button
                       type="button"
@@ -159,7 +159,7 @@ export default function AccountPage() {
                       onClick={() => deleteRetained(item.id)}
                       className="text-[var(--color-muted)] underline hover:text-red-600"
                     >
-                      Supprimer
+                      Delete
                     </button>
                   </div>
                 </li>
@@ -170,19 +170,19 @@ export default function AccountPage() {
       </section>
 
       <section className="mt-10">
-        <h2 className="text-sm font-semibold text-[var(--color-text)]">Mes contacts ({contactsTotal})</h2>
+        <h2 className="text-sm font-semibold text-[var(--color-text)]">My contacts ({contactsTotal})</h2>
         {contactsTotal === 0 ? (
-          <p className="mt-3 text-sm text-[var(--color-muted)]">Aucun contact.</p>
+          <p className="mt-3 text-sm text-[var(--color-muted)]">No contacts.</p>
         ) : (
           <>
             <div className="mt-3 overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="text-[var(--color-muted)]">
-                    <th className="py-1 pr-3 font-medium">Nom</th>
+                    <th className="py-1 pr-3 font-medium">Name</th>
                     <th className="py-1 pr-3 font-medium">Email</th>
-                    <th className="py-1 pr-3 font-medium">Téléphone</th>
-                    <th className="py-1 pr-3 font-medium">Société</th>
+                    <th className="py-1 pr-3 font-medium">Phone</th>
+                    <th className="py-1 pr-3 font-medium">Company</th>
                     <th className="py-1 font-medium" />
                   </tr>
                 </thead>
@@ -200,7 +200,7 @@ export default function AccountPage() {
                           onClick={() => deleteContact(c.id)}
                           className="text-[var(--color-muted)] underline hover:text-red-600"
                         >
-                          Supprimer
+                          Delete
                         </button>
                       </td>
                     </tr>
@@ -209,7 +209,7 @@ export default function AccountPage() {
               </table>
             </div>
             {contactsTotal > contacts.length ? (
-              <p className="mt-2 text-xs text-[var(--color-muted)]">Affichage des {contacts.length} premiers sur {contactsTotal} — exportez pour tout récupérer.</p>
+              <p className="mt-2 text-xs text-[var(--color-muted)]">Showing the first {contacts.length} of {contactsTotal} — export to get them all.</p>
             ) : null}
             <div className="mt-3 flex items-center gap-3 text-sm">
               <a
@@ -217,7 +217,7 @@ export default function AccountPage() {
                 href="/api/account/contacts/export"
                 data-testid="contacts-export"
               >
-                Exporter CSV
+                Export CSV
               </a>
               <button
                 type="button"
@@ -225,7 +225,7 @@ export default function AccountPage() {
                 onClick={clearContacts}
                 className="text-[var(--color-muted)] underline hover:text-red-600"
               >
-                Tout supprimer
+                Delete all
               </button>
             </div>
           </>
@@ -239,10 +239,10 @@ export default function AccountPage() {
             onClick={openBilling}
             className="inline-flex h-11 items-center justify-center rounded-lg border border-[var(--color-border)] px-4 text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg)]"
           >
-            Gérer la facturation
+            Manage billing
           </button>
         ) : (
-          <p className="text-sm text-[var(--color-muted)]">Aucune facture pour le moment. <a className="underline" href="/pricing">Voir les tarifs</a></p>
+          <p className="text-sm text-[var(--color-muted)]">No invoices yet. <a className="underline" href="/pricing">See pricing</a></p>
         )}
         {billingError ? <p role="alert" className="mt-2 text-sm text-red-600">{billingError}</p> : null}
       </div>
@@ -252,7 +252,7 @@ export default function AccountPage() {
         onClick={() => { logout(); window.location.assign('/'); }}
         className="mt-10 text-sm text-[var(--color-muted)] underline hover:text-[var(--color-text)]"
       >
-        Se déconnecter
+        Log out
       </button>
     </main>
   );

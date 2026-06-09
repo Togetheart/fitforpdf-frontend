@@ -12,7 +12,7 @@ describe('LoginPage', () => {
     global.fetch = vi.fn(async (url, opts) => { calls.push({ url: String(url), opts }); return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'content-type': 'application/json' } }); });
     render(<LoginPage />);
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'me@x.com' } });
-    fireEvent.click(screen.getByRole('button', { name: /lien|sign in|connecter|envoyer/i }));
+    fireEvent.click(screen.getByRole('button', { name: /send the link/i }));
     await waitFor(() => expect(screen.getByTestId('login-sent')).toBeTruthy());
     const call = calls.find((c) => c.url.includes('/api/auth/request-link'));
     expect(call).toBeTruthy();
@@ -23,7 +23,7 @@ describe('LoginPage', () => {
     global.fetch = vi.fn(async () => new Response('{}', { status: 500 }));
     render(<LoginPage />);
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'me@x.com' } });
-    fireEvent.click(screen.getByRole('button', { name: /lien|sign in|connecter|envoyer/i }));
+    fireEvent.click(screen.getByRole('button', { name: /send the link/i }));
     await waitFor(() => expect(screen.getByTestId('login-sent')).toBeTruthy());
   });
 });

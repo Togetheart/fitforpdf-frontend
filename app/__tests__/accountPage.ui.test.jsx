@@ -28,7 +28,7 @@ describe('AccountPage', () => {
     render(<AccountPage />);
     await waitFor(() => expect(screen.getByText('me@x.com')).toBeTruthy());
     expect(screen.getByText(/7/)).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: /facturation/i }));
+    fireEvent.click(screen.getByRole('button', { name: /manage billing/i }));
     await waitFor(() => expect(window.location.assign).toHaveBeenCalledWith('https://portal.stripe/go'));
   });
 
@@ -36,8 +36,8 @@ describe('AccountPage', () => {
     mockMe({ account: { email: 'nb@x.com', hasBilling: false }, quota: { plan: 'free', credits: { remaining: 0 } } });
     render(<AccountPage />);
     await waitFor(() => expect(screen.getByText('nb@x.com')).toBeTruthy());
-    expect(screen.queryByRole('button', { name: /facturation/i })).toBeNull();
-    expect(screen.getByText(/aucune facture/i)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /manage billing/i })).toBeNull();
+    expect(screen.getByText(/no invoices/i)).toBeTruthy();
   });
 
   test('logged out: redirects to /login', async () => {

@@ -28,7 +28,7 @@ export default function AccountMenu({ account, onLogout, quota = null }) {
         href="/login"
         className="inline-flex h-[31px] items-center rounded-full border border-[var(--color-line)] px-3 text-[13px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)]"
       >
-        Se connecter
+        Log in
       </a>
     );
   }
@@ -77,14 +77,14 @@ export default function AccountMenu({ account, onLogout, quota = null }) {
             onClick={() => setOpen(false)}
             className="block rounded-lg px-3 py-2 text-[13px] font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-surface-sunken)]"
           >
-            Mon compte
+            My account
           </a>
           <button
             type="button"
             onClick={() => { setOpen(false); onLogout(); }}
             className="w-full rounded-lg px-3 py-2 text-left text-[13px] font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-surface-sunken)]"
           >
-            Se déconnecter
+            Log out
           </button>
         </div>
       ) : null}

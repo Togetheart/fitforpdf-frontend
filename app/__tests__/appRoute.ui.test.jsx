@@ -81,8 +81,8 @@ describe('/app tool-first workbench shell', () => {
     expect(within(toolbar).getByRole('img', { name: /fitforpdf/i })).toBeTruthy();
     expect(screen.queryByTestId('app-crumb')).toBeNull();
     // Plan/credits + API now live inside the account menu (anonymous → no menu);
-    // the header chrome is just picto · theme · the "Se connecter" entry.
-    expect(screen.getByRole('link', { name: /se connecter/i }).getAttribute('href')).toBe('/login');
+    // the header chrome is just picto · theme · the "Log in" entry.
+    expect(screen.getByRole('link', { name: /log in/i }).getAttribute('href')).toBe('/login');
   });
 
   test('shows admin unlimited quota when backend returns api_enterprise', async () => {
