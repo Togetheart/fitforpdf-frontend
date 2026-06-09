@@ -1849,7 +1849,16 @@ function CollapsedEdgeReopen({ side, label, onExpand }) {
   return (
     <div
       data-testid={`workbench-${side}-reopen`}
-      className="flex h-full w-10 shrink-0 flex-col items-center bg-transparent py-2"
+      className={[
+        'flex h-full w-10 shrink-0 flex-col items-center bg-transparent',
+        // Vertically align the re-open icon with the panel's EXPANDED collapse
+        // toggle, so the picto doesn't jump when collapsing/expanding. That toggle
+        // sits in the tabs row at: card margin (m-1.5 = 6px) + the panel's top
+        // padding (rail py-[18px], inspector pt-[22px]) + ~3px (the tabs row renders
+        // a touch taller than its min-h-8, nudging the centered toggle down). Values
+        // verified on a live preview: the icon centers match within ~1px both sides.
+        isLeft ? 'pt-[27px]' : 'pt-[31px]',
+      ].join(' ')}
     >
       <button
         type="button"
