@@ -198,13 +198,13 @@ export default function AboutPage() {
               className="font-medium text-[var(--color-text)] underline underline-offset-4 decoration-1 transition-colors hover:text-cta"
             >
               Sébastien Neusch
-            </a>
-            , a France-based builder focused on developer tools and data
+            </a>,
+            a France-based builder focused on developer tools and data
             infrastructure for business workflows.
           </p>
           <p className="text-sm leading-relaxed text-[var(--color-muted)]">
-            Operated by <strong className="font-semibold text-[var(--color-text)]">BLVTR SASU</strong>{' '}
-           , a French SASU registered for software publishing and developer
+            Operated by <strong className="font-semibold text-[var(--color-text)]">BLVTR SASU</strong>,
+            a French SASU registered for software publishing and developer
             services.
           </p>
         </section>
