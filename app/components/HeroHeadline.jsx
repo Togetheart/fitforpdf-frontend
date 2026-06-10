@@ -267,8 +267,11 @@ export default function HeroHeadline() {
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-1 sm:space-y-2 leading-[1.15] tracking-tight text-2xl font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
         <span className="relative inline-flex items-stretch">
-          {/* Left bracket */}
-          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Left bracket. max-h caps the self-stretch: in the static
+              product-first hero (no fixed-height section) the stretch +
+              preserveAspectRatio=none pair otherwise resolves circularly
+              and inflates the H1 to thousands of px. */}
+          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch max-h-[44px] sm:max-h-[60px] text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Text container, clips on scroll, wraps on mobile */}
@@ -282,8 +285,8 @@ export default function HeroHeadline() {
               {LANDING_COPY.heroHeadlineL1}
             </span>
           </span>
-          {/* Right bracket */}
-          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Right bracket (same max-h cap as the left one) */}
+          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch max-h-[44px] sm:max-h-[60px] text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Full [F] logo, appears at center when brackets close */}
