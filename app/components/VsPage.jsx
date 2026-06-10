@@ -169,7 +169,7 @@ export default function VsPage({
           <p className="mt-4 text-lg text-muted">
             Upload a file and get a structured PDF in seconds. No setup, no dependencies.
           </p>
-          <Button variant="primary" href="/#generate" className="mt-8">
+          <Button variant="primary" href="/app" className="mt-8">
             {ctaText}
           </Button>
         </div>

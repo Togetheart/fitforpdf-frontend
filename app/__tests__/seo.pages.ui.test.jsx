@@ -30,13 +30,12 @@ describe.each(pages)('SEO page: $meta.slug', ({ Component, h1 }) => {
     cleanup();
   });
 
-  test('has CTA linking to home or upload pill', () => {
+  test('has CTA linking to the app or home', () => {
     render(<Component />);
-    // Accept either `/` (top of home) or `/#generate` (direct to upload pill).
-    // The latter is the new convention after the /#tool anchor was fixed —
-    // both eventually land on the same page, the anchor just scrolls deeper.
+    // Accept `/app` (the workbench — current convention since the V1 inline
+    // engine left the home page) or the legacy home anchors.
     const cta = screen.getByTestId('seo-cta');
-    const link = cta.querySelector('a[href="/"], a[href="/#generate"], a[href="/#tool"]');
+    const link = cta.querySelector('a[href="/app"], a[href="/"], a[href="/#generate"], a[href="/#tool"]');
     expect(link).toBeTruthy();
     cleanup();
   });

@@ -238,7 +238,7 @@ export const PRICING_PAGE_COPY = {
   singleExports: '1 export',
   singleDescription: 'For one urgent export.',
   singleCtaLabel: 'Buy 1 export',
-  singleFeatures: ['1 PDF export', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
+  singleFeatures: ['1 PDF export', 'No fitforpdf watermark', 'Branding & layout controls', 'Never expires'],
 
   // Pack Starter
   paygStarterTitle: 'Starter',
@@ -249,7 +249,7 @@ export const PRICING_PAGE_COPY = {
   paygStarterDescription: 'For freelancers and regular client work.',
   paygStarterCtaLabel: 'Get 10 exports',
   paygStarterBadge: 'Most popular',
-  paygStarterFeatures: ['10 PDF exports', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
+  paygStarterFeatures: ['10 PDF exports', 'No fitforpdf watermark', 'Branding & layout controls', 'Never expires'],
 
   // Pack Volume
   volumeTitle: 'Volume',
@@ -259,15 +259,15 @@ export const PRICING_PAGE_COPY = {
   volumeExports: '100 exports',
   volumeDescription: 'For consultants and recurring reporting.',
   volumeCtaLabel: 'Get 100 exports',
-  volumeFeatures: ['100 PDF exports', 'No fitforpdf watermark', 'Standard structured layout', 'Never expires'],
+  volumeFeatures: ['100 PDF exports', 'No fitforpdf watermark', 'Branding & layout controls', 'Never expires'],
 
   // Pro subscription
   proTagline: 'Everything you need to scale your reporting.',
   proSubTagline: 'Cancel anytime.',
   proSubscriptionTitle: 'Pro',
-  proMonthlyPrice: '$29',
+  proMonthlyPrice: '$9.90',
   proMonthlyPeriod: '/ month',
-  proYearlyPrice: '$290',
+  proYearlyPrice: '$99',
   proYearlyPeriod: '/ year',
   proYearlySaving: '2 months free',
   proExports: '500 PDF exports per month',
@@ -275,7 +275,7 @@ export const PRICING_PAGE_COPY = {
   proFeatures: [
     '500 PDF exports per month',
     'No fitforpdf watermark',
-    'Advanced layout controls',
+    'Branding & layout controls',
     'Priority processing & support',
     'Cancel anytime, no questions asked',
   ],
@@ -291,26 +291,26 @@ export const PRICING_PAGE_COPY = {
   freeFeature: 'fitforpdf branding included',
   freeFeatureAlt: 'Account-free',
   freeCtaLabel: 'Start free',
-  freeCtaHref: '/#generate',
+  freeCtaHref: '/app',
   freeSafetyTitle: 'Just want to test the waters?',
   freeSafetyDesc: '3 free exports. fitforpdf watermark included. No account needed.',
   freeSafetyCtaLabel: 'Upload a file for free →',
-  freeSafetyCtaHref: '/#generate',
+  freeSafetyCtaHref: '/app',
 
   proApiTitle: 'For SaaS & automation',
   proApiTagline: "Render readable PDFs from your product's reports and data exports.",
   proApiSubTagline: 'REST API for Excel, CSV, and database tables.',
-  proApiPricePlaceholder: 'From $49/mo',
+  proApiPricePlaceholder: 'From $15/mo',
   proApiSocialProof: 'Used by SaaS products exporting reports.',
   proApiSocialProof2: 'Built for wide business tables.',
   proApiCtaLabel: 'Get API access',
   proApiCtaHref: '/developers#request-access',
   proApiFeatures: [
     'REST API access',
-    'Unlimited API renders',
-    'Team seats & shared billing',
+    '25 free renders to start',
+    'Plans from 150 renders/month',
     'White-label output',
-    'Custom SLA & priority support',
+    'Priority processing',
   ],
 
   backToApp: 'Back to app',
@@ -318,11 +318,12 @@ export const PRICING_PAGE_COPY = {
 
   comparisonTitle: 'Compare features',
   comparison: [
-    ['Client-ready PDF output', '✓', '✓', '✓', '✓'],
+    ['Readable, send-ready PDF output', '✓', '✓', '✓', '✓'],
     ['fitforpdf attribution', '✓ included', '✗ removed', '✗ removed', '✗ removed'],
+    ['Branding & layout controls', '✗', '✓', '✓', '✓'],
     ['Credits expire', 'N/A', '✗ never', '✗ never', 'monthly reset'],
     ['Batch export', '✗', '✗', '✗', '✗'],
-    ['API access', '✗', '✗', '✗', 'Contact us'],
+    ['API access', 'Free key (25 renders)', 'Free key (25 renders)', 'Free key (25 renders)', 'Free key (25 renders)'],
   ],
 
   faqTitle: 'Frequently Asked Questions',
@@ -642,12 +643,12 @@ export const SEO = {
     description: 'Turn wide Excel and CSV exports into readable, send-ready PDFs with sections, pagination, and column grouping. 3 free exports. No account needed.',
   },
   developers: {
-    title: 'fitforpdf API, Client-Ready PDFs from Excel & CSV',
-    description: 'REST API to turn wide Excel and CSV tables into client-ready, structured PDFs for SaaS reporting, CRM exports, and data-heavy workflows.',
+    title: 'fitforpdf API, Send-Ready PDFs from Excel & CSV',
+    description: 'REST API to turn wide Excel and CSV tables into readable, structured PDFs for SaaS reporting, CRM exports, and AI-agent workflows. 25 free renders.',
   },
   pricing: {
     title: 'fitforpdf Pricing, Excel to PDF Export Plans',
-    description: '3 free exports. Pay-as-you-go packs from $19. Pro subscription at $29/mo for 500 exports.',
+    description: '3 free exports. Pay-as-you-go packs from $19. Pro subscription at $9.90/mo for 500 exports.',
   },
   privacy: {
     title: 'Privacy Policy, Your Data, Not Our Business',

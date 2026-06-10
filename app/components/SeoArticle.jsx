@@ -136,7 +136,7 @@ export default function SeoArticle({ article }) {
           </h2>
           <p className="mb-5 text-[var(--color-muted)]">{article.cta.body}</p>
           <a
-            href="/#generate"
+            href="/app"
             className="inline-block rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/80"
           >
             {article.cta.label}

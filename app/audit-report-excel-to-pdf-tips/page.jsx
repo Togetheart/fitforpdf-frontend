@@ -265,7 +265,7 @@ export default function AuditPdfPage() {
             PDF in seconds. 3 free exports, no account needed.
           </p>
           <a
-            href="/#generate"
+            href="/app"
             className="inline-block rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/80"
           >
             Generate your first audit PDF, free
