@@ -152,36 +152,41 @@ export default function HeroHeadline() {
       }
 
       // ─── Phase 2: comparison reveal ───────────────────────────────────
+      // S1 product-first layout (2026-06-10): when no [data-hero-comparison]
+      // element exists, the product shot is statically visible in the flow
+      // and phase 2 has nothing to choreograph — skip it entirely (phase 1,
+      // the bracket morph, still runs). Lets us A/B back by re-adding the
+      // attribute without touching this effect.
       const p2Target = Math.max(0, Math.min(1, (sy - 200) / 300));
       phase2Current += (p2Target - phase2Current) * 0.08;
       if (Math.abs(phase2Current - p2Target) < 0.001) phase2Current = p2Target;
 
-      // Fade out subtitle, fade in comparison (CTA stays visible)
-      for (const el of fadeables) {
-        // Kill CSS animation fill-mode that overrides inline opacity
-        if (phase2Current > 0.001) {
-          el.style.animation = 'none';
-        } else {
-          el.style.animation = '';
-        }
-        el.style.opacity = String(1 - phase2Current);
-        el.style.transform = `translateY(${-16 * phase2Current}px)`;
-      }
       if (comparison) {
+        // Fade out subtitle, fade in comparison (CTA stays visible)
+        for (const el of fadeables) {
+          // Kill CSS animation fill-mode that overrides inline opacity
+          if (phase2Current > 0.001) {
+            el.style.animation = 'none';
+          } else {
+            el.style.animation = '';
+          }
+          el.style.opacity = String(1 - phase2Current);
+          el.style.transform = `translateY(${-16 * phase2Current}px)`;
+        }
         comparison.style.opacity = String(phase2Current);
         comparison.style.transform = `translateY(${16 * (1 - phase2Current)}px)`;
-      }
-      // Fade out background lines as comparison appears
-      if (!bgLines) bgLines = document.querySelector('[data-hero-bg-lines]');
-      if (bgLines) {
-        bgLines.style.opacity = String(1 - phase2Current);
-      }
-      // Lift hero content up to make room for comparison below viewport edge
-      if (heroContent) {
-        if (phase2Current > 0.001) {
-          heroContent.style.transform = `translateY(${-160 * phase2Current}px)`;
-        } else {
-          heroContent.style.transform = '';
+        // Fade out background lines as comparison appears
+        if (!bgLines) bgLines = document.querySelector('[data-hero-bg-lines]');
+        if (bgLines) {
+          bgLines.style.opacity = String(1 - phase2Current);
+        }
+        // Lift hero content up to make room for comparison below viewport edge
+        if (heroContent) {
+          if (phase2Current > 0.001) {
+            heroContent.style.transform = `translateY(${-160 * phase2Current}px)`;
+          } else {
+            heroContent.style.transform = '';
+          }
         }
       }
 

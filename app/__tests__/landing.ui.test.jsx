@@ -103,17 +103,23 @@ describe('landing conversion-first structure', () => {
     expect(finalLink.getAttribute('href')).toBe('/app');
   });
 
-  test('hero includes subtle gradient background', () => {
+  test('hero includes subtle gradient background and is product-first (static, no sticky spacer)', () => {
     const heroBackdrop = screen.getByTestId('hero-backdrop');
     const heroBg = screen.getByTestId('hero-bg');
     const heroGradients = screen.getByTestId('hero-bg-gradients');
-    const heroSpacer = screen.getByTestId('hero-section').parentElement;
+    const hero = screen.getByTestId('hero-section');
 
     expect((heroBackdrop.getAttribute('class') || '').includes('hero-backdrop')).toBe(true);
     expect((heroBg.getAttribute('class') || '').includes('hero-bg')).toBe(true);
     expect((heroGradients.getAttribute('class') || '').includes('hero-bg-gradients')).toBe(true);
     expect(heroBackdrop.getAttribute('data-motion')).toBe('on');
-    expect(heroSpacer?.getAttribute('class') || '').toContain('sm:h-[calc(100vh+140px)]');
+    // S1 product-first hero: static flow (no sticky scroll sequence), and the
+    // workbench shot is in the hero, visible without scroll choreography.
+    expect((hero.getAttribute('class') || '')).not.toContain('sticky');
+    const productShot = screen.getAllByAltText(/fitforpdf workbench/i)[0];
+    expect(productShot).toBeTruthy();
+    expect(hero.contains(productShot)).toBe(true);
+    expect(document.querySelector('[data-hero-comparison]')).toBeNull();
   });
 
   test('pricing preview renders PAYG plan cards', () => {
