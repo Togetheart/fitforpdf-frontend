@@ -93,7 +93,10 @@ export default function SiteHeader() {
                 styled "Log in" pill when logged out, one consistent control. */}
             <ThemeToggle />
             <AccountMenu account={account} onLogout={logout} />
-            <Button variant="primary" href={account ? '/app' : '/#generate'} className="px-4 text-xs h-9">
+            {/* S1 sprint (2026-06-10): anonymous visitors go to /app too —
+                the V1 inline tool is gone from the home, /app is the only
+                conversion surface. */}
+            <Button variant="primary" href="/app" className="px-4 text-xs h-9">
               {account ? "Ouvrir l'app" : 'Try free'}
             </Button>
           </nav>
@@ -196,7 +199,7 @@ export default function SiteHeader() {
             <ThemeToggle />
             <Button
               variant="primary"
-              href={account ? '/app' : '/#generate'}
+              href="/app"
               className="flex-1 ml-3"
               onClick={closeMenu}
             >

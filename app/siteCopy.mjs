@@ -21,8 +21,13 @@ export const LANDING_COPY = {
   // cleanup step before I can send it out". "Your export" (vs. "Excel") is
   // the inclusive framing: Abhinav/moltin.work uses "report exports" for a
   // SaaS context — the universal term across all ICPs (2026-04-15 feedback).
-  heroHeadlineL1: 'Make your export client-ready.',
-  heroHeadlineL2: 'Without the cleanup.',
+  // V5 (2026-06-10, sprint S1): the "client-ready" PROMISE leaves the titles.
+  // Kunj (consulting segment) hears corporate-grade fidelity in it — merged
+  // headers, charts, brand charters — which is explicit anti-scope. The pain
+  // language (Magdalena's words) stays everywhere else; the headline now
+  // sells the outcome both segments agree on: skip the manual cleanup, send.
+  heroHeadlineL1: 'Skip the cleanup.',
+  heroHeadlineL2: 'Send it now.',
   heroCta: 'Fix your export',
   heroMicrocopy: '',
   heroMicrocopyFree: '3 free exports. No account needed. Packs from $19.',
@@ -631,8 +636,8 @@ export const SEO = {
   siteUrl: 'https://www.fitforpdf.com',
   ogImage: 'https://www.fitforpdf.com/og-image.jpg',
   home: {
-    title: 'fitforpdf, Client-Ready PDFs from Excel & CSV',
-    description: 'Turn wide Excel and CSV exports into client-ready PDFs with sections, pagination, and column grouping. 3 free exports. No account needed.',
+    title: 'fitforpdf, Send-Ready PDFs from Excel & CSV',
+    description: 'Turn wide Excel and CSV exports into readable, send-ready PDFs with sections, pagination, and column grouping. 3 free exports. No account needed.',
   },
   developers: {
     title: 'fitforpdf API, Client-Ready PDFs from Excel & CSV',

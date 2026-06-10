@@ -130,29 +130,29 @@ test('hero trust eyebrow carries the no-LLM signal above the headline', () => {
   );
 });
 
-test('hero H1 headline copy uses validated "client-ready" + inclusive "your export" framing', () => {
-  // Magdalena verbatim (2026-03-22): "The most frustrating part is that the
-  // export often isn't truly client-ready, so there's usually a manual
-  // cleanup step before I can send it out." — quadruple-validated pain.
-  // "Your export" (not "Excel") is the inclusive framing validated by
-  // Abhinav (2026-04-15): his use case is "report exports at moltin.work",
-  // a SaaS context where "Excel" would exclude mentally.
+test('hero H1 headline sells the outcome (skip cleanup → send), no "client-ready" promise', () => {
+  // V5 (2026-06-10, sprint S1): the "client-ready" PROMISE leaves the titles.
+  // Kunj (consulting ICP, 2026-05-28) hears corporate-grade fidelity in
+  // "client-ready" — merged headers, charts, brand charters — explicit
+  // anti-scope, a comparison we lose by design. Magdalena's pain language
+  // ("cleanup", cut-off columns, page breaks) stays in the subheadline and
+  // body. The headline now sells the outcome both segments agree on.
   const l1 = LANDING_COPY.heroHeadlineL1;
   const l2 = LANDING_COPY.heroHeadlineL2;
   assert.equal(typeof l1, 'string');
   assert.equal(typeof l2, 'string');
-  assert.equal(/client[- ]ready/i.test(l1), true, 'H1 L1 must contain "client-ready"');
+  assert.equal(/cleanup/i.test(l1), true, 'H1 L1 must reference the cleanup pain');
   assert.equal(
-    /your export/i.test(l1),
-    true,
-    'H1 L1 must use "your export" (inclusive framing) and NOT restrict to "Excel"',
+    /client[- ]ready/i.test(l1 + ' ' + l2),
+    false,
+    'H1 must NOT promise "client-ready" (consulting-grade fidelity is anti-scope, Kunj 2026-05-28)',
   );
   assert.equal(
     /excel/i.test(l1),
     false,
     'H1 L1 must NOT mention Excel, too restrictive for SaaS/CRM ICPs (Abhinav signal)',
   );
-  assert.equal(/cleanup/i.test(l2), true, 'H1 L2 must reference the cleanup pain');
+  assert.equal(/send/i.test(l2), true, 'H1 L2 must name the outcome: send it');
 });
 
 test('hero subheadline uses staccato pain + solution structure', () => {

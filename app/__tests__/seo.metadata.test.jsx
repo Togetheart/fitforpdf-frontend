@@ -23,8 +23,13 @@ describe('SEO constants', () => {
     expect(SEO.auditPdf.slug).toBe('audit-report-excel-to-pdf-tips');
   });
 
-  test('homepage title matches the client-ready positioning shown on-page', () => {
-    expect(SEO.home.title).toMatch(/client-ready/i);
+  test('homepage title matches the send-ready positioning shown on-page (no client-ready promise)', () => {
+    // S1 sprint (2026-06-10): "client-ready" left the HOME title promise —
+    // the consulting segment hears corporate-grade fidelity in it (anti-scope,
+    // Kunj 2026-05-28). The SEO sub-pages below keep their own wording for
+    // search-intent continuity; only the home positioning pivots.
+    expect(SEO.home.title).toMatch(/send-ready/i);
+    expect(SEO.home.title).not.toMatch(/client-ready/i);
     expect(SEO.home.title).toMatch(/excel/i);
     expect(SEO.home.title).toMatch(/csv/i);
     expect(SEO.home.title).toMatch(/pdf/i);

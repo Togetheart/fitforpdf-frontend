@@ -6,9 +6,6 @@ import {
   LANDING_COPY_KEYS,
   HOME_FAQ,
 } from './siteCopy.mjs';
-import useQuota from './hooks/useQuota.mjs';
-import useConversion from './hooks/useConversion.mjs';
-import UploadCard from './components/UploadCard';
 import Accordion from './components/Accordion';
 import Section from './components/ui/Section';
 import PricingToggleSection from './components/PricingToggleSection';
@@ -20,7 +17,6 @@ import { JsonLd } from './components/JsonLd';
 import Image from 'next/image';
 
 import StickyMobileCTA from './components/StickyMobileCTA';
-import { scrollToTarget } from './lib/scrollToTarget.mjs';
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
 
@@ -30,7 +26,7 @@ const COMPARISON_ROWS = [
   ['Page breaks', 'Unpredictable splits', 'Automatic pagination'],
   ['Reference columns', 'Lost after first pages', 'Repeated automatically'],
   ['Overview', 'None', 'Navigate between sections instantly'],
-  ['Result', 'Spreadsheet-like output', 'Client-ready document'],
+  ['Result', 'Spreadsheet-like output', 'Readable, send-ready document'],
 ];
 
 
@@ -67,8 +63,6 @@ function EarlyWorkflowFeedback() {
 }
 
 export default function Page() {
-  const quota = useQuota();
-  const conversion = useConversion({ quota });
   const [lightboxOpen, setLightboxOpen] = React.useState(false);
 
   /* Store promo code from ?ref= param (betalist, microlaunch, etc.) */
@@ -82,19 +76,9 @@ export default function Page() {
     } catch {}
   }, []);
 
-  function handleHeroGenerateClick(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    // All scroll math + corrective-pass logic lives in scrollToTarget so
-    // every CTA on the page (hero, how-it-works, final-cta, sticky mobile)
-    // shares the same robust implementation. See lib/scrollToTarget.mjs
-    // for why we use getBoundingClientRect (sticky/transform ancestors)
-    // and how the corrective pass is cancelled on user scroll.
-    scrollToTarget(['generate', 'tool']);
-  }
-
+  // S1 sprint (2026-06-10): every generate CTA now routes to the /app
+  // workbench. The V1 inline engine is gone from the home — the landing
+  // sells, /app converts. See the sprint design doc (gstack projects).
   const homeFaqLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -130,7 +114,7 @@ export default function Page() {
             <div className="flex items-center gap-3">
               <Button
                 variant="accent"
-                onClick={handleHeroGenerateClick}
+                href="/app"
                 className="h-12 px-8"
               >
                 {LANDING_COPY.heroCta}
@@ -258,125 +242,15 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Upload tool, restructured: the dark navy area is no longer a
-          full-bleed section but a CONTAINED card floating on the page bg.
-          Why: a full-width dark slab created an abrupt edge-to-edge color
-          cut + no breathing room. As a contained card it reads as
-          "the focal element" with intent, margins, and rounded corners.
-          The apple-grid-bg + apple-grid-noise + apple-grid-card aesthetic
-          is preserved; only the framing changed. */}
-      <section
-        id="generate"
-        className="bg-[var(--color-bg-hero)] relative z-10 py-8 sm:py-12 scroll-mt-24"
-        data-testid={`section-${LANDING_COPY_KEYS.upload}`}
-      >
-        <div
-          data-testid="upload-blue-container"
-          className="mx-auto max-w-[1040px] px-4 sm:px-6"
-        >
-          <div className="apple-grid-bg relative overflow-hidden rounded-[24px] px-5 py-7 sm:px-9 sm:py-9 shadow-[0_18px_44px_-18px_rgba(12,18,34,0.45)]">
-            <div className="apple-grid-noise" />
-            {/* Soft inner top highlight, adds depth + signals "premium card" */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
-            />
-            <div
-              data-testid="upload-blue-inner"
-              className="relative z-10 mx-auto max-w-[760px]"
-            >
-        <div
-          data-testid={LANDING_COPY_KEYS.upload}
-          className="apple-grid-card mx-auto w-full relative p-6 sm:p-8"
-        >
-          <UploadCard
-            toolTitle={LANDING_COPY.toolTitle}
-            toolSubcopy={(() => {
-              if (quota.planType === 'api_enterprise' || quota.isUnlimited === true) {
-                return 'Admin account. Unlimited test exports.';
-              }
-              if (quota.planType === 'credits') {
-                const count = Number.isFinite(quota.freeExportsLeft) ? quota.freeExportsLeft : 0;
-                if (count <= 0) return 'No exports left. Get more to continue.';
-                return `${count} purchased export${count === 1 ? '' : 's'} remaining.`;
-              }
-              if (quota.planType === 'pro') {
-                return 'Pro plan. 500 exports/month.';
-              }
-              const count = Number.isFinite(quota.freeExportsLeft)
-                ? quota.freeExportsLeft
-                : Number.isFinite(quota.freeExportsLimit)
-                  ? quota.freeExportsLimit
-                  : 3;
-              return `${count} free export${count === 1 ? '' : 's'}. No account required.`;
-            })()}
-            file={conversion.file}
-            freeExportsLeft={quota.freeExportsLeft}
-            includeBranding={conversion.includeBranding}
-            truncateLongText={conversion.truncateLongText}
-            isLoading={conversion.isLoading}
-            notice={conversion.notice}
-            error={conversion.error}
-            hasResultBlob={Boolean(conversion.pdfBlob)}
-            onFileSelect={(nextFile) => conversion.handleFileSelect(nextFile)}
-            onRemoveFile={conversion.handleRemoveFile}
-            onBrandingChange={conversion.setIncludeBranding}
-            onTruncateChange={conversion.setTruncateLongText}
-            onSubmit={conversion.handleSubmit}
-            onDownloadAgain={conversion.handleDownloadAnyway}
-            onCopyShareLink={conversion.handleCopyShareLink}
-            onTrySample={conversion.handleTrySample}
-            downloadedFileName={Boolean(conversion.pdfBlob) ? conversion.resolvedPdfFilename : null}
-            verdict={conversion.renderVerdict}
-            conversionProgress={conversion.conversionProgress}
-            onBuyCredits={quota.openBuyCreditsPanel}
-            isPro={quota.planType === 'pro'}
-            showBuyCreditsForTwo={false}
-            isQuotaLocked={quota.isQuotaLocked}
-            planType={quota.planType}
-            remainingInPeriod={quota.remainingInPeriod}
-            usedInPeriod={quota.usedInPeriod}
-            periodLimit={quota.periodLimit}
-            paywallReason={quota.paywallReason}
-            onBuyCreditsPack={conversion.handleBuyCreditsPack}
-            showBuyCreditsPanel={quota.showBuyCreditsPanel}
-            onCloseBuyPanel={quota.closeBuyCreditsPanel}
-            purchaseMessage={quota.purchaseMessage}
-            onGoPro={conversion.handleGoProCheckout}
-            onLayoutChange={conversion.handleLayoutChange}
-            layout={conversion.layout}
-            exportHistory={conversion.exportHistory}
-            isHistoryLoading={conversion.isHistoryLoading}
-            historyError={conversion.historyError}
-            historyStatus={conversion.historyStatus}
-            onHistoryStatusChange={conversion.onHistoryStatusChange}
-            hasMoreHistory={conversion.hasMoreHistory}
-            onLoadMoreHistory={conversion.loadMoreExportHistory}
-            onRefreshHistory={conversion.refreshExportHistory}
-            renderId={conversion.renderId}
-            shareState={conversion.shareState}
-            variant="dark"
-            failKind={conversion.failKind}
-            failureRecommendations={conversion.failureRecommendations}
-            pageBurdenCopy={conversion.pageBurdenCopy}
-            onRetryCompact={conversion.handleGenerateCompact}
-            compactSuggestion={conversion.compactSuggestion}
-            wasDemoLastUpload={conversion.wasDemoLastUpload}
-            onTryYourFile={conversion.handleSwitchToRealUpload}
-            onRenderAnother={conversion.handleRenderAnother}
-            onPostRenderPricingClick={conversion.handlePostRenderPricingClick}
-            onPostRenderContactClick={conversion.handlePostRenderContactClick}
-            confidence={conversion.confidence}
-            debugMetrics={conversion.debugMetrics}
-          />
-        </div>
-        <p className="mt-6 text-center text-sm text-white/60">
-          {LANDING_COPY.heroTypicalOutput}
-        </p>
-            </div>{/* close max-w-[760px] inner */}
-          </div>{/* close apple-grid-bg dark card */}
-        </div>{/* close max-w-[1040px] outer */}
-      </section>
+      {/* V1 inline upload tool REMOVED (2026-06-10, sprint S1): the landing
+          no longer embeds the conversion engine. Every generate CTA routes to
+          the /app workbench, which carries the full inspector (grouping,
+          custom sections, rename/color/reorder, title, Pro branding) plus the
+          sample sandbox. Rationale: 100% of visitors used to hit this
+          inspector-less V1 surface — including the ICP tester whose "no
+          control over grouping/sections" feedback drove V2. One engine, one
+          surface, one funnel. (Also drops useQuota/useConversion from the
+          landing bundle.) */}
       {/* Lead-capture modal removed (2026-06-07): over 90 days it was shown 9× and
           captured 0 emails (backend was a stub), while interrupting the high-intent
           moment right after a successful render. Re-introduce later as a non-blocking
@@ -517,7 +391,7 @@ export default function Page() {
           <div className="mt-8 flex items-center justify-center gap-3">
             <Button
               variant="primary"
-              onClick={handleHeroGenerateClick}
+              href="/app"
             >
               {LANDING_COPY.finalCtaLabel}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1.5 opacity-70" aria-hidden="true">
