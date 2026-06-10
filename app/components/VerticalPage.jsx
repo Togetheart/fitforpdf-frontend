@@ -38,7 +38,7 @@ export default function VerticalPage({
         titleClassName="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.08] max-w-[22ch] mx-auto"
         subtitleClassName="max-w-[48ch] mx-auto"
       >
-        <Button variant="primary" href="/#generate" className="mt-2">
+        <Button variant="primary" href="/app" className="mt-2">
           {ctaText}
         </Button>
       </PageHero>
@@ -139,7 +139,7 @@ export default function VerticalPage({
             Upload your spreadsheet and get a clean, paginated PDF in seconds.
             No signup required.
           </p>
-          <Button variant="primary" href="/#generate">
+          <Button variant="primary" href="/app">
             {ctaText}
           </Button>
         </div>

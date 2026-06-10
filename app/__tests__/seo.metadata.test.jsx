@@ -35,8 +35,16 @@ describe('SEO constants', () => {
     expect(SEO.home.title).toMatch(/pdf/i);
   });
 
+  test('developers title follows the send-ready pivot (machine surface, same promise as home)', () => {
+    // Pricing/launch pass (2026-06-10): /developers sells the same raw-fast
+    // wedge as home, so its title pivots with it. The ICP vertical pages
+    // below keep their own wording for search-intent continuity.
+    expect(SEO.developers.title).toMatch(/send-ready/i);
+    expect(SEO.developers.title).not.toMatch(/client-ready/i);
+    expect(SEO.developers.title).toMatch(/pdf/i);
+  });
+
   test.each([
-    ['developers', SEO.developers],
     ['auditors', SEO.forAuditors],
     ['consultants', SEO.forConsultants],
     ['finance', SEO.forFinance],

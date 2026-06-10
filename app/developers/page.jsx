@@ -157,6 +157,95 @@ function EndpointCard({ endpoint }) {
   );
 }
 
+function ApiPlanCheckout({ plan, planLabel, primary = false }) {
+  const [open, setOpen] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+  const [status, setStatus] = useState('idle'); // idle | submitting | error
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const buttonClass = primary
+    ? 'block w-full rounded-full bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700'
+    : 'block w-full rounded-full border border-[var(--color-border)] px-6 py-3 text-center text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]';
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const key = apiKey.trim();
+    if (!key) {
+      setErrorMsg('Paste your API key (ffp_…) to continue.');
+      setStatus('error');
+      return;
+    }
+    setStatus('submitting');
+    setErrorMsg('');
+    try {
+      const res = await fetch('/api/plan/api/checkout', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ plan, apiKey: key }),
+      });
+      const data = await res.json().catch(() => ({}));
+      const url = typeof data?.url === 'string' ? data.url : '';
+      if (!res.ok || !url) {
+        const msg = data?.error?.message
+          || (typeof data?.error === 'string' ? data.error : null)
+          || 'Could not start checkout. Please try again.';
+        setErrorMsg(msg);
+        setStatus('error');
+        return;
+      }
+      window.location.assign(url);
+    } catch {
+      setErrorMsg('Network error. Please try again.');
+      setStatus('error');
+    }
+  }
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className={buttonClass}
+        data-testid={`api-plan-cta-${plan}`}
+      >
+        Subscribe &rarr;
+      </button>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-2" data-testid={`api-plan-checkout-${plan}`}>
+      <label htmlFor={`key-${plan}`} className="block text-left text-xs font-semibold text-[var(--color-text)]">
+        Your API key
+      </label>
+      <input
+        id={`key-${plan}`}
+        type="text"
+        value={apiKey}
+        onChange={(e) => setApiKey(e.target.value)}
+        placeholder="ffp_live_…"
+        autoComplete="off"
+        spellCheck={false}
+        className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-hero)] px-4 py-2.5 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-muted)]/40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+      />
+      <button
+        type="submit"
+        disabled={status === 'submitting'}
+        className={`${buttonClass} disabled:cursor-not-allowed disabled:opacity-60`}
+      >
+        {status === 'submitting' ? 'Redirecting…' : `Subscribe to ${planLabel}`}
+      </button>
+      {status === 'error' && errorMsg ? (
+        <p className="text-left text-xs text-red-600" role="alert">{errorMsg}</p>
+      ) : null}
+      <p className="text-left text-xs text-[var(--color-muted)]">
+        The subscription attaches to this key.{' '}
+        <a href="#request-access" className="underline underline-offset-2">No key yet? Get one free</a>
+      </p>
+    </form>
+  );
+}
+
 function RequestAccessForm() {
   const [form, setForm] = useState({ name: '', email: '' });
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
@@ -821,12 +910,12 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
           <div className="flex flex-col rounded-xl border-2 border-blue-500/30 bg-[var(--color-bg)] p-5 relative">
             <span className="absolute -top-2.5 right-4 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-semibold text-white uppercase tracking-wide">Recommended</span>
             <p className="text-sm font-semibold text-[var(--color-text)]">Starter API</p>
-            <p className="mt-1"><span className="text-2xl font-bold text-[var(--color-text)]">$49</span><span className="text-sm text-[var(--color-muted)]"> / month</span></p>
-            <p className="mt-0.5 text-xs text-[var(--color-muted)]">~$0.098 per render</p>
+            <p className="mt-1"><span className="text-2xl font-bold text-[var(--color-text)]">$15</span><span className="text-sm text-[var(--color-muted)]"> / month</span></p>
+            <p className="mt-0.5 text-xs text-[var(--color-muted)]">$0.10 per render</p>
             <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-                500 renders / month
+                150 renders / month
               </li>
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
@@ -838,21 +927,19 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
               </li>
             </ul>
             <div className="mt-auto pt-6">
-              <a href="#request-access" className="block rounded-full bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700">
-                Get started &rarr;
-              </a>
+              <ApiPlanCheckout plan="api_starter" planLabel="Starter API" primary />
             </div>
           </div>
 
           {/* Scale API */}
           <div className="flex flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
             <p className="text-sm font-semibold text-[var(--color-text)]">Scale API</p>
-            <p className="mt-1"><span className="text-2xl font-bold text-[var(--color-text)]">$99</span><span className="text-sm text-[var(--color-muted)]"> / month</span></p>
-            <p className="mt-0.5 text-xs text-[var(--color-muted)]">~$0.033 per render</p>
+            <p className="mt-1"><span className="text-2xl font-bold text-[var(--color-text)]">$49</span><span className="text-sm text-[var(--color-muted)]"> / month</span></p>
+            <p className="mt-0.5 text-xs text-[var(--color-muted)]">~$0.049 per render</p>
             <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-                3,000 renders / month
+                1,000 renders / month
               </li>
               <li className="flex items-center gap-2">
                 <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
@@ -864,9 +951,7 @@ def render_pdf(file_url: str, mode: str = "normal") -> dict:
               </li>
             </ul>
             <div className="mt-auto pt-6">
-              <a href="#request-access" className="block rounded-full border border-[var(--color-border)] px-6 py-3 text-center text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-bg-hero)]">
-                Get started &rarr;
-              </a>
+              <ApiPlanCheckout plan="api_scale" planLabel="Scale API" />
             </div>
           </div>
 

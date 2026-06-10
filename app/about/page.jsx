@@ -245,7 +245,7 @@ export default function AboutPage() {
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
-              href="/#generate"
+              href="/app"
               className="inline-block rounded-xl bg-[#0F172A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/80"
             >
               Try it free

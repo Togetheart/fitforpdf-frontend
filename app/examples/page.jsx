@@ -91,7 +91,7 @@ export default function ExamplesPage() {
           Upload your Excel or CSV file and get a structured PDF in seconds. 3 free exports, no account needed.
         </p>
         <div className="flex justify-center">
-          <Button variant="primary" href="/#generate" className="px-8">
+          <Button variant="primary" href="/app" className="px-8">
             Try it free
           </Button>
         </div>

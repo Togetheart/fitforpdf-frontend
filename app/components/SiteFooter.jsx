@@ -37,7 +37,7 @@ export default function SiteFooter() {
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">Product</p>
           <nav className="flex flex-col gap-1.5">
-            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/#generate">
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/app">
               Try free
             </a>
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/pricing">

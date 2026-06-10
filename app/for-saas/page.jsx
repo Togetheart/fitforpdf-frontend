@@ -68,7 +68,7 @@ const SAAS_FAQ_LD = {
       name: 'Can I integrate fitforpdf into my product?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. Our REST API lets you render PDFs from Excel, CSV, and database tables programmatically. API plans start at $49/month.',
+        text: 'Yes. Our REST API lets you render PDFs from Excel, CSV, and database tables programmatically. API plans start at $15/month.',
       },
     },
     {
