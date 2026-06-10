@@ -112,8 +112,8 @@ export async function POST(req) {
 
   let upstreamResponse;
   try {
-    const successUrl = safeRedirectUrl(payload?.success_url, 'https://www.fitforpdf.com/success');
-    const cancelUrl = safeRedirectUrl(payload?.cancel_url, 'https://www.fitforpdf.com/developers');
+    const successUrl = safeRedirectUrl(payload?.success_url || payload?.successUrl, 'https://www.fitforpdf.com/success');
+    const cancelUrl = safeRedirectUrl(payload?.cancel_url || payload?.cancelUrl, 'https://www.fitforpdf.com/developers');
     const idempotencyKey = getIdempotencyKey(req, payload);
     upstreamResponse = await fetch(checkoutUrl, {
       method: 'POST',
@@ -123,10 +123,12 @@ export async function POST(req) {
         ...buildTraceHeaders(requestId),
         ...(idempotencyKey ? { 'x-idempotency-key': idempotencyKey } : {}),
       },
+      // The v1 routes read camelCase body params (successUrl/cancelUrl),
+      // unlike the legacy app.js checkout routes (success_url/cancel_url).
       body: JSON.stringify({
         plan,
-        success_url: successUrl,
-        cancel_url: cancelUrl,
+        successUrl,
+        cancelUrl,
       }),
     });
   } catch (error) {

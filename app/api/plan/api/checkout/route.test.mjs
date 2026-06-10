@@ -104,8 +104,9 @@ test('POST /api/plan/api/checkout ignores off-domain redirect URLs', async () =>
   const restoreEnv = setupEnv('https://api.fitforpdf.neatexport.local');
   const fetchMock = withMockFetch(({ options }) => {
     const parsed = JSON.parse(options.body);
-    assert.equal(parsed.success_url, 'https://www.fitforpdf.com/success');
-    assert.equal(parsed.cancel_url, 'https://www.fitforpdf.com/developers');
+    // camelCase — the v1 backend routes ignore snake_case body params.
+    assert.equal(parsed.successUrl, 'https://www.fitforpdf.com/success');
+    assert.equal(parsed.cancelUrl, 'https://www.fitforpdf.com/developers');
     return new Response(JSON.stringify({ url: 'https://checkout.test/api-scale' }), {
       status: 200,
       headers: { 'content-type': 'application/json' },
