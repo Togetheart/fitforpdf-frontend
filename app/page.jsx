@@ -17,6 +17,7 @@ import { JsonLd } from './components/JsonLd';
 import Image from 'next/image';
 
 import StickyMobileCTA from './components/StickyMobileCTA';
+import { captureRefAttribution } from './lib/refAttribution.mjs';
 
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
 
@@ -65,7 +66,9 @@ function EarlyWorkflowFeedback() {
 export default function Page() {
   const [lightboxOpen, setLightboxOpen] = React.useState(false);
 
-  /* Store promo code from ?ref= param (betalist, microlaunch, etc.) */
+  /* Store promo code from ?ref= param (betalist, microlaunch, etc.) and pin
+     channel attribution (S1 funnel: hn/ph/li/compta/mcp tagged links land on
+     the home too — the visit must be attributable even before /app opens). */
   React.useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -74,6 +77,7 @@ export default function Page() {
       const promo = REF_TO_PROMO[ref];
       if (promo) localStorage.setItem('ffp_promo', promo);
     } catch {}
+    captureRefAttribution();
   }, []);
 
   // S1 sprint (2026-06-10): every generate CTA now routes to the /app

@@ -9,7 +9,14 @@ import useConversion from '../hooks/useConversion.mjs';
 import useSession from '../hooks/useSession.mjs';
 import useIsDesktop from '../hooks/useIsDesktop.mjs';
 import UploadCard from './UploadCard';
-import { trackPaywallEvent } from '../lib/analytics.mjs';
+import {
+  trackPaywallEvent,
+  trackAppOpened,
+  trackControlUsed,
+  trackPaywallViewed,
+  resetControlUsageTracking,
+} from '../lib/analytics.mjs';
+import { captureRefAttribution } from '../lib/refAttribution.mjs';
 import AccountMenu from './AccountMenu';
 import PlanBadge from './ui/PlanBadge';
 import AnimatedLogo from './AnimatedLogo';
@@ -369,6 +376,7 @@ function CustomGroupsControl({ conversion }) {
             value={targetOf(col)}
             onChange={(e) => {
               const v = e.target.value;
+              trackControlUsed({ control: 'custom_groups', surface: 'workbench' });
               conversion.reassignSectionColumn(col, v === FIXED_TARGET ? FIXED_TARGET : Number(v));
             }}
             className="min-h-11 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)] lg:min-h-9"
@@ -492,6 +500,7 @@ function SectionNamesEditor({ conversion }) {
     const from = ids.indexOf(active.id);
     const to = ids.indexOf(over.id);
     if (from === -1 || to === -1) return;
+    trackControlUsed({ control: 'section_reorder', surface: 'workbench' });
     conversion.reorderSection(from, to);
   }
 
@@ -506,8 +515,14 @@ function SectionNamesEditor({ conversion }) {
               index={i}
               title={typeof s.title === 'string' ? s.title : ''}
               color={typeof s.color === 'string' ? s.color : ''}
-              onRename={conversion.renameSection}
-              onSetColor={conversion.setSectionColor}
+              onRename={(...args) => {
+                trackControlUsed({ control: 'section_rename', surface: 'workbench' });
+                conversion.renameSection(...args);
+              }}
+              onSetColor={(...args) => {
+                trackControlUsed({ control: 'section_color', surface: 'workbench' });
+                conversion.setSectionColor(...args);
+              }}
             />
           ))}
         </div>
@@ -584,7 +599,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
                   key={opt.v}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => conversion.setColumnMap(opt.v)}
+                  onClick={() => {
+                    trackControlUsed({ control: 'column_grouping', surface: 'workbench' });
+                    conversion.setColumnMap(opt.v);
+                  }}
                   className={[
                     'min-h-11 flex-1 px-2 py-1.5 text-xs transition lg:min-h-9',
                     i > 0 ? 'border-l border-[var(--color-line)]' : '',
@@ -644,7 +662,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             aria-label="Report title"
             type="text"
             value={conversion.reportTitle}
-            onChange={(e) => conversion.setReportTitle(e.target.value)}
+            onChange={(e) => {
+              trackControlUsed({ control: 'report_title', surface: 'workbench' });
+              conversion.setReportTitle(e.target.value);
+            }}
             placeholder="e.g. Acme Co. - Q4 2025 export"
             maxLength={200}
             className="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)]"
@@ -677,7 +698,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
               type="color"
               aria-label="Accent color"
               value={/^#[0-9a-fA-F]{6}$/.test(conversion.accentColor) ? conversion.accentColor : '#2563EB'}
-              onChange={(e) => conversion.setAccentColor(e.target.value)}
+              onChange={(e) => {
+                trackControlUsed({ control: 'accent_color', surface: 'workbench' });
+                conversion.setAccentColor(e.target.value);
+              }}
               className="h-9 w-12 cursor-pointer rounded border border-[var(--color-line)] bg-[var(--color-surface)]"
             />
             <span className="text-[12px] text-[var(--color-muted)]">{conversion.accentColor || 'Default'}</span>
@@ -697,7 +721,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
                 type="file"
                 aria-label="Logo image (PNG or JPG)"
                 accept="image/png,image/jpeg"
-                onChange={(e) => conversion.handleLogoSelect(e.target.files?.[0] || null)}
+                onChange={(e) => {
+                  trackControlUsed({ control: 'logo', surface: 'workbench' });
+                  conversion.handleLogoSelect(e.target.files?.[0] || null);
+                }}
                 className="sr-only"
               />
             </label>
@@ -753,7 +780,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             aria-label="Footer text"
             value={conversion.footerText}
             maxLength={120}
-            onChange={(event) => conversion.setFooterText(event.target.value)}
+            onChange={(event) => {
+              trackControlUsed({ control: 'footer_text', surface: 'workbench' });
+              conversion.setFooterText(event.target.value);
+            }}
             placeholder="Confidential - internal use"
             className="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)]"
           />
@@ -765,25 +795,37 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             label="Summary page"
             testid="app-layout-overview-toggle"
             checked={conversion.layout?.overview !== false}
-            onChange={(next) => conversion.handleLayoutChange('overview', next)}
+            onChange={(next) => {
+              trackControlUsed({ control: 'layout_overview', surface: 'workbench' });
+              conversion.handleLayoutChange('overview', next);
+            }}
           />
           <ToggleRow
             label="Repeat headers on every page"
             testid="app-layout-headers-toggle"
             checked={conversion.layout?.headers !== false}
-            onChange={(next) => conversion.handleLayoutChange('headers', next)}
+            onChange={(next) => {
+              trackControlUsed({ control: 'layout_headers', surface: 'workbench' });
+              conversion.handleLayoutChange('headers', next);
+            }}
           />
           <ToggleRow
             label="Page footer"
             testid="app-layout-footer-toggle"
             checked={conversion.layout?.footer !== false}
-            onChange={(next) => conversion.handleLayoutChange('footer', next)}
+            onChange={(next) => {
+              trackControlUsed({ control: 'layout_footer', surface: 'workbench' });
+              conversion.handleLayoutChange('footer', next);
+            }}
           />
           <ToggleRow
             label="Section titles"
             testid="app-layout-section-titles-toggle"
             checked={conversion.layout?.sectionTitles !== false}
-            onChange={(next) => conversion.handleLayoutChange('sectionTitles', next)}
+            onChange={(next) => {
+              trackControlUsed({ control: 'layout_section_titles', surface: 'workbench' });
+              conversion.handleLayoutChange('sectionTitles', next);
+            }}
             hint={'The big "SECTION N" block above each table. Off keeps just the column-header row.'}
           />
           <p className="mt-2 text-[11px] text-[var(--color-text-subtle)]">The summary page lists your sections; turn it off for a plain table.</p>
@@ -1077,6 +1119,11 @@ function UploadSurface({ conversion, quota, toolTitle, resolvedSubcopy, variant 
 }
 
 function WorkbenchQuotaPaywall({ conversion }) {
+  // paywall_view: the VIEW event (the existing paywall_* events only fire on
+  // click). Mount = the user is actually looking at the wall.
+  React.useEffect(() => {
+    trackPaywallViewed({ surface: 'workbench' });
+  }, []);
   return (
     <div
       role="alert"
@@ -2169,6 +2216,15 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
   // Which mobile off-canvas drawer is open: 'left' (rail), 'right' (inspector),
   // or null. One at a time. Desktop ignores this (it uses the PanelGroup).
   const [openDrawer, setOpenDrawer] = React.useState(null);
+
+  // S1 funnel head event: one app_open per mount, carrying ?ref= channel
+  // attribution (first-touch pinned via $set_once). Also resets the
+  // control_used dedupe so "controls touched" is counted per app session.
+  React.useEffect(() => {
+    resetControlUsageTracking();
+    trackAppOpened({ surface: layout, ...captureRefAttribution() });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Load "Recent exports" on mount, and refresh after each render (renderId changes).
   // useConversion only fetched history on a manual status change / load-more, so the
