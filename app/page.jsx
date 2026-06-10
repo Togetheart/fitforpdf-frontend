@@ -158,7 +158,13 @@ export default function Page() {
               reveal. Mobile keeps its own block below the hero. */}
           <div className="hidden sm:block w-full">
             <div className="flex flex-col items-center pt-4 pb-12">
-              <div className="w-full max-w-[960px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[0_28px_64px_-28px_rgba(15,23,42,0.28)]">
+              {/* The shot itself converts (Cursor/Lovable pattern: the hero
+                  product visual is a door, not a poster). */}
+              <a
+                href="/app"
+                aria-label="Open the fitforpdf workbench"
+                className="block w-full max-w-[960px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[0_28px_64px_-28px_rgba(15,23,42,0.28)] transition hover:shadow-[0_32px_72px_-28px_rgba(15,23,42,0.38)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
+              >
                 <Image
                   src="/workbench-light.png"
                   alt="The fitforpdf workbench: a wide CSV rendered as a sectioned PDF, with section colors, custom column groups and rename controls"
@@ -168,7 +174,7 @@ export default function Page() {
                   sizes="960px"
                   priority
                 />
-              </div>
+              </a>
             </div>
           </div>
         </PageHero>

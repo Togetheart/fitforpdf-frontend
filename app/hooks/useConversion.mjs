@@ -753,7 +753,12 @@ export default function useConversion({ quota }) {
     // (no event). Tolerate all three — a missing/partial event must not throw.
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     let canExport = true;
-    if (isQuotaLocked) {
+    // Demo sandbox (S1): tweaking the SAMPLE is free server-side (the backend
+    // hash-matches the canonical bytes and refunds the export), so the client
+    // quota lock must not block an Update-preview on the demo file. Any real
+    // file still goes through the lock; the backend stays the authority.
+    const isDemoFlow = wasDemoLastUploadRef.current && Boolean(file);
+    if (isQuotaLocked && !isDemoFlow) {
       canExport = await refreshQuotaAndBlockIfNeeded();
     }
     if (!canExport) {
