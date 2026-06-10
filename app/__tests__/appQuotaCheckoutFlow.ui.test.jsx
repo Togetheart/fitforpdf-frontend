@@ -266,4 +266,63 @@ describe('/app workbench, quota-locked paywall', () => {
       expect(window.location.assign).toHaveBeenCalledWith(STRIPE_CHECKOUT_URL);
     }, { timeout: 3000 });
   });
+
+  test('demo sandbox: an exhausted visitor can still render and tweak the SAMPLE (no paywall, free wording)', async () => {
+    // Server-side the canonical sample is hash-matched and refunded
+    // (backend demo sandbox); client-side the quota lock must not block it.
+    quotaPayload = { plan_type: 'free', free_exports_left: 0, free: { limit: 3, remaining: 0 } };
+    const original = global.fetch;
+    global.fetch = vi.fn(async (url, options = {}) => {
+      const u = String(url);
+      fetchCalls.push({ url: u, options });
+      if (u.includes('/api/quota')) return jsonResponse(quotaPayload);
+      if (u.includes('/api/sample/premium')) {
+        return new Response('invoice_id,client\nINV-1,Acme', {
+          status: 200,
+          headers: { 'content-type': 'text/csv', 'content-disposition': 'attachment; filename="enterprise-invoices-demo.csv"' },
+        });
+      }
+      if (u.includes('/api/render')) {
+        return new Response(new Blob(['%PDF-1.4'], { type: 'application/pdf' }), {
+          status: 200,
+          headers: {
+            'content-type': 'application/pdf',
+            'content-disposition': 'attachment; filename="out.pdf"',
+            'x-render-id': 'rid_demo_free',
+            'x-demo-render': '1',
+            'x-cleansheet-score': '95',
+            'x-cleansheet-verdict': 'OK',
+            'x-cleansheet-sections': JSON.stringify([
+              { label: 'A', title: 'Customer info', columns: ['Region'] },
+            ]),
+          },
+        });
+      }
+      return new Response('', { status: 404 });
+    });
+
+    render(<AppPage />);
+    await findPlanBadge();
+
+    const expander = await screen.findByRole('button', { name: /Try a sample/i });
+    await act(async () => { fireEvent.click(expander); });
+    const renderSample = await screen.findByRole('button', { name: /Render this sample/i });
+    await act(async () => { fireEvent.click(renderSample); });
+
+    await waitFor(() => {
+      expect(fetchCalls.some((c) => c.url.includes('/api/render'))).toBe(true);
+    }, { timeout: 3000 });
+
+    // Post-render demo state at 0 quota: the sandbox note replaces the
+    // paywall, and Update preview stays enabled with the free wording.
+    await waitFor(() => {
+      expect(screen.getByText(/free on the sample/i)).toBeTruthy();
+    }, { timeout: 3000 });
+    expect(screen.queryByTestId('workbench-quota-paywall')).toBeNull();
+    const updateBtn = screen.getByRole('button', { name: /Update preview/i });
+    expect(updateBtn.disabled).toBe(false);
+    expect(screen.getByTestId('app-inspector-quota-lock').textContent).toContain('Sample tweaks are free');
+
+    global.fetch = original;
+  });
 });

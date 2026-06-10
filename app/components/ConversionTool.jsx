@@ -805,12 +805,14 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
           <button
             type="button"
             onClick={() => conversion.handleSubmit({ preventDefault: () => {} })}
-            disabled={conversion.isLoading || !conversion.file || quotaLocked}
+            disabled={conversion.isLoading || !conversion.file || (quotaLocked && !conversion.wasDemoLastUpload)}
             className="mb-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-2 text-[13px] font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
             Update preview
-            <span className="text-[10px] font-medium text-[var(--color-text-subtle)]">applies changes · 1 export</span>
+            <span className="text-[10px] font-medium text-[var(--color-text-subtle)]">
+              {conversion.wasDemoLastUpload ? 'applies changes · free on the sample' : 'applies changes · 1 export'}
+            </span>
           </button>
         ) : (
           <p className="mb-2 text-center text-[11.5px] leading-5 text-[var(--color-text-subtle)]">
@@ -819,7 +821,9 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         )}
         {quotaLocked ? (
           <p data-testid="app-inspector-quota-lock" className="mb-2 text-center text-[11.5px] text-[var(--color-warn-text)]">
-            No exports left. <a href="/pricing" className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Buy credits</a> to re-render.
+            {conversion.wasDemoLastUpload
+              ? <>Sample tweaks are free. <a href="/pricing" className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Buy credits</a> to render your own file.</>
+              : <>No exports left. <a href="/pricing" className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2">Buy credits</a> to re-render.</>}
           </p>
         ) : null}
         {conversion.pdfBlob ? (
@@ -1175,10 +1179,13 @@ function WorkbenchDropzone({ conversion, quota }) {
                 type="button"
                 onClick={(event) => {
                   event.stopPropagation();
-                  if (isQuotaLocked) return;
+                  // Demo sandbox (S1): the sample renders free server-side
+                  // (hash-matched + refunded), so the quota lock only blocks
+                  // REAL files.
+                  if (isQuotaLocked && !conversion.wasDemoLastUpload) return;
                   void conversion.handleSubmit({ preventDefault: () => {} });
                 }}
-                disabled={conversion.isLoading || isQuotaLocked}
+                disabled={conversion.isLoading || (isQuotaLocked && !conversion.wasDemoLastUpload)}
                 className="min-h-11 rounded-[10px] bg-[var(--color-cta-bg)] px-7 text-sm font-bold text-white transition hover:bg-[var(--color-cta-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {conversion.isLoading ? <LoadingDots label="Generating" /> : 'Generate PDF'}
@@ -1195,7 +1202,14 @@ function WorkbenchDropzone({ conversion, quota }) {
                 Change file
               </button>
             </div>
-            {isQuotaLocked ? <WorkbenchQuotaPaywall conversion={conversion} /> : null}
+            {isQuotaLocked && !conversion.wasDemoLastUpload ? (
+              <WorkbenchQuotaPaywall conversion={conversion} />
+            ) : null}
+            {isQuotaLocked && conversion.wasDemoLastUpload ? (
+              <p data-testid="demo-sandbox-note" className="mt-3 max-w-[420px] text-center text-[12px] leading-5 text-[var(--color-muted)]">
+                Sample renders are free, your exports are untouched. Upload your own file when you&apos;re ready.
+              </p>
+            ) : null}
           </>
         ) : (
           <button
@@ -1304,7 +1318,7 @@ function WorkbenchSampleCard({ conversion }) {
         <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--color-text-subtle)] transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
       <div id={contentId} hidden={!open} className="mt-3">
-        <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">Wide spreadsheet in, clean sectioned PDF out, the real sample, no upload needed.</p>
+        <p className="mb-3 text-xs leading-5 text-[var(--color-muted)]">Wide spreadsheet in, clean sectioned PDF out, the real sample, no upload needed. Sample renders are free, they never touch your quota.</p>
 
         {/* Before → after. Stacked on mobile (CSV ↓ PDF), side-by-side from sm up
             (CSV → PDF) so it fills the full-width card without whitespace. */}
