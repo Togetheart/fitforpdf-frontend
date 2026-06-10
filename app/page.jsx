@@ -151,14 +151,18 @@ export default function Page() {
             style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
           >
             <div className="flex flex-col items-center pt-2">
-              <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
+              {/* S1 sprint (2026-06-10): the scroll payoff is now the V2
+                  workbench itself (preview + section controls + inspector),
+                  not the static output image — the landing finally SHOWS the
+                  product a visitor gets behind the CTA. */}
+              <div className="w-full max-w-[840px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
                 <Image
-                  src="/fitforpdf_product@2x.png"
-                  alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                  width={1200}
-                  height={800}
+                  src="/workbench-light.png"
+                  alt="The fitforpdf workbench: a wide CSV rendered as a sectioned PDF, with section colors, custom column groups and rename controls"
+                  width={1512}
+                  height={743}
                   className="w-full block"
-                  sizes="600px"
+                  sizes="840px"
                 />
               </div>
             </div>
@@ -195,10 +199,10 @@ export default function Page() {
             aria-label="View full-size product image"
           >
             <Image
-              src="/fitforpdf_product@2x.png"
-              alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-              width={1200}
-              height={800}
+              src="/workbench-light.png"
+              alt="The fitforpdf workbench: a wide CSV rendered as a sectioned PDF, with section colors, custom column groups and rename controls"
+              width={1512}
+              height={743}
               className="w-full block"
               sizes="100vw"
             />
@@ -430,10 +434,10 @@ export default function Page() {
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
-          <div className="relative w-full max-h-[90vh] aspect-[3/2]" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full max-h-[90vh] aspect-[1512/743]" onClick={(e) => e.stopPropagation()}>
             <Image
-              src="/fitforpdf_product@2x.png"
-              alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+              src="/workbench-light.png"
+              alt="The fitforpdf workbench: a wide CSV rendered as a sectioned PDF, with section colors, custom column groups and rename controls"
               fill
               className="rounded-xl object-contain"
               sizes="100vw"

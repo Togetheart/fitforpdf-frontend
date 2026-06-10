@@ -83,9 +83,10 @@ export default function SiteHeader() {
             <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/pricing">
               Pricing
             </a>
-            <a className="transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/contact">
-              Contact
-            </a>
+            {/* S1 sprint (2026-06-10): Contact dropped from the header — it
+                was the one nav exit with zero purchase intent (it stays in
+                the footer). Every remaining header element either explains
+                (API, Pricing) or converts (Try free). */}
             {/* The landing is marketing, not the app: the live exports/plan quota
                 lives in the app (at the point of work + the account menu), not as
                 chrome here. The offer ("3 free exports") is communicated in the hero
@@ -96,7 +97,12 @@ export default function SiteHeader() {
             {/* S1 sprint (2026-06-10): anonymous visitors go to /app too —
                 the V1 inline tool is gone from the home, /app is the only
                 conversion surface. */}
-            <Button variant="primary" href="/app" className="px-4 text-xs h-9">
+            <Button
+              variant="primary"
+              href="/app"
+              title="3 free exports — no account needed"
+              className="px-4 text-xs h-9"
+            >
               {account ? "Ouvrir l'app" : 'Try free'}
             </Button>
           </nav>
@@ -162,13 +168,8 @@ export default function SiteHeader() {
           >
             Pricing
           </a>
-          <a
-            href="/contact"
-            onClick={closeMenu}
-            className="rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-border)] hover:text-[var(--color-text)]"
-          >
-            Contact
-          </a>
+          {/* Contact intentionally absent (S1): zero purchase intent in the
+              header; it lives in the footer. */}
           {account ? (
             <>
               <a
