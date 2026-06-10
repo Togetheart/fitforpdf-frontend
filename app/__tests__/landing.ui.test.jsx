@@ -57,11 +57,11 @@ describe('landing conversion-first structure', () => {
   });
 
   test('hero keeps the 2-line headline with required rhythm', () => {
-    const heading = screen.getByRole('heading', { level: 1, name: /Make your export client-ready/i });
+    const heading = screen.getByRole('heading', { level: 1, name: /Skip the cleanup/i });
 
     expect(heading).toBeTruthy();
     expect(screen.getByTestId('hero-headline-accent').textContent).toBe(LANDING_COPY.heroHeadlineL1);
-    expect(screen.getByText(/Without the cleanup/)).toBeTruthy();
+    expect(screen.getByText(/Send it now/)).toBeTruthy();
     const headingText = heading.textContent || '';
     expect(headingText).toContain(LANDING_COPY.heroHeadlineL1);
     expect(headingText).toContain(LANDING_COPY.heroHeadlineL2);
@@ -77,13 +77,12 @@ describe('landing conversion-first structure', () => {
     expect(screen.queryByTestId('section-home-demo')).toBeNull();
   });
 
-  test('hero has no standalone CTA, upload card is the primary action', () => {
+  test('hero CTA routes to the /app workbench (S1: landing sells, /app converts)', () => {
     const hero = screen.getByTestId('hero-section');
-    expect(within(hero).queryByTestId('hero-primary-cta')).toBeNull();
-    // Upload card now lives outside hero (proof-first flow)
-    const uploadCard = screen.getByTestId('upload-card');
-    expect(uploadCard).toBeTruthy();
-    expect(hero.compareDocumentPosition(uploadCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const heroCta = within(hero).getByRole('link', { name: new RegExp(LANDING_COPY.heroCta, 'i') });
+    expect(heroCta.getAttribute('href')).toBe('/app');
+    // The V1 inline upload card no longer exists anywhere on the landing.
+    expect(screen.queryByTestId('upload-card')).toBeNull();
   });
 
   test('hero has headline/subline/microcopy', () => {
@@ -92,13 +91,16 @@ describe('landing conversion-first structure', () => {
     expect(screen.getByText(LANDING_COPY.heroMicrocopyFree)).toBeTruthy();
   });
 
-  test('upload block includes a Generate PDF button as the sole CTA', () => {
-    const toolSection = screen.getByTestId(LANDING_COPY_KEYS.upload);
-    const uploadGenerate = within(toolSection).getByRole('button', { name: 'Generate PDF' });
+  test('no inline conversion engine on the landing; final CTA routes to /app', () => {
+    // S1 sprint (2026-06-10): the V1 engine left the home. Every generate
+    // path is a link to /app — one engine, one surface, one funnel.
+    expect(screen.queryByTestId(LANDING_COPY_KEYS.upload)).toBeNull();
+    expect(screen.queryByTestId('upload-blue-container')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Generate PDF' })).toBeNull();
 
-    expect(uploadGenerate).toBeTruthy();
-    expect(uploadGenerate.getAttribute('class') || '').toContain('bg-cta');
-    expect(screen.queryByTestId('hero-primary-cta')).toBeNull();
+    const finalCta = screen.getByTestId('final-cta-section');
+    const finalLink = within(finalCta).getByRole('link', { name: new RegExp(LANDING_COPY.finalCtaLabel, 'i') });
+    expect(finalLink.getAttribute('href')).toBe('/app');
   });
 
   test('hero includes subtle gradient background', () => {
@@ -160,30 +162,11 @@ describe('landing conversion-first structure', () => {
     expect(starterCard?.className || '').toContain('md:scale-[1.04]');
   });
 
-  test('single demo entrypoint is in the upload block', () => {
-    const proofSection = screen.getByTestId(`section-${LANDING_COPY_KEYS.beforeAfter}`);
-    const uploadCard = screen.getByTestId('upload-card');
+  test('no demo entrypoint on the landing (the sample sandbox lives in /app)', () => {
     const proofCard = screen.getByTestId('home-preview-card');
-    const demoButton = screen.getByTestId('demo-try-button');
-
-    expect(proofSection.contains(uploadCard)).toBe(false);
-    expect(uploadCard).toBeTruthy();
     expect(proofCard).toBeTruthy();
-    expect(demoButton).toBeTruthy();
-    const demoClass = demoButton.getAttribute('class') || '';
-    expect(demoButton.textContent).toContain('See an example first');
-    expect(demoClass).toContain('text-white/55');
-    expect(demoClass).not.toContain('bg-white/10');
+    expect(screen.queryByTestId('demo-try-button')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Run the demo' })).toBeNull();
-    expect(screen.getAllByTestId('demo-try-button')).toHaveLength(1);
-  });
-
-  test('upload blue container is wide enough for the post-render state', () => {
-    const container = screen.getByTestId('upload-blue-container');
-    const inner = screen.getByTestId('upload-blue-inner');
-
-    expect(container.getAttribute('class') || '').toContain('max-w-[1040px]');
-    expect(inner.getAttribute('class') || '').toContain('max-w-[760px]');
   });
 
   test('preview card has desktop float animation class', () => {

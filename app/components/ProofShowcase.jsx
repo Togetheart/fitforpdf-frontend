@@ -41,23 +41,26 @@ const FEATURES = [
     color: '#2563EB',
   },
   {
-    title: 'Clear page numbers and row ranges',
+    // S1 sprint (2026-06-10): personalization surfaced on the landing —
+    // these two tiles answer the public V1 critique ("no control over how
+    // columns get grouped", "no customisation"). The controls live in /app.
+    title: 'Rename, reorder and recolor sections',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="4" y1="9" x2="20" y2="9" />
-        <line x1="4" y1="15" x2="20" y2="15" />
-        <line x1="10" y1="3" x2="8" y2="21" />
-        <line x1="16" y1="3" x2="14" y2="21" />
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
       </svg>
     ),
     color: '#2563EB',
   },
   {
-    title: 'Section names generated automatically',
+    title: 'Pick which columns go in which section',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 3v2m0 14v2M5.636 5.636l1.414 1.414m9.9 9.9 1.414 1.414M3 12h2m14 0h2M5.636 18.364l1.414-1.414m9.9-9.9 1.414-1.414" />
-        <circle cx="12" cy="12" r="4" />
+        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        <path d="M17.5 14v7M14 17.5h7" />
       </svg>
     ),
     color: '#2563EB',
