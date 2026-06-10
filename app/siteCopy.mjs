@@ -9,7 +9,9 @@ export const LANDING_COPY = {
   // Magdalena (2026-03-22): "cut-off columns", "awkward page breaks" and
   // Abhinav (2026-04-15): "wide Excel tables become unreadable".
   heroSubheadlineL2a: 'Wide tables. Cut-off columns. Broken page breaks.',
-  heroSubheadlineL2b: 'FitForPDF fixes all three: in one click.',
+  // L2b carries the CATEGORY since the V5 headline sells only the outcome:
+  // a cold visitor must read WHAT the product makes in the first two lines.
+  heroSubheadlineL2b: 'FitForPDF turns your export into a readable, sendable PDF. One click.',
   heroExample: 'Example: CRM export, 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
   proofTimeSaved: 'Typically saves 30 to 45 min per export',

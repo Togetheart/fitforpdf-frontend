@@ -92,17 +92,21 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <JsonLd data={homeFaqLd} />
-      {/* Scroll spacer, desktop only for Apple-style sticky scroll sequence */}
-      <div className="h-[80svh] sm:h-[calc(100vh+140px)]">
+      {/* S1 product-first hero (2026-06-10): static flow, no sticky scroll
+          sequence. The 2026 conversion pattern for a B2B utility is "product
+          visible immediately" (Linear/Stripe-style): headline + category
+          subline + CTAs + the workbench shot in the same first impression.
+          The bracket morph (phase 1) still plays as you scroll past. */}
+      <div>
         <PageHero
           heroTestId="hero-section"
           variant="home"
           align="center"
-          height="h-[80svh] sm:h-screen"
+          height="h-auto"
           title={<HeroHeadline />}
-          contentClassName="items-center justify-center gap-4 sm:gap-10 text-center h-full !pt-4 !pb-4 sm:!py-6"
+          contentClassName="items-center justify-center gap-4 sm:gap-8 text-center !pt-10 !pb-0 sm:!pt-16 sm:!pb-0"
           contentMaxWidthClassName="max-w-content"
-          className="py-0 w-full sm:sticky sm:top-0"
+          className="py-0 w-full"
         >
           {/* Subtitle, stays visible throughout */}
           <p className="hero-headline-line w-full max-w-3xl mx-auto text-base sm:text-lg text-muted">
@@ -144,21 +148,21 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Comparison reveal, desktop only: fades in during scroll phase 2 */}
-          <div
-            data-hero-comparison
-            className="hidden sm:block"
-            style={{ opacity: 0, transform: 'translateY(16px)', height: 0, overflow: 'visible' }}
-          >
-            <div className="flex flex-col items-center pt-2">
-              <div className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm">
+          {/* Product shot, desktop: statically visible at load (product-first
+              hero). No data-hero-comparison attribute = HeroHeadline phase 2
+              stays dormant; re-add the attribute to A/B the old scroll
+              reveal. Mobile keeps its own block below the hero. */}
+          <div className="hidden sm:block w-full">
+            <div className="flex flex-col items-center pt-4 pb-12">
+              <div className="w-full max-w-[960px] overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[0_28px_64px_-28px_rgba(15,23,42,0.28)]">
                 <Image
-                  src="/fitforpdf_product@2x.png"
-                  alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-                  width={1200}
-                  height={800}
+                  src="/workbench-light.png"
+                  alt="The fitforpdf workbench: a wide CSV rendered as a sectioned PDF, with section colors, custom column groups and rename controls"
+                  width={1512}
+                  height={743}
                   className="w-full block"
-                  sizes="600px"
+                  sizes="960px"
+                  priority
                 />
               </div>
             </div>
@@ -195,10 +199,10 @@ export default function Page() {
             aria-label="View full-size product image"
           >
             <Image
-              src="/fitforpdf_product@2x.png"
-              alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
-              width={1200}
-              height={800}
+              src="/workbench-light.png"
+              alt="The fitforpdf workbench: a wide CSV rendered as a sectioned PDF, with section colors, custom column groups and rename controls"
+              width={1512}
+              height={743}
               className="w-full block"
               sizes="100vw"
             />
@@ -206,7 +210,25 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Featured on, BetaList badge */}
+      {/* Visual demo, moved before the upload for "proof first" flow.
+          NOTE: bypasses the generic <Section> wrapper because Section's
+          baked-in `py-10 sm:py-14` on its inner div added 100+px of unwanted
+          trailing whitespace after ProofShowcase. We render the section
+          directly with tight bottom padding so the dark upload section sits
+          immediately below the features grid (was a 367px white void). */}
+      <section
+        id={LANDING_COPY_KEYS.beforeAfter}
+        data-testid={`section-${LANDING_COPY_KEYS.beforeAfter}`}
+        className="bg-[var(--color-bg-hero)] relative z-10 pt-12 sm:pt-16"
+      >
+        <div className="mx-auto flex w-full flex-col gap-8 max-w-wide px-4 sm:px-6 lg:px-10 xl:px-12">
+          <ProofShowcase />
+        </div>
+      </section>
+
+      {/* Featured on, BetaList badge — placed AFTER the proof section so the
+          social-proof pill never wins the attention duel against the product
+          shot in the hero (S1 product-first reorder, 2026-06-10). */}
       <div className="w-full py-6 relative z-10 bg-[var(--color-bg-hero)] flex items-center justify-center">
         <a
           href="https://betalist.com/startups/fitforpdf?utm_campaign=badge-fitforpdf&utm_medium=badge&utm_source=badge-featured"
@@ -225,22 +247,6 @@ export default function Page() {
           />
         </a>
       </div>
-
-      {/* Visual demo, moved before the upload for "proof first" flow.
-          NOTE: bypasses the generic <Section> wrapper because Section's
-          baked-in `py-10 sm:py-14` on its inner div added 100+px of unwanted
-          trailing whitespace after ProofShowcase. We render the section
-          directly with tight bottom padding so the dark upload section sits
-          immediately below the features grid (was a 367px white void). */}
-      <section
-        id={LANDING_COPY_KEYS.beforeAfter}
-        data-testid={`section-${LANDING_COPY_KEYS.beforeAfter}`}
-        className="bg-[var(--color-bg-hero)] relative z-10 pt-12 sm:pt-16"
-      >
-        <div className="mx-auto flex w-full flex-col gap-8 max-w-wide px-4 sm:px-6 lg:px-10 xl:px-12">
-          <ProofShowcase />
-        </div>
-      </section>
 
       {/* V1 inline upload tool REMOVED (2026-06-10, sprint S1): the landing
           no longer embeds the conversion engine. Every generate CTA routes to
@@ -430,10 +436,10 @@ export default function Page() {
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
-          <div className="relative w-full max-h-[90vh] aspect-[3/2]" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full max-h-[90vh] aspect-[1512/743]" onClick={(e) => e.stopPropagation()}>
             <Image
-              src="/fitforpdf_product@2x.png"
-              alt="Excel spreadsheet transformed into a structured PDF by fitforpdf"
+              src="/workbench-light.png"
+              alt="The fitforpdf workbench: a wide CSV rendered as a sectioned PDF, with section colors, custom column groups and rename controls"
               fill
               className="rounded-xl object-contain"
               sizes="100vw"

@@ -152,36 +152,41 @@ export default function HeroHeadline() {
       }
 
       // ─── Phase 2: comparison reveal ───────────────────────────────────
+      // S1 product-first layout (2026-06-10): when no [data-hero-comparison]
+      // element exists, the product shot is statically visible in the flow
+      // and phase 2 has nothing to choreograph — skip it entirely (phase 1,
+      // the bracket morph, still runs). Lets us A/B back by re-adding the
+      // attribute without touching this effect.
       const p2Target = Math.max(0, Math.min(1, (sy - 200) / 300));
       phase2Current += (p2Target - phase2Current) * 0.08;
       if (Math.abs(phase2Current - p2Target) < 0.001) phase2Current = p2Target;
 
-      // Fade out subtitle, fade in comparison (CTA stays visible)
-      for (const el of fadeables) {
-        // Kill CSS animation fill-mode that overrides inline opacity
-        if (phase2Current > 0.001) {
-          el.style.animation = 'none';
-        } else {
-          el.style.animation = '';
-        }
-        el.style.opacity = String(1 - phase2Current);
-        el.style.transform = `translateY(${-16 * phase2Current}px)`;
-      }
       if (comparison) {
+        // Fade out subtitle, fade in comparison (CTA stays visible)
+        for (const el of fadeables) {
+          // Kill CSS animation fill-mode that overrides inline opacity
+          if (phase2Current > 0.001) {
+            el.style.animation = 'none';
+          } else {
+            el.style.animation = '';
+          }
+          el.style.opacity = String(1 - phase2Current);
+          el.style.transform = `translateY(${-16 * phase2Current}px)`;
+        }
         comparison.style.opacity = String(phase2Current);
         comparison.style.transform = `translateY(${16 * (1 - phase2Current)}px)`;
-      }
-      // Fade out background lines as comparison appears
-      if (!bgLines) bgLines = document.querySelector('[data-hero-bg-lines]');
-      if (bgLines) {
-        bgLines.style.opacity = String(1 - phase2Current);
-      }
-      // Lift hero content up to make room for comparison below viewport edge
-      if (heroContent) {
-        if (phase2Current > 0.001) {
-          heroContent.style.transform = `translateY(${-160 * phase2Current}px)`;
-        } else {
-          heroContent.style.transform = '';
+        // Fade out background lines as comparison appears
+        if (!bgLines) bgLines = document.querySelector('[data-hero-bg-lines]');
+        if (bgLines) {
+          bgLines.style.opacity = String(1 - phase2Current);
+        }
+        // Lift hero content up to make room for comparison below viewport edge
+        if (heroContent) {
+          if (phase2Current > 0.001) {
+            heroContent.style.transform = `translateY(${-160 * phase2Current}px)`;
+          } else {
+            heroContent.style.transform = '';
+          }
         }
       }
 
@@ -262,8 +267,11 @@ export default function HeroHeadline() {
     <h1 className="mx-auto flex w-full max-w-[1220px] flex-col space-y-1 sm:space-y-2 leading-[1.15] tracking-tight text-2xl font-semibold sm:text-[2.25rem] md:text-5xl overflow-hidden">
       <span ref={bracketRowRef} className="hero-headline-line flex justify-center">
         <span className="relative inline-flex items-stretch">
-          {/* Left bracket */}
-          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Left bracket. max-h caps the self-stretch: in the static
+              product-first hero (no fixed-height section) the stretch +
+              preserveAspectRatio=none pair otherwise resolves circularly
+              and inflates the H1 to thousands of px. */}
+          <svg ref={bracketLRef} className="shrink-0 w-[10px] self-stretch max-h-[44px] sm:max-h-[60px] text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 7,2 L 2,2 L 2,42 L 7,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Text container, clips on scroll, wraps on mobile */}
@@ -277,8 +285,8 @@ export default function HeroHeadline() {
               {LANDING_COPY.heroHeadlineL1}
             </span>
           </span>
-          {/* Right bracket */}
-          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
+          {/* Right bracket (same max-h cap as the left one) */}
+          <svg ref={bracketRRef} className="shrink-0 w-[10px] self-stretch max-h-[44px] sm:max-h-[60px] text-[var(--color-text)] will-change-transform" viewBox="0 0 10 44" preserveAspectRatio="none" aria-hidden="true">
             <path d="M 3,2 L 8,2 L 8,42 L 3,42" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Full [F] logo, appears at center when brackets close */}
