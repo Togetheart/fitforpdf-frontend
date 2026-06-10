@@ -237,3 +237,85 @@ test('post-render helpers tolerate empty arg objects', () => {
   assert.equal(calls[1].event, 'post_render_pricing_clicked');
   restore();
 });
+
+// ── S1 distribution-sprint funnel helpers (2026-06-10) ──────────────
+
+test('trackAppOpened captures app_open with ref, registers super property, pins $set_once', async () => {
+  const { trackAppOpened } = await import('./analytics.mjs');
+  const calls = [];
+  const registered = [];
+  const originalWindow = globalThis.window;
+  globalThis.window = {
+    posthog: {
+      capture(event, properties) { calls.push({ event, properties }); },
+      register(props) { registered.push(props); },
+    },
+  };
+
+  trackAppOpened({ surface: 'workbench', ref: 'hn', initialRef: 'hn', initialReferrer: 'https://news.ycombinator.com/' });
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'app_open');
+  assert.equal(calls[0].properties.ref, 'hn');
+  assert.equal(calls[0].properties.surface, 'workbench');
+  assert.deepEqual(calls[0].properties.$set_once, {
+    initial_ref: 'hn',
+    initial_referrer: 'https://news.ycombinator.com/',
+  });
+  assert.deepEqual(registered, [{ ref: 'hn' }]);
+
+  globalThis.window = originalWindow;
+});
+
+test('trackAppOpened without ref captures app_open without $set_once or register', async () => {
+  const { trackAppOpened } = await import('./analytics.mjs');
+  const calls = [];
+  const registered = [];
+  const originalWindow = globalThis.window;
+  globalThis.window = {
+    posthog: {
+      capture(event, properties) { calls.push({ event, properties }); },
+      register(props) { registered.push(props); },
+    },
+  };
+
+  trackAppOpened({ surface: 'workbench' });
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].properties.$set_once, undefined);
+  assert.equal(registered.length, 0);
+
+  globalThis.window = originalWindow;
+});
+
+test('trackControlUsed dedupes per control until resetControlUsageTracking', async () => {
+  const { trackControlUsed, resetControlUsageTracking } = await import('./analytics.mjs');
+  const { calls, restore } = withMockPostHog();
+  resetControlUsageTracking();
+
+  trackControlUsed({ control: 'report_title', surface: 'workbench' });
+  trackControlUsed({ control: 'report_title', surface: 'workbench' }); // typing again — deduped
+  trackControlUsed({ control: 'section_rename', surface: 'workbench' });
+  trackControlUsed({}); // no control — ignored
+
+  assert.equal(calls.length, 2);
+  assert.deepEqual(calls.map((c) => c.properties.control), ['report_title', 'section_rename']);
+
+  resetControlUsageTracking();
+  trackControlUsed({ control: 'report_title', surface: 'workbench' });
+  assert.equal(calls.length, 3, 'reset re-arms the dedupe (new app session)');
+
+  restore();
+  resetControlUsageTracking();
+});
+
+test('trackPaywallViewed captures paywall_view with surface', async () => {
+  const { trackPaywallViewed } = await import('./analytics.mjs');
+  const { calls, restore } = withMockPostHog();
+  trackPaywallViewed({ surface: 'workbench', plan: 'free' });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'paywall_view');
+  assert.equal(calls[0].properties.surface, 'workbench');
+  assert.equal(calls[0].properties.plan, 'free');
+  restore();
+});

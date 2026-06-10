@@ -104,6 +104,69 @@ export function trackRenderCompleted(metrics = {}) {
   capture('render_completed', properties);
 }
 
+// ── Distribution-sprint funnel (S1, 2026-06-10) ──────────────────
+// app_open → (demo_file_used | upload_started) → render_completed →
+// control_used → paywall_view → payment_completed, each breakable by
+// ref/initial_ref so the 31 July verdict (criterion 3: a channel delivers
+// ≥50 activated users/week, 2 consecutive weeks) is measurable.
+
+/**
+ * Fired once per /app mount. Registers `ref` as a session super property and
+ * pins first-touch attribution on the person via $set_once.
+ */
+export function trackAppOpened({ surface, ref, initialRef, initialReferrer } = {}) {
+  const properties = {};
+  if (surface !== undefined) properties.surface = surface;
+  if (ref) properties.ref = ref;
+  if (initialRef || initialReferrer) {
+    properties.$set_once = {};
+    if (initialRef) properties.$set_once.initial_ref = initialRef;
+    if (initialReferrer) properties.$set_once.initial_referrer = initialReferrer;
+  }
+  if (ref && typeof window !== 'undefined' && typeof window.posthog !== 'undefined') {
+    try {
+      window.posthog.register({ ref });
+    } catch {}
+  }
+  capture('app_open', properties);
+}
+
+// One event per control per app_open — a Set dedupes so typing 40 chars in
+// the title field stays ONE control_used. Reset on every app_open mount.
+const firedControls = new Set();
+
+export function resetControlUsageTracking() {
+  firedControls.clear();
+}
+
+/**
+ * Fired the FIRST time a given inspector control is touched in this app
+ * session. `control` ∈ column_grouping | custom_groups | section_rename |
+ * section_reorder | section_color | report_title | accent_color | logo |
+ * footer_text. Answers "which V2 controls do real users actually reach for"
+ * — the question the V1 tester could never generate data for.
+ */
+export function trackControlUsed({ control, surface } = {}) {
+  if (typeof control !== 'string' || !control) return;
+  if (firedControls.has(control)) return;
+  firedControls.add(control);
+  const properties = { control };
+  if (surface !== undefined) properties.surface = surface;
+  capture('control_used', properties);
+}
+
+/**
+ * Fired when a quota paywall becomes VISIBLE (distinct from the existing
+ * paywall_*_clicked events, which only fire on interaction). paywall_view →
+ * payment_started → payment_completed is the monetization sub-funnel.
+ */
+export function trackPaywallViewed({ surface, plan } = {}) {
+  const properties = {};
+  if (surface !== undefined) properties.surface = surface;
+  if (plan !== undefined) properties.plan = plan;
+  capture('paywall_view', properties);
+}
+
 export function trackPaymentStarted({ plan, pack }) {
   capture('payment_started', { plan, pack });
 }
