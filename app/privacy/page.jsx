@@ -3,6 +3,7 @@ import React from 'react';
 import { PRIVACY_PAGE_COPY, LANDING_COPY, SEO } from '../siteCopy.mjs';
 import Section from '../components/ui/Section';
 import Accordion from '../components/Accordion';
+import CookiePreferencesButton from '../components/CookiePreferencesButton';
 import PageHero from '../components/PageHero';
 import AnimatedShieldIcon from '../components/AnimatedShieldIcon';
 import { JsonLd } from '../components/JsonLd';
@@ -327,6 +328,13 @@ export default function PrivacyPage() {
                 </div>
               ))}
             </div>
+            <p className="text-xs leading-5 text-muted">
+              Product analytics and session replay run{' '}
+              <strong className="font-semibold text-[var(--color-text)]">only if you accept</strong>{' '}
+              them in the cookie banner — nothing is recorded otherwise, and your files are never included.{' '}
+              <CookiePreferencesButton className="font-medium text-[var(--color-text)] underline underline-offset-2 transition-colors hover:text-cta" />
+              {' '}lets you change or withdraw your choice anytime.
+            </p>
           </div>
         </div>
       </Section>

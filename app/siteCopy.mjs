@@ -556,7 +556,7 @@ export const PRIVACY_PAGE_COPY = {
 
   legalBasis: {
     title: 'Legal basis',
-    text: 'Processing is based on legitimate interest (Article 6(1)(f) GDPR): providing the file conversion service you requested. We collect only the minimum data necessary.',
+    text: 'Processing is based on legitimate interest (Article 6(1)(f) GDPR): providing the file conversion service you requested. We collect only the minimum data necessary. Optional analytics and session replay run only on your consent (Article 6(1)(a)), which you can withdraw at any time.',
   },
   dataLocation: {
     title: 'Where your data lives',
@@ -579,7 +579,7 @@ export const PRIVACY_PAGE_COPY = {
       { name: 'OVH', role: 'Cloud infrastructure & hosting', location: 'France (EU)' },
       { name: 'Supabase', role: 'Account metadata & quota tracking', location: 'AWS Europe (EU)' },
       { name: 'Stripe', role: 'Payment processing', location: 'EU data residency' },
-      { name: 'Microsoft Clarity', role: 'Behavioral analytics (anonymized sessions)', location: 'Microsoft (EU)' },
+      { name: 'PostHog', role: 'Product analytics & session replay — only with your consent', location: 'PostHog Cloud, EU (Frankfurt)' },
     ],
   },
 
