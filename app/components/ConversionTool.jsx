@@ -1014,6 +1014,12 @@ function WorkbenchRail({
             )}
           </div>
 
+          {/* Anonymous-only: this history is bound to the device cookie. Quiet
+              dark-tone nudge, shown only once there's something worth keeping. */}
+          {recentExports.length > 0 ? (
+            <LoginNudge variant="exports" tone="dark" className="mt-3 px-1" />
+          ) : null}
+
           <button
             type="button"
             onClick={conversion.handleRenderAnother}

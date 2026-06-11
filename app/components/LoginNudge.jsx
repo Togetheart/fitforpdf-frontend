@@ -24,17 +24,23 @@ const COPY = {
   },
 };
 
-export default function LoginNudge({ variant = 'post-render', className = '' }) {
+// tone: 'light' = ink on a light surface (footer/paywall); 'dark' = light text
+// on the dark rail (Recent Exports), where ink would be invisible.
+export default function LoginNudge({ variant = 'post-render', tone = 'light', className = '' }) {
   const { account, loading } = useSession();
   if (loading || account) return null;
   const copy = COPY[variant] || COPY['post-render'];
+  const textColor = tone === 'dark' ? 'text-white/55' : 'text-[var(--color-text-subtle)]';
+  const linkColor = tone === 'dark'
+    ? 'text-white/90 decoration-white/40 hover:decoration-white'
+    : 'text-[var(--color-text)] decoration-[var(--color-text-subtle)] hover:decoration-[var(--color-text)]';
   return (
-    <p className={`text-center text-[11.5px] leading-5 text-[var(--color-text-subtle)] ${className}`.trim()}>
+    <p className={`text-center text-[11.5px] leading-5 ${textColor} ${className}`.trim()}>
       {copy.lead}{' '}
       <a
         href="/login"
         data-testid="login-nudge"
-        className="font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 transition hover:decoration-[var(--color-text)]"
+        className={`font-semibold underline underline-offset-2 transition ${linkColor}`}
       >
         {copy.cta}
       </a>
