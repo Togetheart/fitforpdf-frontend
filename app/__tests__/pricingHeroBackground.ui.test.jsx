@@ -53,7 +53,7 @@ describe('pricing page hero section', () => {
     render(<>{resolved}</>);
 
     const cards = screen.getAllByTestId('payg-plan-card');
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
     expect(screen.getByTestId('pricing-compare')).toBeTruthy();
     expect(screen.getByTestId('pricing-faq')).toBeTruthy();
   });

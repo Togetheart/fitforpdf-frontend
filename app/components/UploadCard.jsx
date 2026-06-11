@@ -38,7 +38,12 @@ const CREDIT_PACKS = PAYG_PACKS.map((p) => ({
   price: p.priceDisplay,
 }));
 
-const PAYWALL_PACKS = PAYG_PACKS.filter((p) => p.id !== 'single');
+// Workbench paywall shows two side-by-side options: the cheap single first,
+// then the most-popular Starter pack (rendered last → "Best value" badge).
+// Order-stable regardless of PAYG_PACKS ordering; always yields two cards.
+const PAYWALL_PACKS = ['single', 'payg-starter']
+  .map((id) => PAYG_PACKS.find((p) => p.id === id))
+  .filter(Boolean);
 const HISTORY_STATUS_OPTIONS = [
   { value: 'all', label: 'All' },
   { value: 'done', label: 'Ready' },
@@ -1085,7 +1090,7 @@ export default function UploadCard({
             <section data-testid="upload-paywall" className="w-full max-w-[640px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 space-y-4">
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-[var(--color-text)]">You've used your free exports.</p>
-                <p className="text-xs text-muted">Pick a credit pack, one-time purchase, no subscription.</p>
+                <p className="text-xs text-muted">Unlock this export — one-time pack, never expires, no subscription.</p>
               </div>
               <div className="grid grid-cols-2 gap-2" data-testid="quota-upgrade-inline">
                 {PAYWALL_PACKS.map((p, i) => (
