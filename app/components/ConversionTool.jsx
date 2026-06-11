@@ -1252,7 +1252,7 @@ function WorkbenchDropzone({ conversion, quota }) {
             </>
           )}
         </h2>
-        <p className="mt-2 text-[13.5px] text-[var(--color-muted)]">.xlsx, .xls, .csv - up to 4 MB</p>
+        <p className="mt-2 text-[13.5px] text-[var(--color-muted)]">.xlsx, .csv - up to 4 MB</p>
         {/* "or" bridges the drag affordance and the button, but there's no drag on
             touch, so hide it on mobile (the "ready" status still shows once a file is in). */}
         <div className={['my-[18px] text-[12.5px] text-[var(--color-text-subtle)]', hasFile ? '' : 'hidden sm:block'].join(' ')}>{hasFile ? 'ready' : 'or'}</div>
@@ -1394,7 +1394,7 @@ function WorkbenchDropzone({ conversion, quota }) {
         id="fitforpdf-file-input"
         data-testid="generate-file-input"
         type="file"
-        accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         className="hidden"
         disabled={conversion.isLoading}
         onChange={(event) => selectFile(event.target.files?.[0])}
