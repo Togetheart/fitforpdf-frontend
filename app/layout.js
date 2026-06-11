@@ -31,8 +31,14 @@ export const metadata = {
     images: [SEO.ogImage],
   },
   icons: {
-    icon: '/fitforpdf-icon.svg',
-    apple: '/fitforpdf-icon.svg',
+    // Safari/legacy read the .ico, modern browsers prefer the crisp SVG, iOS
+    // needs a real raster apple-touch-icon (it ignores SVG, so the tab/home
+    // screen was blank before). Generated from fitforpdf-icon.svg.
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/fitforpdf-icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
 };
 
