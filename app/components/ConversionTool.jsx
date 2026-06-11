@@ -7,6 +7,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useQuota from '../hooks/useQuota.mjs';
 import useConversion from '../hooks/useConversion.mjs';
 import useSession from '../hooks/useSession.mjs';
+import LoginNudge from './LoginNudge';
 import useIsDesktop from '../hooks/useIsDesktop.mjs';
 import UploadCard from './UploadCard';
 import {
@@ -891,6 +892,10 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             Render another file
           </button>
         ) : null}
+        {/* The magic moment: they just downloaded a clean export. Anonymous-only,
+            ink (not blue), one quiet line — the highest-intention spot to capture
+            an email without ever blocking. */}
+        {conversion.pdfBlob ? <LoginNudge variant="post-render" className="mt-3" /> : null}
         {/* Exports-remaining is no longer shown here. It lives at the point of
             work, the canvas quota chip (visible on desktop AND mobile, signed-in
             AND anonymous), plus the account menu as a reference. The inspector
@@ -1008,6 +1013,12 @@ function WorkbenchRail({
               </div>
             )}
           </div>
+
+          {/* Anonymous-only: this history is bound to the device cookie. Quiet
+              dark-tone nudge, shown only once there's something worth keeping. */}
+          {recentExports.length > 0 ? (
+            <LoginNudge variant="exports" tone="dark" className="mt-3 px-1" />
+          ) : null}
 
           <button
             type="button"
@@ -1276,7 +1287,12 @@ function WorkbenchDropzone({ conversion, quota }) {
               </button>
             </div>
             {isQuotaLocked && !conversion.wasDemoLastUpload ? (
-              <WorkbenchQuotaPaywall conversion={conversion} />
+              <>
+                <WorkbenchQuotaPaywall conversion={conversion} />
+                {/* About to commit money as a guest — quiet anonymous-only nudge
+                    so credits (and traceability) attach to an email, not a cookie. */}
+                <LoginNudge variant="paywall" className="mt-3 max-w-[420px]" />
+              </>
             ) : null}
             {isQuotaLocked && conversion.wasDemoLastUpload ? (
               <p data-testid="demo-sandbox-note" className="mt-3 max-w-[420px] text-center text-[12px] leading-5 text-[var(--color-muted)]">
