@@ -541,19 +541,29 @@ export default function useConversion({ quota }) {
       formData.append('keep_headers', layout.headers !== false ? '1' : '0');
       formData.append('keep_footer', layout.footer !== false ? '1' : '0');
       formData.append('keep_section_titles', layout.sectionTitles !== false ? '1' : '0');
-      // Custom report title (Kunj). Only sent when set; demo renders skip it.
-      const isDemoRender = targetFile.name === 'enterprise-invoices-demo.csv';
-      if (!isDemoRender && typeof reportTitle === 'string' && reportTitle.trim()) {
+      // Customization (title / footer / accent / logo / sections) is sent for
+      // ANY file, including the sample. The sample is a real preview, not a
+      // dead canonical render: the backend is the single source of truth — title
+      // and section overrides are free plan-independent controls, branding is
+      // gated by plan (X-Branding-Allowed). The old by-filename strip made
+      // "Update preview" silently do nothing on the sample.
+      if (typeof reportTitle === 'string' && reportTitle.trim()) {
         formData.append('reportTitle', reportTitle.trim().slice(0, 200));
       }
-      if (!isDemoRender && typeof footerText === 'string' && footerText.trim()) {
+      if (typeof footerText === 'string' && footerText.trim()) {
         formData.append('footerText', footerText.trim().slice(0, 120));
       }
-      // Brand accent color + logo (paid; backend gates by entitlement).
-      if (!isDemoRender && /^#[0-9a-fA-F]{6}$/.test(String(accentColor))) {
+      // Brand accent color + logo + footer: sent for ANY file, including the
+      // sample, so a paid/admin user can preview their branding on it. The
+      // backend is the single source of truth — it gates branding by plan via
+      // X-Branding-Allowed (dropped for free, applied for paid), and that gate
+      // survives the demo quota refund. Stripping these by filename here only
+      // blocked ENTITLED users on the sample, where "Update preview" then
+      // appeared to do nothing.
+      if (/^#[0-9a-fA-F]{6}$/.test(String(accentColor))) {
         formData.append('accentColor', accentColor);
       }
-      if (!isDemoRender && logoFile) {
+      if (logoFile) {
         formData.append('logo', logoFile);
         formData.append('logo_size', logoSize);
       }
@@ -561,7 +571,7 @@ export default function useConversion({ quota }) {
       // sections, emit an explicit positional grouping every render: columnGroups
       // in draft order + sectionTitles keyed by the POSITIONAL label the backend
       // will assign. Idempotent across re-renders (no label drift).
-      if (!isDemoRender && sectionsCustomized && sectionDraft.length) {
+      if (sectionsCustomized && sectionDraft.length) {
         const { columnGroups, sectionTitles, sectionColors } = buildGroupingPayload({
           sectionDraft,
           frozenColumns: frozenDraft,
