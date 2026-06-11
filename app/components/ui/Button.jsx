@@ -7,7 +7,7 @@ const VARIANTS = {
   primary:
     'h-11 bg-cta text-cta-text shadow-sm hover:bg-cta-hover active:scale-[0.99]',
   accent:
-    'h-11 bg-accent text-white shadow-sm hover:bg-accent-hover active:scale-[0.99]',
+    'h-11 bg-[var(--color-accent)] text-[var(--color-accent-text)] shadow-sm hover:bg-[var(--color-accent-hover)] active:scale-[0.99]',
   secondary:
     'h-11 border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:bg-[var(--color-bg-hero)]',
   outline:

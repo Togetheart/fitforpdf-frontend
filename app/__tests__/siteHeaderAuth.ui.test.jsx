@@ -33,7 +33,7 @@ describe('SiteHeader auth entry', () => {
     render(<SiteHeader />);
     await waitFor(() => expect(screen.getByTestId('account-avatar')).toBeTruthy());
     expect(screen.queryByRole('link', { name: /log in/i })).toBeNull();
-    const openApp = screen.getAllByRole('link', { name: /ouvrir l'app/i });
+    const openApp = screen.getAllByRole('link', { name: /open the app/i });
     expect(openApp.length).toBeGreaterThanOrEqual(1);
     expect(openApp[0].getAttribute('href')).toBe('/app');
   });

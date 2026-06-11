@@ -178,28 +178,13 @@ export default function Page() {
         </PageHero>
       </div>
 
-      {/* Mobile only: product image, scroll-driven reveal like desktop */}
+      {/* Mobile only: product image. Visible on first paint — the product-first
+          promise has to hold on phones too. Was hidden at opacity:0 until the
+          first scroll, so a phone visitor saw no product above the fold. */}
       <div
         className="sm:hidden pb-6 px-4 -mt-8 relative z-10 bg-[var(--color-bg-hero)]"
       >
-        <div
-          className="flex flex-col items-center gap-4"
-          style={{ opacity: 0, transform: 'translateY(16px)' }}
-          ref={(el) => {
-            if (!el || el.dataset.mobileImgInit) return;
-            el.dataset.mobileImgInit = '1';
-            let firstScroll = false;
-            const handler = () => {
-              if (firstScroll) return;
-              firstScroll = true;
-              setTimeout(() => {
-                el.style.animation = 'mobileImgReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-              }, 100);
-              window.removeEventListener('scroll', handler);
-            };
-            window.addEventListener('scroll', handler, { passive: true });
-          }}
-        >
+        <div className="flex flex-col items-center gap-4">
           <button
             type="button"
             onClick={() => setLightboxOpen(true)}
