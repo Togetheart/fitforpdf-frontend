@@ -579,7 +579,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         </div>
         <p className="mt-3 text-xs leading-5 text-[var(--color-muted)]">
           {conversion.pdfBlob
-            ? 'Change anything, then update the preview. Re-render costs one export.'
+            ? 'Change anything, then update the preview — re-rendering the same file is free.'
             : 'Set options now, or refine them after your first render.'}
         </p>
       </div>
@@ -857,7 +857,7 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
             <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
             Update preview
             <span className="text-[10px] font-medium text-[var(--color-text-subtle)]">
-              {conversion.wasDemoLastUpload ? 'applies changes · free on the sample' : 'applies changes · 1 export'}
+              {conversion.wasDemoLastUpload ? 'applies changes · free on the sample' : 'applies changes · free'}
             </span>
           </button>
         ) : (
