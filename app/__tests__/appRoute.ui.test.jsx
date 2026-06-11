@@ -376,7 +376,10 @@ describe('/app tool-first workbench shell', () => {
 
     const canvas = screen.getByTestId('app-canvas');
     expect(within(canvas).getByTestId('workbench-quota-paywall')).toBeTruthy();
-    expect(within(canvas).getByRole('button', { name: /Get 10 exports/i })).toBeTruthy();
+    // Paywall now shows BOTH packs WITH prices — the $4.90 single (previously
+    // filtered out, leaving a single price-less button) is the restored entry point.
+    expect(within(canvas).getByText('$4.90')).toBeTruthy();
+    expect(within(canvas).getByText('$19')).toBeTruthy();
     expect(fetchMock.calls.some((call) => call.url.includes('/api/render'))).toBe(false);
 
     fetchMock.restore();

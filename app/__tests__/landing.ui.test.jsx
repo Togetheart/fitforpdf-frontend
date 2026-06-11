@@ -224,7 +224,7 @@ describe('landing conversion-first structure', () => {
     ].forEach((question) => {
       expect(faq.textContent).toContain(question);
     });
-    expect(faq.textContent).toContain('Yes. Open the sample PDF before uploading your own file.');
+    expect(faq.textContent).toContain('watch it fix a real sample spreadsheet live');
   });
 
   test('landing section spacing uses varied rhythm', () => {
