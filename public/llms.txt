@@ -37,11 +37,10 @@ REST API available for programmatic access:
 
 - Free: 3 exports (with fitforpdf watermark)
 - Single: $4.90 for 1 export (no watermark)
-- Starter: $19 for 10 exports (no watermark)
-- Volume: $79 for 100 exports (no watermark)
-- Pro: $29/month for 500 exports/month (no watermark, advanced layout, priority support)
+- Starter: $19 for 10 exports (no watermark) — most popular
+- Pro: $9.90/month (or $99/year) for up to 500 exports/month (no watermark, advanced layout, priority support)
 
-Credits never expire (pay-as-you-go packs).
+Pay-as-you-go credits never expire. For developers, API plans start at $15/month (see /developers).
 
 ## Privacy
 
