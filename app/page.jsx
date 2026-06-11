@@ -131,12 +131,10 @@ export default function Page() {
                 </svg>
               </Button>
               <a
-                href="/sample-output.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/app?sample=1"
                 className={CTA_SECONDARY + ' h-12'}
               >
-                See a sample PDF
+                Watch it fix a sample
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
@@ -415,12 +413,10 @@ export default function Page() {
               </svg>
             </Button>
             <a
-              href="/sample-output.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/app?sample=1"
               className="inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-white/20 bg-white/10 text-white hover:bg-white/20"
             >
-              See a sample PDF
+              Watch it fix a sample
             </a>
           </div>
         </div>

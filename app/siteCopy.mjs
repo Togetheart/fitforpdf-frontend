@@ -206,8 +206,8 @@ export const HOME_FAQ = [
   {
     id: 'sample',
     q: 'Can I see an example before trying it?',
-    a: 'Yes. Open the sample PDF before uploading your own file.',
-    link: '/sample-output.pdf',
+    a: 'Yes — watch it fix a real sample spreadsheet live, no upload needed.',
+    link: '/app?sample=1',
   },
   {
     id: 'files',

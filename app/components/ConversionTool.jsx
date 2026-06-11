@@ -21,7 +21,7 @@ import AccountMenu from './AccountMenu';
 import PlanBadge from './ui/PlanBadge';
 import AnimatedLogo from './AnimatedLogo';
 import ThemeToggle from './ThemeToggle';
-import { PAYG_PACKS } from '../siteCopy.mjs';
+import { PAYG_PACKS, PRICING_PAGE_COPY } from '../siteCopy.mjs';
 import { recommendationLabel, sectionColorClasses, SECTION_COLOR_HEXES } from '../pageUiLogic.mjs';
 import { renderPdfFirstPageImage } from '../lib/pdfPreviewImage.mjs';
 import {
@@ -54,7 +54,10 @@ import { CSS } from '@dnd-kit/utilities';
  * migrating it onto this component is a separate, tested follow-up (T-task).
  */
 
-const WORKBENCH_CREDIT_PACKS = PAYG_PACKS.filter((pack) => pack.id !== 'single').slice(0, 2);
+// Show BOTH packs WITH their prices. The $4.90 single is the lowest-commitment
+// entry point and was previously filtered out, leaving the highest-intent surface
+// in the product with a single price-less "Get 10 exports" button.
+const WORKBENCH_CREDIT_PACKS = PAYG_PACKS;
 
 // One labelled block in the inspector. The old per-section "Live"/"Soon" status
 // pills were dropped — when every control is live, the badge is pure noise.
@@ -1137,22 +1140,49 @@ function WorkbenchQuotaPaywall({ conversion }) {
           <p className="mt-1 text-[12.5px] leading-5 text-[var(--color-warn-text)]">
             Buy credits to generate this PDF. Your selected file stays ready.
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {WORKBENCH_CREDIT_PACKS.map((pack) => (
-              <button
-                key={pack.stripePackId}
-                type="button"
-                disabled={conversion.isLoading}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  conversion.handleBuyCreditsPack(pack.stripePackId);
-                }}
-                className="min-h-10 rounded-lg bg-[var(--color-accent)] px-3 text-[12.5px] font-bold text-[var(--color-accent-text)] transition hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {pack.actionLabel}
-              </button>
-            ))}
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {WORKBENCH_CREDIT_PACKS.map((pack) => {
+              const featured = Boolean(pack.recommended);
+              return (
+                <button
+                  key={pack.stripePackId}
+                  type="button"
+                  disabled={conversion.isLoading}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    conversion.handleBuyCreditsPack(pack.stripePackId);
+                  }}
+                  className={[
+                    'group relative flex min-h-[58px] flex-col items-start justify-center rounded-lg border bg-[var(--color-surface)] px-3 py-2 text-left transition disabled:cursor-not-allowed disabled:opacity-50',
+                    featured
+                      ? 'border-[var(--color-accent)] hover:border-[var(--color-accent-hover)]'
+                      : 'border-[var(--color-line)] hover:border-[var(--color-line-strong)]',
+                  ].join(' ')}
+                >
+                  {featured ? (
+                    <span className="absolute right-1.5 top-1.5 rounded-full bg-[var(--color-accent)] px-1.5 py-px text-[9.5px] font-semibold uppercase tracking-wide text-[var(--color-accent-text)]">
+                      Best value
+                    </span>
+                  ) : null}
+                  <span className="text-[11px] font-medium text-[var(--color-muted)]">{pack.exportsLabel}</span>
+                  <span className={['text-[16px] font-bold tracking-tight', featured ? 'text-[var(--color-accent)]' : 'text-[var(--color-text)]'].join(' ')}>
+                    {pack.priceDisplay}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+          <button
+            type="button"
+            disabled={conversion.isLoading}
+            onClick={(event) => {
+              event.stopPropagation();
+              conversion.handleGoProCheckout();
+            }}
+            className="mt-2 inline-block text-[11.5px] font-medium text-[var(--color-warn-text)] underline decoration-[var(--color-warn-text)]/40 underline-offset-2 transition hover:decoration-[var(--color-warn-text)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Need lots of exports? Pro is {PRICING_PAGE_COPY.proMonthlyPrice}/mo
+          </button>
         </div>
       </div>
     </div>
@@ -1255,18 +1285,33 @@ function WorkbenchDropzone({ conversion, quota }) {
             ) : null}
           </>
         ) : (
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              openPicker();
-            }}
-            disabled={conversion.isLoading}
-            className="min-h-11 w-full rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-7 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-          >
-            <span className="sm:hidden">Choose a file</span>
-            <span className="hidden sm:inline">Browse files</span>
-          </button>
+          <div className="flex w-full flex-col items-center gap-2 sm:w-auto">
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                openPicker();
+              }}
+              disabled={conversion.isLoading}
+              className="min-h-11 w-full rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-7 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+            >
+              <span className="sm:hidden">Choose a file</span>
+              <span className="hidden sm:inline">Browse files</span>
+            </button>
+            {/* Zero-friction activation: render the real sample (free, no upload)
+                in one click for visitors who have no spreadsheet handy. */}
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                void conversion.handleTrySample();
+              }}
+              disabled={conversion.isLoading}
+              className="min-h-9 text-[12.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 transition hover:decoration-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              No file handy? Render the sample →
+            </button>
+          </div>
         )}
         {(conversion.failKind === 'page_burden' || conversion.error) ? (
           <div
@@ -1407,7 +1452,7 @@ INV-1003,Blue Horizon 1002,blue-horizon-3@example.com,Sophie Klein,Startup,Overd
           type="button"
           onClick={conversion.handleTrySample}
           disabled={conversion.isLoading}
-          className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-[12.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 transition hover:decoration-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-3 inline-flex min-h-10 items-center gap-1.5 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 text-[12.5px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)] hover:bg-[var(--color-surface-sunken)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           Render this sample
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -2233,6 +2278,18 @@ export default function ConversionTool({ toolTitle, toolSubcopy, variant = 'dark
   React.useEffect(() => {
     resetControlUsageTracking();
     trackAppOpened({ surface: layout, ...captureRefAttribution() });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Deep link: /app?sample=1 renders the sample with ZERO clicks. The hero's
+  // "Watch it fix a sample" CTA drops a visitor straight into a live render at
+  // peak intent instead of a static PDF download. Fires once on mount.
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search || '');
+    if (params.get('sample') === '1') {
+      void conversion.handleTrySample();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
