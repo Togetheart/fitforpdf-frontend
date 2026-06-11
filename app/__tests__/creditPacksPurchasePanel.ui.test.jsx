@@ -90,11 +90,11 @@ describe('credits-purchase-panel shows new PAYG_PACKS prices', () => {
     expect(within(panel).getByText('10 exports')).toBeTruthy();
   });
 
-  test('shows $79 for 100 exports (volume)', () => {
+  test('does NOT show the retired Volume pack ($79 / 100 exports)', () => {
     renderWithPanel();
     const panel = screen.getByTestId('credits-purchase-panel');
-    expect(within(panel).getByText('$79')).toBeTruthy();
-    expect(within(panel).getByText('100 exports')).toBeTruthy();
+    expect(within(panel).queryByText('$79')).toBeNull();
+    expect(within(panel).queryByText('100 exports')).toBeNull();
   });
 
   test('does NOT show old prices $2.90 or $69', () => {
@@ -138,16 +138,6 @@ describe('credits-purchase-panel calls onBuyCreditsPack with correct Stripe pack
     expect(onBuyCreditsPack).toHaveBeenCalledWith('credits_10');
   });
 
-  test('100-export button calls onBuyCreditsPack("credits_100")', () => {
-    const { onBuyCreditsPack } = renderWithPanel();
-    const panel = screen.getByTestId('credits-purchase-panel');
-    const btn = within(panel).getAllByRole('button').find((b) =>
-      b.textContent.includes('100 exports'),
-    );
-    expect(btn).toBeTruthy();
-    fireEvent.click(btn);
-    expect(onBuyCreditsPack).toHaveBeenCalledWith('credits_100');
-  });
 });
 
 // ── upload-paywall (shown via isQuotaLocked) ──────────────────────────────
@@ -160,11 +150,18 @@ describe('upload-paywall shows new PAYG_PACKS prices', () => {
     expect(within(paywall).getByText('10 exports')).toBeTruthy();
   });
 
-  test('shows $79 for 100 exports (volume)', () => {
+  test('shows $4.90 for 1 export (single)', () => {
     renderWithPaywall();
     const paywall = screen.getByTestId('upload-paywall');
-    expect(within(paywall).getByText('$79')).toBeTruthy();
-    expect(within(paywall).getByText('100 exports')).toBeTruthy();
+    expect(within(paywall).getByText('$4.90')).toBeTruthy();
+    expect(within(paywall).getByText('1 export')).toBeTruthy();
+  });
+
+  test('does NOT show the retired Volume pack ($79 / 100 exports)', () => {
+    renderWithPaywall();
+    const paywall = screen.getByTestId('upload-paywall');
+    expect(within(paywall).queryByText('$79')).toBeNull();
+    expect(within(paywall).queryByText('100 exports')).toBeNull();
   });
 
   test('does NOT show old prices $15 or $69', () => {
@@ -197,14 +194,14 @@ describe('upload-paywall calls onBuyCreditsPack with correct Stripe pack IDs', (
     expect(onBuyCreditsPack).toHaveBeenCalledWith('credits_10');
   });
 
-  test('100-export paywall button calls onBuyCreditsPack("credits_100")', () => {
+  test('1-export paywall button calls onBuyCreditsPack("credits_1")', () => {
     const { onBuyCreditsPack } = renderWithPaywall();
     const paywall = screen.getByTestId('upload-paywall');
     const btn = within(paywall).getAllByRole('button').find((b) =>
-      b.textContent.includes('100 exports'),
+      /\b1 export\b/.test(b.textContent || ''),
     );
     expect(btn).toBeTruthy();
     fireEvent.click(btn);
-    expect(onBuyCreditsPack).toHaveBeenCalledWith('credits_100');
+    expect(onBuyCreditsPack).toHaveBeenCalledWith('credits_1');
   });
 });

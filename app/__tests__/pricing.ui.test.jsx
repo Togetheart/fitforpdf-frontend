@@ -61,20 +61,21 @@ describe('pricing page UI', () => {
     expect(h1.textContent).toContain('Built for professionals.');
   });
 
-  test('renders exactly 3 PAYG plan cards', () => {
+  test('renders exactly 2 PAYG plan cards (Single + Starter)', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
     expect(screen.queryByTestId('pricing-grid')).toBeNull();
     expect(screen.queryByTestId('plan-card')).toBeNull();
   });
 
-  test('plan cards show correct prices', () => {
+  test('unified grid shows pack and Pro prices, drops Volume', () => {
     const pageText = document.body.textContent || '';
 
     expect(pageText.includes('$4.90')).toBe(true);
     expect(pageText.includes('$19')).toBe(true);
-    expect(pageText.includes('$79')).toBe(true);
+    expect(pageText.includes('$9.90')).toBe(true);
+    expect(pageText.includes('$79')).toBe(false);
   });
 
   test('comparison table is present and has comparison test id', () => {
@@ -137,7 +138,7 @@ describe('pricing page UI', () => {
 
     expect(pageText.includes('$4.90')).toBe(true);
     expect(pageText.includes('$19')).toBe(true);
-    expect(pageText.includes('$79')).toBe(true);
+    expect(pageText.includes('$9.90')).toBe(true);
     expect(pageText.includes('€29/month')).toBe(false);
     expect(pageText.includes('Coming soon')).toBe(false);
   });

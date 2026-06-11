@@ -47,8 +47,7 @@ test('"payg-starter" pack maps to credits_10', () => {
   assert.equal(starter.stripePackId, 'credits_10');
 });
 
-test('"volume" pack maps to credits_100', () => {
+test('the retired Volume pack is no longer offered on the pricing page', () => {
   const volume = PAYG_PACKS.find((p) => p.id === 'volume');
-  assert.ok(volume, 'volume pack not found');
-  assert.equal(volume.stripePackId, 'credits_100');
+  assert.equal(volume, undefined, 'Volume pack should be removed from PAYG_PACKS');
 });

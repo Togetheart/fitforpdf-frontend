@@ -14,10 +14,10 @@ afterEach(() => {
 });
 
 describe('pricing page highlight', () => {
-  test('pricing page renders exactly three PAYG plan cards', () => {
+  test('pricing page renders exactly two PAYG plan cards (Single + Starter)', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
     expect(screen.queryByTestId('plan-card')).toBeNull();
     expect(screen.queryByTestId('pricing-grid')).toBeNull();
     expect(screen.queryByTestId('plan-highlighted')).toBeNull();
@@ -38,7 +38,7 @@ describe('pricing page highlight', () => {
 
     expect(allText).toContain('$4.90');
     expect(allText).toContain('$19');
-    expect(allText).toContain('$79');
+    expect(allText).not.toContain('$79');
   });
 
   test('comparison and faq sections are present', () => {

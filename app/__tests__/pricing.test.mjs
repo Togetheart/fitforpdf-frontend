@@ -13,28 +13,29 @@ function pricingText() {
   ].join(' ');
 }
 
-test('pricing contains 100 exports and 100-credit pack price', () => {
+test('pricing contains the single pack (1 export, $4.90)', () => {
   const content = pricingText();
-  assert.ok(content.includes('100 exports'));
-  assert.ok(content.includes('$79'));
+  assert.ok(content.includes('1 export'));
+  assert.ok(content.includes('$4.90'));
 });
 
-test('pricing contains 500 exports and 500-credit messaging', () => {
+test('pricing contains the starter pack (10 exports, $19)', () => {
   const content = pricingText();
   assert.ok(content.includes('10 exports'));
   assert.ok(content.includes('$19'));
 });
 
-test('pricing contains no legacy free-tier-only assertions', () => {
+test('pricing drops the retired Volume pack', () => {
   const content = pricingText();
   assert.equal(content.includes('Pro + API'), false);
-  assert.equal(content.includes('Volume'), true);
+  assert.equal(content.includes('Volume'), false);
+  assert.equal(content.includes('$79'), false);
 });
 
 test('pricing exposes free and pay-as-you-go plan cards', () => {
   assert.equal(PRICING_CARDS.length, 3);
   const planIds = PRICING_CARDS.map((card) => card.id);
-  assert.deepEqual(planIds, ['free', 'payg-starter', 'volume']);
+  assert.deepEqual(planIds, ['free', 'single', 'payg-starter']);
 });
 
 test('pricing has back to app link', () => {

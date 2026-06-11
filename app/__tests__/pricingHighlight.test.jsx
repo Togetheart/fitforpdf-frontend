@@ -35,21 +35,21 @@ afterEach(() => {
 });
 
 describe('pricing highlight on home', () => {
-  test('home pricing preview renders exactly three PAYG cards', () => {
+  test('home pricing preview renders exactly two PAYG cards (Single + Starter)', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
     expect(screen.queryByTestId('plan-card')).toBeNull();
     expect(screen.queryByTestId('pricing-grid')).toBeNull();
   });
 
-  test('PAYG cards show correct prices', () => {
+  test('PAYG cards show correct prices, no retired Volume', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
     const allText = cards.map((c) => c.textContent || '').join(' ');
 
     expect(allText).toContain('$4.90');
     expect(allText).toContain('$19');
-    expect(allText).toContain('$79');
+    expect(allText).not.toContain('$79');
   });
 
   test('starter pack is marked as recommended (Most popular)', () => {
@@ -65,6 +65,6 @@ describe('pricing highlight on home', () => {
 
     expect(allText).toContain('$4.90');
     expect(allText).toContain('$19');
-    expect(allText).toContain('$79');
+    expect(allText).not.toContain('$79');
   });
 });

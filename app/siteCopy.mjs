@@ -112,7 +112,7 @@ export const LANDING_COPY = {
   ],
   credibilityMicro: "If it looks wrong once, you won't trust it. fitforpdf is built for the first try.",
 
-  pricingPreviewTitle: 'Start free. Upgrade when volume matters.',
+  pricingPreviewTitle: 'Start free. Upgrade when you send to clients.',
   pricingPreviewSubline: 'Try fitforpdf without creating an account. When you need more files, more automation, or API access, choose the plan that fits your workflow.',
   pricingPreviewCta: 'See pricing',
 
@@ -251,16 +251,6 @@ export const PRICING_PAGE_COPY = {
   paygStarterBadge: 'Most popular',
   paygStarterFeatures: ['10 PDF exports', 'No fitforpdf watermark', 'Branding & layout controls', 'Never expires'],
 
-  // Pack Volume
-  volumeTitle: 'Volume',
-  volumeTopline: 'One-time payment',
-  volumePrice: '$79',
-  volumePerExport: '$0.79 per export',
-  volumeExports: '100 exports',
-  volumeDescription: 'For consultants and recurring reporting.',
-  volumeCtaLabel: 'Get 100 exports',
-  volumeFeatures: ['100 PDF exports', 'No fitforpdf watermark', 'Branding & layout controls', 'Never expires'],
-
   // Pro subscription
   proTagline: 'Everything you need to scale your reporting.',
   proSubTagline: 'Cancel anytime.',
@@ -331,7 +321,7 @@ export const PRICING_PAGE_COPY = {
     {
       id: 'expire',
       q: 'Do my "Pay as you go" credits expire?',
-      a: 'No. If you buy a pack of 10 or 100 exports, they remain in your account forever until you use them.',
+      a: 'No. If you buy a credit pack, the exports remain in your account forever until you use them.',
     },
     {
       id: 'subscription',
@@ -356,8 +346,25 @@ export const PRICING_PAGE_COPY = {
   ],
 };
 
-// PAYG packs for the pricing page (Starter first — best value anchor)
+// PAYG packs for the pricing page. Order is the on-page order: Single (cheap
+// impulse) then Starter (the ICP pack, featured "Most popular" centre anchor).
+// Pro subscription is appended as a third card by PricingToggleSection.
 export const PAYG_PACKS = [
+  {
+    id: 'single',
+    title: PRICING_PAGE_COPY.singleTitle,
+    priceLine: PRICING_PAGE_COPY.singleTopline,
+    priceLines: [PRICING_PAGE_COPY.singleTopline],
+    priceDisplay: PRICING_PAGE_COPY.singlePrice,
+    exportsLabel: PRICING_PAGE_COPY.singleExports,
+    description: PRICING_PAGE_COPY.singleDescription,
+    points: PRICING_PAGE_COPY.singleFeatures,
+    actionLabel: 'Buy 1 export',
+    disabled: false,
+    recommended: false,
+    ctaNote: null,
+    stripePackId: 'credits_1',
+  },
   {
     id: 'payg-starter',
     title: PRICING_PAGE_COPY.paygStarterTitle,
@@ -374,37 +381,6 @@ export const PAYG_PACKS = [
     badge: PRICING_PAGE_COPY.paygStarterBadge,
     ctaNote: null,
     stripePackId: 'credits_10',
-  },
-  {
-    id: 'volume',
-    title: PRICING_PAGE_COPY.volumeTitle,
-    priceLine: PRICING_PAGE_COPY.volumeTopline,
-    priceLines: [PRICING_PAGE_COPY.volumeTopline],
-    priceDisplay: PRICING_PAGE_COPY.volumePrice,
-    perExport: PRICING_PAGE_COPY.volumePerExport,
-    exportsLabel: PRICING_PAGE_COPY.volumeExports,
-    description: PRICING_PAGE_COPY.volumeDescription,
-    points: PRICING_PAGE_COPY.volumeFeatures,
-    actionLabel: PRICING_PAGE_COPY.volumeCtaLabel,
-    disabled: false,
-    recommended: false,
-    ctaNote: null,
-    stripePackId: 'credits_100',
-  },
-  {
-    id: 'single',
-    title: PRICING_PAGE_COPY.singleTitle,
-    priceLine: PRICING_PAGE_COPY.singleTopline,
-    priceLines: [PRICING_PAGE_COPY.singleTopline],
-    priceDisplay: PRICING_PAGE_COPY.singlePrice,
-    exportsLabel: PRICING_PAGE_COPY.singleExports,
-    description: PRICING_PAGE_COPY.singleDescription,
-    points: PRICING_PAGE_COPY.singleFeatures,
-    actionLabel: 'Buy 1 export',
-    disabled: false,
-    recommended: false,
-    ctaNote: null,
-    stripePackId: 'credits_1',
   },
 ];
 
@@ -428,6 +404,20 @@ export const PRICING_CARDS = [
     ctaNote: null,
   },
   {
+    id: 'single',
+    title: PRICING_PAGE_COPY.singleTitle,
+    priceLine: PRICING_PAGE_COPY.singleTopline,
+    priceLines: [
+      PRICING_PAGE_COPY.singleTopline,
+      `${PRICING_PAGE_COPY.singleExports} · ${PRICING_PAGE_COPY.singlePrice}`,
+    ],
+    points: PRICING_PAGE_COPY.singleFeatures,
+    actionLabel: PRICING_PAGE_COPY.singleCtaLabel,
+    disabled: false,
+    recommended: false,
+    ctaNote: null,
+  },
+  {
     id: 'payg-starter',
     title: PRICING_PAGE_COPY.paygStarterTitle,
     priceLine: PRICING_PAGE_COPY.paygStarterTopline,
@@ -441,21 +431,6 @@ export const PRICING_CARDS = [
     disabled: false,
     recommended: true,
     badge: PRICING_PAGE_COPY.paygStarterBadge,
-    ctaNote: null,
-  },
-  {
-    id: 'volume',
-    title: PRICING_PAGE_COPY.volumeTitle,
-    priceLine: PRICING_PAGE_COPY.volumeTopline,
-    priceLines: [
-      PRICING_PAGE_COPY.volumeTopline,
-      `${PRICING_PAGE_COPY.volumeExports} · ${PRICING_PAGE_COPY.volumePrice}`,
-    ],
-    perExport: PRICING_PAGE_COPY.volumePerExport,
-    points: PRICING_PAGE_COPY.volumeFeatures,
-    actionLabel: PRICING_PAGE_COPY.volumeCtaLabel,
-    disabled: false,
-    recommended: false,
     ctaNote: null,
   },
 ];

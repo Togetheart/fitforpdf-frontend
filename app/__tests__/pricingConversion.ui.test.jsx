@@ -29,21 +29,21 @@ describe('pricing conversion UI', () => {
     expect(h1.textContent).toContain('Built for professionals.');
   });
 
-  test('renders three PAYG plan cards', () => {
+  test('renders two PAYG plan cards (Single + Starter)', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
 
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
     expect(screen.queryByTestId('plan-highlighted')).toBeNull();
     expect(screen.queryByTestId('plan-card')).toBeNull();
   });
 
-  test('plan cards list correct prices', () => {
+  test('plan cards list correct pack prices, no retired Volume', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
     const allText = cards.map((c) => c.textContent || '').join(' ');
 
     expect(allText).toContain('$4.90');
     expect(allText).toContain('$19');
-    expect(allText).toContain('$79');
+    expect(allText).not.toContain('$79');
   });
 
   test('contains a comparison table and faq', () => {
