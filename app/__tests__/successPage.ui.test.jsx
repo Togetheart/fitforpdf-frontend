@@ -37,12 +37,15 @@ function mockFetch(handler) {
   };
 }
 
-const READY_MESSAGE = 'Payment received, entitlement ready';
-const PROVISIONING_MESSAGE = 'Payment received, provisioning access';
-const IDENTITY_MISMATCH_MESSAGE = 'Payment received, provisioning blocked: missing checkout identity';
-const MISSING_SESSION_MESSAGE = 'Checkout session id is required';
-const FAILED_MESSAGE = 'Payment failed';
-const CANCELED_MESSAGE = 'Checkout expired or canceled';
+// Matchers target apostrophe-free fragments of the redesigned /success copy
+// (ink-on-paper restyle, human messages, /app-first CTAs). One unique fragment
+// per resolved view so each state stays unambiguous.
+const READY_MESSAGE = /Your exports are unlocked/;
+const PROVISIONING_MESSAGE = /unlocking your exports/;
+const IDENTITY_MISMATCH_MESSAGE = /finalizing your access/;
+const MISSING_SESSION_MESSAGE = /find that checkout/;
+const FAILED_MESSAGE = /card was declined/;
+const CANCELED_MESSAGE = /Checkout cancelled/;
 
 beforeEach(() => {
   if (!window.matchMedia) {
