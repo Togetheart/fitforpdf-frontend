@@ -1,6 +1,7 @@
 import Script from 'next/script';
 import './globals.css';
 import SiteShellGate from './components/SiteShellGate';
+import ConsentBanner from './components/ConsentBanner';
 import ViewTransitions from './components/ViewTransitions';
 import { Analytics } from '@vercel/analytics/next';
 import { SEO } from './siteCopy.mjs';
@@ -179,8 +180,15 @@ export default function RootLayout({ children }) {
     enable_recording_console_log: false,
     advanced_disable_feature_flags: true,
     advanced_disable_feature_flags_on_first_load: true,
-    autocapture: { dom_event_allowlist: ['click', 'submit', 'change'] }
+    autocapture: { dom_event_allowlist: ['click', 'submit', 'change'] },
+    // CNIL/GDPR: capture nothing — no events, no session replay, no persistent
+    // cookies — until the visitor consents via the banner. opt_in_capturing()
+    // (Accept) turns autocapture + session_recording on; opt_out keeps it all off.
+    opt_out_capturing_by_default: true,
+    opt_out_persistence_by_default: true
   });
+  // A returning visitor who already accepted → re-enable capture this load.
+  try { if (localStorage.getItem('ffp-analytics-consent') === 'granted') posthog.opt_in_capturing(); } catch (e) {}
 })();`}
         </Script>
       </head>
@@ -192,6 +200,7 @@ export default function RootLayout({ children }) {
         <ViewTransitions />
         <SiteShellGate>{children}</SiteShellGate>
         <Analytics />
+        <ConsentBanner />
         {/* Microsoft Clarity removed (perf): it was a SECOND full session
             recorder running alongside PostHog's session_recording, redundant
             DOM-serialization + a separate third-party origin. PostHog is the

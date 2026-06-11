@@ -2,6 +2,7 @@ import React from 'react';
 import { LANDING_COPY } from '../siteCopy.mjs';
 import AnimatedLogo from './AnimatedLogo';
 import NewsletterForm from './NewsletterForm';
+import CookiePreferencesButton from './CookiePreferencesButton';
 import { makeUtm, UTM_SOURCE, UTM_MEDIUM, UTM_CAMPAIGN } from '../lib/utm.mjs';
 
 // Tag every outbound link in the footer with utm_medium=social, utm_campaign=footer
@@ -112,6 +113,7 @@ export default function SiteFooter() {
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/mentions-legales">
               Mentions légales
             </a>
+            <CookiePreferencesButton className="text-left text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" />
             <a
               className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1"
               href="/contact"
