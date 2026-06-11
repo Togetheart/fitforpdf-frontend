@@ -343,6 +343,21 @@ export const PRICING_PAGE_COPY = {
       q: 'Do you store my files?',
       a: 'No. Files are deleted immediately after conversion. The generated PDF is available for up to 15 minutes.',
     },
+    {
+      id: 'refund',
+      q: 'What if the export isn’t right?',
+      a: 'Email support@fitforpdf.com and we’ll refund unused credits, no questions asked. You always see a free watermarked preview before you pay, so you know exactly what you’re unlocking.',
+    },
+    {
+      id: 'invoice',
+      q: 'Will I get an invoice for my accounting?',
+      a: 'Yes. Stripe emails a receipt for every purchase, and a proper VAT invoice is available for your records — handy when you’re expensing it to a client.',
+    },
+    {
+      id: 'payment-methods',
+      q: 'How do I pay?',
+      a: 'Card payment through Stripe’s secure checkout (Visa, Mastercard, Amex and more, depending on your country). We never see or store your card details.',
+    },
   ],
 };
 

@@ -44,7 +44,7 @@ export default function SiteHeader() {
         )}
       >
         <div className="mx-auto flex w-full max-w-[1520px] items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-12">
-          <a href="/" className="flex items-center gap-2" aria-label="fitforpdf, accueil">
+          <a href="/" className="flex items-center gap-2" aria-label="fitforpdf, home">
             <AnimatedLogo
               className={cn(
                 'transition-all duration-300',
@@ -103,7 +103,7 @@ export default function SiteHeader() {
               title="3 free exports — no account needed"
               className="px-4 text-xs h-9"
             >
-              {account ? "Ouvrir l'app" : 'Try free'}
+              {account ? 'Open the app' : 'Try free'}
             </Button>
           </nav>
 
@@ -204,7 +204,7 @@ export default function SiteHeader() {
               className="flex-1 ml-3"
               onClick={closeMenu}
             >
-              {account ? "Ouvrir l'app" : 'Try free'}
+              {account ? 'Open the app' : 'Try free'}
             </Button>
           </div>
         </nav>

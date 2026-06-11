@@ -61,7 +61,7 @@ export function PillToggle({ options, value, onChange, size = 'md' }) {
 }
 
 /* ── PAYG card ─────────────────────────────────────────── */
-export function PaygCard({ pack, onBuy, isLoading }) {
+export function PaygCard({ pack, onBuy, isLoading, orderClassName }) {
   const isDisabled = pack?.disabled === true;
   const isFeatured = Boolean(pack.recommended);
 
@@ -71,14 +71,17 @@ export function PaygCard({ pack, onBuy, isLoading }) {
       data-testid="payg-plan-card"
       className={cn(
         'feature-card-hover relative flex flex-col overflow-visible',
-        // Whole-card click target (stretched-link pattern on the CTA button).
-        // Skipped for disabled packs to avoid "click does nothing" frustration.
-        !isDisabled && 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
+        orderClassName,
+        // Subtle hover lift; the visible CTA is the only click target now (the
+        // whole-card stretched overlay fired a surprise navigation to Stripe).
+        !isDisabled && 'hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
         isFeatured
-          ? 'md:scale-[1.04] bg-[var(--color-bg)] p-7'
+          // Featured = a real ring + shadow. The old 1px border was byte-identical
+          // to the default card, so "most popular" never actually popped — and it
+          // works on mobile too, where md:scale does not apply.
+          ? 'md:scale-[1.04] bg-[var(--color-bg)] p-7 ring-2 ring-[var(--color-text)] shadow-md'
           : 'p-6',
       )}
-      style={isFeatured ? { border: '1px solid rgba(0,0,0,0.10)' } : {}}
     >
 
       {/* Badge, centered above */}
@@ -154,8 +157,8 @@ export function PaygCard({ pack, onBuy, isLoading }) {
         ))}
       </ul>
 
-      {/* CTA, visible button, z-10 so it stays clickable above the
-          full-card overlay below. */}
+      {/* CTA — the only click target now. The featured pack gets the single blue
+          primary action; the others stay outline so one action leads the eye. */}
       <div className="relative z-10 mt-6">
         <button
           type="button"
@@ -164,37 +167,23 @@ export function PaygCard({ pack, onBuy, isLoading }) {
           className={cn(
             'w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98]',
             isFeatured
-              ? 'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50'
+              ? 'bg-cta text-cta-text hover:bg-cta-hover shadow-sm hover:shadow-[0_4px_16px_rgba(37,99,235,0.28)] disabled:cursor-not-allowed disabled:opacity-50'
               : 'border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] disabled:cursor-not-allowed disabled:opacity-50',
             isDisabled ? 'bg-cta/15 text-cta/55 cursor-not-allowed' : '',
           )}
         >
-          {pack.actionLabel}
+          {isLoading ? 'Opening secure checkout…' : pack.actionLabel}
         </button>
+        <p className="mt-2 text-center text-[11px] leading-4 text-muted">
+          Secure checkout via Stripe · One-time, never auto-charged
+        </p>
       </div>
-
-      {/* Full-card click intercept. Last in DOM so it stacks above static
-          content (price, features, etc.) without needing z-index. The
-          visible CTA above gets `relative z-10` to stay clickable on top.
-          tabIndex=-1 keeps only one tab stop on the visible button.
-          Replaces the previous after:absolute pseudo-element pattern, which
-          is unreliable on <button> across browsers (replaced-element quirk). */}
-      {!isDisabled && !isLoading ? (
-        <button
-          type="button"
-          onClick={onBuy}
-          tabIndex={-1}
-          aria-hidden="true"
-          data-testid="card-stretched-overlay"
-          className="absolute inset-0 cursor-pointer rounded-2xl bg-transparent"
-        />
-      ) : null}
     </Card>
   );
 }
 
 /* ── Pro subscription card ─────────────────────────────── */
-export function ProSubscriptionCard({ billing, onBillingChange, onSubscribe, isLoading }) {
+export function ProSubscriptionCard({ billing, onBillingChange, onSubscribe, isLoading, orderClassName }) {
   const isYearly = billing === 'yearly';
   const price = isYearly ? PRICING_PAGE_COPY.proYearlyPrice : PRICING_PAGE_COPY.proMonthlyPrice;
   const period = isYearly ? PRICING_PAGE_COPY.proYearlyPeriod : PRICING_PAGE_COPY.proMonthlyPeriod;
@@ -209,8 +198,8 @@ export function ProSubscriptionCard({ billing, onBillingChange, onSubscribe, isL
       as="article"
       className={cn(
         'relative flex w-full flex-col overflow-visible p-8 bg-[var(--color-bg)]',
-        // Whole-card click via stretched-link on CTA below.
-        'cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
+        orderClassName,
+        'hover:-translate-y-0.5 hover:shadow-md transition-all duration-150',
       )}
       style={{ border: '1px solid var(--color-border)' }}
     >
@@ -259,28 +248,21 @@ export function ProSubscriptionCard({ billing, onBillingChange, onSubscribe, isL
         ))}
       </ul>
 
-      {/* CTA, visible button, z-10 above the overlay below. */}
+      {/* CTA — outline style; the blue primary is reserved for the featured
+          Starter pack so a single action draws the eye across the grid. */}
       <div className="relative z-10 mt-auto pt-8">
         <button
           type="button"
           onClick={onSubscribe}
           disabled={isLoading}
-          className="w-full rounded-full py-2.5 text-sm font-semibold tracking-tight transition-all duration-150 active:scale-[0.98] bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-full border border-[var(--color-border)] py-2.5 text-sm font-semibold tracking-tight text-[var(--color-text)] transition-all duration-150 hover:border-[var(--color-muted)] hover:bg-[var(--color-bg)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {PRICING_PAGE_COPY.proCtaLabel}
+          {isLoading ? 'Opening secure checkout…' : PRICING_PAGE_COPY.proCtaLabel}
         </button>
+        <p className="mt-2 text-center text-[11px] leading-4 text-muted">
+          Secure checkout via Stripe · Cancel anytime · Receipt &amp; invoice included
+        </p>
       </div>
-
-      {/* Full-card click intercept (see PaygCard for rationale). */}
-      {!isLoading ? (
-        <button
-          type="button"
-          onClick={onSubscribe}
-          tabIndex={-1}
-          aria-hidden="true"
-          className="absolute inset-0 cursor-pointer rounded-2xl bg-transparent"
-        />
-      ) : null}
     </Card>
   );
 }
@@ -344,6 +326,9 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
             isLoading={checkout.isLoading}
             pack={pack}
             onBuy={() => handlePackBuy(pack)}
+            // Mobile leads with the featured Starter, then Pro, then the cheapest
+            // Single last — desktop keeps the DOM order via the unprefixed grid.
+            orderClassName={pack.recommended ? 'max-md:order-1' : 'max-md:order-3'}
           />
         ))}
         <ProSubscriptionCard
@@ -351,6 +336,7 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
           onBillingChange={setBilling}
           isLoading={checkout.isLoading}
           onSubscribe={() => checkout.openProCheckout(billing)}
+          orderClassName="max-md:order-2"
         />
       </div>
 

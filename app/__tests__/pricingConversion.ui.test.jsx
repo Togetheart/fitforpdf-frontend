@@ -65,7 +65,7 @@ describe('pricing conversion UI', () => {
   test('faq opens one item at a time and icon rotates to rotate-45', () => {
     const faq = screen.getByTestId('pricing-faq');
     const buttons = within(faq).getAllByRole('button');
-    expect(buttons.length).toBe(5);
+    expect(buttons.length).toBe(8);
 
     const first = buttons[0];
     const second = buttons[1];
