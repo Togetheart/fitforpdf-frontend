@@ -1,4 +1,5 @@
 import { getNeatExportApiKey } from '../../../../lib/backendKeys.js';
+import { sanitizedCheckoutError, logCheckoutFailure } from '../../../../lib/checkoutError.mjs';
 import { randomUUID } from 'node:crypto';
 
 export const runtime = 'nodejs';
@@ -120,10 +121,12 @@ export async function POST(req) {
       }),
     });
   } catch (error) {
-    return jsonResponse(502, {
-      error: 'Backend checkout request failed',
-      details: { error: error instanceof Error ? error.message : 'unknown' },
-    }, buildResponseHeaders(requestId));
+    logCheckoutFailure('pro', {
+      status: 502,
+      requestId,
+      payload: { error: error instanceof Error ? error.message : 'unknown' },
+    });
+    return jsonResponse(502, sanitizedCheckoutError(502, requestId), buildResponseHeaders(requestId));
   }
 
   const contentType = (upstreamResponse.headers.get('content-type') || '').toLowerCase();
@@ -133,18 +136,18 @@ export async function POST(req) {
   }
 
   if (!upstreamResponse.ok) {
-    return jsonResponse(upstreamResponse.status, {
-      error: responsePayload?.error || 'Checkout failed',
-      details: responsePayload,
-    }, buildResponseHeaders(requestId, upstreamResponse));
+    logCheckoutFailure('pro', { status: upstreamResponse.status, requestId, payload: responsePayload });
+    return jsonResponse(
+      upstreamResponse.status,
+      sanitizedCheckoutError(upstreamResponse.status, requestId),
+      buildResponseHeaders(requestId, upstreamResponse),
+    );
   }
 
   const checkoutRedirect = typeof responsePayload?.url === 'string' ? responsePayload.url.trim() : '';
   if (!checkoutRedirect) {
-    return jsonResponse(502, {
-      error: 'Invalid checkout response',
-      details: responsePayload,
-    }, buildResponseHeaders(requestId, upstreamResponse));
+    logCheckoutFailure('pro', { status: 502, requestId, payload: responsePayload });
+    return jsonResponse(502, sanitizedCheckoutError(502, requestId), buildResponseHeaders(requestId, upstreamResponse));
   }
 
   return jsonResponse(200, { url: checkoutRedirect }, buildResponseHeaders(requestId, upstreamResponse));

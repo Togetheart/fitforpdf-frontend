@@ -22,9 +22,15 @@ export function useCheckout() {
     if (details.billing) {
       params.set('billing', details.billing);
     }
+    // Surface-aware cancel: send a bailing buyer back where they were — the
+    // workbench keeps their preview, /pricing keeps the grid — instead of the
+    // marketing home. Callers pass details.cancelPath; default stays '/'.
+    const cancelPath = typeof details.cancelPath === 'string' && details.cancelPath.startsWith('/')
+      ? details.cancelPath
+      : '/';
     return {
       success_url: frontendOrigin ? `${frontendOrigin}/success?${params.toString()}` : undefined,
-      cancel_url: frontendOrigin ? `${frontendOrigin}/?checkout=cancelled` : undefined,
+      cancel_url: frontendOrigin ? `${frontendOrigin}${cancelPath}?checkout=cancelled` : undefined,
     };
   }
 
@@ -74,7 +80,7 @@ export function useCheckout() {
   async function openCreditsPack(pack, options = {}) {
     if (!pack) return { ok: false, error: null };
     trackPaymentStarted({ plan: 'credits', pack });
-    const returnUrls = buildReturnUrls('credits', { pack });
+    const returnUrls = buildReturnUrls('credits', { pack, cancelPath: options.cancelPath });
     const idem = options?.idempotencyKey;
     return _post('/api/credits/purchase/checkout', {
       pack,
@@ -86,7 +92,7 @@ export function useCheckout() {
   /** For credits_100 / credits_500 packs (pricing page Starter & Pro) */
   async function openCheckout(pack, options = {}) {
     if (!pack) return { ok: false, error: null };
-    const returnUrls = buildReturnUrls('credits', { pack });
+    const returnUrls = buildReturnUrls('credits', { pack, cancelPath: options.cancelPath });
     const idem = options?.idempotencyKey;
     return _post('/api/checkout', {
       pack,
@@ -97,7 +103,7 @@ export function useCheckout() {
 
   async function openProCheckout(billing = 'monthly', options = {}) {
     trackPaymentStarted({ plan: 'pro', pack: billing });
-    const returnUrls = buildReturnUrls('pro', { billing });
+    const returnUrls = buildReturnUrls('pro', { billing, cancelPath: options.cancelPath });
     const idem = options?.idempotencyKey;
     return _post('/api/plan/pro/checkout', {
       billing,

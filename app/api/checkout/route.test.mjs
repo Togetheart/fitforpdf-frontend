@@ -156,3 +156,38 @@ test('POST /api/checkout returns 400 when pack is missing', async () => {
   fetchMock.restore();
   restoreEnv();
 });
+
+test('POST /api/checkout sanitizes upstream errors and never leaks Stripe details', async () => {
+  const restoreEnv = setupEnv('https://checkout.api.local');
+  const leak = 'Expired API Key provided: sk_live_51abcDEFghi****On5o';
+  const fetchMock = withMockFetch(() => new Response(
+    JSON.stringify({ error: leak, raw: { message: leak } }),
+    { status: 401, headers: { 'content-type': 'application/json' } },
+  ));
+  const logged = [];
+  const originalError = console.error;
+  console.error = (...args) => { logged.push(args); };
+
+  const req = new Request('https://www.fitforpdf.com/api/checkout', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ pack: 'credits_100' }),
+  });
+  const res = await POST(req);
+  const json = await res.json();
+  console.error = originalError;
+
+  const serialized = JSON.stringify(json);
+  assert.equal(res.status, 401);
+  assert.ok(!('details' in json), 'must not echo the upstream payload');
+  assert.ok(!serialized.includes('sk_live'), 'must not leak the Stripe key');
+  assert.ok(!serialized.includes('Expired API Key'), 'must not leak the raw Stripe message');
+  assert.match(json.error, /nothing was charged/);
+  assert.ok(
+    logged.some((args) => JSON.stringify(args).includes('sk_live')),
+    'records the real upstream detail server-side',
+  );
+
+  fetchMock.restore();
+  restoreEnv();
+});

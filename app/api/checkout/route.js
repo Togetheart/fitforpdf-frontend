@@ -1,4 +1,5 @@
 import { getNeatExportApiKey } from '../../lib/backendKeys.js';
+import { sanitizedCheckoutError, logCheckoutFailure } from '../../lib/checkoutError.mjs';
 import { randomUUID } from 'node:crypto';
 
 export const runtime = 'nodejs';
@@ -130,10 +131,12 @@ export async function POST(req) {
       }),
     });
   } catch (error) {
-    return jsonResponse(502, {
-      error: 'Backend checkout request failed',
-      details: { error: error instanceof Error ? error.message : 'unknown' },
-    }, responseHeaders);
+    logCheckoutFailure('packs', {
+      status: 502,
+      requestId,
+      payload: { error: error instanceof Error ? error.message : 'unknown' },
+    });
+    return jsonResponse(502, sanitizedCheckoutError(502, requestId), responseHeaders);
   }
 
   const contentType = (checkoutResponse.headers.get('content-type') || '').toLowerCase();
@@ -143,22 +146,18 @@ export async function POST(req) {
   }
 
   if (!checkoutResponse.ok) {
-    return jsonResponse(checkoutResponse.status, {
-      error: checkoutPayload?.error || 'Checkout failed',
-      details: checkoutPayload,
-    }, {
-      ...buildResponseHeaders(requestId, checkoutResponse),
-    });
+    logCheckoutFailure('packs', { status: checkoutResponse.status, requestId, payload: checkoutPayload });
+    return jsonResponse(
+      checkoutResponse.status,
+      sanitizedCheckoutError(checkoutResponse.status, requestId),
+      buildResponseHeaders(requestId, checkoutResponse),
+    );
   }
 
   const checkoutUrl = typeof checkoutPayload?.url === 'string' ? checkoutPayload.url.trim() : '';
   if (!checkoutUrl) {
-    return jsonResponse(502, {
-      error: 'Invalid checkout response',
-      details: checkoutPayload,
-    }, {
-      ...buildResponseHeaders(requestId, checkoutResponse),
-    });
+    logCheckoutFailure('packs', { status: 502, requestId, payload: checkoutPayload });
+    return jsonResponse(502, sanitizedCheckoutError(502, requestId), buildResponseHeaders(requestId, checkoutResponse));
   }
 
   return jsonResponse(200, { url: checkoutUrl }, buildResponseHeaders(requestId, checkoutResponse));
