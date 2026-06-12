@@ -50,7 +50,13 @@ internal linking is the SEO lever.
 
 1. **Demo depth = both, in two phases.** Static before/after first (frontend-only), then the
    live "Try this file" button.
-2. **Structure = hub-and-spoke.** `/convert/[slug]` from a registry; persona pages → hubs.
+2. **Structure = hub-and-spoke, by EXTENDING the existing `seoArticles.mjs` + `SeoArticle.jsx`
+   system** — the proven long-tail SEO engine (11 live pages, born from the one page that
+   brings organic traffic). **Top-level keyword slugs** (the established convention), NOT
+   `/convert/[slug]`. Persona pages link to the new articles (hub→spoke); articles cross-link
+   via the existing `related` field (spoke→hub, spoke↔spoke). _(Adjustment 2026-06-12 after
+   discovering the existing system — supersedes the `/convert/[slug]` + `convertSamples.mjs`
+   wording in the Architecture section below.)_
 3. **Language follows the dataset's audience.** FR dataset → French page; US/global → English.
    Per-page `lang`, no i18n routing, no hreflang (no mirror translations).
 4. **Pilot = 3 datasets** (below).
@@ -58,6 +64,24 @@ internal linking is the SEO lever.
    "load without auto-render."
 
 ## Architecture
+
+> **Updated 2026-06-12 — extend the existing system.** The repo already has a registry-driven
+> SEO-article engine: `app/lib/seoArticles.mjs` (the `SEO_ARTICLES` array, helper
+> `getArticleBySlug`), the shared template `app/components/SeoArticle.jsx` (renders eyebrow/h1/
+> lead/sections/faqs/related/cta + Article/FAQ/Breadcrumb JSON-LD; exports `articleMetadata()`),
+> and one thin `app/<slug>/page.jsx` per entry (top-level slug). `app/sitemap.js` already
+> iterates `SEO_ARTICLES` (line ~73), so new entries auto-appear in the sitemap. **We extend
+> this**, we do not build a parallel `/convert/[slug]` route or a `convertSamples.mjs` registry.
+>
+> Concretely: (a) add 3 entries to `SEO_ARTICLES`, each with an optional new `demo` field and a
+> `lang` field; (b) extend `SeoArticle.jsx` to render a **demo block** when `article.demo` is
+> present (raw-CSV before snippet ↔ rendered-PDF `afterImage`, a download link, the license
+> attribution line, and — Phase 2 — the "Try this file" button) and to set `lang` on the
+> article wrapper `<div lang={article.lang || 'en'}>` for per-page language; (c) add 3 thin
+> `app/<slug>/page.jsx` files following the existing 4-line pattern; (d) link the persona pages
+> to the new articles (hub→spoke) via a small `relatedArticles` addition to `VerticalPage`.
+> The subsections below are the original `/convert/[slug]` framing — kept for history but
+> superseded by this note for routing/registry/sitemap.
 
 ### Route & registry
 - New dynamic route `app/convert/[slug]/page.jsx` (Next.js app router, SSG via
@@ -100,10 +124,10 @@ routes manually — this removes the omission risk).
 
 ## The 3 pilot datasets (grounding-verified)
 
-| slug | lang | dataset | format / mess | license | trim |
+| slug (top-level) | lang | dataset | format / mess | license | trim |
 |---|---|---|---|---|---|
-| `dgfip-balance-comptable` | fr | DGFiP balances comptables des communes 2024 | CSV `;`, UTF-8+BOM, CRLF, 28 cols; cryptic FR accounting codes (COMPTE, BEDEB/BECRE, SD/SC) | Licence Ouverte / Etalab 2.0 — **attribution** ("DGFiP" + dataset name) | full file 95.8 MB → 422; export ONE commune via Opendatasoft `where=lbudg="<COMMUNE>"&delimiter=%3B` (~227 rows, 36 KB) |
-| `irs-soi-tax-stats-csv-to-pdf` | en | IRS SOI Historic Table 2 (individual income & tax by state × AGI) | CSV comma, ASCII, **163 cols** × 595 rows; cryptic codes (`A00100`, `N02650`), numbers as quoted strings with thousands separators (`"159,651,330"`) and negatives | US federal — **public domain** (no attribution required) | keep US total + ~3 states × 10 AGI brackets (~40 rows); verify < 200-page cap |
+| `convertir-balance-comptable-csv-en-pdf` | fr | DGFiP balances comptables des communes 2024 | CSV `;`, UTF-8+BOM, CRLF, 28 cols; cryptic FR accounting codes (COMPTE, BEDEB/BECRE, SD/SC) | Licence Ouverte / Etalab 2.0 — **attribution** ("DGFiP" + dataset name) | full file 95.8 MB → 422; export ONE commune via Opendatasoft `where=lbudg="<COMMUNE>"&delimiter=%3B` (~227 rows, 36 KB) |
+| `irs-tax-stats-csv-to-pdf` | en | IRS SOI Historic Table 2 (individual income & tax by state × AGI) | CSV comma, ASCII, **163 cols** × 595 rows; cryptic codes (`A00100`, `N02650`), numbers as quoted strings with thousands separators (`"159,651,330"`) and negatives | US federal — **public domain** (no attribution required) | keep US total + ~3 states × 10 AGI brackets (~40 rows); verify < 200-page cap |
 | `world-bank-gdp-csv-to-pdf` | en | World Bank GDP (current US$), `NY.GDP.MKTP.CD` | ZIP→CSV; 4-line preamble before the real header, ~66 year columns + phantom trailing-comma column, all-quoted, sparse recent years | **CC BY 4.0** — **attribution required in the rendered PDF/footer** | unzip `API_NY...csv`; keep ~10 recognizable economies (World, US, China, France, Germany, Japan, India, Brazil…) |
 
 Direct sources (implementation reference):
