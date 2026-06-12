@@ -15,6 +15,7 @@ import {
   SECTION_COLOR_CLASSES,
   SECTION_COLOR_HEXES,
   sectionColorClasses,
+  buildIncludeColumns,
 } from './pageUiLogic.mjs';
 import {
   canExport,
@@ -343,4 +344,34 @@ test('reorder preserves the color field on moved sections (operates on whole obj
     { columns: ['c'], title: 'C', color: '#F59E0B' },
     { columns: ['a'], title: 'A', color: '#EF4444' },
   ]);
+});
+
+test('buildIncludeColumns: omits when nothing is excluded (render all)', () => {
+  assert.equal(buildIncludeColumns({ allColumns: ['a', 'b', 'c'], excludedColumns: [] }), null);
+});
+
+test('buildIncludeColumns: returns the kept columns when some are excluded', () => {
+  assert.deepEqual(
+    buildIncludeColumns({ allColumns: ['a', 'b', 'c', 'd'], excludedColumns: ['b', 'd'] }),
+    ['a', 'c'],
+  );
+});
+
+test('buildIncludeColumns: omits when every column is excluded (never send an empty list)', () => {
+  assert.equal(buildIncludeColumns({ allColumns: ['a', 'b'], excludedColumns: ['a', 'b'] }), null);
+});
+
+test('buildIncludeColumns: omits when the master list is empty', () => {
+  assert.equal(buildIncludeColumns({ allColumns: [], excludedColumns: ['a'] }), null);
+});
+
+test('buildIncludeColumns: stale excluded names (not in master) do not curate', () => {
+  // excluded names that are not in allColumns -> kept === all -> omit
+  assert.equal(buildIncludeColumns({ allColumns: ['a', 'b'], excludedColumns: ['x', 'y'] }), null);
+});
+
+test('buildIncludeColumns: tolerates missing / malformed args', () => {
+  assert.equal(buildIncludeColumns(), null);
+  assert.equal(buildIncludeColumns({}), null);
+  assert.equal(buildIncludeColumns({ allColumns: ['a'], excludedColumns: null }), null);
 });
