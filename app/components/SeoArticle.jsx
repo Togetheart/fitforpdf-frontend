@@ -53,7 +53,7 @@ export default function SeoArticle({ article }) {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-hero)]">
+    <div lang={article.lang || 'en'} className="min-h-screen bg-[var(--color-bg-hero)]">
       <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
         <JsonLd data={articleLd} />
         {faqLd ? <JsonLd data={faqLd} /> : null}
@@ -71,6 +71,44 @@ export default function SeoArticle({ article }) {
         <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
           {article.lead}
         </p>
+
+        {article.demo ? (
+          <section data-testid="seo-demo" className="mb-12">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+                <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                  The raw CSV
+                </figcaption>
+                <pre className="overflow-x-auto whitespace-pre text-[11px] leading-snug text-[var(--color-muted)]">
+{article.demo.beforeSnippet}
+                </pre>
+              </figure>
+              <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+                <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                  The fitforpdf PDF
+                </figcaption>
+                <img
+                  data-testid="seo-demo-after"
+                  src={article.demo.afterImage}
+                  alt={`${article.h1} — rendered PDF preview`}
+                  loading="lazy"
+                  className="w-full rounded-lg border border-[var(--color-border)]"
+                />
+              </figure>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <a
+                data-testid="seo-demo-download"
+                href={article.demo.sampleFile}
+                download={article.demo.downloadName}
+                className="inline-block rounded-xl border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text)] underline-offset-2 hover:bg-black/5"
+              >
+                Download this sample CSV
+              </a>
+              <p className="text-xs text-[var(--color-muted)]">{article.demo.license}</p>
+            </div>
+          </section>
+        ) : null}
 
         {article.sections.map((section, i) => (
           <section key={`${section.h2}-${i}`}>
