@@ -1,0 +1,221 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-06-09T21:00:00Z",
+  "rubric": {
+    "scorer": "scoreV2 (src/pdfScore.js) - deterministic, tool-agnostic",
+    "scale": "0-100 plus a verdict OK / WARN / FAIL",
+    "judges": [
+      "Column preservation (were all columns rendered, or collapsed/clipped?)",
+      "Header repetition across pages",
+      "Legible font size (no shrink-to-illegible)",
+      "No blank or clipped pages",
+      "Pagination clarity for split tables"
+    ],
+    "note": "The SAME scorer judges every tool. Reason codes explain each downgrade."
+  },
+  "tools": [
+    {
+      "id": "fitforpdf",
+      "label": "FitForPDF",
+      "method": "renderTableToPdfBuffer - auto column-map + pagination (the production engine)"
+    },
+    {
+      "id": "naive_chrome",
+      "label": "Naive headless-Chrome",
+      "method": "HTML <table> -> Chromium page.pdf() (landscape A4) - the generic Puppeteer / Gotenberg approach"
+    }
+  ],
+  "pending": [
+    {
+      "label": "DocRaptor",
+      "note": "method published; contribute a real run"
+    },
+    {
+      "label": "WeasyPrint",
+      "note": "method published; contribute a real run"
+    },
+    {
+      "label": "Gotenberg",
+      "note": "method published; contribute a real run"
+    }
+  ],
+  "cases": [
+    {
+      "file": "gold_horizontal.csv",
+      "label": "Invoices (horizontal)",
+      "hard": "100+ rows x 12 columns - needs multi-page pagination with the header row repeated on every page.",
+      "cols": 12,
+      "rows": 100,
+      "results": {
+        "fitforpdf": {
+          "score": 100,
+          "verdict": "OK",
+          "reasons": [],
+          "pages": 26,
+          "bytes": 120817
+        },
+        "naive_chrome": {
+          "score": 60,
+          "verdict": "WARN",
+          "reasons": [
+            "small_font"
+          ],
+          "pages": 2,
+          "bytes": 64976
+        }
+      }
+    },
+    {
+      "file": "gold_wide.csv",
+      "label": "Operations log (wide + long)",
+      "hard": "181 rows x 15 columns - many rows AND wide; both axes paginate.",
+      "cols": 15,
+      "rows": 180,
+      "results": {
+        "fitforpdf": {
+          "score": 100,
+          "verdict": "OK",
+          "reasons": [],
+          "pages": 48,
+          "bytes": 236090
+        },
+        "naive_chrome": {
+          "score": 60,
+          "verdict": "WARN",
+          "reasons": [
+            "small_font"
+          ],
+          "pages": 4,
+          "bytes": 89031
+        }
+      }
+    },
+    {
+      "file": "adversarial_wide_columns.csv",
+      "label": "24 wide columns",
+      "hard": "24 columns with long header names - overflows a single page; must split horizontally and stay legible.",
+      "cols": 24,
+      "rows": 11,
+      "results": {
+        "fitforpdf": {
+          "score": 100,
+          "verdict": "OK",
+          "reasons": [],
+          "pages": 10,
+          "bytes": 62106
+        },
+        "naive_chrome": {
+          "score": 40,
+          "verdict": "FAIL",
+          "reasons": [
+            "column_collapse",
+            "small_font"
+          ],
+          "pages": 1,
+          "bytes": 50202
+        }
+      }
+    },
+    {
+      "file": "adversarial_multisection.csv",
+      "label": "35 columns (extreme)",
+      "hard": "35 columns - the widest case; an extreme horizontal split into many labelled sections.",
+      "cols": 35,
+      "rows": 17,
+      "results": {
+        "fitforpdf": {
+          "score": 100,
+          "verdict": "OK",
+          "reasons": [],
+          "pages": 10,
+          "bytes": 48423
+        },
+        "naive_chrome": {
+          "score": 60,
+          "verdict": "WARN",
+          "reasons": [
+            "small_font"
+          ],
+          "pages": 1,
+          "bytes": 48466
+        }
+      }
+    },
+    {
+      "file": "perceptive_split.csv",
+      "label": "Contacts (email / phone / company)",
+      "hard": "16 typed columns that each need a minimum readable width (email, phone, company) - splitting without clipping is the test.",
+      "cols": 16,
+      "rows": 1,
+      "results": {
+        "fitforpdf": {
+          "score": 100,
+          "verdict": "OK",
+          "reasons": [],
+          "pages": 3,
+          "bytes": 10390
+        },
+        "naive_chrome": {
+          "score": 60,
+          "verdict": "WARN",
+          "reasons": [
+            "small_font"
+          ],
+          "pages": 1,
+          "bytes": 37005
+        }
+      }
+    },
+    {
+      "file": "adversarial_unicode.csv",
+      "label": "Unicode / accents",
+      "hard": "Non-ASCII values and headers - font fallback and width safety (no clipping / replacement chars).",
+      "cols": 6,
+      "rows": 7,
+      "results": {
+        "fitforpdf": {
+          "score": 100,
+          "verdict": "OK",
+          "reasons": [],
+          "pages": 4,
+          "bytes": 49504
+        },
+        "naive_chrome": {
+          "score": 45,
+          "verdict": "FAIL",
+          "reasons": [
+            "small_font",
+            "column_collapse"
+          ],
+          "pages": 1,
+          "bytes": 66611
+        }
+      }
+    },
+    {
+      "file": "gold_wide_huge_column.csv",
+      "label": "One giant text column",
+      "hard": "A single very long free-text column - overflow, wrapping and row-height limits.",
+      "cols": 8,
+      "rows": 2,
+      "results": {
+        "fitforpdf": {
+          "score": 100,
+          "verdict": "OK",
+          "reasons": [],
+          "pages": 3,
+          "bytes": 10433
+        },
+        "naive_chrome": {
+          "score": 60,
+          "verdict": "WARN",
+          "reasons": [
+            "small_font"
+          ],
+          "pages": 1,
+          "bytes": 41133
+        }
+      }
+    }
+  ]
+}

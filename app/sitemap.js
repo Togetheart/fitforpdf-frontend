@@ -96,6 +96,12 @@ export default function sitemap() {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+    {
+      url: `${SEO.siteUrl}/benchmark`,
+      lastModified: pageModDate('benchmark/page.jsx'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
 
     // Audience pages
     {
