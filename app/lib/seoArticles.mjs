@@ -582,6 +582,180 @@ export const SEO_ARTICLES = [
       label: 'Try better pagination, free',
     },
   },
+
+  // ── Dataset demo pages (real open data + before/after + downloadable file) ──
+  {
+    slug: 'convertir-balance-comptable-csv-en-pdf',
+    lang: 'fr',
+    eyebrow: 'Comptabilité',
+    title: 'Balance comptable CSV en PDF lisible | fitforpdf',
+    description:
+      "Transformez une balance comptable (export CSV DGFiP, trop large pour Excel) en PDF propre, paginé et prêt à envoyer au client. Sans mise en page manuelle.",
+    h1: 'Convertir une balance comptable (CSV DGFiP) en PDF lisible',
+    lead:
+      "Les balances comptables exportées en CSV — point-virgule, des dizaines de colonnes de codes (COMPTE, BEDEB, SD/SC) — sont illisibles dans Excel et à l'impression. Voici comment en faire un PDF propre, paginé, prêt à envoyer.",
+    sections: [
+      {
+        h2: 'Pourquoi une balance CSV casse à l’impression',
+        list: [
+          'Trop de colonnes : les soldes débit/crédit passent hors page et sont tronqués.',
+          'Délimiteur point-virgule + encodage (UTF-8/BOM ou Latin-1 selon l’export) : tout colle dans une seule colonne si l’outil se trompe.',
+          'Aucune répétition d’en-têtes : page 2 et suivantes deviennent indéchiffrables.',
+        ],
+      },
+      {
+        h2: 'La conversion structurée avec fitforpdf',
+        body:
+          "fitforpdf détecte le délimiteur et l’encodage, regroupe les colonnes en sections lisibles, répète les colonnes-clés (numéro de compte, libellé) sur chaque page, et pagine proprement — y compris pour une balance de plusieurs centaines de lignes.",
+      },
+    ],
+    faqs: [
+      {
+        q: 'Mon CSV utilise des points-virgules et des accents — est-ce géré ?',
+        a: "Oui. fitforpdf détecte le délimiteur (`;`, `,` ou tabulation) et l’encodage (UTF-8 et Windows-1252/Latin-1), donc les accents et les colonnes restent corrects.",
+      },
+      {
+        q: 'Combien de colonnes une balance peut-elle avoir ?',
+        a: 'Jusqu’à 150 colonnes sont rendues automatiquement en sections lisibles ; les balances DGFiP (~28 colonnes) passent sans réglage.',
+      },
+    ],
+    related: [
+      { label: 'Convertir un gros CSV en PDF', href: '/convert-large-csv-to-pdf' },
+      { label: 'Rapport financier (tableur) en PDF', href: '/financial-report-spreadsheet-to-pdf' },
+      { label: 'Pour les équipes finance', href: '/for-finance' },
+    ],
+    cta: {
+      title: 'Convertissez votre balance maintenant',
+      body: 'Déposez votre export CSV et récupérez un PDF propre, prêt à envoyer. 3 exports gratuits.',
+      label: 'Essayer gratuitement',
+    },
+    demo: {
+      sampleSlug: 'dgfip-balance-comptable',
+      sampleFile: '/CSV/dgfip-balance-comptable.csv',
+      downloadName: 'balance-comptable-dgfip-demo.csv',
+      afterImage: '/convert/dgfip-balance-comptable-after.png',
+      beforeSnippet:
+        'EXER;IDENT;NDEPT;LBUDG;INSEE;...;COMPTE;BEDEB;BECRE;...;SD;SC\n2024;...;ANNECY;...;6450000;"12 345,67";"0,00";...;"12 345,67";"0,00"',
+      license: 'Source : DGFiP / Ministère de l’Économie — Licence Ouverte / Etalab 2.0.',
+    },
+  },
+  {
+    slug: 'irs-tax-stats-csv-to-pdf',
+    lang: 'en',
+    eyebrow: 'Tax & finance data',
+    title: 'IRS Tax-Stats (SOI) CSV to PDF | fitforpdf',
+    description:
+      'Turn the IRS SOI Historic Table 2 CSV — 160+ cryptic columns, numbers quoted with commas — into a clean, paginated, printable PDF. No spreadsheet wrangling.',
+    h1: 'Convert IRS tax-stats (SOI) CSV to a printable PDF',
+    lead:
+      'The IRS Statistics of Income "Historic Table 2" ships as a 163-column CSV with cryptic codes (A00100, N02650) and numbers stored as quoted strings like "159,651,330". Here is how to turn it into a readable PDF.',
+    sections: [
+      {
+        h2: 'Why this CSV is unreadable as-is',
+        list: [
+          '163 columns: open it in Excel and print, and most columns fall off the page.',
+          'Codes, not labels: A-prefixed = dollar amounts, N-prefixed = counts, per AGI bracket.',
+          'Numbers are quoted strings with thousands separators ("159,651,330") and negatives — naive parsers mangle them.',
+        ],
+      },
+      {
+        h2: 'The structured conversion',
+        body:
+          'fitforpdf groups the columns into readable sections, repeats the state / AGI-bracket identifier columns on every page, parses the quoted numbers correctly, and paginates — so a 160-column federal table becomes a PDF you can actually read.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Can fitforpdf handle a 160-column CSV?',
+        a: 'Yes — up to 150 columns are auto-grouped into readable sections with repeated identifier columns; wider files are split across sections with consistent headers.',
+      },
+      {
+        q: 'Will the quoted numbers like "159,651,330" stay correct?',
+        a: 'Yes. fitforpdf parses quoted cells with embedded thousands separators and negatives without splitting them into wrong columns.',
+      },
+    ],
+    related: [
+      { label: 'Wide-table PDF export', href: '/wide-table-pdf-export' },
+      { label: 'Keep all columns: XLSX to PDF', href: '/xlsx-to-pdf-keep-all-columns' },
+      { label: 'For auditors', href: '/for-auditors' },
+    ],
+    cta: {
+      title: 'Convert your tax-stats CSV',
+      body: 'Drop the CSV and get a clean, paginated PDF with every column accounted for. 3 free exports.',
+      label: 'Try it free',
+    },
+    demo: {
+      sampleSlug: 'irs-soi-tax-stats',
+      sampleFile: '/CSV/irs-soi-tax-stats.csv',
+      downloadName: 'irs-soi-tax-stats-demo.csv',
+      afterImage: '/convert/irs-soi-tax-stats-after.png',
+      beforeSnippet:
+        'STATE,AGI_STUB,N1,MARS1,...,A00100,N02650,A02650,N00200,A00200,...\n"US","1","...",...,"159,651,330","...","-160,983,232",...',
+      license: 'Source: IRS Statistics of Income, Historic Table 2 — U.S. federal public domain.',
+    },
+  },
+  {
+    slug: 'world-bank-gdp-csv-to-pdf',
+    lang: 'en',
+    eyebrow: 'Open data',
+    title: 'World Bank GDP CSV to PDF Table | fitforpdf',
+    description:
+      'Convert a World Bank GDP-by-country Open Data CSV — a column for every year since 1960 — into a tidy, printable PDF table. No reshaping, no messy Excel.',
+    h1: 'Convert a World Bank GDP CSV into a clean PDF table',
+    lead:
+      'The World Bank GDP CSV is the classic "wide format": a metadata preamble, then one column per year from 1960 to today, all quoted. Here is how to turn it into a tidy, printable PDF.',
+    sections: [
+      {
+        h2: 'Why the World Bank CSV is awkward',
+        list: [
+          'A 4-line preamble means the real header is not on row 1 — many tools mis-detect columns.',
+          '60+ year columns run far off any printed page.',
+          'Every field is quoted and recent years are empty — ragged, sparse rows.',
+        ],
+      },
+      {
+        h2: 'The structured conversion',
+        body:
+          'fitforpdf reads past the preamble, groups the year columns into readable sections, repeats the country name on every page, and paginates — turning the notorious wide CSV into a clean PDF table.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Does it handle the World Bank CSV preamble and wide year columns?',
+        a: 'Yes — fitforpdf detects the real header and groups the year columns into readable, paginated sections with the country column repeated.',
+      },
+      {
+        q: 'Can I do this with any World Bank indicator export?',
+        a: 'Yes. Any wide indicator CSV (one column per year) converts the same way.',
+      },
+    ],
+    related: [
+      { label: 'Wide-table PDF export', href: '/wide-table-pdf-export' },
+      { label: 'Convert a large CSV to PDF', href: '/convert-large-csv-to-pdf' },
+      { label: 'For consultants', href: '/for-consultants' },
+    ],
+    cta: {
+      title: 'Convert your World Bank CSV',
+      body: 'Drop the GDP CSV and get a clean, paginated PDF table. 3 free exports.',
+      label: 'Try it free',
+    },
+    demo: {
+      sampleSlug: 'world-bank-gdp',
+      sampleFile: '/CSV/world-bank-gdp.csv',
+      downloadName: 'world-bank-gdp-demo.csv',
+      afterImage: '/convert/world-bank-gdp-after.png',
+      beforeSnippet:
+        '"Country Name","Country Code","Indicator Name","Indicator Code","1960",...,"2024"\n"World","WLD","GDP (current US$)","NY.GDP.MKTP.CD","...",...,"..."',
+      license: 'Source: The World Bank — GDP (current US$), World Development Indicators (CC BY 4.0).',
+    },
+  },
+];
+
+/** Slugs of the dataset pages that render the before/after + download demo block. */
+export const DEMO_ARTICLE_SLUGS = [
+  'convertir-balance-comptable-csv-en-pdf',
+  'irs-tax-stats-csv-to-pdf',
+  'world-bank-gdp-csv-to-pdf',
 ];
 
 /**
