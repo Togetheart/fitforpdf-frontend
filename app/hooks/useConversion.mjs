@@ -25,11 +25,13 @@ import {
   trackSecondRealRenderStarted,
   trackPostRenderPricingClicked,
   trackPostRenderContactClicked,
+  trackUploadFileTooLarge,
 } from '../lib/analytics.mjs';
 
 const API_BASE = '/api';
 const CONVERSION_PROGRESS_MIN_MS = 1800;
 const LOGO_MAX_DIM_PX = 512;
+const WEB_UPLOAD_MAX_BYTES = 4 * 1024 * 1024; // ~Vercel 4.5MB proxy body cap, minus multipart/field overhead
 
 // Re-encode a logo into a clean, downscaled, baseline 8-bit PNG via <canvas> so the
 // PDF renderer (PDFKit) can always embed it — PDFKit throws on interlaced/16-bit/exotic
@@ -812,6 +814,14 @@ export default function useConversion({ quota }) {
   }
 
   function handleFileSelect(nextFile) {
+    if (nextFile && Number.isFinite(nextFile.size) && nextFile.size > WEB_UPLOAD_MAX_BYTES) {
+      const mb = (nextFile.size / (1024 * 1024)).toFixed(1);
+      const ext = (nextFile.name || '').split('.').pop()?.toLowerCase() || '';
+      trackUploadFileTooLarge({ fileSize: nextFile.size, limitBytes: WEB_UPLOAD_MAX_BYTES, fileType: ext });
+      setError(`This file is ${mb} MB. The web app currently supports files up to ${Math.round(WEB_UPLOAD_MAX_BYTES / (1024 * 1024))} MB. For larger files, use the API or reply to your export email and we'll help.`);
+      setFile(null);
+      return;
+    }
     setRenderVerdict(null);
     setRenderId(null);
     setShareState({ status: 'idle', jobId: null });

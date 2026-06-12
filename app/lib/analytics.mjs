@@ -27,6 +27,14 @@ export function trackUploadStarted({ fileType, fileSize }) {
   capture('upload_started', { file_type: fileType, file_size: fileSize });
 }
 
+export function trackUploadFileTooLarge({ fileSize, limitBytes, fileType } = {}) {
+  capture('upload_file_too_large', {
+    file_size: fileSize,
+    limit_bytes: limitBytes,
+    file_type: fileType,
+  });
+}
+
 export function trackDemoFileUsed() {
   capture('demo_file_used');
 }
