@@ -102,6 +102,10 @@ export default function ForConsultantsPage() {
       painPoints={PAIN_POINTS}
       benefits={BENEFITS}
       ctaText="Try it free"
+      relatedArticles={[
+        { label: 'Convert a World Bank GDP CSV into a clean PDF table', href: '/world-bank-gdp-csv-to-pdf' },
+        { label: 'Wide-table PDF export', href: '/wide-table-pdf-export' },
+      ]}
     />
     </>
   );

@@ -21,6 +21,7 @@ export default function VerticalPage({
   benefits,
   ctaText = 'Try it free',
   productImage = '/fitforpdf_product@2x.png',
+  relatedArticles,
 }) {
   // Derive current path from vertical label to exclude self from related links
   const currentHref = ALL_VERTICALS.find((v) => vertical.includes(v.label.split(' ')[0]))?.href;
@@ -104,6 +105,22 @@ export default function VerticalPage({
           ))}
         </ul>
       </Section>
+
+      {/* ── Examples (dataset demo articles) ── */}
+      {relatedArticles && relatedArticles.length > 0 ? (
+        <Section id="examples">
+          <h2 className="mb-4 text-2xl font-semibold text-[var(--color-text)]">
+            Concrete examples
+          </h2>
+          <ul data-testid="vertical-examples" className="space-y-2">
+            {relatedArticles.map((a) => (
+              <li key={a.href}>
+                <a href={a.href} className={LINK_STYLE}>{a.label}</a>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
 
       {/* ── Related use cases ── */}
       <Section id="related" bg="bg-hero">

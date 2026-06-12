@@ -102,6 +102,11 @@ export default function ForFinancePage() {
         painPoints={PAIN_POINTS}
         benefits={BENEFITS}
         ctaText="Try it free"
+        relatedArticles={[
+          { label: 'Convertir une balance comptable (CSV DGFiP) en PDF', href: '/convertir-balance-comptable-csv-en-pdf' },
+          { label: 'Convert IRS tax-stats (SOI) CSV to a printable PDF', href: '/irs-tax-stats-csv-to-pdf' },
+          { label: 'Financial report spreadsheet to PDF', href: '/financial-report-spreadsheet-to-pdf' },
+        ]}
       />
     </>
   );
