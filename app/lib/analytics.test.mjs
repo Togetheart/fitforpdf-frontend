@@ -11,6 +11,7 @@ import {
   trackRenderCompleted,
   trackSecondRealRenderStarted,
   trackUploadAfterDemo,
+  trackUploadFileTooLarge,
   trackUploadStarted,
 } from './analytics.mjs';
 
@@ -317,5 +318,16 @@ test('trackPaywallViewed captures paywall_view with surface', async () => {
   assert.equal(calls[0].event, 'paywall_view');
   assert.equal(calls[0].properties.surface, 'workbench');
   assert.equal(calls[0].properties.plan, 'free');
+  restore();
+});
+
+test('trackUploadFileTooLarge captures upload_file_too_large with size + limit', () => {
+  const { calls, restore } = withMockPostHog();
+  trackUploadFileTooLarge({ fileSize: 9_000_000, limitBytes: 4 * 1024 * 1024, fileType: 'csv' });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].event, 'upload_file_too_large');
+  assert.equal(calls[0].properties.file_size, 9_000_000);
+  assert.equal(calls[0].properties.limit_bytes, 4 * 1024 * 1024);
+  assert.equal(calls[0].properties.file_type, 'csv');
   restore();
 });
