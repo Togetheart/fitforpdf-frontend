@@ -198,6 +198,25 @@ export function buildGroupingPayload({ sectionDraft, frozenColumns } = {}) {
   return { columnGroups, sectionTitles, sectionColors };
 }
 
+/**
+ * Decide the `includeColumns` payload from the picker selection.
+ * Returns the list of columns to KEEP, or null to OMIT the field entirely
+ * (which makes the backend render all columns — the byte-unchanged default).
+ *
+ * @param {{ allColumns?: string[], excludedColumns?: string[] }} [opts]
+ * @returns {string[] | null}
+ */
+export function buildIncludeColumns({ allColumns, excludedColumns } = {}) {
+  const all = Array.isArray(allColumns) ? allColumns.filter((c) => typeof c === 'string') : [];
+  if (all.length === 0) return null;
+  const excludedSet = new Set(Array.isArray(excludedColumns) ? excludedColumns : []);
+  if (excludedSet.size === 0) return null; // nothing curated -> render all
+  const kept = all.filter((c) => !excludedSet.has(c));
+  if (kept.length === 0) return null; // never send an empty list -> render all
+  if (kept.length === all.length) return null; // excluded only stale names -> no-op
+  return kept;
+}
+
 // Move a column between sections / Fixed in the draft. `target` is 'fixed', an
 // existing section index, or any index >= length to start a new trailing
 // section. Removes the column from wherever it was; drops emptied sections.

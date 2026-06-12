@@ -60,6 +60,8 @@ import { CSS } from '@dnd-kit/utilities';
 // in the product with a single price-less "Get 10 exports" button.
 const WORKBENCH_CREDIT_PACKS = PAYG_PACKS;
 
+const WIDE_FILE_COLUMN_THRESHOLD = 25;
+
 // One labelled block in the inspector. The old per-section "Live"/"Soon" status
 // pills were dropped — when every control is live, the badge is pure noise.
 function InspectorSection({ title, hint, children, badge = null, locked = false, defaultOpen = false }) {
@@ -396,6 +398,84 @@ function CustomGroupsControl({ conversion }) {
   );
 }
 
+function ColumnsControl({ conversion }) {
+  const allColumns = Array.isArray(conversion.allColumnsMaster) ? conversion.allColumnsMaster : [];
+  const excluded = Array.isArray(conversion.excludedColumns) ? conversion.excludedColumns : [];
+  const frozenSet = new Set(Array.isArray(conversion.frozenDraft) ? conversion.frozenDraft : []);
+  const [query, setQuery] = React.useState('');
+
+  if (allColumns.length === 0) {
+    return (
+      <p className="mt-1 text-[11.5px] leading-5 text-[var(--color-text-subtle)]">
+        Update the preview once to choose which columns to include.
+      </p>
+    );
+  }
+
+  const excludedSet = new Set(excluded);
+  const includedCount = allColumns.filter((c) => !excludedSet.has(c)).length;
+  const q = query.trim().toLowerCase();
+  const visible = q ? allColumns.filter((c) => c.toLowerCase().includes(q)) : allColumns;
+
+  return (
+    <div data-testid="app-columns-picker" className="mt-2 flex flex-col gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <span data-testid="app-columns-counter" className="text-[11.5px] font-medium text-[var(--color-text-subtle)]">
+          {includedCount} / {allColumns.length} included
+        </span>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => { trackControlUsed({ control: 'columns_select_all', surface: 'workbench' }); conversion.includeAllColumns(); }}
+            className="rounded-md px-1.5 py-0.5 text-[11.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]"
+          >
+            Select all
+          </button>
+          <button
+            type="button"
+            onClick={() => { trackControlUsed({ control: 'columns_clear', surface: 'workbench' }); conversion.excludeAllColumns(); }}
+            className="rounded-md px-1.5 py-0.5 text-[11.5px] font-semibold text-[var(--color-text)] underline decoration-[var(--color-text-subtle)] underline-offset-2 hover:decoration-[var(--color-text)]"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        aria-label="Search columns"
+        placeholder="Search columns"
+        className="min-h-11 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-2 text-[12.5px] text-[var(--color-text)] outline-none focus:border-[var(--color-line-strong)] lg:min-h-9"
+      />
+
+      <div className="flex max-h-72 flex-col gap-0.5 overflow-y-auto overscroll-contain">
+        {visible.map((col) => (
+          <label key={col} className="flex min-h-11 items-center gap-2 rounded-md px-1 text-[12.5px] text-[var(--color-text)] hover:bg-[var(--color-surface-sunken)] lg:min-h-9">
+            <input
+              type="checkbox"
+              aria-label={col}
+              checked={!excludedSet.has(col)}
+              onChange={() => { trackControlUsed({ control: 'columns_picker', surface: 'workbench' }); conversion.toggleColumnIncluded(col); }}
+              className="h-4 w-4 shrink-0 accent-[var(--color-accent)]"
+            />
+            <span className="min-w-0 flex-1 truncate">{col}</span>
+            {frozenSet.has(col) ? (
+              <span className="shrink-0 rounded bg-[var(--color-surface-sunken)] px-1 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-[var(--color-text-subtle)]">
+                fixed
+              </span>
+            ) : null}
+          </label>
+        ))}
+        {visible.length === 0 ? (
+          <p className="px-1 py-2 text-[11.5px] text-[var(--color-text-subtle)]">No columns match "{query}".</p>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 // Native color picker for one section (free-form, like the Branding accent color).
 // Picking a color calls onSetColor(index, hex); "Reset" clears it back to the
 // section's positional default. The 1-based human number (index + 1) is used in the
@@ -591,6 +671,14 @@ export function ConversionInspector({ conversion, quota, className = '', onColla
         <div className="flex flex-col gap-4 pb-4">
         {activeTab === 'sections' ? (
           <>
+        <InspectorSection
+          title="Columns"
+          hint="Choose which columns appear in the PDF. Unchecked columns are dropped — the row number column is always kept."
+          defaultOpen
+        >
+          <ColumnsControl conversion={conversion} />
+        </InspectorSection>
+
         <InspectorSection title="Column grouping" hint="How wide tables get split across pages." defaultOpen>
           <div data-testid="app-columnmap" className="flex overflow-hidden rounded-lg border border-[var(--color-line)]">
             {[
@@ -1508,7 +1596,7 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
   );
 }
 
-function WorkbenchRenderedCanvas({ conversion, quota, onEditOptions }) {
+export function WorkbenchRenderedCanvas({ conversion, quota, onEditOptions }) {
   // After a "Condense long text & retry", the export was made to fit by shortening
   // long cells — a degraded result. We surface that honestly and turn it into the
   // upgrade nudge (full, untruncated fidelity is the paid lever). Free users only:
@@ -1589,6 +1677,29 @@ function WorkbenchRenderedCanvas({ conversion, quota, onEditOptions }) {
           </a>
         </div>
       ) : null}
+      {(() => {
+        const cols = Array.isArray(conversion.allColumnsMaster) ? conversion.allColumnsMaster.length : 0;
+        const curated = Array.isArray(conversion.excludedColumns) && conversion.excludedColumns.length > 0;
+        if (cols <= WIDE_FILE_COLUMN_THRESHOLD || curated) return null;
+        return (
+          <div
+            data-testid="app-wide-file-banner"
+            className="mb-[18px] flex items-center gap-3 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-4 py-3"
+          >
+            <FileText className="h-5 w-5 shrink-0 text-[var(--color-text-subtle)]" aria-hidden="true" />
+            <p className="min-w-0 flex-1 text-[12.5px] leading-5 text-[var(--color-text)]">
+              {cols} columns — this PDF will be long. Choose which columns to include for a shorter, cleaner export.
+            </p>
+            <button
+              type="button"
+              onClick={onEditOptions}
+              className="shrink-0 whitespace-nowrap rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-1.5 text-[12.5px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)]"
+            >
+              Choose which columns →
+            </button>
+          </div>
+        );
+      })()}
       <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-[var(--color-muted)]">
         <FileText className="h-3.5 w-3.5" aria-hidden="true" />
         Preview
