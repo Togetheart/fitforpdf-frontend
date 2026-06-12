@@ -661,13 +661,13 @@ export const SEO_ARTICLES = [
       {
         h2: 'The structured conversion',
         body:
-          'fitforpdf groups the columns into readable sections, repeats the state / AGI-bracket identifier columns on every page, parses the quoted numbers correctly, and paginates — so a 160-column federal table becomes a PDF you can actually read.',
+          'fitforpdf groups the columns into readable sections (up to 150 columns), repeats the state / AGI-bracket identifier columns on every page, parses the quoted numbers correctly, and paginates — so a very wide federal table becomes a PDF you can actually read.',
       },
     ],
     faqs: [
       {
-        q: 'Can fitforpdf handle a 160-column CSV?',
-        a: 'Yes — up to 150 columns are auto-grouped into readable sections with repeated identifier columns; wider files are split across sections with consistent headers.',
+        q: 'How many columns can fitforpdf handle?',
+        a: 'Up to 150 columns, auto-grouped into readable sections with the identifier columns repeated on every page. The IRS table is wider than most tools handle — focus the export on the income and deduction items you need (the sample here is a focused slice).',
       },
       {
         q: 'Will the quoted numbers like "159,651,330" stay correct?',
