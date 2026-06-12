@@ -458,7 +458,7 @@ function ColumnsControl({ conversion }) {
               aria-label={col}
               checked={!excludedSet.has(col)}
               onChange={() => { trackControlUsed({ control: 'columns_picker', surface: 'workbench' }); conversion.toggleColumnIncluded(col); }}
-              className="h-4 w-4 shrink-0 accent-[var(--color-primary,#2563eb)]"
+              className="h-4 w-4 shrink-0 accent-[var(--color-accent)]"
             />
             <span className="min-w-0 flex-1 truncate">{col}</span>
             {frozenSet.has(col) ? (
