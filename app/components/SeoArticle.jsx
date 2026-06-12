@@ -52,6 +52,8 @@ export default function SeoArticle({ article }) {
     ],
   };
 
+  const isFr = article.lang === 'fr';
+
   return (
     <div lang={article.lang || 'en'} className="min-h-screen bg-[var(--color-bg-hero)]">
       <div className="mx-auto max-w-[720px] px-4 py-20 sm:px-6">
@@ -77,7 +79,7 @@ export default function SeoArticle({ article }) {
             <div className="grid gap-4 sm:grid-cols-2">
               <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
                 <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
-                  The raw CSV
+                  {isFr ? 'Le CSV brut' : 'The raw CSV'}
                 </figcaption>
                 <pre className="overflow-x-auto whitespace-pre text-[11px] leading-snug text-[var(--color-muted)]">
 {article.demo.beforeSnippet}
@@ -85,7 +87,7 @@ export default function SeoArticle({ article }) {
               </figure>
               <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
                 <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
-                  The fitforpdf PDF
+                  {isFr ? 'Le PDF fitforpdf' : 'The fitforpdf PDF'}
                 </figcaption>
                 <img
                   data-testid="seo-demo-after"
@@ -103,7 +105,7 @@ export default function SeoArticle({ article }) {
                 download={article.demo.downloadName}
                 className="inline-block rounded-xl border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text)] underline-offset-2 hover:bg-black/5"
               >
-                Download this sample CSV
+                {isFr ? 'Télécharger ce CSV d’exemple' : 'Download this sample CSV'}
               </a>
               <p className="text-xs text-[var(--color-muted)]">{article.demo.license}</p>
             </div>

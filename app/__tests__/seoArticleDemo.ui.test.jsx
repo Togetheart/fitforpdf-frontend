@@ -27,10 +27,11 @@ describe('SeoArticle demo block', () => {
     expect(demo.textContent).toContain('World Bank');
   });
 
-  test('sets lang on the article wrapper for a French page', () => {
+  test('sets lang on the article wrapper and localizes demo labels for a French page', () => {
     const article = getArticleBySlug('convertir-balance-comptable-csv-en-pdf');
     const { container } = render(<SeoArticle article={article} />);
     expect(container.querySelector('[lang="fr"]')).toBeTruthy();
+    expect(screen.getByTestId('seo-demo-download').textContent).toMatch(/Télécharger/i);
   });
 
   test('articles without a demo render no demo block', () => {

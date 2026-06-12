@@ -635,7 +635,7 @@ export const SEO_ARTICLES = [
       downloadName: 'balance-comptable-dgfip-demo.csv',
       afterImage: '/convert/dgfip-balance-comptable-after.png',
       beforeSnippet:
-        'EXER;IDENT;NDEPT;LBUDG;INSEE;...;COMPTE;BEDEB;BECRE;...;SD;SC\n2024;...;ANNECY;...;6450000;"12 345,67";"0,00";...;"12 345,67";"0,00"',
+        'exer;ident;ndept;lbudg;insee;...;compte;bedeb;becre;...;sd;sc\n2024;...;ANNECY;...;6450000;"12 345,67";"0,00";...;"12 345,67";"0,00"',
       license: 'Source : DGFiP / Ministère de l’Économie — Licence Ouverte / Etalab 2.0.',
     },
   },
