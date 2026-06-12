@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   buildRenderUrl,
   getFailKind,
@@ -8,6 +8,7 @@ import {
   recommendationLabel,
   reorder,
   buildGroupingPayload,
+  buildIncludeColumns,
   reassignColumn,
 } from '../pageUiLogic.mjs';
 import { getPlanExhausted, QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
@@ -442,6 +443,16 @@ export default function useConversion({ quota }) {
   // positional grouping on every render so the order/titles persist.
   const [sectionDraft, setSectionDraft] = useState([]);
   const [frozenDraft, setFrozenDraft] = useState([]);
+  // Columns picker: the full, stable column list (captured from the first unfiltered
+  // render) and the set of column names the user has unchecked.
+  const [allColumnsMaster, setAllColumnsMaster] = useState([]);
+  const [excludedColumns, setExcludedColumns] = useState([]);
+
+  const toggleColumnIncluded = useCallback((name) => {
+    setExcludedColumns((prev) => (prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]));
+  }, []);
+  const includeAllColumns = useCallback(() => setExcludedColumns([]), []);
+  const excludeAllColumns = useCallback(() => setExcludedColumns(allColumnsMaster.slice()), [allColumnsMaster]);
   const [sectionsCustomized, setSectionsCustomized] = useState(false);
   const [renderId, setRenderId] = useState(null);
   const [exportHistory, setExportHistory] = useState([]);
@@ -587,6 +598,11 @@ export default function useConversion({ quota }) {
         }
       }
 
+      const includeColumns = buildIncludeColumns({ allColumns: allColumnsMaster, excludedColumns });
+      if (includeColumns) {
+        formData.append('includeColumns', JSON.stringify(includeColumns));
+      }
+
       const effectiveTruncateLongText = truncateLongTextOverride === null ? truncateLongText : truncateLongTextOverride;
       const res = await fetch(buildRenderUrl(API_BASE, mode, { truncateLongText: effectiveTruncateLongText, columnMap }), {
         method: 'POST',
@@ -681,6 +697,14 @@ export default function useConversion({ quota }) {
         })),
       );
       setFrozenDraft(Array.isArray(nextFrozen) ? nextFrozen.slice() : []);
+      // Establish the stable full column list once per file (the first render is always
+      // unfiltered, so its response carries every column). Later filtered renders never shrink it.
+      setAllColumnsMaster((prev) => {
+        if (prev.length) return prev;
+        const sectionCols = (Array.isArray(nextSections) ? nextSections : []).flatMap((s) => (Array.isArray(s.columns) ? s.columns : []));
+        const frozenCols = Array.isArray(nextFrozen) ? nextFrozen : [];
+        return [...new Set([...sectionCols, ...frozenCols])];
+      });
       setRenderId(res.headers.get('x-render-id') ?? null);
       setResolvedPdfFilename(responseFilename);
       setConfidence(confidenceData);
@@ -798,6 +822,8 @@ export default function useConversion({ quota }) {
     // A new file invalidates any prior section/group customization.
     setSectionDraft([]);
     setFrozenDraft([]);
+    setAllColumnsMaster([]);
+    setExcludedColumns([]);
     setSectionsCustomized(false);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
@@ -837,6 +863,8 @@ export default function useConversion({ quota }) {
     // inspector's section/group controls don't linger on the old file.
     setSectionDraft([]);
     setFrozenDraft([]);
+    setAllColumnsMaster([]);
+    setExcludedColumns([]);
     setSectionsCustomized(false);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
@@ -939,6 +967,8 @@ export default function useConversion({ quota }) {
     // show stale section/group controls before the next file is picked.
     setSectionDraft([]);
     setFrozenDraft([]);
+    setAllColumnsMaster([]);
+    setExcludedColumns([]);
     setSectionsCustomized(false);
     setRenderedSections([]);
     setRenderedFrozenColumns([]);
@@ -1158,6 +1188,11 @@ export default function useConversion({ quota }) {
     renderedFrozenColumns,
     sectionDraft,
     frozenDraft,
+    allColumnsMaster,
+    excludedColumns,
+    toggleColumnIncluded,
+    includeAllColumns,
+    excludeAllColumns,
     sectionsCustomized,
     reorderSection,
     renameSection,
