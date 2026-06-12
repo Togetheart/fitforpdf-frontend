@@ -60,6 +60,8 @@ import { CSS } from '@dnd-kit/utilities';
 // in the product with a single price-less "Get 10 exports" button.
 const WORKBENCH_CREDIT_PACKS = PAYG_PACKS;
 
+const WIDE_FILE_COLUMN_THRESHOLD = 25;
+
 // One labelled block in the inspector. The old per-section "Live"/"Soon" status
 // pills were dropped — when every control is live, the badge is pure noise.
 function InspectorSection({ title, hint, children, badge = null, locked = false, defaultOpen = false }) {
@@ -1594,7 +1596,7 @@ function WorkbenchEmptyCanvas({ conversion, quota }) {
   );
 }
 
-function WorkbenchRenderedCanvas({ conversion, quota, onEditOptions }) {
+export function WorkbenchRenderedCanvas({ conversion, quota, onEditOptions }) {
   // After a "Condense long text & retry", the export was made to fit by shortening
   // long cells — a degraded result. We surface that honestly and turn it into the
   // upgrade nudge (full, untruncated fidelity is the paid lever). Free users only:
@@ -1675,6 +1677,29 @@ function WorkbenchRenderedCanvas({ conversion, quota, onEditOptions }) {
           </a>
         </div>
       ) : null}
+      {(() => {
+        const cols = Array.isArray(conversion.allColumnsMaster) ? conversion.allColumnsMaster.length : 0;
+        const curated = Array.isArray(conversion.excludedColumns) && conversion.excludedColumns.length > 0;
+        if (cols <= WIDE_FILE_COLUMN_THRESHOLD || curated) return null;
+        return (
+          <div
+            data-testid="app-wide-file-banner"
+            className="mb-[18px] flex items-center gap-3 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-surface-sunken)] px-4 py-3"
+          >
+            <FileText className="h-5 w-5 shrink-0 text-[var(--color-text-subtle)]" aria-hidden="true" />
+            <p className="min-w-0 flex-1 text-[12.5px] leading-5 text-[var(--color-text)]">
+              {cols} columns — this PDF will be long. Choose which columns to include for a shorter, cleaner export.
+            </p>
+            <button
+              type="button"
+              onClick={onEditOptions}
+              className="shrink-0 whitespace-nowrap rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-1.5 text-[12.5px] font-semibold text-[var(--color-text)] transition hover:border-[var(--color-line-strong)]"
+            >
+              Choose which columns →
+            </button>
+          </div>
+        );
+      })()}
       <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-[var(--color-muted)]">
         <FileText className="h-3.5 w-3.5" aria-hidden="true" />
         Preview
