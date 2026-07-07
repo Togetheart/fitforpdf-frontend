@@ -170,8 +170,23 @@ function buildUpstreamHeaders(apiKey, req, requestId) {
   if (branding) headers['X-FitForPDF-Branding'] = branding;
   const forwardCookie = extractForwardableCookies(req.headers.get('cookie'));
   if (forwardCookie) headers.Cookie = forwardCookie;
-  const forwardedFor = req.headers.get('x-forwarded-for');
+
+  // Forward the client's real network signals. The backend's cookie-less anon
+  // identity is network-bound (IP + UA + language); without these it binds to
+  // the proxy's own egress IP and fetch UA ("node"), collapsing every
+  // cookie-less caller behind one Vercel egress IP into a single shared
+  // identity (and quota).
+  const forwardedFor = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip');
   if (forwardedFor) headers['X-Forwarded-For'] = forwardedFor;
+  const clientUserAgent = req.headers.get('user-agent');
+  if (clientUserAgent) headers['User-Agent'] = clientUserAgent;
+  const clientAcceptLanguage = req.headers.get('accept-language');
+  if (clientAcceptLanguage) headers['Accept-Language'] = clientAcceptLanguage;
+
+  // Token-gated smoke-test marker — the backend validates the value and tags
+  // the render as synthetic (dedicated identity, no analytics, no quota).
+  const syntheticMonitor = req.headers.get('x-synthetic-monitor');
+  if (syntheticMonitor) headers['X-Synthetic-Monitor'] = syntheticMonitor;
 
   if (exportIntent) {
     headers['X-Export-Intent'] = exportIntent;
