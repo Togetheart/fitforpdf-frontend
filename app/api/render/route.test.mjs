@@ -843,3 +843,90 @@ test('GET /api/render is not allowed', async () => {
   assert.equal(res.status, 405);
   assert.equal(json.error, 'Method Not Allowed');
 });
+
+test('POST /api/render forwards client network identity signals upstream (UA, language, IP)', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf' },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Macintosh) RealBrowser/1.0',
+      'Accept-Language': 'fr-FR,fr;q=0.9',
+      'X-Forwarded-For': '198.51.100.10',
+    },
+  });
+  const res = await POST(req);
+
+  assert.equal(res.status, 200);
+  const upstreamHeaders = fetchMock.calls[0].options.headers;
+  // Without these the backend sees the proxy's own network (egress IP + UA
+  // "node") and its network-bound anon identity collapses to one identity
+  // per egress IP, shared by every cookie-less caller.
+  assert.equal(upstreamHeaders['User-Agent'], 'Mozilla/5.0 (Macintosh) RealBrowser/1.0');
+  assert.equal(upstreamHeaders['Accept-Language'], 'fr-FR,fr;q=0.9');
+  assert.equal(upstreamHeaders['X-Forwarded-For'], '198.51.100.10');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render derives X-Forwarded-For from x-real-ip when XFF is absent', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf' },
+  }));
+
+  const req = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+    headers: { 'x-real-ip': '198.51.100.20' },
+  });
+  const res = await POST(req);
+
+  assert.equal(res.status, 200);
+  assert.equal(fetchMock.calls[0].options.headers['X-Forwarded-For'], '198.51.100.20');
+
+  fetchMock.restore();
+  restoreEnv();
+});
+
+test('POST /api/render passes X-Synthetic-Monitor through to the backend', async () => {
+  const restoreEnv = setupEnv({
+    CLEAN_SHEET_API_URL: 'https://cleansheet-api.neatexport.com',
+    NEATEXPORT_API_KEY: 'backend-key',
+  });
+  const fetchMock = withMockFetch(() => new Response(new Uint8Array([37, 80, 68, 70]), {
+    status: 200,
+    headers: { 'content-type': 'application/pdf' },
+  }));
+
+  const withHeader = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+    headers: { 'X-Synthetic-Monitor': 'smoke-token' },
+  });
+  await POST(withHeader);
+  assert.equal(fetchMock.calls[0].options.headers['X-Synthetic-Monitor'], 'smoke-token');
+
+  const withoutHeader = new Request('https://www.fitforpdf.com/api/render', {
+    method: 'POST',
+    body: makeRequestBody(),
+  });
+  await POST(withoutHeader);
+  assert.equal(fetchMock.calls[1].options.headers['X-Synthetic-Monitor'], undefined);
+
+  fetchMock.restore();
+  restoreEnv();
+});

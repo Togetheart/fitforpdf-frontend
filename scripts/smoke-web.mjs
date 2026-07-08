@@ -38,6 +38,22 @@ function ensure(condition, message) {
   }
 }
 
+/**
+ * Headers for the smoke render. When SYNTHETIC_MONITOR_TOKEN is configured
+ * (GitHub secret, matching the backend env), the render is tagged as a
+ * synthetic monitor: dedicated identity, excluded from analytics and visitor
+ * quotas. Without the token the render counts as a regular visitor.
+ */
+export function buildSmokeRequestHeaders(env = process.env) {
+  const headers = {
+    'X-FitForPDF-Source-Filename': 'customers-100.csv',
+  };
+  if (env.SYNTHETIC_MONITOR_TOKEN) {
+    headers['X-Synthetic-Monitor'] = env.SYNTHETIC_MONITOR_TOKEN;
+  }
+  return headers;
+}
+
 async function run() {
   const baseUrl = process.env.BASE_URL;
   ensure(baseUrl, 'BASE_URL is required (example: https://www.fitforpdf.com)');
@@ -57,9 +73,7 @@ async function run() {
   });
   const postResponse = await fetch(postUrl, {
     method: 'POST',
-    headers: {
-      'X-FitForPDF-Source-Filename': 'customers-100.csv',
-    },
+    headers: buildSmokeRequestHeaders(),
     body: formData,
   });
 

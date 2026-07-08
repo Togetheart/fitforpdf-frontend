@@ -51,10 +51,14 @@ jobs:
           NEATEXPORT_API_KEY: ${{ secrets.NEATEXPORT_API_KEY }}
 
       # ── Web smoke: full frontend proxy render flow ──
+      # SYNTHETIC_MONITOR_TOKEN tags these renders as synthetic on the backend
+      # (dedicated identity, excluded from analytics and visitor quotas).
+      # Unset secret = header omitted = renders count as real visitors again.
       - name: Web smoke tests (frontend proxy)
         run: npm run smoke:web
         env:
           BASE_URL: https://www.fitforpdf.com
+          SYNTHETIC_MONITOR_TOKEN: ${{ secrets.SYNTHETIC_MONITOR_TOKEN }}
 
       # ── Notify on failure ──
       - name: Alert on failure
