@@ -89,6 +89,27 @@ export default function SiteFooter() {
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/audit-report-excel-to-pdf-tips">
               Audit report export tips
             </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/excel-to-pdf-keep-headers-repeat">
+              Keep Excel headers repeating
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/xlsx-to-pdf-keep-all-columns">
+              XLSX to PDF, keep all columns
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/convert-large-csv-to-pdf">
+              Convert large CSV to PDF
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/excel-pdf-text-too-small-fix">
+              Fix tiny text in Excel PDF
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/crm-export-to-pdf">
+              CRM export to PDF
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/excel-multiple-sheets-to-single-pdf">
+              Multiple Excel sheets, one PDF
+            </a>
+            <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/pdf-export-excel-page-break-control">
+              Control PDF page breaks
+            </a>
             <a className="text-sm text-[var(--color-muted)] transition hover:text-[var(--color-text)] hover:underline underline-offset-4 decoration-1" href="/vs-puppeteer">
               vs Puppeteer
             </a>
