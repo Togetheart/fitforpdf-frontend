@@ -133,6 +133,8 @@ export default function FitOnePagePage() {
           <li><a href="/excel-to-pdf-columns-cut-off" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Fix cut-off columns in Excel PDF export</a></li>
           <li><a href="/csv-to-structured-pdf" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Convert CSV to structured, readable PDF</a></li>
           <li><a href="/audit-report-excel-to-pdf-tips" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Export audit Excel sheets to PDF, best practices</a></li>
+          <li><a href="/excel-multiple-sheets-to-single-pdf" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Combine multiple Excel sheets into a single PDF</a></li>
+          <li><a href="/excel-pdf-text-too-small-fix" className="text-[var(--color-accent)] underline underline-offset-2 hover:text-[var(--color-cta)]">Excel PDF export text too small, fix</a></li>
         </ul>
       </nav>
 
