@@ -10,6 +10,7 @@ import {
   buildGroupingPayload,
   buildIncludeColumns,
   reassignColumn,
+  resolveResubmitMode,
 } from '../pageUiLogic.mjs';
 import { getPlanExhausted, QUOTA_STATUS_BY_RENDER_CODE } from './useQuota.mjs';
 import { useCheckout } from './useCheckout.mjs';
@@ -810,7 +811,7 @@ export default function useConversion({ quota }) {
     }
     const nextFlowId = createFlowId();
     setFlowId(nextFlowId);
-    await submitRender('normal', { flowIdOverride: nextFlowId });
+    await submitRender(resolveResubmitMode(Boolean(pdfBlob), lastRequestMode), { flowIdOverride: nextFlowId });
   }
 
   function handleFileSelect(nextFile) {

@@ -375,3 +375,13 @@ test('buildIncludeColumns: tolerates missing / malformed args', () => {
   assert.equal(buildIncludeColumns({}), null);
   assert.equal(buildIncludeColumns({ allColumns: ['a'], excludedColumns: null }), null);
 });
+
+test('resolveResubmitMode: Update preview keeps the active render mode (QA ISSUE-003: 33→36 pages on unchanged regeneration)', async () => {
+  const { resolveResubmitMode } = await import('./pageUiLogic.mjs');
+  // A PDF exists → this is a re-render of the same content: keep the mode.
+  assert.equal(resolveResubmitMode(true, 'compact'), 'compact');
+  assert.equal(resolveResubmitMode(true, 'optimized'), 'optimized');
+  // Fresh upload (no existing PDF) → default mode.
+  assert.equal(resolveResubmitMode(false, 'compact'), 'normal');
+  assert.equal(resolveResubmitMode(true, null), 'normal');
+});
