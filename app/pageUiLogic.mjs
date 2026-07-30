@@ -245,3 +245,11 @@ export function reassignColumn({ sectionDraft, frozenColumns, column, target } =
   draft = draft.filter((s) => s.columns.length > 0);
   return { sectionDraft: draft, frozenColumns: frozen };
 }
+
+/* "Update preview" re-renders the SAME content, so it must keep the mode the
+ * user last rendered with (e.g. the demo sample renders in 'compact'); falling
+ * back to 'normal' silently changed the layout — QA saw 33 pages become 36 on
+ * an unchanged regeneration. A fresh upload has no PDF yet → default mode. */
+export function resolveResubmitMode(hasExistingPdf, lastRequestMode) {
+  return hasExistingPdf && lastRequestMode ? lastRequestMode : 'normal';
+}
