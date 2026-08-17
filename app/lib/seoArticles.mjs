@@ -71,6 +71,7 @@ export const SEO_ARTICLES = [
       { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
       { label: 'Export audit Excel sheets to PDF, best practices', href: '/audit-report-excel-to-pdf-tips' },
       { label: 'Convert CSV to structured, readable PDF', href: '/csv-to-structured-pdf' },
+      { label: 'Combine multiple Excel sheets into a single PDF', href: '/excel-multiple-sheets-to-single-pdf' },
     ],
     cta: {
       title: 'Headers always in place, automatically.',
@@ -127,6 +128,7 @@ export const SEO_ARTICLES = [
       { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
       { label: 'Convert 30+ column Excel to PDF (keep all columns)', href: '/xlsx-to-pdf-keep-all-columns' },
       { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
+      { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
     ],
     cta: {
       title: 'Wide tables, readable PDFs.',
@@ -183,6 +185,7 @@ export const SEO_ARTICLES = [
       { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
       { label: 'How to export wide tables to PDF', href: '/wide-table-pdf-export' },
       { label: 'Excel multiple sheets to single PDF', href: '/excel-multiple-sheets-to-single-pdf' },
+      { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
     ],
     cta: {
       title: 'Keep every column. No manual layout.',
