@@ -72,7 +72,6 @@ export const SEO_ARTICLES = [
       { label: 'Excel multiple sheets to single PDF', href: '/excel-multiple-sheets-to-single-pdf' },
       { label: 'Export audit Excel sheets to PDF, best practices', href: '/audit-report-excel-to-pdf-tips' },
       { label: 'Convert CSV to structured, readable PDF', href: '/csv-to-structured-pdf' },
-      { label: 'Combine multiple Excel sheets into a single PDF', href: '/excel-multiple-sheets-to-single-pdf' },
     ],
     cta: {
       title: 'Headers always in place, automatically.',
