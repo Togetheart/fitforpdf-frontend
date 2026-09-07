@@ -46,6 +46,7 @@ const articleLd = {
   headline: SEO.fitOnePage.title,
   description: SEO.fitOnePage.description,
   url: `${SEO.siteUrl}/${SEO.fitOnePage.slug}`,
+  dateModified: '2026-09-07',
   publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
 };
 
@@ -114,6 +115,33 @@ export default function FitOnePagePage() {
         into readable sections, each with its own page, repeated reference columns, and clear
         row ranges. The result is a professional, client-ready document.
       </p>
+
+      <section data-testid="seo-example" className="mb-12">
+        <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Worked example</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+            <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+              Excel, Scale to Fit (30-col budget)
+            </figcaption>
+            <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{`30 columns forced onto 1 page: Scale to Fit shrinks to ~38%
+Font renders at roughly 4pt, headers and numbers blur together
+Decimal alignment breaks: "12,400.00" reads as noise at that size`}
+            </pre>
+          </figure>
+          <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+            <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+              fitforpdf, 3 sections of 10 columns
+            </figcaption>
+            <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{`Same 30 columns, split into 3 sections at 10pt+
+Account column repeated in every section for context
+Numbers stay aligned and legible at 100% zoom`}
+            </pre>
+          </figure>
+        </div>
+        <p className="mt-2 text-xs text-[var(--color-muted)]">Illustrative example.</p>
+      </section>
 
       <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">
         <h2 className="py-6 text-xl font-semibold text-[var(--color-text)]">Frequently asked questions</h2>

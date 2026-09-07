@@ -360,6 +360,21 @@ export const SEO_ARTICLES = [
       body: 'fitforpdf keeps every cell at readable size by structuring wide tables into sections. 3 free exports.',
       label: 'Get a readable PDF, free',
     },
+    dateModified: '2026-09-07',
+    example: {
+      beforeCaption: 'Excel, Scale to Fit 38% (24-col CRM export)',
+      afterCaption: 'fitforpdf, section "Contact & Deal" (10pt)',
+      beforeLines: [
+        'Row printed at ~5pt:',
+        '"J.Smith|Acme Co|j@acme.co|555-0142|Enterprise|Won|12,400|..."',
+        '-> a single cell needs 200% zoom to read',
+      ],
+      afterLines: [
+        'Name       Company   Email        Phone      Stage  Value',
+        'J. Smith   Acme Co   j@acme.co    555-0142   Won    $12,400',
+        '-> readable at 100%, remaining columns continue in the next section',
+      ],
+    },
   },
   // ────────────────────────────────────────────────────────────────────
   {
@@ -528,6 +543,24 @@ export const SEO_ARTICLES = [
       title: 'Multi-sheet workbook → one structured PDF.',
       body: 'Upload your XLSX (any number of sheets). Get a single PDF with an overview + section per sheet. 3 free exports.',
       label: 'Combine your workbook, free',
+    },
+    dateModified: '2026-09-07',
+    example: {
+      beforeCaption: 'Excel, "Print Entire Workbook" (3 tabs)',
+      afterCaption: 'fitforpdf, one PDF, section per sheet',
+      beforeLines: [
+        'Sheet "Summary"      -> portrait, 6 cols, OK',
+        'Sheet "Transactions" -> landscape, 22 cols, clipped to 15',
+        'Sheet "Notes"        -> portrait, 3 cols, OK',
+        '-> page 4 cuts mid-table, no sheet labels in the PDF',
+      ],
+      afterLines: [
+        'Overview page lists all 3 sheets with page refs',
+        'Section "Summary"      -> p.2',
+        'Section "Transactions" -> pp.3-6 (sectioned, ID + Date repeated)',
+        'Section "Notes"        -> p.7',
+        '-> every column present, every section labeled',
+      ],
     },
   },
   // ────────────────────────────────────────────────────────────────────

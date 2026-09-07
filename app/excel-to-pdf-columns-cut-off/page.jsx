@@ -46,6 +46,7 @@ const articleLd = {
   headline: SEO.excelCutoff.title,
   description: SEO.excelCutoff.description,
   url: `${SEO.siteUrl}/${SEO.excelCutoff.slug}`,
+  dateModified: '2026-09-07',
   publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
 };
 
@@ -108,6 +109,37 @@ export default function ExcelCutoffPage() {
         fitforpdf automatically groups wide columns into readable sections, each section fits on
         a page with the reference columns (ID, Name) repeated. No manual layout needed.
       </p>
+
+      <section data-testid="seo-example" className="mb-12">
+        <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Worked example</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+            <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+              Excel&#39;s PDF (22-col CRM export, cut off)
+            </figcaption>
+            <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{`Columns 1-15 print: Name, Company, Email, Phone, Title,
+Industry, Stage, Owner, Created, Last Contact, Deal Value,
+Currency, Source, Campaign, Notes (truncated)
+Columns 16-22 LOST: Next Step, Priority, Region, Renewal
+Date, Contract ID, Discount %, Approved By`}
+            </pre>
+          </figure>
+          <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+            <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+              fitforpdf&#39;s PDF (sectioned)
+            </figcaption>
+            <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{`Section A "Contact" - Name, Company, Email, Phone, Title
+Section B "Deal" - Stage, Owner, Deal Value, Currency, Source
+Section C "Ops" - Next Step, Priority, Region, Renewal Date,
+Contract ID
+All 22 columns present, Name + Company repeated on every section`}
+            </pre>
+          </figure>
+        </div>
+        <p className="mt-2 text-xs text-[var(--color-muted)]">Illustrative example.</p>
+      </section>
 
       <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">
         <h2 className="py-6 text-xl font-semibold text-[var(--color-text)]">Frequently asked questions</h2>
