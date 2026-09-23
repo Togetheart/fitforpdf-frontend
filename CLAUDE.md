@@ -4,6 +4,7 @@
 
 SaaS B2B — transforms messy Excel/CSV exports into clean, structured PDFs.
 Users upload a spreadsheet, the backend generates a PDF with proper pagination, split sections, repeated key columns, and a table of contents.
+Accepted formats are tabular CSV and XLSX. XLSX conversion reads the first worksheet only; column sections are not workbook tabs. The PDF uses a new layout rather than reproducing the original workbook formatting or charts.
 
 ## Stack
 
@@ -82,9 +83,10 @@ app/
 
 ## Monetization
 
-- 3 exports gratuits (pas de compte nécessaire)
-- Packs one-time à partir de $19
-- Abonnement Pro mensuel
+- 3 exports gratuits avec filigrane (pas de compte nécessaire), plafond de 200 pages
+- Paiement ponctuel : 1 export à $4.90 ou 10 exports à $19
+- Abonnement Pro : $9.90/mois ou $99/an ; exports payants plafonnés à 600 pages, autres limites de fichier applicables
+- Le refus de volume propose Pro uniquement à un utilisateur free confirmé pour une estimation de 201 à 600 pages ; changer de fichier efface cette proposition
 - Codes promo supportés (betalist, microlaunch, free3)
 
 ## gstack (REQUIRED — global install)
