@@ -20,15 +20,15 @@ export const metadata = {
 const faqs = [
   {
     q: "Why doesn't Excel fit large sheets on one PDF page well?",
-    a: 'Because Excel uses strict page boundaries and scales down content, making large sheets either illegible or split unexpectedly.',
+    a: 'Fitting a large table onto one page can require shrinking its text. The result depends on column widths, row count, page size and scaling settings.',
   },
   {
     q: 'How do I make Excel print all columns on one page PDF?',
-    a: 'In Excel, go to Page Layout → Scale to Fit and set Width to "1 page". This works for sheets up to ~15 columns. Beyond that, text becomes too small to read.',
+    a: 'In Excel, go to Page Layout → Scale to Fit and set Width to "1 page". Leave Height automatic if rows may continue onto more pages. To request a single page overall, also set Height to "1 page" and check the text size in Print Preview.',
   },
   {
     q: 'How do I fit a wide Excel spreadsheet into a readable PDF?',
-    a: 'For sheets with many columns, landscape orientation and margin reduction help, but structured sectioning (grouping columns by theme) produces far more readable results.',
+    a: 'Compare landscape orientation, margins and scaling in Print Preview. If the text becomes too small, consider more pages or a layout that splits columns into sections with repeated identifiers.',
   },
   {
     q: 'Is fitting everything on one page always the best approach?',
@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: 'How does fitforpdf handle large sheets?',
-    a: 'fitforpdf groups columns into sections with repeated reference columns, each section fits on a page without scaling distortion.',
+    a: 'fitforpdf creates column sections with repeated key columns. Sections can span several pages; it does not guarantee a single-page result. For XLSX, it converts the first worksheet only.',
   },
 ];
 
@@ -46,7 +46,7 @@ const articleLd = {
   headline: SEO.fitOnePage.title,
   description: SEO.fitOnePage.description,
   url: `${SEO.siteUrl}/${SEO.fitOnePage.slug}`,
-  dateModified: '2026-09-07',
+  dateModified: '2026-09-23',
   publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
 };
 
@@ -80,20 +80,21 @@ export default function FitOnePagePage() {
         How to fit a large Excel sheet on one PDF page
       </h1>
       <p className="mb-10 text-base leading-relaxed text-[var(--color-muted)]">
-        If your sheet is too wide, Excel&#39;s default export may shrink or cut content. Learn
-        manual steps and better automated solutions for large spreadsheets.
+        Excel can fit a worksheet onto one PDF page, but the resulting text size depends on the
+        table and page settings. Compare a single page with a layout that uses more pages.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 1, Page layout &amp; scaling</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        Go to Page Layout → Scale to Fit and set Width to 1 page. This forces Excel to compress
-        the sheet horizontally, but very wide sheets become unreadable.
+        Go to Page Layout → Scale to Fit. Set Width and Height to 1 page to request a single
+        page overall. Setting only Width to 1 page allows rows to continue onto additional pages.
+        Check Print Preview: shrinking a large table may make its text too small.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 2, Landscape orientation</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        Switch to Landscape in Page Layout → Orientation. This gives you more horizontal space
-        and works well for sheets up to about 15 columns.
+        Switch to Landscape in Page Layout → Orientation to give columns more horizontal space.
+        Whether they fit depends on their widths, the paper size and the margins.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Step 3, Adjust margins &amp; page breaks</h2>
@@ -104,43 +105,43 @@ export default function FitOnePagePage() {
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Limitations of fitting on one page</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        For sheets with 20+ columns, fitting on one page means tiny, unreadable text. Clients
-        receiving these PDFs often can&#39;t read the data without zooming in. Structured sectioning
-        is often a better alternative.
+        Column count alone cannot tell you whether a table will be readable on one page.
+        Check long values, headings and the intended print size. If the text is too small,
+        allow more pages or try a layout that separates column groups.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Smarter alternative: structured sections</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        Instead of squeezing everything on one page, fitforpdf automatically splits wide sheets
-        into readable sections, each with its own page, repeated reference columns, and clear
-        row ranges. The result is a professional, client-ready document.
+        fitforpdf creates a new layout for tabular data, with column sections and repeated key
+        columns. Sections can span several pages. It converts the first worksheet only from an
+        XLSX file and does not reproduce the original workbook formatting. Compare the preview
+        with your source before sharing it.
       </p>
 
       <section data-testid="seo-example" className="mb-12">
-        <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Worked example</h2>
+        <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Conceptual example</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
             <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
-              Excel, Scale to Fit (30-col budget)
+              Budget table to lay out
             </figcaption>
             <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
-{`30 columns forced onto 1 page: Scale to Fit shrinks to ~38%
-Font renders at roughly 4pt, headers and numbers blur together
-Decimal alignment breaks: "12,400.00" reads as noise at that size`}
+{`Account | Actual | Budget | Variance | Notes
+One-page scaling keeps the table together but may shrink its text.`}
             </pre>
           </figure>
           <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
             <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
-              fitforpdf, 3 sections of 10 columns
+              Possible sections with a repeated account column
             </figcaption>
             <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
-{`Same 30 columns, split into 3 sections at 10pt+
-Account column repeated in every section for context
-Numbers stay aligned and legible at 100% zoom`}
+{`Amounts: Account | Actual | Budget | Variance
+Notes:   Account | Notes
+Actual grouping, text size and pagination depend on your data.`}
             </pre>
           </figure>
         </div>
-        <p className="mt-2 text-xs text-[var(--color-muted)]">Illustrative example.</p>
+        <p className="mt-2 text-xs text-[var(--color-muted)]">Conceptual diagram, not a measured result. Check the PDF produced from your own file.</p>
       </section>
 
       <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">
@@ -169,7 +170,7 @@ Numbers stay aligned and legible at 100% zoom`}
       <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-8 text-center">
         <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]">Ready to export your sheet cleanly?</h2>
         <p className="mb-5 text-[var(--color-muted)]">
-          Upload your Excel file and get a structured, readable PDF in seconds. 3 free exports.
+          Try a sectioned layout for your table and inspect the preview. 3 free exports with a watermark.
         </p>
         <a
           href="/"

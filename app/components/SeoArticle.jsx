@@ -138,7 +138,7 @@ export default function SeoArticle({ article }) {
         {article.example ? (
           <section data-testid="seo-example" className="mb-12">
             <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">
-              {article.example.label || (isFr ? 'Exemple concret' : 'Worked example')}
+              {article.example.label || (isFr ? 'Schéma conceptuel' : 'Conceptual example')}
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
@@ -159,7 +159,7 @@ export default function SeoArticle({ article }) {
               </figure>
             </div>
             <p className="mt-2 text-xs text-[var(--color-muted)]">
-              {isFr ? 'Exemple illustratif.' : 'Illustrative example.'}
+              {isFr ? 'Schéma conceptuel, pas un résultat mesuré. Vérifiez le PDF obtenu avec votre fichier.' : 'Conceptual diagram, not a measured result. Check the PDF produced from your own file.'}
             </p>
           </section>
         ) : null}
