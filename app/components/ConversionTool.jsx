@@ -1333,6 +1333,7 @@ function WorkbenchDropzone({ conversion, quota }) {
           event.stopPropagation();
         }}
         onKeyDown={(event) => {
+          if (event.target !== event.currentTarget) return;
           if (event.key !== 'Enter' && event.key !== ' ') return;
           event.preventDefault();
           openPicker();

@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import React from 'react';
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, renderHook, screen, waitFor, within } from '@testing-library/react';
 
 import AppPage from '../app/page.jsx';
+import useConversion from '../hooks/useConversion.mjs';
 
 /**
  * The /app workbench dropzone (WorkbenchDropzone) calls handleSubmit but, before
@@ -94,6 +95,44 @@ describe('/app workbench dropzone surfaces render failures', () => {
     await selectFileAndGenerate();
     const box = await screen.findByTestId('generate-error');
     expect(within(box).queryByRole('button', { name: /Pro.*\$9\.90/i })).toBeNull();
+  });
+
+  test.each(['replacement', 'oversized'])('a %s file clears the previous page-limit offer', async (kind) => {
+    renderResponder = pageBurdenResponse;
+    await selectFileAndGenerate();
+    const upgrade = await screen.findByRole('button', { name: /Pro.*\$9\.90/i });
+    await waitFor(() => expect(upgrade.disabled).toBe(false), { timeout: 3000 });
+    const nextFile = new File(['id,value\n2,3'], 'next.csv', { type: 'text/csv' });
+    if (kind === 'oversized') Object.defineProperty(nextFile, 'size', { value: 5 * 1024 * 1024 });
+    await act(async () => fireEvent.change(screen.getByTestId('generate-file-input'), { target: { files: [nextFile] } }));
+    expect(screen.queryByRole('button', { name: /Pro.*\$9\.90/i })).toBeNull();
+    expect(screen.queryByText('This export exceeds the page limit')).toBeNull();
+  });
+
+  test.each(['Enter', ' '])('the %s key on the upgrade button does not open the file picker', async (key) => {
+    renderResponder = pageBurdenResponse;
+    await selectFileAndGenerate();
+    const upgrade = await screen.findByRole('button', { name: /Pro.*\$9\.90/i });
+    await waitFor(() => expect(upgrade.disabled).toBe(false), { timeout: 3000 });
+    const picker = vi.spyOn(screen.getByTestId('generate-file-input'), 'click').mockImplementation(() => {});
+    expect(fireEvent.keyDown(upgrade, { key })).toBe(true);
+    expect(picker).not.toHaveBeenCalled();
+    // Keyboard activation on the dropzone itself must remain available.
+    expect(fireEvent.keyDown(screen.getByTestId('generate-dropzone'), { key })).toBe(false);
+    expect(picker).toHaveBeenCalledTimes(1);
+  });
+
+  test('removing a refused file clears its page estimate and recommendations', async () => {
+    renderResponder = pageBurdenResponse;
+    const quota = { planType: 'free', freeExportsLeft: 3, isQuotaLocked: false };
+    const { result } = renderHook(() => useConversion({ quota }));
+    await act(async () => result.current.handleFileSelect(REAL_FILE));
+    await act(async () => result.current.handleSubmit());
+    expect(result.current.pageBurdenEstimatedPages).toBe(246);
+    await act(async () => result.current.handleRemoveFile());
+    expect(result.current.pageBurdenEstimatedPages).toBeNull();
+    expect(result.current.failureRecommendations).toEqual([]);
+    expect(result.current.confidence).toBeNull();
   });
 
   test('page-limit upgrade opens monthly checkout, returns to app on cancel, and shows failures', async () => {

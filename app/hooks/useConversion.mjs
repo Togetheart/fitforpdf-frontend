@@ -818,6 +818,9 @@ export default function useConversion({ quota }) {
   }
 
   function handleFileSelect(nextFile) {
+    setConfidence(null);
+    setFailureRecommendations([]);
+    setPageBurdenEstimatedPages(null);
     if (nextFile && Number.isFinite(nextFile.size) && nextFile.size > WEB_UPLOAD_MAX_BYTES) {
       const mb = (nextFile.size / (1024 * 1024)).toFixed(1);
       const ext = (nextFile.name || '').split('.').pop()?.toLowerCase() || '';
@@ -865,6 +868,9 @@ export default function useConversion({ quota }) {
   }
 
   function handleRemoveFile() {
+    setConfidence(null);
+    setFailureRecommendations([]);
+    setPageBurdenEstimatedPages(null);
     setFile(null);
     setPdfBlob(null);
     setRenderVerdict(null);
@@ -970,6 +976,8 @@ export default function useConversion({ quota }) {
     setFile(null);
     setPdfBlob(null);
     setConfidence(null);
+    setFailureRecommendations([]);
+    setPageBurdenEstimatedPages(null);
     setRenderVerdict(null);
     setRenderId(null);
     setFlowId(null);
