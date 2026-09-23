@@ -2,58 +2,34 @@ export const TELEGRAM_BOT_URL = 'https://t.me/CrabiAssistantBot';
 
 export const LANDING_COPY = {
   logoText: 'fitforpdf',
-  heroTitle: 'Skip the cleanup.\\nSend it now.',
-  heroSubheadline: 'Wide tables. Cut-off columns. Broken page breaks. FitForPDF fixes all three: in one click.',
-  heroSubheadlineL1: 'Wide tables. Cut-off columns. Broken page breaks.',
-  // Staccato pain line (L2a) + solution line (L2b). Language validated by
-  // Magdalena (2026-03-22): "cut-off columns", "awkward page breaks" and
-  // Abhinav (2026-04-15): "wide Excel tables become unreadable".
-  heroSubheadlineL2a: 'Wide tables. Cut-off columns. Broken page breaks.',
-  // L2b carries the CATEGORY since the V5 headline sells only the outcome:
-  // a cold visitor must read WHAT the product makes in the first two lines.
-  heroSubheadlineL2b: 'FitForPDF turns your export into a readable, sendable PDF. One click.',
+  heroTitle: 'Wide Excel tables.\\nReadable client PDFs.',
+  heroSubheadline: 'Turn wide Excel or CSV tables into readable PDF sections for your clients.',
+  heroSubheadlineL1: 'For consultants sending CRM exports and reporting tables to clients.',
+  // State the customer workflow before explaining the table transformation.
+  heroSubheadlineL2a: 'For consultants sending CRM exports and reporting tables to clients.',
+  heroSubheadlineL2b: 'Turn wide Excel or CSV tables into readable PDF sections, with key columns repeated.',
   heroExample: 'Example: CRM export, 14 columns → 4 readable PDF sections',
   heroTypicalOutput: 'Works with: CRM exports · financial reports · analytics tables · SaaS data exports',
-  proofTimeSaved: 'Typically saves 30 to 45 min per export',
+  proofTimeSaved: 'See the same table before and after conversion',
   proofSourceLine: 'Typical sources: Excel exports · CSV datasets · SaaS reports',
   heroLabel: 'FITFORPDF',
-  // Hero H1 — two lines. Line 1 is animated (bracket → [F] morph via GSAP,
-  // see HeroHeadline.jsx). Line 2 is static. Language validated by Magdalena
-  // (2026-03-22) who described the gap as "not truly client-ready" + "manual
-  // cleanup step before I can send it out". "Your export" (vs. "Excel") is
-  // the inclusive framing: Abhinav/moltin.work uses "report exports" for a
-  // SaaS context — the universal term across all ICPs (2026-04-15 feedback).
-  // V5 (2026-06-10, sprint S1): the "client-ready" PROMISE leaves the titles.
-  // Kunj (consulting segment) hears corporate-grade fidelity in it — merged
-  // headers, charts, brand charters — which is explicit anti-scope. The pain
-  // language (Magdalena's words) stays everywhere else; the headline now
-  // sells the outcome both segments agree on: skip the manual cleanup, send.
-  heroHeadlineL1: 'Skip the cleanup.',
-  heroHeadlineL2: 'Send it now.',
+  // Keep the two-line animated heading; name the input and the reading outcome.
+  heroHeadlineL1: 'Wide Excel tables.',
+  heroHeadlineL2: 'Readable client PDFs.',
   heroCta: 'Fix your export',
   heroMicrocopy: '',
-  heroMicrocopyFree: '3 free exports. No account needed. Packs from $19.',
+  heroMicrocopyFree: '3 free exports with watermark. No account. Remove it from $4.90.',
   heroPrimaryCta: 'Generate PDF',
   heroTrustLine: 'Processed in France. Files deleted instantly. No AI, no data stored.',
   heroTrustRow: 'No account. No tracking of file contents. Works with CSV and XLSX.',
-  // Trust eyebrow — rendered above the H1 as the first strategic signal on
-  // page load (Apple-style). Replaces the former pain badge. "No LLM" is
-  // rendered in semibold + foreground color to give it a typographic accent
-  // without a pill/box. See Mathieu feedback 2026-04-14.
-  //
-  // Order — V4.3 (2026-04-15): NO LLM leads. This restores the original
-  // strategic order from Mathieu's 2026-04-14 feedback: the differentiator
-  // ("No LLM") must be the first word the eye catches when the page loads,
-  // since it's the single strongest competitive signal in a market saturated
-  // with LLM-wrapper tools. V4.2 tested "Zero storage" as the softer lead-in
-  // but the differentiation signal landed too late in the reading rhythm.
-  heroTrustEyebrow: 'No LLM · Zero storage · EU-hosted',
+  // Source spreadsheets and temporarily available PDFs have different retention.
+  heroTrustEyebrow: 'No LLM · Source files not stored · EU-hosted',
   heroTrustEyebrowAccent: 'No LLM',
   // File compatibility — rendered under the CTAs next to the free-tier
   // microcopy. Answers the #1 decision-point hesitation ("will my file
   // work?") and reinforces the broader "export" positioning by naming the
   // concrete formats (2026-04-15 feedback: no duplicate No LLM bottom).
-  heroFileCompat: 'Works with Excel, CSV, and any tabular export.',
+  heroFileCompat: 'Works with tabular Excel (.xlsx) and CSV exports.',
 
   problemTitle: "The problem isn't exporting. It's everything you do after.",
   problemBody: "Your spreadsheet exports, but the PDF still isn't ready to send. Columns get cut off. Page breaks land in the wrong places. You shrink fonts, adjust margins, export again, and hope it looks presentable. fitforpdf removes that cleanup step.",
@@ -124,7 +100,7 @@ export const LANDING_COPY = {
   ],
   privacyStripCta: 'Read privacy policy',
 
-  socialProofLine: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
+  socialProofLine: 'For consultants and teams sharing readable tables with clients.',
   socialProofTicker: [
     'Auditors sending 300-page reports',
     'Consultants sharing data with clients',
@@ -176,22 +152,22 @@ export const HOME_FAQ = [
   {
     id: 'time-saved',
     q: 'How much time does this actually save?',
-    a: 'Most users spend 20 to 45 minutes fixing each export. fitforpdf reduces that to seconds.',
+    a: 'That depends on your file and current workflow. Try the same export in Excel and FitForPDF, then compare the time and readability. We have not measured an average customer time saving yet.',
   },
   {
     id: 'worth-it',
     q: 'Is this worth it for just a few exports?',
-    a: 'Yes. Even one export can take 30 minutes to fix manually. A single clean PDF often pays for itself.',
+    a: 'Try your own file free first. If the result fits your needs, a single export without the watermark costs $4.90, with no subscription.',
   },
   {
     id: 'why-not-excel',
     q: 'Why not just fix it in Excel?',
-    a: "You can, but it's repetitive, fragile, and time-consuming. fitforpdf removes that step entirely.",
+    a: "Excel can set print areas, scale pages and repeat headings. FitForPDF offers another approach for wide tables: split columns into readable sections and repeat key columns automatically.",
   },
   {
     id: 'reformat',
     q: 'Do I need to reformat my spreadsheet first?',
-    a: 'No. Upload the file you already have.',
+    a: 'Use a table with a clear header row. FitForPDF creates a new layout from the data; charts, merged cells and the original workbook formatting are not reproduced.',
   },
   {
     id: 'filetypes',
@@ -219,10 +195,10 @@ export const HOME_FAQ = [
 export const PRICING_PAGE_COPY = {
   pageTitle: "Simple pricing.",
   pageTitleAccent: "Built for professionals.",
-  pageSubtitle: 'Typical manual formatting: 30–45 min per export. fitforpdf: done in seconds.',
+  pageSubtitle: 'Try your file free with a watermark. Choose one-time exports or a monthly subscription.',
   pageTagline: 'No subscriptions. No lock-in.',
   pageMicro: 'No subscriptions. No lock-in.',
-  socialProof: 'Used by consultants, finance teams, and operators who need clean PDFs without manual formatting.',
+  socialProof: 'For consultants and teams sharing readable tables with clients.',
 
   // Toggle labels
   togglePayg: 'Pay as you go',
@@ -248,7 +224,7 @@ export const PRICING_PAGE_COPY = {
   paygStarterExports: '10 exports',
   paygStarterDescription: 'For freelancers and regular client work.',
   paygStarterCtaLabel: 'Get 10 exports',
-  paygStarterBadge: 'Most popular',
+  paygStarterBadge: 'No subscription',
   paygStarterFeatures: ['10 PDF exports', 'No fitforpdf watermark', 'Branding & layout controls', 'Never expires'],
 
   // Pro subscription

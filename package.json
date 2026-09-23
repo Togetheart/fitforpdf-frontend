@@ -1,6 +1,6 @@
 {
   "name": "cleansheet-frontend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "dev": "node scripts/copy-pdf-worker.mjs && next dev -p 3001",

@@ -28,6 +28,7 @@ export default function SeoArticle({ article }) {
     headline: article.title,
     description: article.description,
     url,
+    ...(article.dateModified ? { dateModified: article.dateModified } : {}),
     publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
   };
 
@@ -133,6 +134,35 @@ export default function SeoArticle({ article }) {
             )}
           </section>
         ))}
+
+        {article.example ? (
+          <section data-testid="seo-example" className="mb-12">
+            <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">
+              {article.example.label || (isFr ? 'Schéma conceptuel' : 'Conceptual example')}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+                <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                  {article.example.beforeCaption}
+                </figcaption>
+                <pre data-testid="seo-example-before" className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{article.example.beforeLines.join('\n')}
+                </pre>
+              </figure>
+              <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+                <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                  {article.example.afterCaption}
+                </figcaption>
+                <pre data-testid="seo-example-after" className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{article.example.afterLines.join('\n')}
+                </pre>
+              </figure>
+            </div>
+            <p className="mt-2 text-xs text-[var(--color-muted)]">
+              {isFr ? 'Schéma conceptuel, pas un résultat mesuré. Vérifiez le PDF obtenu avec votre fichier.' : 'Conceptual diagram, not a measured result. Check the PDF produced from your own file.'}
+            </p>
+          </section>
+        ) : null}
 
         {article.faqs && article.faqs.length > 0 ? (
           <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">

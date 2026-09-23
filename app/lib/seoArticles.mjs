@@ -315,39 +315,39 @@ export const SEO_ARTICLES = [
       'Microscopic text in your Excel PDF? It\'s a symptom of Scale to Fit on a wide table. Here\'s how to fix it and stop sacrificing readability.',
     h1: 'Excel PDF export text is too small to read, how to fix it',
     lead:
-      'If your exported PDF requires zooming to 200% just to read cell values, the cause is almost always Scale to Fit applied to a table that\'s too wide for the page. Fixing the scale alone isn\'t enough.',
+      'If your exported PDF requires zooming just to read cell values, check whether Scale to Fit is shrinking a wide table. Page size, orientation, column widths and the original font size all affect the result.',
     sections: [
       {
         h2: 'Why "Scale to Fit" produces unreadable text',
         body:
-          'Excel\'s Scale to Fit shrinks the entire sheet, including font sizes, until it fits the page dimensions you specified. A 25-column sheet on landscape A4 gets crushed to roughly 6pt, where letters lose definition and decimal alignment becomes meaningless.',
+          'Excel\'s Scale to Fit can shrink the sheet, including its text, to fit the requested page dimensions. The resulting text size depends on the workbook and print settings; column count alone cannot predict it.',
       },
       {
         h2: 'The fix: stop scaling, start sectioning',
         list: [
           'Page Layout → Scale to Fit → reset to Width: Automatic, Height: Automatic, Scaling: 100%.',
-          'Pick the orientation that fits your widest natural section (landscape for >8 cols).',
+          'Compare portrait and landscape in Print Preview, using the paper size your readers will use.',
           'If the table still overflows: split into column groups before printing, OR switch to a sectioning tool.',
         ],
       },
       {
-        h2: 'fitforpdf preserves text size automatically',
+        h2: 'fitforpdf creates a sectioned table layout',
         body:
-          'Because fitforpdf splits wide tables horizontally into sections, every column gets the full page width to render at a readable size (10pt+ baseline). No scaling, no zoom required, the PDF is built to be read at 100%.',
+          'fitforpdf distributes a wide table across column sections and repeats key columns for context. It creates a new layout instead of preserving Excel\'s formatting. Preview the result with your own data, especially long headers and dense cells.',
       },
     ],
     faqs: [
       {
         q: 'What font size is too small for an Excel PDF?',
-        a: 'Below 8pt becomes hard to read printed. Below 6pt is illegible. Most "Scale to Fit" exports of wide tables end up around 4-6pt, which is the symptom users notice as "the text is too small".',
+        a: 'There is no single threshold that works for every reader and display. Check the PDF at its intended print size or on the device your recipient will use. Increase space or split the table if reading requires excessive zoom.',
       },
       {
         q: 'Can I just zoom in on the PDF and call it done?',
-        a: 'You can, but clients reading on a phone, projecting in a meeting, or printing won\'t. The right fix is to produce a PDF that\'s readable at 100% scale.',
+        a: 'Zoom can help on screen, but it does not change the printed size. Choose the layout based on how the PDF will be read and check a representative page before sharing.',
       },
       {
-        q: 'What\'s the minimum font size fitforpdf uses?',
-        a: 'fitforpdf targets a baseline of 9pt for data cells (10pt for headers). If a table is so wide that even sectioning can\'t hit that baseline, the engine emits a warning instead of producing an unreadable PDF.',
+        q: 'Does fitforpdf guarantee one font size throughout the PDF?',
+        a: 'No. Text size can vary between data cells, headers and other page elements. The output depends on the content and layout, so inspect the preview before downloading or sharing.',
       },
     ],
     related: [
@@ -357,8 +357,23 @@ export const SEO_ARTICLES = [
     ],
     cta: {
       title: 'Stop shrinking. Start sectioning.',
-      body: 'fitforpdf keeps every cell at readable size by structuring wide tables into sections. 3 free exports.',
+      body: 'Try a sectioned layout with your own table and compare the preview. 3 free exports with a watermark.',
       label: 'Get a readable PDF, free',
+    },
+    dateModified: '2026-09-23',
+    example: {
+      beforeCaption: 'A wide source table',
+      afterCaption: 'Possible column sections',
+      beforeLines: [
+        'Name | Company | Email | Stage | Deal value',
+        'Fitting a wide table onto one page may shrink its text.',
+      ],
+      afterLines: [
+        'Contact fields: Name | Company | Email',
+        'Deal fields:    Name | Company | Stage | Deal value',
+        'Repeat key columns to connect the sections.',
+        'Actual grouping and text size depend on the file.',
+      ],
     },
   },
   // ────────────────────────────────────────────────────────────────────
@@ -480,43 +495,43 @@ export const SEO_ARTICLES = [
     eyebrow: 'Multi-sheet Excel',
     title: 'Combine Multiple Excel Sheets into a Single PDF',
     description:
-      'How to combine multiple Excel sheets into one PDF with consistent formatting, using Excel\'s built-in option and an automated alternative.',
+      'Combine multiple Excel sheets with Excel\'s workbook export. Learn how to prepare each sheet and when fitforpdf\'s first-sheet-only conversion can help.',
     h1: 'Combine multiple Excel sheets into a single PDF',
     lead:
-      'A workbook with 6 tabs and 6 different layouts. You need one PDF that flows naturally between them. Here\'s the manual approach and where it falls short.',
+      'Need several workbook tabs in one PDF? Use Excel\'s workbook export and review each sheet\'s page setup. fitforpdf converts the first worksheet only; it does not combine workbook tabs.',
     sections: [
       {
         h2: 'Excel\'s built-in option: Print Active Sheets',
         body:
-          'File → Print → Print Active Sheets → set to "Entire Workbook". This generates a single PDF with all sheets included in their tab order. The catch: every sheet keeps its own page setup, so if one is landscape and another portrait, the PDF will be mixed.',
+          'In File → Print, choose "Print Entire Workbook" instead of "Print Active Sheets", then use the PDF output option available on your system. Review the preview and sheet selection: each worksheet has its own page setup, so orientations and margins can differ.',
       },
       {
         h2: 'Pre-export consistency checklist',
         list: [
-          'Group all sheets (Ctrl+click each tab), then set page setup once, applies to all.',
-          'Set Print Titles per sheet (since they\'re not shared across the group).',
+          'Review page size, orientation and margins on each sheet you want to include.',
+          'Set Print Titles for each sheet that needs repeated headings.',
           'Add a unified footer with workbook name + sheet name + page numbers.',
           'Verify each sheet\'s print area is set correctly, Page Layout → Print Area → Set.',
         ],
       },
       {
-        h2: 'Automated multi-sheet handling',
+        h2: 'fitforpdf converts the first worksheet only',
         body:
-          'fitforpdf reads multi-sheet XLSX files and produces a single PDF with an overview page listing every sheet and a section per sheet. Each section gets its own sectioning logic based on the sheet\'s width, so a narrow summary tab stays portrait, a wide detail tab gets sectioned automatically.',
+          'fitforpdf reads the first worksheet only when you upload an XLSX file. Other tabs are not included. To use its sectioned layout for several tables, save each table as a separate CSV or single-sheet XLSX, convert each file, then combine the resulting PDFs in a separate PDF tool. For an entire workbook with its original formatting, use Excel\'s PDF export.',
       },
     ],
     faqs: [
       {
         q: 'How do I export multiple Excel sheets to one PDF?',
-        a: 'File → Print → choose "Print Entire Workbook" instead of "Print Active Sheets", then Save as PDF. Make sure every sheet has the same page setup (orientation, margins) for visual consistency.',
+        a: 'In Excel, choose "Print Entire Workbook" in the print settings, then save or print to PDF. Check that the preview includes every intended sheet and that each sheet\'s page setup suits its content.',
       },
       {
         q: 'Why do my multi-sheet PDFs have inconsistent formatting?',
-        a: 'Because each sheet has its own page setup. Use sheet grouping (Ctrl+click tabs) to apply settings once, or hard-set Page Layout per tab before exporting.',
+        a: 'Each sheet has its own page setup. Review orientation, margins, print area and repeated headings for each tab before exporting.',
       },
       {
-        q: 'Does fitforpdf preserve sheet names in the multi-sheet PDF?',
-        a: 'Yes, each sheet becomes a section with its tab name as the section title, and the overview page lists every sheet with page references.',
+        q: 'Can fitforpdf combine every sheet in my workbook?',
+        a: 'No. fitforpdf converts the first worksheet only. Export the entire workbook with Excel, or convert separate single-sheet files and combine the PDFs with another tool. fitforpdf sections represent column groups within a table, not workbook tabs.',
       },
     ],
     related: [
@@ -525,9 +540,25 @@ export const SEO_ARTICLES = [
       { label: 'Excel PDF page break control', href: '/pdf-export-excel-page-break-control' },
     ],
     cta: {
-      title: 'Multi-sheet workbook → one structured PDF.',
-      body: 'Upload your XLSX (any number of sheets). Get a single PDF with an overview + section per sheet. 3 free exports.',
-      label: 'Combine your workbook, free',
+      title: 'Try a sectioned PDF for one table.',
+      body: 'Upload a CSV or a single-sheet XLSX. fitforpdf converts the first worksheet only. 3 free exports with a watermark.',
+      label: 'Convert one table, free',
+    },
+    dateModified: '2026-09-23',
+    example: {
+      beforeCaption: 'Workbook tabs to include',
+      afterCaption: 'Choose the workflow for your output',
+      beforeLines: [
+        'Summary',
+        'Transactions',
+        'Notes',
+      ],
+      afterLines: [
+        'Excel: Print Entire Workbook, then inspect the preview.',
+        'fitforpdf: first worksheet only (Summary in this order).',
+        'For separate tables: export each as its own file,',
+        'convert individually, then combine PDFs elsewhere.',
+      ],
     },
   },
   // ────────────────────────────────────────────────────────────────────

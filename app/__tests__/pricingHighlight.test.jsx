@@ -52,9 +52,9 @@ describe('pricing highlight on home', () => {
     expect(allText).not.toContain('$79');
   });
 
-  test('starter pack is marked as recommended (Most popular)', () => {
+  test('starter pack is marked as recommended (No subscription)', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
-    const popularTexts = cards.filter((c) => (c.textContent || '').includes('Most popular'));
+    const popularTexts = cards.filter((c) => (c.textContent || '').includes('No subscription'));
 
     expect(popularTexts).toHaveLength(1);
   });

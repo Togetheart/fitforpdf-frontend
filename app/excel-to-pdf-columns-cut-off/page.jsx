@@ -20,23 +20,23 @@ export const metadata = {
 const faqs = [
   {
     q: 'Why does Excel cut off columns in PDF exports?',
-    a: 'Because Excel fits content into a fixed page width and cannot expand beyond margin boundaries automatically. Wide sheets get truncated rather than restructured.',
+    a: 'Check the print area, hidden columns and page breaks. Columns outside the print area are excluded, while a wide print area can continue onto additional pages or shrink depending on scaling settings.',
   },
   {
     q: 'How do I stop Excel from cutting off columns when printing to PDF?',
-    a: 'Go to Page Layout → Scale to Fit → set Width to 1 page. This compresses the sheet, but makes text very small on wide sheets. A better approach is to group columns into sections.',
+    a: 'Check that the print area includes the intended columns. In Page Layout → Scale to Fit, setting Width to 1 page can fit them horizontally, but inspect the text size. You can also allow more pages or split the table into sections.',
   },
   {
     q: 'Why does my Excel PDF only show half the columns?',
-    a: 'The sheet is wider than the page size. Excel prints only what fits within the print area. You can extend the print area or switch to a tool that sections wide data automatically.',
+    a: 'The print area may exclude columns, some columns may be hidden, or the remaining columns may be on later pages. Inspect Print Preview and adjust the print area before changing tools.',
   },
   {
     q: 'Can I fix cut-off columns without a tool?',
-    a: 'You can adjust page scaling, orientation, and margins, but this often distorts layout for sheets with many columns.',
+    a: 'Yes. Adjust the print area, scaling, orientation and margins, then inspect all pages in Print Preview. Allowing more pages can preserve text size.',
   },
   {
     q: 'Does fitforpdf preserve all columns?',
-    a: 'Yes, fitforpdf restructures the sheet into sections, so no column is cut off. Reference columns (ID, Name) are repeated on each section for context.',
+    a: 'fitforpdf distributes the selected table columns across sections and repeats key columns for context. For XLSX files, it reads the first worksheet only; hidden or excluded columns are not included. Check the preview against your source table.',
   },
 ];
 
@@ -46,6 +46,7 @@ const articleLd = {
   headline: SEO.excelCutoff.title,
   description: SEO.excelCutoff.description,
   url: `${SEO.siteUrl}/${SEO.excelCutoff.slug}`,
+  dateModified: '2026-09-23',
   publisher: { '@type': 'Organization', name: 'fitforpdf', url: SEO.siteUrl },
 };
 
@@ -85,29 +86,59 @@ export default function ExcelCutoffPage() {
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Why Excel PDF export breaks on wide sheets</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        Excel uses a fixed page width when exporting. If your sheet is wider than a standard page,
-        Excel truncates content or scales it to unreadable sizes.
+        Excel exports the configured print area using the selected page size and scaling.
+        Columns can be excluded by the print area, continue onto later pages, or become
+        small when the whole table is scaled down. Inspect the preview to identify which applies.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Manual workarounds</h2>
       <ul className="mb-8 list-disc pl-6 leading-relaxed text-[var(--color-muted)]">
-        <li>Page Layout → Scale to Fit → set Width to 1 page</li>
+        <li>Check that the print area includes the columns you want</li>
+        <li>Compare scaling to one page wide with allowing several pages</li>
         <li>Switch orientation to Landscape</li>
-        <li>Reduce font size and column widths manually</li>
-        <li>Split the sheet into multiple print areas</li>
+        <li>Adjust column widths and margins while checking text size</li>
+        <li>Repeat identifier columns with Print Titles when using several pages</li>
       </ul>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Limitations of manual fixes</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        Manual scaling breaks readability for wide data. Landscape orientation helps but still
-        truncates sheets with 20+ columns. Splitting into areas takes time and breaks context.
+        Scaling can make text too small. Landscape adds width, but the result also depends on
+        column widths and page size. If you split the table across pages, repeated identifiers
+        help readers connect the data.
       </p>
 
       <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Structured export with fitforpdf</h2>
       <p className="mb-8 leading-relaxed text-[var(--color-muted)]">
-        fitforpdf automatically groups wide columns into readable sections, each section fits on
-        a page with the reference columns (ID, Name) repeated. No manual layout needed.
+        fitforpdf creates a new table layout with column sections and repeated key columns.
+        Sections can span several pages. Upload a tabular CSV or XLSX with a clear header row;
+        for XLSX, only the first worksheet is read. Review the preview before sharing.
       </p>
+
+      <section data-testid="seo-example" className="mb-12">
+        <h2 className="mb-3 text-xl font-semibold text-[var(--color-text)]">Conceptual example</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+            <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+              A source table with contact and deal fields
+            </figcaption>
+            <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{`Name | Company | Email | Stage | Deal value
+Check that the Excel print area includes every field you need.`}
+            </pre>
+          </figure>
+          <figure className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+            <figcaption className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+              Possible groups with repeated identifiers
+            </figcaption>
+            <pre className="overflow-x-auto whitespace-pre-wrap text-[11px] leading-snug text-[var(--color-muted)]">
+{`Contact fields: Name | Company | Email
+Deal fields:    Name | Company | Stage | Deal value
+Actual grouping and pagination depend on the file and settings.`}
+            </pre>
+          </figure>
+        </div>
+        <p className="mt-2 text-xs text-[var(--color-muted)]">Conceptual diagram, not a measured result. Check the PDF produced from your own file.</p>
+      </section>
 
       <section data-testid="seo-faq" className="mb-12 border-t border-[var(--color-border)]">
         <h2 className="py-6 text-xl font-semibold text-[var(--color-text)]">Frequently asked questions</h2>
@@ -135,7 +166,7 @@ export default function ExcelCutoffPage() {
       <section data-testid="seo-cta" className="rounded-2xl bg-[var(--color-bg-hero)] px-6 py-8 text-center">
         <h2 className="mb-2 text-xl font-semibold text-[var(--color-text)]">Fix your Excel export now</h2>
         <p className="mb-5 text-[var(--color-muted)]">
-          Upload your spreadsheet. Get a structured PDF in seconds. 3 free exports.
+          Try a new layout for your table and inspect the preview. 3 free exports with a watermark.
         </p>
         <a
           href="/"

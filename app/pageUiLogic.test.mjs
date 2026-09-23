@@ -52,7 +52,8 @@ test('shows page burden message and compact CTA on page_burden_high FAIL', () =>
   assert.equal(getFailKind(confidence), 'page_burden');
 
   const copy = getPageBurdenUiCopy();
-  assert.equal(copy.title, 'Document too large for direct sending');
+  assert.equal(copy.title, 'This export exceeds the page limit');
+  assert.doesNotMatch(copy.description, /reasonable volume|human review/i);
   assert.equal(copy.primaryCta, 'Generate compact version');
 });
 

@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import React from 'react';
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, renderHook, screen, waitFor, within } from '@testing-library/react';
 
 import AppPage from '../app/page.jsx';
+import useConversion from '../hooks/useConversion.mjs';
 
 /**
  * The /app workbench dropzone (WorkbenchDropzone) calls handleSubmit but, before
@@ -13,16 +14,18 @@ import AppPage from '../app/page.jsx';
 
 const REAL_FILE = new File(['col1,col2\n1,2'], 'real.csv', { type: 'text/csv' });
 
+let planType = 'free';
+let quotaStatus = 200;
 function quotaResponse() {
-  return new Response(JSON.stringify({ plan_type: 'free', free_exports_left: 9 }), {
-    status: 200, headers: { 'content-type': 'application/json' },
+  return new Response(JSON.stringify({ plan_type: planType, free_exports_left: 9 }), {
+    status: quotaStatus, headers: { 'content-type': 'application/json' },
   });
 }
 
-function pageBurdenResponse() {
+function pageBurdenResponse(estimatedPages = 246) {
   return new Response(JSON.stringify({
     error: 'Projected page count is too high for a sendable PDF.',
-    estimatedPages: 246,
+    estimatedPages,
     recommendations: ['mode_compact', 'scope_reduce'],
     confidence: { score: 35, verdict: 'FAIL', reasons: ['page_burden_high'] },
   }), { status: 422, headers: { 'content-type': 'application/json' } });
@@ -48,6 +51,8 @@ function installFetch() {
 
 let restoreFetch;
 beforeEach(() => {
+  planType = 'free';
+  quotaStatus = 200;
   Object.defineProperty(window, 'matchMedia', {
     writable: true, configurable: true,
     value: () => ({ matches: false, media: '', addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, dispatchEvent: () => {} }),
@@ -67,13 +72,97 @@ async function selectFileAndGenerate() {
 }
 
 describe('/app workbench dropzone surfaces render failures', () => {
+  test.each([
+    ['free', 246, true], ['free', 600, true], ['free', 601, false],
+    ['free', null, false], ['free', 200, false], ['free', '246', false],
+    ['pro', 246, false], ['credits', 246, false], ['api_enterprise', 246, false],
+  ])('%s plan, %s pages: upgrade visibility is %s', async (plan, pages, visible) => {
+    planType = plan;
+    renderResponder = () => pageBurdenResponse(pages);
+    await selectFileAndGenerate();
+    const box = await screen.findByTestId('generate-error');
+    expect(Boolean(within(box).queryByRole('button', { name: /Pro.*\$9\.90/i }))).toBe(visible);
+    if (visible) {
+      expect(box.textContent).toContain('200');
+      expect(box.textContent).toContain('600');
+      expect(box.textContent).not.toMatch(/unlimited|lifts the limit/i);
+    }
+  });
+
+  test('an unavailable quota never treats an unknown account as a free prospect', async () => {
+    quotaStatus = 503;
+    renderResponder = pageBurdenResponse;
+    await selectFileAndGenerate();
+    const box = await screen.findByTestId('generate-error');
+    expect(within(box).queryByRole('button', { name: /Pro.*\$9\.90/i })).toBeNull();
+  });
+
+  test.each(['replacement', 'oversized'])('a %s file clears the previous page-limit offer', async (kind) => {
+    renderResponder = pageBurdenResponse;
+    await selectFileAndGenerate();
+    const upgrade = await screen.findByRole('button', { name: /Pro.*\$9\.90/i });
+    await waitFor(() => expect(upgrade.disabled).toBe(false), { timeout: 3000 });
+    const nextFile = new File(['id,value\n2,3'], 'next.csv', { type: 'text/csv' });
+    if (kind === 'oversized') Object.defineProperty(nextFile, 'size', { value: 5 * 1024 * 1024 });
+    await act(async () => fireEvent.change(screen.getByTestId('generate-file-input'), { target: { files: [nextFile] } }));
+    expect(screen.queryByRole('button', { name: /Pro.*\$9\.90/i })).toBeNull();
+    expect(screen.queryByText('This export exceeds the page limit')).toBeNull();
+  });
+
+  test.each(['Enter', ' '])('the %s key on the upgrade button does not open the file picker', async (key) => {
+    renderResponder = pageBurdenResponse;
+    await selectFileAndGenerate();
+    const upgrade = await screen.findByRole('button', { name: /Pro.*\$9\.90/i });
+    await waitFor(() => expect(upgrade.disabled).toBe(false), { timeout: 3000 });
+    const picker = vi.spyOn(screen.getByTestId('generate-file-input'), 'click').mockImplementation(() => {});
+    expect(fireEvent.keyDown(upgrade, { key })).toBe(true);
+    expect(picker).not.toHaveBeenCalled();
+    // Keyboard activation on the dropzone itself must remain available.
+    expect(fireEvent.keyDown(screen.getByTestId('generate-dropzone'), { key })).toBe(false);
+    expect(picker).toHaveBeenCalledTimes(1);
+  });
+
+  test('removing a refused file clears its page estimate and recommendations', async () => {
+    renderResponder = pageBurdenResponse;
+    const quota = { planType: 'free', freeExportsLeft: 3, isQuotaLocked: false };
+    const { result } = renderHook(() => useConversion({ quota }));
+    await act(async () => result.current.handleFileSelect(REAL_FILE));
+    await act(async () => result.current.handleSubmit());
+    expect(result.current.pageBurdenEstimatedPages).toBe(246);
+    await act(async () => result.current.handleRemoveFile());
+    expect(result.current.pageBurdenEstimatedPages).toBeNull();
+    expect(result.current.failureRecommendations).toEqual([]);
+    expect(result.current.confidence).toBeNull();
+  });
+
+  test('page-limit upgrade opens monthly checkout, returns to app on cancel, and shows failures', async () => {
+    renderResponder = pageBurdenResponse;
+    const previousFetch = global.fetch;
+    global.fetch = vi.fn(async (url, options) => {
+      if (String(url).includes('/api/plan/pro/checkout')) {
+        return new Response(JSON.stringify({ error: 'Checkout temporarily unavailable' }), { status: 503 });
+      }
+      return previousFetch(url, options);
+    });
+    await selectFileAndGenerate();
+    const box = await screen.findByTestId('generate-error');
+    const upgrade = within(box).getByRole('button', { name: /Pro.*\$9\.90/i });
+    await waitFor(() => expect(upgrade.disabled).toBe(false), { timeout: 3000 });
+    await act(async () => fireEvent.click(upgrade));
+    expect(await within(box).findByText('Checkout temporarily unavailable')).toBeTruthy();
+    const call = global.fetch.mock.calls.find(([url]) => String(url).includes('/api/plan/pro/checkout'));
+    const body = JSON.parse(call[1].body);
+    expect(body.billing).toBe('monthly');
+    expect(body.cancel_url).toMatch(/\/app\?checkout=cancelled$/);
+  });
+
   test('page-burden (422) shows the failure + an actionable recommendation, not silence', async () => {
     renderResponder = pageBurdenResponse;
     await selectFileAndGenerate();
 
     const box = await screen.findByTestId('generate-error');
     // The compact recommendation must be visible (recommendationLabel('mode_compact')).
-    expect(within(box).getByText(/compact/i)).toBeTruthy();
+    expect(within(box).getByText('Try compact mode.')).toBeTruthy();
     // And no PDF preview should be claimed.
     expect(screen.queryByTestId('app-pdf-preview')).toBeNull();
   });

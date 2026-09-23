@@ -57,11 +57,11 @@ describe('landing conversion-first structure', () => {
   });
 
   test('hero keeps the 2-line headline with required rhythm', () => {
-    const heading = screen.getByRole('heading', { level: 1, name: /Skip the cleanup/i });
+    const heading = screen.getByRole('heading', { level: 1, name: /Wide Excel tables/i });
 
     expect(heading).toBeTruthy();
     expect(screen.getByTestId('hero-headline-accent').textContent).toBe(LANDING_COPY.heroHeadlineL1);
-    expect(screen.getByText(/Send it now/)).toBeTruthy();
+    expect(screen.getByText(/Readable client PDFs/)).toBeTruthy();
     const headingText = heading.textContent || '';
     expect(headingText).toContain(LANDING_COPY.heroHeadlineL1);
     expect(headingText).toContain(LANDING_COPY.heroHeadlineL2);
@@ -164,7 +164,7 @@ describe('landing conversion-first structure', () => {
     const starterCard = cards.find((card) => card.textContent?.includes('Starter'));
 
     expect(starterCard).toBeTruthy();
-    expect(starterCard?.textContent).toContain('Most popular');
+    expect(starterCard?.textContent).toContain('No subscription');
     expect(starterCard?.className || '').toContain('md:scale-[1.04]');
   });
 
@@ -203,9 +203,8 @@ describe('landing conversion-first structure', () => {
     const comparison = screen.getByTestId('section-comparison');
 
     expect(screen.getByText('Excel PDF Export vs fitforpdf')).toBeTruthy();
-    // The editorial lede (drop cap) + the serif trust figures replaced the old subcopy.
-    expect(screen.getByText(/Spreadsheets are built for machines, not readers\./)).toBeTruthy();
-    expect(screen.getByText('files stored, ever')).toBeTruthy();
+    expect(screen.getByText(/Excel gives you control over print areas/)).toBeTruthy();
+    expect(screen.getByText('source files stored')).toBeTruthy();
     // Comparison follows proof and upload in document order, before pricing.
     expect(proofSection.compareDocumentPosition(comparison) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     const pricing = screen.getByTestId(`section-${LANDING_COPY_KEYS.pricingPreview}`);
@@ -277,4 +276,18 @@ describe('landing conversion-first structure', () => {
     expect(xlsxRadio.getAttribute('aria-checked')).toBe('true');
     expect(csvRadio.getAttribute('aria-checked')).toBe('false');
   });
+});
+
+// Commercial claims must stay within the evidence available at launch.
+test('landing explains tabular scope and avoids unmeasured savings', () => {
+  expect(document.body.textContent).not.toMatch(/saves? (?:30|45)|most users spend|most popular/i);
+  expect(document.body.textContent).toMatch(/charts.*merged|merged.*charts/i);
+  expect(document.body.textContent).toContain('watermark');
+});
+
+test('comparison acknowledges Excel print titles and distinguishes source files', () => {
+  const comparison = screen.getByTestId('section-comparison');
+  expect(comparison.textContent).toContain('Configurable print titles');
+  expect(comparison.textContent).toContain('source files stored');
+  expect(comparison.textContent).not.toContain('Lost after first pages');
 });
