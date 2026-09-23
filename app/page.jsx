@@ -22,12 +22,12 @@ import { captureRefAttribution } from './lib/refAttribution.mjs';
 const CTA_SECONDARY = 'inline-flex h-11 items-center gap-1.5 justify-center rounded-full border px-5 text-sm font-semibold transition duration-150 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:border-[var(--color-border)] hover:bg-[var(--color-bg-hero)]';
 
 const COMPARISON_ROWS = [
-  ['Wide columns', 'Cut off or unreadable', 'Grouped into sections'],
-  ['Layout', 'Manual configuration', 'Auto-structured'],
-  ['Page breaks', 'Unpredictable splits', 'Automatic pagination'],
-  ['Reference columns', 'Lost after first pages', 'Repeated automatically'],
-  ['Overview', 'None', 'Navigate between sections instantly'],
-  ['Result', 'Spreadsheet-like output', 'Readable, send-ready document'],
+  ['Wide columns', 'Scaling and print-area controls', 'Grouped into sections'],
+  ['Layout', 'Preserves worksheet layout', 'Creates a new table layout'],
+  ['Page breaks', 'Configurable print settings', 'Automatic pagination'],
+  ['Reference columns', 'Configurable print titles', 'Repeated automatically'],
+  ['Overview', 'Can be built in the workbook', 'Generated section overview'],
+  ['Result', 'Printed worksheet', 'Sectioned document for reading'],
 ];
 
 
@@ -182,7 +182,7 @@ export default function Page() {
           promise has to hold on phones too. Was hidden at opacity:0 until the
           first scroll, so a phone visitor saw no product above the fold. */}
       <div
-        className="sm:hidden pb-6 px-4 -mt-8 relative z-10 bg-[var(--color-bg-hero)]"
+        className="sm:hidden pb-6 px-4 mt-4 relative z-10 bg-[var(--color-bg-hero)]"
       >
         <div className="flex flex-col items-center gap-4">
           <button
@@ -265,9 +265,9 @@ export default function Page() {
             </h2>
             <div className="relative mx-auto mt-6 max-w-[58ch]">
               <p className="text-left text-[15.5px] leading-[1.75] text-[var(--color-text)]">
-                Spreadsheets are built for machines, not readers. fitforpdf re-typesets a wide
-                export into a paginated PDF, anchor columns repeated on every page, an automatic
-                table of contents, and nothing cut off.
+                Excel gives you control over print areas, scaling and repeated headings.
+                fitforpdf creates a new layout for wide tables: readable sections, repeated
+                key columns and an overview to navigate the document.
               </p>
               {/* Margin note (marginalia): in the left gutter on wide screens, stacks
                   below the lede on smaller ones so the annotation is never lost. */}
@@ -280,7 +280,7 @@ export default function Page() {
           <div className="mx-auto grid max-w-xl grid-cols-3 divide-x divide-[#0F172A]/10 text-center">
             <div className="px-2">
               <div className="text-[34px] font-bold leading-none text-[var(--color-text)]">0</div>
-              <div className="mt-1.5 text-[11.5px] leading-snug text-muted">files stored, ever</div>
+              <div className="mt-1.5 text-[11.5px] leading-snug text-muted">source files stored</div>
             </div>
             <div className="px-2">
               <div className="text-[34px] font-bold leading-none text-[var(--color-text)]">0</div>

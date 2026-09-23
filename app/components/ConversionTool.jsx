@@ -1292,6 +1292,15 @@ function WorkbenchDropzone({ conversion, quota }) {
   const inputRef = React.useRef(null);
   const hasFile = Boolean(conversion.file);
   const isQuotaLocked = Boolean(quota?.isQuotaLocked);
+  // Mirrors the backend's 200/600-page ceilings. An upgrade cannot help an
+  // already-paid user or a file beyond the paid ceiling; unknown counts stay safe.
+  const showPageLimitUpgrade = quota?.loaded
+    && quota.planType === 'free'
+    && Number.isFinite(quota.freeExportsLeft)
+    && !quota.isUnlimited
+    && Number.isFinite(conversion.pageBurdenEstimatedPages)
+    && conversion.pageBurdenEstimatedPages > 200
+    && conversion.pageBurdenEstimatedPages <= 600;
 
   const selectFile = (nextFile) => {
     if (!nextFile || conversion.isLoading) return;
@@ -1439,6 +1448,27 @@ function WorkbenchDropzone({ conversion, quota }) {
                       <li key={token}>{recommendationLabel(token)}</li>
                     ))}
                   </ul>
+                ) : null}
+                {showPageLimitUpgrade ? (
+                  <div className="mt-3 border-t border-[var(--color-danger-border)] pt-3 text-[12.5px] text-[var(--color-danger-text)]">
+                    <p>
+                      This export is estimated at {conversion.pageBurdenEstimatedPages} pages. Free exports allow up to 200 pages;
+                      paid exports allow up to 600. Other file limits still apply.
+                    </p>
+                    <button
+                      type="button"
+                      disabled={conversion.isLoading || conversion.isCheckoutLoading}
+                      onClick={() => {
+                        trackPaywallEvent('paywall_upgrade_clicked', { surface: 'page_burden', estimated_pages: conversion.pageBurdenEstimatedPages });
+                        void conversion.handleGoProCheckout?.({ cancelPath: '/app' });
+                      }}
+                      className="mt-2 inline-flex min-h-10 items-center rounded-[10px] bg-[var(--color-cta-bg)] px-4 text-[13px] font-bold text-white disabled:opacity-50"
+                    >
+                      {conversion.isCheckoutLoading ? 'Opening checkout…' : `Get Pro · ${PRICING_PAGE_COPY.proMonthlyPrice}/month`}
+                    </button>
+                    <p className="mt-1">Monthly subscription. Cancel anytime. <a className="underline" href="/pricing">Compare one-time options</a></p>
+                    {quota.purchaseMessage ? <p className="mt-2" role="status">{quota.purchaseMessage}</p> : null}
+                  </div>
                 ) : null}
                 {/* One-click recovery: condense long text (cap tall cells to a few
                     lines) and re-render the same file, which drops the projected

@@ -102,12 +102,12 @@ test('hero trust eyebrow carries the no-LLM signal above the headline', () => {
   assert.equal(/no llm/i.test(eyebrow), true, 'Trust eyebrow must contain "No LLM"');
   assert.equal(accent.toLowerCase(), 'no llm', 'Trust accent must be "No LLM"');
   // The three pillars must all appear in the eyebrow.
-  assert.equal(/zero storage/i.test(eyebrow), true, 'Trust eyebrow must mention zero storage');
+  assert.equal(/source files not stored/i.test(eyebrow), true, 'Trust eyebrow must mention source files not stored');
   assert.equal(/eu[- ]hosted/i.test(eyebrow), true, 'Trust eyebrow must mention EU-hosted');
-  // V4.3 order (2026-04-15): NO LLM → Zero storage → EU-hosted. The
+  // V4.3 order (2026-04-15): NO LLM → Source files not stored → EU-hosted. The
   // differentiator ("No LLM") must be the first word the eye catches when
   // the page loads — it is the single strongest competitive signal in a
-  // market saturated with LLM-wrapper tools. V4.2 tested "Zero storage" as
+  // market saturated with LLM-wrapper tools. V4.2 tested "Source files not stored" as
   // the softer lead-in but the differentiation signal landed too late in
   // the reading rhythm. The JSX renderer splits around the accent so it can
   // live anywhere in the string.
@@ -118,60 +118,26 @@ test('hero trust eyebrow carries the no-LLM signal above the headline', () => {
   );
   assert.equal(
     eyebrow.toLowerCase().indexOf('no llm') <
-      eyebrow.toLowerCase().indexOf('zero storage'),
+      eyebrow.toLowerCase().indexOf('source files not stored'),
     true,
-    '"No LLM" must precede "Zero storage" (V4.3 order lock)',
+    '"No LLM" must precede "Source files not stored" (V4.3 order lock)',
   );
   assert.equal(
-    eyebrow.toLowerCase().indexOf('zero storage') <
+    eyebrow.toLowerCase().indexOf('source files not stored') <
       eyebrow.toLowerCase().indexOf('eu-hosted'),
     true,
-    '"Zero storage" must precede "EU-hosted" (V4.3 order lock)',
+    '"Source files not stored" must precede "EU-hosted" (V4.3 order lock)',
   );
 });
 
-test('hero H1 headline sells the outcome (skip cleanup → send), no "client-ready" promise', () => {
-  // V5 (2026-06-10, sprint S1): the "client-ready" PROMISE leaves the titles.
-  // Kunj (consulting ICP, 2026-05-28) hears corporate-grade fidelity in
-  // "client-ready" — merged headers, charts, brand charters — explicit
-  // anti-scope, a comparison we lose by design. Magdalena's pain language
-  // ("cleanup", cut-off columns, page breaks) stays in the subheadline and
-  // body. The headline now sells the outcome both segments agree on.
-  const l1 = LANDING_COPY.heroHeadlineL1;
-  const l2 = LANDING_COPY.heroHeadlineL2;
-  assert.equal(typeof l1, 'string');
-  assert.equal(typeof l2, 'string');
-  assert.equal(/cleanup/i.test(l1), true, 'H1 L1 must reference the cleanup pain');
-  assert.equal(
-    /client[- ]ready/i.test(l1 + ' ' + l2),
-    false,
-    'H1 must NOT promise "client-ready" (consulting-grade fidelity is anti-scope, Kunj 2026-05-28)',
-  );
-  assert.equal(
-    /excel/i.test(l1),
-    false,
-    'H1 L1 must NOT mention Excel, too restrictive for SaaS/CRM ICPs (Abhinav signal)',
-  );
-  assert.equal(/send/i.test(l2), true, 'H1 L2 must name the outcome: send it');
+test('hero names the input and readable output without promising workbook fidelity', () => {
+  assert.match(LANDING_COPY.heroHeadlineL1, /wide.*Excel.*tables/i);
+  assert.match(LANDING_COPY.heroHeadlineL2, /readable.*PDF/i);
+  assert.doesNotMatch(LANDING_COPY.heroHeadlineL1 + LANDING_COPY.heroHeadlineL2, /client[- ]ready/i);
 });
 
-test('hero subheadline uses staccato pain + solution structure', () => {
-  // Pain staccato on L2a + solution on L2b. The staccato must enumerate the
-  // three validated visual pains (wide tables, cut-off columns, broken page
-  // breaks). "Broken page breaks" is the specific, visual phrasing validated
-  // by Magdalena ("awkward page breaks") and is more concrete than the
-  // vague "manual fixes" (2026-04-15 feedback).
-  const l2a = LANDING_COPY.heroSubheadlineL2a;
-  const l2b = LANDING_COPY.heroSubheadlineL2b;
-  assert.equal(typeof l2a, 'string');
-  assert.equal(typeof l2b, 'string');
-  assert.equal(/wide tables/i.test(l2a), true, 'Staccato must mention wide tables (Abhinav)');
-  assert.equal(/cut[- ]off/i.test(l2a), true, 'Staccato must mention cut-off columns (Magdalena)');
-  assert.equal(
-    /page breaks/i.test(l2a),
-    true,
-    'Staccato must mention page breaks (specific visual pain, Magdalena)',
-  );
-  assert.equal(/fitforpdf/i.test(l2b), true, 'Solution line must name the product');
-  assert.equal(/one click/i.test(l2b), true, 'Solution line must promise one-click simplicity');
+test('hero identifies a customer workflow and explains the transformation', () => {
+  assert.match(LANDING_COPY.heroSubheadlineL2a, /consultants.*CRM.*clients/i);
+  assert.match(LANDING_COPY.heroSubheadlineL2b, /Excel.*CSV.*PDF.*sections/i);
+  assert.match(LANDING_COPY.heroSubheadlineL2b, /key columns repeated/i);
 });

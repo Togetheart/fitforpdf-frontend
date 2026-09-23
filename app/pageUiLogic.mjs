@@ -49,8 +49,8 @@ export function getFailKind(confidence) {
 
 export function getPageBurdenUiCopy() {
   return {
-    title: 'Document too large for direct sending',
-    description: 'This PDF would exceed a reasonable volume for human review.',
+    title: 'This export exceeds the page limit',
+    description: 'Reduce rows or columns, or try a more compact layout.',
     primaryCta: 'Generate compact version',
     secondaryCta: 'Adjust scope (coming soon)',
   };

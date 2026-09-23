@@ -374,6 +374,7 @@ export default function useConversion({ quota }) {
   const [showDebug, setShowDebug] = useState(false);
   const [debugByQuery, setDebugByQuery] = useState(false);
   const [failureRecommendations, setFailureRecommendations] = useState([]);
+  const [pageBurdenEstimatedPages, setPageBurdenEstimatedPages] = useState(null);
   const [compactSuggestion, setCompactSuggestion] = useState(null);
   const [resolvedPdfFilename, setResolvedPdfFilename] = useState('report.pdf');
   const [renderVerdict, setRenderVerdict] = useState(null);
@@ -539,6 +540,7 @@ export default function useConversion({ quota }) {
     setRenderVerdict(null);
     setRenderId(null);
     setFailureRecommendations([]);
+    setPageBurdenEstimatedPages(null);
     setCompactSuggestion(null);
     setColumnMapDebug(null);
     setShareState({ status: 'idle', jobId: null });
@@ -649,6 +651,7 @@ export default function useConversion({ quota }) {
           setLastRequestMode(mode);
           setShowDetails(false);
           setFailureRecommendations(normalizePageBurdenRecommendations(data.recommendations));
+          setPageBurdenEstimatedPages(Number.isFinite(data.estimatedPages) ? data.estimatedPages : null);
           return;
         }
 
@@ -1118,10 +1121,10 @@ export default function useConversion({ quota }) {
     if (result?.error) setPurchaseMessage(result.error);
   }
 
-  async function handleGoProCheckout() {
+  async function handleGoProCheckout(options = {}) {
     setPaywallReason('');
     setPurchaseMessage('');
-    const result = await checkout.openProCheckout();
+    const result = await checkout.openProCheckout('monthly', options);
     if (result?.error) setPurchaseMessage(result.error);
   }
 
@@ -1233,6 +1236,7 @@ export default function useConversion({ quota }) {
     resolvedPdfFilename,
     lastRequestMode,
     failureRecommendations,
+    pageBurdenEstimatedPages,
     compactSuggestion,
     wasDemoLastUpload,
     showDetails,
@@ -1254,6 +1258,7 @@ export default function useConversion({ quota }) {
     // checkout
     handleBuyCreditsPack,
     handleGoProCheckout,
+    isCheckoutLoading: checkout.isLoading,
     // history
     exportHistory,
     isHistoryLoading,

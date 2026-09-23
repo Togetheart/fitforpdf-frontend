@@ -26,7 +26,7 @@ describe('pricing page highlight', () => {
   test('starter pack card is the only recommended card', () => {
     const cards = screen.getAllByTestId('payg-plan-card');
     const recommendedCards = cards.filter((card) =>
-      (card.textContent || '').includes('Most popular'),
+      (card.textContent || '').includes('No subscription'),
     );
 
     expect(recommendedCards).toHaveLength(1);

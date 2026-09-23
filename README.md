@@ -38,6 +38,12 @@ API_KEY=<secret>
 - `npm run build` → build for production
 - `npm run start` → serve production build on port `3001`
 
+With the local server running and gstack installed, run
+`node --test scripts/mobile-hero.browser.test.mjs` to check that the product
+image does not cover the hero or free-tier disclosure at 375, 390 and 430px.
+This browser check is separate from unit CI. Node 22 is supported by the
+existing test suite; Node 26's native Web Storage conflicts with jsdom.
+
 ## Development guardrails
 
 - Run changes from this repo only for frontend edits.

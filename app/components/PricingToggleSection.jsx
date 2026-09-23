@@ -308,10 +308,10 @@ export default function PricingToggleSection({ showFreeTier = true, promoCode = 
 
   return (
     <div className="space-y-10">
-      {/* Social proof pill */}
+      {/* Explain the purchase before presenting paid options. */}
       <div className="flex flex-col items-center gap-3">
         <StatPill>
-          Saves <span className="font-bold">45 min</span> of manual formatting per export.
+          Try your file free. Pay to remove the watermark.
         </StatPill>
         <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
           {PRICING_PAGE_COPY.paygTagline}
