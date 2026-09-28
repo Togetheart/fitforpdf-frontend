@@ -299,6 +299,8 @@ export const SEO_ARTICLES = [
       { label: 'CSV to structured, readable PDF', href: '/csv-to-structured-pdf' },
       { label: 'Wide table PDF export', href: '/wide-table-pdf-export' },
       { label: 'XLSX to PDF keep all columns', href: '/xlsx-to-pdf-keep-all-columns' },
+      { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
+      { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
     ],
     cta: {
       title: 'Large CSV → readable PDF in seconds.',
@@ -426,6 +428,8 @@ export const SEO_ARTICLES = [
       { label: 'Wide table PDF export', href: '/wide-table-pdf-export' },
       { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
       { label: 'Financial report spreadsheet to PDF', href: '/financial-report-spreadsheet-to-pdf' },
+      { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
+      { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
     ],
     cta: {
       title: 'Send a CRM export your client can read.',
@@ -482,6 +486,8 @@ export const SEO_ARTICLES = [
       { label: 'FitForPDF for finance teams', href: '/for-finance' },
       { label: 'Audit report Excel to PDF, best practices', href: '/audit-report-excel-to-pdf-tips' },
       { label: 'Wide table PDF export', href: '/wide-table-pdf-export' },
+      { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
+      { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
     ],
     cta: {
       title: 'Board-ready financial PDFs.',
@@ -658,6 +664,7 @@ export const SEO_ARTICLES = [
       { label: 'Convertir un gros CSV en PDF', href: '/convert-large-csv-to-pdf' },
       { label: 'Rapport financier (tableur) en PDF', href: '/financial-report-spreadsheet-to-pdf' },
       { label: 'Pour les équipes finance', href: '/for-finance' },
+      { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
     ],
     cta: {
       title: 'Convertissez votre balance maintenant',
@@ -713,6 +720,8 @@ export const SEO_ARTICLES = [
       { label: 'Wide-table PDF export', href: '/wide-table-pdf-export' },
       { label: 'Keep all columns: XLSX to PDF', href: '/xlsx-to-pdf-keep-all-columns' },
       { label: 'For auditors', href: '/for-auditors' },
+      { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
+      { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
     ],
     cta: {
       title: 'Convert your tax-stats CSV',
@@ -768,6 +777,8 @@ export const SEO_ARTICLES = [
       { label: 'Wide-table PDF export', href: '/wide-table-pdf-export' },
       { label: 'Convert a large CSV to PDF', href: '/convert-large-csv-to-pdf' },
       { label: 'For consultants', href: '/for-consultants' },
+      { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
+      { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
     ],
     cta: {
       title: 'Convert your World Bank CSV',
