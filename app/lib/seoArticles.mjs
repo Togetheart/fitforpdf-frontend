@@ -186,6 +186,7 @@ export const SEO_ARTICLES = [
       { label: 'How to export wide tables to PDF', href: '/wide-table-pdf-export' },
       { label: 'Excel multiple sheets to single PDF', href: '/excel-multiple-sheets-to-single-pdf' },
       { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
+      { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
     ],
     cta: {
       title: 'Keep every column. No manual layout.',
@@ -242,6 +243,7 @@ export const SEO_ARTICLES = [
       { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
       { label: 'Wide table PDF export', href: '/wide-table-pdf-export' },
       { label: 'Excel PDF text too small, fix', href: '/excel-pdf-text-too-small-fix' },
+      { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
     ],
     cta: {
       title: 'No more "too wide" warnings.',
@@ -610,6 +612,7 @@ export const SEO_ARTICLES = [
       { label: 'Fix cut-off columns in Excel PDF export', href: '/excel-to-pdf-columns-cut-off' },
       { label: 'Excel multiple sheets to single PDF', href: '/excel-multiple-sheets-to-single-pdf' },
       { label: 'Keep Excel headers repeating on every PDF page', href: '/excel-to-pdf-keep-headers-repeat' },
+      { label: 'How to fit a large Excel sheet on one PDF page', href: '/fit-excel-sheet-on-one-page-pdf' },
     ],
     cta: {
       title: 'Page breaks that respect your data.',
